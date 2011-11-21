@@ -1,5 +1,8 @@
-/bin
-/obj
-*.user
+_ReSharper.Descent/*
+Descent/Descent/bin
+Descent/Descent/obj
+Descent/Descent/DescentContent
+*.dotCover
+*.ReSharper.user
 *.suo
 *.sln.cache
