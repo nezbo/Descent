@@ -1,6 +1,0 @@
-c:\users\emil\documents\visual studio 2010\Projects\Descent\Descent\Descent\bin\x86\Debug\Descent.exe
-c:\users\emil\documents\visual studio 2010\Projects\Descent\Descent\Descent\bin\x86\Debug\Descent.pdb
-c:\users\emil\documents\visual studio 2010\Projects\Descent\Descent\Descent\obj\x86\Debug\ResolveAssemblyReference.cache
-c:\users\emil\documents\visual studio 2010\Projects\Descent\Descent\Descent\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
-c:\users\emil\documents\visual studio 2010\Projects\Descent\Descent\Descent\obj\x86\Debug\Descent.exe
-c:\users\emil\documents\visual studio 2010\Projects\Descent\Descent\Descent\obj\x86\Debug\Descent.pdb

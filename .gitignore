@@ -1,7 +1,7 @@
-_ReSharper.Descent/*
+_ReSharper.Descent
 Descent/Descent/bin
 Descent/Descent/obj
-Descent/Descent/DescentContent
+Descent/Descent/DescentContent/obj
 *.dotCover
 *.ReSharper.user
 *.suo
