@@ -1,0 +1,3 @@
+system chart DESCENT
+	cluster PLAYER description "The actual player, and his/her role"
+end
