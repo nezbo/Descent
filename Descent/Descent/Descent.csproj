@@ -16,8 +16,10 @@
     <XnaProfile>Reach</XnaProfile>
     <XnaCrossPlatformGroupID>95bfd38f-d0c6-4871-9fc1-decf79e59b91</XnaCrossPlatformGroupID>
     <XnaOutputType>Game</XnaOutputType>
-    <ApplicationIcon>Shared Files\Game.ico</ApplicationIcon>
-    <Thumbnail>Shared Files\GameThumbnail.png</Thumbnail>
+    <ApplicationIcon>
+    </ApplicationIcon>
+    <Thumbnail>
+    </Thumbnail>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -72,15 +74,9 @@
     <Reference Include="System.Net" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Game1.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Shared Files\Program.cs" />
-    <Compile Include="Shared Files\Game1.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Shared Files\Game.ico" />
-    <Content Include="Shared Files\GameThumbnail.png">
-      <XnaPlatformSpecific>true</XnaPlatformSpecific>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DescentContent\DescentContent.contentproj">
