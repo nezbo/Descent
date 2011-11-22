@@ -30,10 +30,10 @@ end
 
 cluster_chart OVERLORD_STUFF
 	class OVERLORD_CARD description "Cards that the overlord draws each turn"
-	class TRAP_CARD description "A type of OverlordCard"
-	class POWER_CARD description "A type of OverlordCard"
-	class EVENT_CARD description "A type of OverlordCard"
-	class SPAWN_CARD description "A type of OverlordCard"
+	class TRAP_CARD description "A type of Overlord_Card to make traps"
+	class POWER_CARD description "A type of Overlord_Card to give continuing powers"
+	class EVENT_CARD description "A type of Overlord_Card to do special events"
+	class SPAWN_CARD description "A type of Overlord_Card to spawn creatures"
 end
 
 -- HOW TO DO/DESCRIBE EVENTS AND ABILITIES??!
@@ -64,6 +64,159 @@ cluster_chart MARKER
 	class OBSTACLE_MARKER description "Either rubble, water or pit, that can be on a square"
 end
 
+class_chart PLAYER
+	indexing
+		cluster: "PLAYER";
+		created: "21-11-2011";
+		revised: "21-11-2011"
+	explanation
+		"The actual player, playing the game"
+end
 
+class_chart HERO_PARTY
+	indexing
+		cluster: "PLAYER";
+		created: "21-11-2011";
+		revised: "21-11-2011"
+	explanation
+		"A party of heroes"
+end
 
-	
+class_chart HERO_PLAYER
+	indexing
+		cluster: "PLAYER";
+		created: "21-11-2011";
+		revised: "21-11-2011"
+	explanation
+		"The role of a hero, that a player can have"
+end
+
+class_chart FIGURE
+	explanation
+		"A figure with basic stats"
+end
+
+class_chart OVERLORD
+	indexing
+		cluster: "PLAYER";
+		created: "21-11-2011";
+		revised: "21-11-2011"
+	explanation
+		"The role of a overlord, that a hero can be"
+end
+
+class_chart FIGURE
+	indexing
+		cluster: "FIGURE";
+		created: "21-11-2011";
+		revised: "21-11-2011"
+	explanation
+		"A figure with basic stats"
+end
+
+class_chart HERO 
+	indexing
+		cluster: "FIGURE";
+		created: "21-11-2011";
+		revised: "21-11-2011"
+	explanation 
+		"A hero, made from a hero-sheet"
+end
+
+class_chart PET 
+	indexing
+		cluster: "FIGURE";
+		created: "21-11-2011";
+		revised: "21-11-2011"
+	explanation 
+		"A pet that a HeroPlayer can control"
+end
+
+class_chart SKILL
+	indexing
+		cluster: "HERO_STUFF";
+		created: "21-11-2011";
+		revised: "21-11-2011"
+	explanation
+		"The skill-cards of a hero"
+end
+
+class_chart EQUIPMENT
+	indexing
+		cluster: "HERO_STUFF";
+		created: "21-11-2011";
+		revised: "21-11-2011"
+	explanation
+		"Equipment can be worn by the hero"
+end
+
+class_chart TRAINING_TOKEN
+	indexing
+		cluster: "HERO_STUFF";
+		created: "21-11-2011";
+		revised: "21-11-2011"
+	explanation
+		"A token that give extra dice in a specific kind of attack"
+end
+
+class_chart POTION
+	indexing
+		cluster: "HERO_STUFF";
+		created: "21-11-2011";
+		revised: "21-11-2011"
+	explanation
+		"A potion, that can either be on a square, or equipped on a Hero"
+end
+
+class_chart OVERLORD_CARD
+	indexing
+		cluster: "OVERLORD_STUFF";
+		created: "21-11-2011";
+		revised: "21-11-2011"
+	explanation
+		"Cards that the overlord draws each turn"
+end
+
+class_chart TRAP_CARD
+	indexing
+		cluster: "OVERLORD_STUFF";
+		created: "21-11-2011";
+		revised: "21-11-2011"
+	explanation
+		"A type of Overlord_Card to make traps"
+	inherit
+		OVERLORD_CARD
+end
+
+class_chart POWER_CARD
+	indexing
+		cluster: "OVERLORD_STUFF";
+		created: "21-11-2011";
+		revised: "21-11-2011"
+	explanation
+		"A type of Overlord_Card"
+	inherit
+		OVERLORD_CARD
+end
+
+class_chart EVENT_CARD
+	indexing
+		cluster: "OVERLORD_STUFF";
+		created: "21-11-2011";
+		revised: "21-11-2011"
+	explanation
+		"A type of Overlord_Card"
+	inherit
+		OVERLORD_CARD
+end
+
+class_chart SPAWN_CARD
+	indexing
+		cluster: "OVERLORD_STUFF";
+		created: "21-11-2011";
+		revised: "21-11-2011"
+	explanation
+		"A type of Overlord_Card"
+	inherit
+		OVERLORD_CARD
+end
