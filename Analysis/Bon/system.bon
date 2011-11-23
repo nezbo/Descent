@@ -38,15 +38,15 @@ end
 
 -- HOW TO DO/DESCRIBE EVENTS AND ABILITIES??!
 cluster_chart EVENT
-	class EFFECT description "An effect that can be on an figure"
-	class POISON_EFFECT description "A poison effect, that has to be healed through"
-	class BURN_EFFECT description "A burn effect that damages a figure"
-	class STUN_EFFECT description "A stun effect, that limits movement and attacks"
-	class WEB_EFFECT description "A web effect that limits movement"
+	class EFFECT description "An Effect that can be on an figure"
+	class POISON_EFFECT description "A poison Effect, that has to be healed through"
+	class BURN_EFFECT description "A burn Effect that damages a figure"
+	class STUN_EFFECT description "A stun Effect, that limits movement and attacks"
+	class WEB_EFFECT description "A web Effect that limits movement"
 	class ABILITY description "The abilities that a figure can have"
-	class EVENT description "A event that will make something happen"
-	class TRIGGERED_EVENT description "An event that is triggered by something og some ability"
-	class ACTIVATED_EVENT description "An Event that is always on"
+	class EVENT description "A Event that will make something happen"
+	class TRIGGERED_EVENT description "An Event that is triggered by something og some ability"
+	class PASSIVE_EVENT description "An Event that is always on"
 end
 
 cluster_chart BOARD
@@ -58,6 +58,7 @@ end
 
 cluster_chart MARKER
 	class MARKER description "Something that can be on a square that is not a figure"
+	class GLYPH_MARKER description "Allows heroes to teleport to other glyphs or town"
 	class MONEY_MARKER description "A gold marker, that can be on a square"
 	class RUNE_KEY_MARKER description "A rune that will open a rune-door, that is either on the map, or aquired by the party"
 	class TREASURE_CHEST_MARKER description "A treasure chest, that can be placed on a board"
@@ -71,6 +72,8 @@ class_chart PLAYER
 		revised: "21-11-2011"
 	explanation
 		"The actual player, playing the game"
+	query
+		"What is your connection?"
 end
 
 class_chart HERO_PARTY
@@ -80,6 +83,16 @@ class_chart HERO_PARTY
 		revised: "21-11-2011"
 	explanation
 		"A party of heroes"
+	query
+		"How many players have yet to take their turn?",
+		"Has 'this' player yet to take their turn?",
+		"How many conquest tokens do the players have?",
+		"Is the pool of conquest tokens empty?"
+	command
+		"Remove 'this' player from the list of players yet to act!",
+		"Reset list of players yet to act!",
+		"Remove 'this' number of conquest tokens from the pool of tokens!",
+		"Add 'this' number of conquest tokens to the pool of tokens!"
 end
 
 class_chart HERO_PLAYER
@@ -94,6 +107,20 @@ end
 class_chart FIGURE
 	explanation
 		"A figure with basic stats"
+	query
+		"What is your name?",
+		"What is your max health?",
+		"What is your health right now?",
+		"What is your max fatique?",
+		"What is your fatique right now?",
+		"What is your armor?",
+		"What is your speed?",
+		"What dice do you use to attack?",
+		"What abilities do you have?",
+		"What effects are on you?"
+	command
+		"Set your health to 'this'!",
+		"Set your fatique to 'this'!"
 end
 
 class_chart OVERLORD
@@ -103,6 +130,13 @@ class_chart OVERLORD
 		revised: "21-11-2011"
 	explanation
 		"The role of a overlord, that a hero can be"
+	query
+		"How many cards do you have?",
+		"How many threat tokens do you have?",
+		"What cards do you have?"
+	command
+		"Draw 'this' many cards!",
+		"
 end
 
 class_chart FIGURE
@@ -220,3 +254,179 @@ class_chart SPAWN_CARD
 	inherit
 		OVERLORD_CARD
 end
+
+class_chart EFFECT
+	indexing
+		cluster: "EVENT";
+		created: "23-11-2011";
+		revised: "23-11-2011"
+	explanation
+		"An effect that can be on an figure"
+end
+
+class_chart POISON_EFFECT
+	indexing
+		cluster: "EVENT";
+		created: "23-11-2011";
+		revised: "23-11-2011"
+	explanation
+		"A poison effect, that has to be healed through"
+	inherit
+		EFFECT
+end
+
+class_chart BURN_EFFECT
+	indexing
+		cluster: "EVENT";
+		created: "23-11-2011";
+		revised: "23-11-2011"
+	explanation
+		"A burn effect that damages a figure"
+	inherit
+		EFFECT
+end
+
+class_chart STUN_EFFECT
+	indexing
+		cluster: "EVENT";
+		created: "23-11-2011";
+		revised: "23-11-2011"
+	explanation
+		"A stun effect, that limits movement and attacks"
+	inherit
+		EFFECT
+end
+
+class_chart WEB_EFFECT
+	indexing
+		cluster: "EVENT";
+		created: "23-11-2011";
+		revised: "23-11-2011"
+	explanation
+		"A web effect that limits movement"
+	inherit
+		EFFECT
+end
+
+class_chart ABILITY
+	indexing
+		cluster: "EVENT";
+		created: "23-11-2011";
+		revised: "23-11-2011"
+	explanation
+		"The abilities that a figure can have"
+end
+
+class_chart EVENT
+	indexing
+		cluster: "EVENT";
+		created: "23-11-2011";
+		revised: "23-11-2011"
+	explanation
+		"A event that will make something happen"
+end
+
+class_chart TRIGGERED_EVENT
+	indexing
+		cluster: "EVENT";
+		created: "23-11-2011";
+		revised: "23-11-2011"
+	explanation
+		"An event that is triggered by something og some ability"
+	inherit
+		EVENT
+end
+
+class_chart PASSIVE_EVENT
+	indexing
+		cluster: "EVENT";
+		created: "23-11-2011";
+		revised: "23-11-2011"
+	explanation
+		"An Event that is always on"
+	inherit
+		EVENT
+end
+
+class_chart BOARD
+	indexing
+		cluster: "BOARD";
+		created: "23-11-2011";
+		revised: "23-11-2011"
+	explanation
+		"The entire gameboard, made up of pieces"
+end
+
+class_chart SQUARE
+	indexing
+		cluster: "BOARD";
+		created: "23-11-2011";
+		revised: "23-11-2011"
+	explanation
+		"A single square of the board"
+end
+
+class_chart TOWN
+	indexing
+		cluster: "BOARD";
+		created: "23-11-2011";
+		revised: "23-11-2011"
+	explanation
+		"When in town the players can buy, they also go there when they die"
+end
+
+class_chart MARKER
+	indexing
+		cluster: "MARKER";
+		created: "23-11-2011";
+		revised: "23-11-2011"
+	explanation
+		"Something that can be on a square that is not a figure"
+end
+
+class_chart MONEY_MARKER
+	indexing
+		cluster: "MARKER";
+		created: "23-11-2011";
+		revised: "23-11-2011"
+	explanation
+		"A gold marker, that can be on a square"
+	inherit
+		MARKER
+end
+
+class_chart RUNE_KEY_MARKER
+	indexing
+		cluster: "MARKER";
+		created: "23-11-2011";
+		revised: "23-11-2011"
+	explanation
+		"A rune that will open a rune-door, that is either on the map, or aquired by the party"
+	inherit
+		MARKER
+end
+
+class_chart TREASURE_CHEST_MARKER
+	indexing
+		cluster: "MARKER";
+		created: "23-11-2011";
+		revised: "23-11-2011"
+	explanation
+		"A treasure chest, that can be placed on a board"
+	inherit
+		MARKER
+end
+
+class_chart OBSTACLE_MARKER
+	indexing
+		cluster: "MARKER";
+		created: "23-11-2011";
+		revised: "23-11-2011"
+	explanation
+		"Either rubble, water or pit, that can be on a square"
+	inherit
+		MARKER
+end
+
+
+
