@@ -1,0 +1,222 @@
+system_chart DESCENT
+	cluster PLAYER description "The actual player, and his/her role"
+	cluster EVENT description "Events, effects and abilities"
+	cluster BOARD description "The game board"
+end
+
+cluster_chart PLAYER
+	class PLAYER description "The actual player, playing the game"
+	class HERO_PARTY description "A party of heroes"
+	class HERO_PLAYER description "The role of a hero, that a player can have"
+	cluster FIGURE description "A figure with basic stats"
+	class OVERLORD description "The role of a overlord, that a hero can be"
+	cluster OVERLORD_STUFF description "Stuff that is specifik for a overlord"
+end
+
+cluster_chart FIGURE
+	class FIGURE description "A figure with basic stats"
+	class HERO description "A hero, made from a herosheet"
+	cluster HERO_STUFF description "Everything that is specific to a hero"
+	class PET description "A pet that a HeroPlayer can control"
+	class MONSTER description "A monster, controlled by  the overlord"
+end
+
+cluster_chart HERO_STUFF
+	class SKILL description "The skill-cards of a hero"
+	class EQUIPMENT description "Equipment can be worn by the hero"
+	class TRAINING_TOKEN description "A token that give extra dice in a specific kind of attack"
+	class POTION description "A potion, that can either be on a square, or equipped on a Hero"
+end
+
+cluster_chart OVERLORD_STUFF
+	class OVERLORD_CARD description "Cards that the overlord draws each turn"
+	class TRAP_CARD description "A type of Overlord_Card to make traps"
+	class POWER_CARD description "A type of Overlord_Card to give continuing powers"
+	class EVENT_CARD description "A type of Overlord_Card to do special events"
+	class SPAWN_CARD description "A type of Overlord_Card to spawn creatures"
+end
+
+-- HOW TO DO/DESCRIBE EVENTS AND ABILITIES??!
+cluster_chart EVENT
+	class EFFECT description "An effect that can be on an figure"
+	class POISON_EFFECT description "A poison effect, that has to be healed through"
+	class BURN_EFFECT description "A burn effect that damages a figure"
+	class STUN_EFFECT description "A stun effect, that limits movement and attacks"
+	class WEB_EFFECT description "A web effect that limits movement"
+	class ABILITY description "The abilities that a figure can have"
+	class EVENT description "A event that will make something happen"
+	class TRIGGERED_EVENT description "An event that is triggered by something og some ability"
+	class ACTIVATED_EVENT description "An Event that is always on"
+end
+
+cluster_chart BOARD
+	class BOARD description "The entire gameboard, made up of pieces"
+	class SQUARE description "A single square of the board"
+	class TOWN description "When in town the players can buy, they also go there when they die"
+	cluster MARKER description "Something that can be on a square that is not a figure"
+end
+
+cluster_chart MARKER
+	class MARKER description "Something that can be on a square that is not a figure"
+	class MONEY_MARKER description "A gold marker, that can be on a square"
+	class RUNE_KEY_MARKER description "A rune that will open a rune-door, that is either on the map, or aquired by the party"
+	class TREASURE_CHEST_MARKER description "A treasure chest, that can be placed on a board"
+	class OBSTACLE_MARKER description "Either rubble, water or pit, that can be on a square"
+end
+
+class_chart PLAYER
+	indexing
+		cluster: "PLAYER";
+		created: "21-11-2011";
+		revised: "21-11-2011"
+	explanation
+		"The actual player, playing the game"
+end
+
+class_chart HERO_PARTY
+	indexing
+		cluster: "PLAYER";
+		created: "21-11-2011";
+		revised: "21-11-2011"
+	explanation
+		"A party of heroes"
+end
+
+class_chart HERO_PLAYER
+	indexing
+		cluster: "PLAYER";
+		created: "21-11-2011";
+		revised: "21-11-2011"
+	explanation
+		"The role of a hero, that a player can have"
+end
+
+class_chart FIGURE
+	explanation
+		"A figure with basic stats"
+end
+
+class_chart OVERLORD
+	indexing
+		cluster: "PLAYER";
+		created: "21-11-2011";
+		revised: "21-11-2011"
+	explanation
+		"The role of a overlord, that a hero can be"
+end
+
+class_chart FIGURE
+	indexing
+		cluster: "FIGURE";
+		created: "21-11-2011";
+		revised: "21-11-2011"
+	explanation
+		"A figure with basic stats"
+end
+
+class_chart HERO 
+	indexing
+		cluster: "FIGURE";
+		created: "21-11-2011";
+		revised: "21-11-2011"
+	explanation 
+		"A hero, made from a hero-sheet"
+end
+
+class_chart PET 
+	indexing
+		cluster: "FIGURE";
+		created: "21-11-2011";
+		revised: "21-11-2011"
+	explanation 
+		"A pet that a HeroPlayer can control"
+end
+
+class_chart SKILL
+	indexing
+		cluster: "HERO_STUFF";
+		created: "21-11-2011";
+		revised: "21-11-2011"
+	explanation
+		"The skill-cards of a hero"
+end
+
+class_chart EQUIPMENT
+	indexing
+		cluster: "HERO_STUFF";
+		created: "21-11-2011";
+		revised: "21-11-2011"
+	explanation
+		"Equipment can be worn by the hero"
+end
+
+class_chart TRAINING_TOKEN
+	indexing
+		cluster: "HERO_STUFF";
+		created: "21-11-2011";
+		revised: "21-11-2011"
+	explanation
+		"A token that give extra dice in a specific kind of attack"
+end
+
+class_chart POTION
+	indexing
+		cluster: "HERO_STUFF";
+		created: "21-11-2011";
+		revised: "21-11-2011"
+	explanation
+		"A potion, that can either be on a square, or equipped on a Hero"
+end
+
+class_chart OVERLORD_CARD
+	indexing
+		cluster: "OVERLORD_STUFF";
+		created: "21-11-2011";
+		revised: "21-11-2011"
+	explanation
+		"Cards that the overlord draws each turn"
+end
+
+class_chart TRAP_CARD
+	indexing
+		cluster: "OVERLORD_STUFF";
+		created: "21-11-2011";
+		revised: "21-11-2011"
+	explanation
+		"A type of Overlord_Card to make traps"
+	inherit
+		OVERLORD_CARD
+end
+
+class_chart POWER_CARD
+	indexing
+		cluster: "OVERLORD_STUFF";
+		created: "21-11-2011";
+		revised: "21-11-2011"
+	explanation
+		"A type of Overlord_Card"
+	inherit
+		OVERLORD_CARD
+end
+
+class_chart EVENT_CARD
+	indexing
+		cluster: "OVERLORD_STUFF";
+		created: "21-11-2011";
+		revised: "21-11-2011"
+	explanation
+		"A type of Overlord_Card"
+	inherit
+		OVERLORD_CARD
+end
+
+class_chart SPAWN_CARD
+	indexing
+		cluster: "OVERLORD_STUFF";
+		created: "21-11-2011";
+		revised: "21-11-2011"
+	explanation
+		"A type of Overlord_Card"
+	inherit
+		OVERLORD_CARD
+end
