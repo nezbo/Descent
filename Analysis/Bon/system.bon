@@ -24,8 +24,8 @@ end
 cluster_chart HERO_STUFF
 	class SKILL description "The skill-cards of a hero"
 	class EQUIPMENT description "Equipment can be worn by the hero"
-	class TRAINING_TOKEN description "A token that give extra dice in a specific kind of attack"
 	class POTION description "A potion, that can either be on a square, or equipped on a Hero"
+	class TRAINING_TOKEN description "A token that give extra dice in a specific kind of attack"
 end
 
 cluster_chart OVERLORD_STUFF
@@ -74,6 +74,7 @@ class_chart PLAYER
 		"The actual player, playing the game"
 	query
 		"What is your connection?"
+		"What is your role?"
 end
 
 class_chart HERO_PARTY
@@ -84,6 +85,7 @@ class_chart HERO_PARTY
 	explanation
 		"A party of heroes"
 	query
+		"How many players are in the HeroParty?",
 		"How many players have yet to take their turn?",
 		"Has 'this' player yet to take their turn?",
 		"How many conquest tokens do the players have?",
@@ -93,6 +95,8 @@ class_chart HERO_PARTY
 		"Reset list of players yet to act!",
 		"Remove 'this' number of conquest tokens from the pool of tokens!",
 		"Add 'this' number of conquest tokens to the pool of tokens!"
+	constraint
+		"A HeroParty must always have 1 to 4 players."
 end
 
 class_chart HERO_PLAYER
@@ -102,6 +106,25 @@ class_chart HERO_PLAYER
 		revised: "21-11-2011"
 	explanation
 		"The role of a hero, that a player can have"
+	query
+		"What hero are you playing?"
+end
+
+class_chart OVERLORD
+	indexing
+		cluster: "PLAYER";
+		created: "21-11-2011";
+		revised: "21-11-2011"
+	explanation
+		"The role of a overlord, that a hero can be"
+	query
+		"How many cards do you have?",
+		"How many threat tokens do you have?",
+		"What cards do you have?"
+	command
+		"Draw 'this' many cards!"
+	constraint
+		"When it is not the overlords turn, the overlord cannot have more than 7 cards in hand."
 end
 
 class_chart FIGURE
@@ -121,31 +144,8 @@ class_chart FIGURE
 	command
 		"Set your health to 'this'!",
 		"Set your fatique to 'this'!"
-end
-
-class_chart OVERLORD
-	indexing
-		cluster: "PLAYER";
-		created: "21-11-2011";
-		revised: "21-11-2011"
-	explanation
-		"The role of a overlord, that a hero can be"
-	query
-		"How many cards do you have?",
-		"How many threat tokens do you have?",
-		"What cards do you have?"
-	command
-		"Draw 'this' many cards!",
-		"
-end
-
-class_chart FIGURE
-	indexing
-		cluster: "FIGURE";
-		created: "21-11-2011";
-		revised: "21-11-2011"
-	explanation
-		"A figure with basic stats"
+	constraint
+		"A Figure must always have more than 0 max health
 end
 
 class_chart HERO 
@@ -155,8 +155,15 @@ class_chart HERO
 		revised: "21-11-2011"
 	explanation 
 		"A hero, made from a hero-sheet"
+	query
+		"How many skills do you have in MELEE/RANGED/MAGIC?"
+		"May I have a list of all potions you have equipped?"
+		"May I have a list of everything you have equipped?"
+		"May I have a list of everything in your backpack?"
+		
 end
 
+-- THIS IS A BIT IFFY? IS IT A TOKEN OR A FIGURE?
 class_chart PET 
 	indexing
 		cluster: "FIGURE";
@@ -164,6 +171,10 @@ class_chart PET
 		revised: "21-11-2011"
 	explanation 
 		"A pet that a HeroPlayer can control"
+	query
+		"What hero owns you?",
+		"What are your abilities?",
+		"What is you max speed?"
 end
 
 class_chart SKILL
@@ -173,6 +184,11 @@ class_chart SKILL
 		revised: "21-11-2011"
 	explanation
 		"The skill-cards of a hero"
+	query
+		"Who owns you?"
+		"What are your abilities?"
+	command
+		"Add this ability to your list of ability?"
 end
 
 class_chart EQUIPMENT
@@ -182,6 +198,17 @@ class_chart EQUIPMENT
 		revised: "21-11-2011"
 	explanation
 		"Equipment can be worn by the hero"
+	query
+		"What type of equipment are you?",
+		"Who owns you?",
+		"Are you equipped?",
+		"Can you be used right now?",
+		"Can you be bought right now?",
+		"What is your price?",
+		"What are your abilities?"
+	command
+		"You are now equipped/not equipped!",
+		"You are owned by 'this'!"
 end
 
 class_chart TRAINING_TOKEN
@@ -191,6 +218,10 @@ class_chart TRAINING_TOKEN
 		revised: "21-11-2011"
 	explanation
 		"A token that give extra dice in a specific kind of attack"
+	query
+		"What attack do you grant bonus to?"
+	command
+		"Give a dice bonus to 'this' player!"
 end
 
 class_chart POTION
@@ -200,6 +231,11 @@ class_chart POTION
 		revised: "21-11-2011"
 	explanation
 		"A potion, that can either be on a square, or equipped on a Hero"
+	inherit
+		EQUIPMENT
+	query
+		"What kind of potion are you?"
+		"What power do you grant?"
 end
 
 class_chart OVERLORD_CARD
@@ -209,6 +245,9 @@ class_chart OVERLORD_CARD
 		revised: "21-11-2011"
 	explanation
 		"Cards that the overlord draws each turn"
+	query
+		"What ability do you have?"
+		"Is this card legal to play now?"
 end
 
 class_chart TRAP_CARD
@@ -253,6 +292,8 @@ class_chart SPAWN_CARD
 		"A type of Overlord_Card"
 	inherit
 		OVERLORD_CARD
+	query
+		"Can I have a list of all monsters that can be spawned with this card?"
 end
 
 class_chart EFFECT
@@ -355,6 +396,12 @@ class_chart BOARD
 		revised: "23-11-2011"
 	explanation
 		"The entire gameboard, made up of pieces"
+	query
+		"Is this square pass-/moveable?"
+		"Can the overlord spawn here?"
+		"Is there line of sight from 'here' to 'there'?"
+		"Is there line of sight from 'here' to 'there', not included monsters?"
+		"Is this space visible by the players?"
 end
 
 class_chart SQUARE
@@ -364,6 +411,9 @@ class_chart SQUARE
 		revised: "23-11-2011"
 	explanation
 		"A single square of the board"
+	query
+		"What marker is on this square?"
+		"What figure is on this square?"
 end
 
 class_chart TOWN
@@ -373,6 +423,8 @@ class_chart TOWN
 		revised: "23-11-2011"
 	explanation
 		"When in town the players can buy, they also go there when they die"
+	query
+		"What players are in town right now?"
 end
 
 class_chart MARKER
@@ -404,6 +456,8 @@ class_chart RUNE_KEY_MARKER
 		"A rune that will open a rune-door, that is either on the map, or aquired by the party"
 	inherit
 		MARKER
+	query
+		"What color are your?"
 end
 
 class_chart TREASURE_CHEST_MARKER
@@ -415,6 +469,13 @@ class_chart TREASURE_CHEST_MARKER
 		"A treasure chest, that can be placed on a board"
 	inherit
 		MARKER
+	query
+		"What kind of treasure do you have?"
+		"How many treasures do you have?"
+		"How much gold do you have?"
+		"How many conquest tokens do you have?"
+		"How many curses do you have?"
+		
 end
 
 class_chart OBSTACLE_MARKER
