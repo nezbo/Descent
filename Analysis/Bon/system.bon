@@ -78,6 +78,7 @@ end
 class_chart PLAYER
 	indexing
 		cluster: "PLAYER";
+		author: "Jonas Breindahl";
 		created: "21-11-2011";
 		revised: "21-11-2011"
 	explanation
@@ -90,6 +91,7 @@ end
 class_chart HERO_PARTY
 	indexing
 		cluster: "PLAYER";
+		author: "Jonas Breindahl";
 		created: "21-11-2011";
 		revised: "21-11-2011"
 	explanation
@@ -112,6 +114,7 @@ end
 class_chart HERO_PLAYER
 	indexing
 		cluster: "PLAYER";
+		author: "Jonas Breindahl";
 		created: "21-11-2011";
 		revised: "21-11-2011"
 	explanation
@@ -123,6 +126,7 @@ end
 class_chart OVERLORD
 	indexing
 		cluster: "PLAYER";
+		author: "Jonas Breindahl";
 		created: "21-11-2011";
 		revised: "21-11-2011"
 	explanation
@@ -138,6 +142,11 @@ class_chart OVERLORD
 end
 
 class_chart FIGURE
+	indexing
+		cluster: "FIGURE";
+		author: "Jonas Breindahl";
+		created: "21-11-2011";
+		revised: "21-11-2011";
 	explanation
 		"A figure with basic stats"
 	query
@@ -155,12 +164,13 @@ class_chart FIGURE
 		"Set your health to 'this'!",
 		"Set your fatique to 'this'!"
 	constraint
-		"A Figure must always have more than 0 max health
+		"A Figure must always have more than 0 max health"
 end
 
 class_chart HERO 
 	indexing
 		cluster: "FIGURE";
+		author: "Jonas Breindahl";
 		created: "21-11-2011";
 		revised: "21-11-2011"
 	explanation 
@@ -177,6 +187,7 @@ end
 class_chart PET 
 	indexing
 		cluster: "FIGURE";
+		author: "Jonas Breindahl";
 		created: "21-11-2011";
 		revised: "21-11-2011"
 	explanation 
@@ -190,6 +201,7 @@ end
 class_chart SKILL
 	indexing
 		cluster: "HERO_STUFF";
+		author: "Jonas Breindahl";
 		created: "21-11-2011";
 		revised: "21-11-2011"
 	explanation
@@ -204,6 +216,7 @@ end
 class_chart EQUIPMENT
 	indexing
 		cluster: "HERO_STUFF";
+		author: "Jonas Breindahl";
 		created: "21-11-2011";
 		revised: "21-11-2011"
 	explanation
@@ -224,6 +237,7 @@ end
 class_chart TRAINING_TOKEN
 	indexing
 		cluster: "HERO_STUFF";
+		author: "Jonas Breindahl";
 		created: "21-11-2011";
 		revised: "21-11-2011"
 	explanation
@@ -237,6 +251,7 @@ end
 class_chart POTION
 	indexing
 		cluster: "HERO_STUFF";
+		author: "Jonas Breindahl";
 		created: "21-11-2011";
 		revised: "21-11-2011"
 	explanation
@@ -251,6 +266,7 @@ end
 class_chart OVERLORD_CARD
 	indexing
 		cluster: "OVERLORD_STUFF";
+		author: "Jonas Breindahl";
 		created: "21-11-2011";
 		revised: "21-11-2011"
 	explanation
@@ -263,6 +279,7 @@ end
 class_chart TRAP_CARD
 	indexing
 		cluster: "OVERLORD_STUFF";
+		author: "Jonas Breindahl";
 		created: "21-11-2011";
 		revised: "21-11-2011"
 	explanation
@@ -274,6 +291,7 @@ end
 class_chart POWER_CARD
 	indexing
 		cluster: "OVERLORD_STUFF";
+		author: "Jonas Breindahl";
 		created: "21-11-2011";
 		revised: "21-11-2011"
 	explanation
@@ -285,6 +303,7 @@ end
 class_chart EVENT_CARD
 	indexing
 		cluster: "OVERLORD_STUFF";
+		author: "Jonas Breindahl";
 		created: "21-11-2011";
 		revised: "21-11-2011"
 	explanation
@@ -296,6 +315,7 @@ end
 class_chart SPAWN_CARD
 	indexing
 		cluster: "OVERLORD_STUFF";
+		author: "Jonas Breindahl";
 		created: "21-11-2011";
 		revised: "21-11-2011"
 	explanation
@@ -309,6 +329,7 @@ end
 class_chart EFFECT
 	indexing
 		cluster: "EVENT";
+		author: "Jonas Breindahl";
 		created: "23-11-2011";
 		revised: "23-11-2011"
 	explanation
@@ -318,6 +339,7 @@ end
 class_chart POISON_EFFECT
 	indexing
 		cluster: "EVENT";
+		author: "Jonas Breindahl";
 		created: "23-11-2011";
 		revised: "23-11-2011"
 	explanation
@@ -329,6 +351,7 @@ end
 class_chart BURN_EFFECT
 	indexing
 		cluster: "EVENT";
+		author: "Jonas Breindahl";
 		created: "23-11-2011";
 		revised: "23-11-2011"
 	explanation
@@ -340,6 +363,7 @@ end
 class_chart STUN_EFFECT
 	indexing
 		cluster: "EVENT";
+		author: "Jonas Breindahl";
 		created: "23-11-2011";
 		revised: "23-11-2011"
 	explanation
@@ -351,6 +375,7 @@ end
 class_chart WEB_EFFECT
 	indexing
 		cluster: "EVENT";
+		author: "Jonas Breindahl";
 		created: "23-11-2011";
 		revised: "23-11-2011"
 	explanation
@@ -362,6 +387,7 @@ end
 class_chart ABILITY
 	indexing
 		cluster: "EVENT";
+		author: "Jonas Breindahl";
 		created: "23-11-2011";
 		revised: "23-11-2011"
 	explanation
@@ -371,6 +397,7 @@ end
 class_chart EVENT
 	indexing
 		cluster: "EVENT";
+		author: "Jonas Breindahl";
 		created: "23-11-2011";
 		revised: "23-11-2011"
 	explanation
@@ -380,6 +407,7 @@ end
 class_chart TRIGGERED_EVENT
 	indexing
 		cluster: "EVENT";
+		author: "Jonas Breindahl";
 		created: "23-11-2011";
 		revised: "23-11-2011"
 	explanation
@@ -391,6 +419,7 @@ end
 class_chart PASSIVE_EVENT
 	indexing
 		cluster: "EVENT";
+		author: "Jonas Breindahl";
 		created: "23-11-2011";
 		revised: "23-11-2011"
 	explanation
@@ -402,6 +431,7 @@ end
 class_chart BOARD
 	indexing
 		cluster: "BOARD";
+		author: "Jonas Breindahl";
 		created: "23-11-2011";
 		revised: "23-11-2011"
 	explanation
@@ -417,6 +447,7 @@ end
 class_chart SQUARE
 	indexing
 		cluster: "BOARD";
+		author: "Jonas Breindahl";
 		created: "23-11-2011";
 		revised: "23-11-2011"
 	explanation
@@ -429,6 +460,7 @@ end
 class_chart TOWN
 	indexing
 		cluster: "BOARD";
+		author: "Jonas Breindahl";
 		created: "23-11-2011";
 		revised: "23-11-2011"
 	explanation
@@ -440,6 +472,7 @@ end
 class_chart MARKER
 	indexing
 		cluster: "MARKER";
+		author: "Jonas Breindahl";
 		created: "23-11-2011";
 		revised: "23-11-2011"
 	explanation
@@ -449,6 +482,7 @@ end
 class_chart MONEY_MARKER
 	indexing
 		cluster: "MARKER";
+		author: "Jonas Breindahl";
 		created: "23-11-2011";
 		revised: "23-11-2011"
 	explanation
@@ -460,6 +494,7 @@ end
 class_chart RUNE_KEY_MARKER
 	indexing
 		cluster: "MARKER";
+		author: "Jonas Breindahl";
 		created: "23-11-2011";
 		revised: "23-11-2011"
 	explanation
@@ -473,6 +508,7 @@ end
 class_chart TREASURE_CHEST_MARKER
 	indexing
 		cluster: "MARKER";
+		author: "Jonas Breindahl";
 		created: "23-11-2011";
 		revised: "23-11-2011"
 	explanation
@@ -491,6 +527,7 @@ end
 class_chart OBSTACLE_MARKER
 	indexing
 		cluster: "MARKER";
+		author: "Jonas Breindahl";
 		created: "23-11-2011";
 		revised: "23-11-2011"
 	explanation
