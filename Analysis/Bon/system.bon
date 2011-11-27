@@ -72,7 +72,8 @@ cluster_chart GUI
 		created: "27-11-2011";
 		revised: "27-11-2011"
 	class GUI description "The overall visual representation of the game board"
-	class GUIElement description "A visual element on the user interface"
+	class GUI_ELEMENT description "A visual element on the user interface"
+	class GUI_ELEMENT_FACTORY description "Responsible for creating hierarchies of GUIElements"
 end
 
 class_chart PLAYER
@@ -548,7 +549,7 @@ class_chart GUI
 		"Handle this mouse click!"
 end
 
-class_chart GUIElement
+class_chart GUI_ELEMENT
 	indexing
 		cluster: "GUI";
 		author: "Emil Juul Jacobsen";
@@ -557,9 +558,28 @@ class_chart GUIElement
 	explanation
 		"A single element of the user interface that, itself, can contain sub-elements"
 	query
-		"What is your position?"
-		"What is your dimensions?"
+		"What is your position?",
+		"What is your dimensions?",
 		"Is this point within your bondaries?"
 	command
-		"Handle this mouse click!"
+		"Handle this mouse click!",
+		"Add this GUI_ELEMENT to your collection of sub-elements!"
+	constraint
+		"The position must be within the window boundaries",
+		"The dimensions combined with the position must not go beyond the window boundaries",
+		"All sub-elements must be within the boundaries of this GUI_ELEMENT"
+end
+
+class_chart GUI_ELEMENT_FACTORY
+	indexing
+		cluster: "GUI";
+		author: "Emil Juul Jacobsen";
+		created: "27-11-2011";
+		revised: "27-11-2011";
+	explanation
+		"Responsible of making hierarchies of GUIElements mainly for the different states of the game"
+	command
+		"Create the GUI_ELEMENT for the visualization of the board!",
+		"Create the GUI_ELEMENT for this state and this perspective!",
+		"Create the GUI_ELEMENT of the menus, chat and player board for this perspective!"
 end
