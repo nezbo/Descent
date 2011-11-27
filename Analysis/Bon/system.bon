@@ -2,6 +2,7 @@ system_chart DESCENT
 	cluster PLAYER description "The actual player, and his/her role"
 	cluster EVENT description "Events, effects and abilities"
 	cluster BOARD description "The game board"
+	cluster GUI description "The visual representation of the game"
 end
 
 cluster_chart PLAYER
@@ -63,6 +64,16 @@ cluster_chart MARKER
 	class RUNE_KEY_MARKER description "A rune that will open a rune-door, that is either on the map, or aquired by the party"
 	class TREASURE_CHEST_MARKER description "A treasure chest, that can be placed on a board"
 	class OBSTACLE_MARKER description "Either rubble, water or pit, that can be on a square"
+end
+
+cluster_chart GUI
+	indexing
+		cluster: "GUI";
+		author: "Emil Juul Jacobsen";
+		created: "27-11-2011";
+		revised: "27-11-2011"
+	class GUI description "The overall visual representation of the game board"
+	class GUIElement description "A visual element on the user interface"
 end
 
 class_chart PLAYER
