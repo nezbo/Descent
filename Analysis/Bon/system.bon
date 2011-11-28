@@ -71,9 +71,10 @@ cluster_chart GUI
 	indexing
 		author: "Emil Juul Jacobsen";
 		created: "27-11-2011";
-		revised: "27-11-2011"
-	class GUI description "The overall visual representation of the game board"
-	class GUIElement description "A visual element on the user interface"
+		revised: "28-11-2011"
+	class GUI description "The overall visual representation of the game board",
+	class GUIElement description "A visual element on the user interface",
+	class CHAT description "The chat/log window for the game"
 end
 
 class_chart PLAYER
@@ -303,8 +304,14 @@ class_chart OVERLORD_CARD
 	explanation
 		"Cards that the overlord draws each turn"
 	query
-		"What ability do you have?"
+		"What is your name?",
+		"What is your description?",
+		"What abilities do you have?",
 		"Is this card legal to play now?"
+	command
+		"Your name is 'this'!",
+		"Your description is 'this'!",
+		"Add 'this' ability to the list of abilities!"
 end
 
 class_chart TRAP_CARD
@@ -420,9 +427,9 @@ class_chart ABILITY
 		cluster: "EVENT";
 		author: "Jonas Breindahl";
 		created: "23-11-2011";
-		revised: "23-11-2011"
+		revised: "27-11-2011"
 	explanation
-		"The abilities that a figure can have"
+		"An ability"
 end
 
 class_chart EVENT
@@ -594,3 +601,11 @@ class_chart GUIElement
 	command
 		"Handle this mouse click!"
 end
+
+class_chart CHAT
+	indexing
+	explanation
+	query
+	command
+end
+
