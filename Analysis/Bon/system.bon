@@ -8,10 +8,10 @@ end
 cluster_chart PLAYER
 	class PLAYER description "The actual player, playing the game"
 	class HERO_PARTY description "A party of heroes"
-	class HERO_PLAYER description "The role of a hero, that a player can have"
+	class HERO_PLAYER description "The role of a hero that a player can take"
 	cluster FIGURE description "A figure with basic stats"
-	class OVERLORD description "The role of a overlord, that a hero can be"
-	cluster OVERLORD_STUFF description "Stuff that is specifik for a overlord"
+	class OVERLORD description "The role of an overlord that a player can take"
+	cluster OVERLORD_STUFF description "Stuff that is specific for an overlord"
 end
 
 cluster_chart FIGURE
@@ -24,6 +24,7 @@ end
 
 cluster_chart HERO_STUFF
 	class SKILL description "The skill-cards of a hero"
+	class INVENTORY description "The inventory of a hero"
 	class EQUIPMENT description "Equipment can be worn by the hero"
 	class POTION description "A potion, that can either be on a square, or equipped on a Hero"
 	class TRAINING_TOKEN description "A token that give extra dice in a specific kind of attack"
@@ -76,6 +77,13 @@ cluster_chart GUI
 	class GUI_ELEMENT_FACTORY description "Responsible for creating hierarchies of GUIElements"
 end
 
+cluster_chart MESSAGING
+	class CONNECTION description "Keeps track of the players connection and provides low-level message sending over the network."
+	class CLIENT_CONNECTION description "A client connection"
+	class SERVER_CONNECTION description "A server connection"
+	class EVENT_MANAGER description "Responsible for parsing requests from the network and sending out events to the listeners."
+end
+
 class_chart PLAYER
 	indexing
 		cluster: "PLAYER";
@@ -85,8 +93,9 @@ class_chart PLAYER
 	explanation
 		"The actual player, playing the game"
 	query
-		"What is your connection?"
-		"What is your role?"
+		"What is your connection?",
+		"What is your role?",
+		"Are you client or server?"
 end
 
 class_chart HERO_PARTY
@@ -109,7 +118,7 @@ class_chart HERO_PARTY
 		"Remove 'this' number of conquest tokens from the pool of tokens!",
 		"Add 'this' number of conquest tokens to the pool of tokens!"
 	constraint
-		"A HeroParty must always have 1 to 4 players."
+		"A HeroParty must always have 2 to 4 players."
 end
 
 class_chart HERO_PLAYER
@@ -147,7 +156,7 @@ class_chart FIGURE
 		cluster: "FIGURE";
 		author: "Jonas Breindahl";
 		created: "21-11-2011";
-		revised: "21-11-2011";
+		revised: "27-11-2011";
 	explanation
 		"A figure with basic stats"
 	query
@@ -158,6 +167,8 @@ class_chart FIGURE
 		"What is your fatique right now?",
 		"What is your armor?",
 		"What is your speed?",
+		"How much speed do you have left?",
+		"How many attacks do you have left?",
 		"What dice do you use to attack?",
 		"What abilities do you have?",
 		"What effects are on you?"
@@ -165,7 +176,8 @@ class_chart FIGURE
 		"Set your health to 'this'!",
 		"Set your fatique to 'this'!"
 	constraint
-		"A Figure must always have more than 0 max health"
+		"A Figure must always have more than 0 max health",
+		"A Figure may never have more life than max life"
 end
 
 class_chart HERO 
@@ -173,15 +185,14 @@ class_chart HERO
 		cluster: "FIGURE";
 		author: "Jonas Breindahl";
 		created: "21-11-2011";
-		revised: "21-11-2011"
+		revised: "27-11-2011"
 	explanation 
 		"A hero, made from a hero-sheet"
 	query
 		"How many skills do you have in MELEE/RANGED/MAGIC?"
-		"May I have a list of all potions you have equipped?"
-		"May I have a list of everything you have equipped?"
-		"May I have a list of everything in your backpack?"
-		
+	constraint
+		"A Hero may only have 0 life when it is your turn",
+		"A Hero may never have more fatique than max fatique"	
 end
 
 -- THIS IS A BIT IFFY? IS IT A TOKEN OR A FIGURE?
@@ -204,14 +215,46 @@ class_chart SKILL
 		cluster: "HERO_STUFF";
 		author: "Jonas Breindahl";
 		created: "21-11-2011";
-		revised: "21-11-2011"
+		revised: "27-11-2011"
 	explanation
 		"The skill-cards of a hero"
 	query
+		"What type of skill are you?",
+		"What is your name?"
 		"Who owns you?"
 		"What are your abilities?"
 	command
 		"Add this ability to your list of ability?"
+	constraint
+		"A Skill must have atleast one ability",
+		"A Skill can be owned by at most one Hero",
+		"A Skill cannot have more than one type"
+end
+
+class_chart INVENTORY
+	indexing
+		cluster: "HERO_STUFF";
+		author: "Jonas Breindahl";
+		created: "27-11-2011";
+		revised: "27-11-2011";
+	explanation
+		"The inventory of a hero"
+	query
+		"How many hands do you have?",
+		"What weapons do you have in your hands?",
+		"What equipment do you have equipped?",
+		"What potions do you have equipped?",
+		"What equipment do you have in your backpack?",
+		"Is there more space in your backpack?"		
+	command
+		"Equip 'this' Equipment!",
+		"Remove 'this' Equipment!",
+		"Put this Equipment in your backpack!",
+		"Remove this Equipment from your backpack!"		
+	constraint
+		"An Inventory can only have 2 other items equipped",
+		"An Inventory can only have 3 potions equipped",
+		"An Inventory can only have weapons or shields in max the number of hands he has"
 end
 
 class_chart EQUIPMENT
@@ -223,16 +266,11 @@ class_chart EQUIPMENT
 	explanation
 		"Equipment can be worn by the hero"
 	query
+		"What is your name?",
 		"What type of equipment are you?",
-		"Who owns you?",
-		"Are you equipped?",
-		"Can you be used right now?",
 		"Can you be bought right now?",
 		"What is your price?",
 		"What are your abilities?"
-	command
-		"You are now equipped/not equipped!",
-		"You are owned by 'this'!"
 end
 
 class_chart TRAINING_TOKEN
@@ -582,4 +620,61 @@ class_chart GUI_ELEMENT_FACTORY
 		"Create the GUI_ELEMENT for the visualization of the board!",
 		"Create the GUI_ELEMENT for this state and this perspective!",
 		"Create the GUI_ELEMENT of the menus, chat and player board for this perspective!"
+end
+
+class_chart CONNECTION
+	indexing
+		cluster: "MESSAGING"
+		author: "Simon Westh Henriksen"
+		created: "28-11-2011"
+		revised: "28-11-2011"
+	explanation
+		"Contains the connection to the network. The connection can be either a TCP server or a TCP client. Can send and recieve text strings."
+	query
+		"Are you a server or a client?",
+		"Are you connected?"
+	command
+		"Send 'this' text string!"
+	constraint
+		"A connection is always either a server or a client."
+end
+
+class_chart CLIENT_CONNECTION
+	indexing
+		cluster: "MESSAGING"
+		author: "Simon Westh Henriksen"
+		created: "28-11-2011"
+		revised: "28-11-2011"
+	explanation
+		"A TCP client connected to the host server. When sending a message, it will send only to the server at the other end of the connection."
+	inherit
+		CONNECTION
+end
+
+class_chart SERVER_CONNECTION
+	indexing
+		cluster: "MESSAGING"
+		author: "Simon Westh Henriksen"
+		created: "28-11-2011"
+		revised: "28-11-2011"
+	explanation
+		"A TCP server that accepts client connections. Sends message to all the clients. This type of connection will broadcast received messages to everyone but the sender."
+	inherit
+		CONNECTION
+end
+
+class_chart EVENT_MANAGER
+	indexing
+		cluster: "MESSAGING"
+		author: "Simon Westh Henriksen"
+		created: "28-11-2011"
+		revised: "29-11-2011"
+	explanation
+		"Takes strings received from the network and fires the appropriate events. Can also convert an event to a text string and send it."
+	query
+	command
+		"Call 'this' method when 'this' event is fired!", -- This command exists for every type of event in our system.
+		"Parse 'this' text string and fire the appropriate event!", -- This also includes descion 
+		"Queue 'this' event!",
+		"Process your event queue!"
 end
