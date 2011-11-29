@@ -8,10 +8,10 @@ end
 cluster_chart PLAYER
 	class PLAYER description "The actual player, playing the game"
 	class HERO_PARTY description "A party of heroes"
-	class HERO_PLAYER description "The role of a hero, that a player can have"
+	class HERO_PLAYER description "The role of a hero that a player can take"
 	cluster FIGURE description "A figure with basic stats"
-	class OVERLORD description "The role of a overlord, that a hero can be"
-	cluster OVERLORD_STUFF description "Stuff that is specifik for a overlord"
+	class OVERLORD description "The role of an overlord that a player can take"
+	cluster OVERLORD_STUFF description "Stuff that is specific for an overlord"
 end
 
 cluster_chart FIGURE
@@ -74,6 +74,13 @@ cluster_chart GUI
 		revised: "27-11-2011"
 	class GUI description "The overall visual representation of the game board"
 	class GUIElement description "A visual element on the user interface"
+end
+
+cluster_chart MESSAGING
+	class CONNECTION description "Keeps track of the players connection and provides low-level message sending over the network."
+	class CLIENT_CONNECTION description "A client connection"
+	class SERVER_CONNECTION description "A server connection"
+	class EVENT_MANAGER description "Responsible for parsing requests from the network and sending out events to the listeners."
 end
 
 class_chart PLAYER
@@ -593,4 +600,61 @@ class_chart GUIElement
 		"Is this point within your bondaries?"
 	command
 		"Handle this mouse click!"
+end
+
+class_chart CONNECTION
+	indexing
+		cluster: "MESSAGING"
+		author: "Simon Westh Henriksen"
+		created: "28-11-2011"
+		revised: "28-11-2011"
+	explanation
+		"Contains the connection to the network. The connection can be either a TCP server or a TCP client. Can send and recieve text strings."
+	query
+		"Are you a server or a client?",
+		"Are you connected?"
+	command
+		"Send 'this' text string!"
+	constraint
+		"A connection is always either a server or a client."
+end
+
+class_chart CLIENT_CONNECTION
+	indexing
+		cluster: "MESSAGING"
+		author: "Simon Westh Henriksen"
+		created: "28-11-2011"
+		revised: "28-11-2011"
+	explanation
+		"A TCP client connected to the host server. When sending a message, it will send only to the server at the other end of the connection."
+	inherit
+		CONNECTION
+end
+
+class_chart SERVER_CONNECTION
+	indexing
+		cluster: "MESSAGING"
+		author: "Simon Westh Henriksen"
+		created: "28-11-2011"
+		revised: "28-11-2011"
+	explanation
+		"A TCP server that accepts client connections. Sends message to all the clients. This type of connection will broadcast received messages to everyone but the sender."
+	inherit
+		CONNECTION
+end
+
+class_chart EVENT_MANAGER
+	indexing
+		cluster: "MESSAGING"
+		author: "Simon Westh Henriksen"
+		created: "28-11-2011"
+		revised: "29-11-2011"
+	explanation
+		"Takes strings received from the network and fires the appropriate events. Can also convert an event to a text string and send it."
+	query
+	command
+		"Call 'this' method when 'this' event is fired!", -- This command exists for every type of event in our system.
+		"Parse 'this' text string and fire the appropriate event!", -- This also includes descion 
+		"Queue 'this' event!",
+		"Process your event queue!"
 end
