@@ -106,7 +106,10 @@ class_chart PLAYER
 	query
 		"What is your connection?",
 		"What is your role?",
-		"Are you client or server?"
+		"Are you client or server?",
+		"What is your unique player ID?"
+	command
+		"Your unique player ID is this!"
 end
 
 class_chart HERO_PARTY
@@ -167,6 +170,7 @@ class_chart FIGURE
 	explanation
 		"A figure with basic stats"
 	query
+		"What is your unique figure ID?",
 		"What is your name?",
 		"What is your max health?",
 		"What is your health right now?",
@@ -310,8 +314,14 @@ class_chart OVERLORD_CARD
 	explanation
 		"Cards that the overlord draws each turn"
 	query
-		"What ability do you have?",
+		"What is your name?",
+		"What is your description?",
+		"What abilities do you have?",
 		"Is this card legal to play now?"
+	command
+		"Your name is 'this'!",
+		"Your description is 'this'!",
+		"Add 'this' ability to the list of abilities!"
 end
 
 class_chart TRAP_CARD
@@ -417,9 +427,9 @@ class_chart ABILITY
 	indexing
 		author: "Jonas Breindahl";
 		created: "23-11-2011";
-		revised: "23-11-2011"
+		revised: "27-11-2011"
 	explanation
-		"The abilities that a figure can have"
+		"An ability"
 end
 
 class_chart EVENT
@@ -597,6 +607,15 @@ class_chart GUI_ELEMENT_FACTORY
 		"Create the GUI_ELEMENT of the menus, chat and player board for this perspective!"
 end
 
+<<<<<<< HEAD
+class_chart CHAT
+	indexing
+	explanation
+	query
+	command
+end
+
+=======
 class_chart CONNECTION
 	indexing
 		author: "Simon Westh Henriksen";
