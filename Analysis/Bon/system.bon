@@ -77,6 +77,7 @@ cluster_chart GUI_CLUSTER
 	class GUI description "The overall visual representation of the game board"
 	class GUI_ELEMENT description "A visual element on the user interface"
 	class GUI_ELEMENT_FACTORY description "Responsible for creating hierarchies of GUIElements"
+	class CHAT description "Lists chat messages and useful game events on the screen"
 end
 
 cluster_chart MESSAGING
@@ -579,7 +580,7 @@ class_chart GUI_ELEMENT
 	indexing
 		author: "Emil Juul Jacobsen";
 		created: "27-11-2011";
-		revised: "27-11-2011";
+		revised: "29-11-2011";
 	explanation
 		"A single element of the user interface that, itself, can contain sub-elements"
 	query
@@ -589,7 +590,8 @@ class_chart GUI_ELEMENT
 	command
 		"Handle this mouse click!",
 		"Do this when clicked",
-		"Add this GUI_ELEMENT to your collection of sub-elements!"
+		"Add this GUI_ELEMENT to your collection of sub-elements!",
+		"Draw yourself!"
 	constraint
 		"The position must be within the window boundaries",
 		"The dimensions combined with the position must not go beyond the window boundaries",
@@ -606,17 +608,26 @@ class_chart GUI_ELEMENT_FACTORY
 	command
 		"Create the GUI_ELEMENT for the visualization of the board!",
 		"Create the GUI_ELEMENT of the menus, chat and player board for this perspective!"
+	constraint
+		"The position of the root GUI_ELEMENTS must be 0,0",
+		"The width and height of the root GUI_ELEMENT must be the same as the game window"
 end
 
-<<<<<<< HEAD
 class_chart CHAT
+	inherit
+		GUI_ELEMENT
 	indexing
+		author: "Emil Juul Jacobsen";
+		created: "29-11-2011";
+		revised: "29-11-2011";
 	explanation
-	query
+		"Handles messages and important game events for presentation on the screen"
 	command
+		"Here is a new message!"
+	constraint
+		"The message should not be empty"
 end
 
-=======
 class_chart CONNECTION
 	indexing
 		author: "Simon Westh Henriksen";
