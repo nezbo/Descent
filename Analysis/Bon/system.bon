@@ -561,7 +561,8 @@ class_chart GUI
 	explanation
 		"Handles the visual aspects of the game and input from the user"
 	command
-		"Handle this mouse click!"
+		"Handle this mouse click!",
+		"Draw everything!"
 end
 
 class_chart GUI_ELEMENT
@@ -577,6 +578,7 @@ class_chart GUI_ELEMENT
 		"Is this point within your bondaries?"
 	command
 		"Handle this mouse click!",
+		"Do this when clicked",
 		"Add this GUI_ELEMENT to your collection of sub-elements!"
 	constraint
 		"The position must be within the window boundaries",
@@ -588,12 +590,11 @@ class_chart GUI_ELEMENT_FACTORY
 	indexing
 		author: "Emil Juul Jacobsen";
 		created: "27-11-2011";
-		revised: "27-11-2011";
+		revised: "29-11-2011";
 	explanation
-		"Responsible of making hierarchies of GUIElements mainly for the different states of the game"
+		"Responsible of making hierarchies of GUIElements for two of the layers"
 	command
 		"Create the GUI_ELEMENT for the visualization of the board!",
-		"Create the GUI_ELEMENT for this state and this perspective!",
 		"Create the GUI_ELEMENT of the menus, chat and player board for this perspective!"
 end
 
