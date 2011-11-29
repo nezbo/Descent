@@ -1,25 +1,27 @@
 system_chart DESCENT
-	cluster PLAYER description "The actual player, and his/her role"
-	cluster EVENT description "Events, effects and abilities"
-	cluster BOARD description "The game board"
-	cluster GUI description "The visual representation of the game"
+	cluster PLAYER_CLUSTER description "The actual player, and his/her role"
+	cluster EVENT_CLUSTER description "Events, effects and abilities"
+	cluster BOARD_CLUSTER description "The game board"
+	cluster GUI_CLUSTER description "The visual representation of the game"
+	cluster MESSAGING description "TODO: Write description"
+	cluster STATE_STUFF description "States, state machine and related stuff"
 end
 
-cluster_chart PLAYER
+cluster_chart PLAYER_CLUSTER
 	class PLAYER description "The actual player, playing the game"
 	class HERO_PARTY description "A party of heroes"
-	class HERO_PLAYER description "The role of a hero, that a player can have"
-	cluster FIGURE description "A figure with basic stats"
-	class OVERLORD description "The role of a overlord, that a hero can be"
-	cluster OVERLORD_STUFF description "Stuff that is specifik for a overlord"
+	class HERO_PLAYER description "The role of a hero that a player can take"
+	class OVERLORD description "The role of an overlord that a player can take"
+	cluster FIGURE_CLUSTER description "A figure with basic stats"
+	cluster OVERLORD_STUFF description "Stuff that is specific for an overlord"
 end
 
-cluster_chart FIGURE
+cluster_chart FIGURE_CLUSTER
 	class FIGURE description "A figure with basic stats"
 	class HERO description "A hero, made from a herosheet"
-	cluster HERO_STUFF description "Everything that is specific to a hero"
 	class PET description "A pet that a HeroPlayer can control"
 	class MONSTER description "A monster, controlled by  the overlord"
+	cluster HERO_STUFF description "Everything that is specific to a hero"
 end
 
 cluster_chart HERO_STUFF
@@ -39,7 +41,7 @@ cluster_chart OVERLORD_STUFF
 end
 
 -- HOW TO DO/DESCRIBE EVENTS AND ABILITIES??!
-cluster_chart EVENT
+cluster_chart EVENT_CLUSTER
 	class EFFECT description "An Effect that can be on an figure"
 	class POISON_EFFECT description "A poison Effect, that has to be healed through"
 	class BURN_EFFECT description "A burn Effect that damages a figure"
@@ -51,14 +53,14 @@ cluster_chart EVENT
 	class PASSIVE_EVENT description "An Event that is always on"
 end
 
-cluster_chart BOARD
+cluster_chart BOARD_CLUSTER
 	class BOARD description "The entire gameboard, made up of pieces"
 	class SQUARE description "A single square of the board"
 	class TOWN description "When in town the players can buy, they also go there when they die"
-	cluster MARKER description "Something that can be on a square that is not a figure"
+	cluster MARKER_CLUSTER description "Something that can be on a square that is not a figure"
 end
 
-cluster_chart MARKER
+cluster_chart MARKER_CLUSTER
 	class MARKER description "Something that can be on a square that is not a figure"
 	class GLYPH_MARKER description "Allows heroes to teleport to other glyphs or town"
 	class MONEY_MARKER description "A gold marker, that can be on a square"
@@ -67,19 +69,35 @@ cluster_chart MARKER
 	class OBSTACLE_MARKER description "Either rubble, water or pit, that can be on a square"
 end
 
-cluster_chart GUI
+cluster_chart GUI_CLUSTER
 	indexing
 		author: "Emil Juul Jacobsen";
 		created: "27-11-2011";
-		revised: "28-11-2011"
-	class GUI description "The overall visual representation of the game board",
-	class GUIElement description "A visual element on the user interface",
-	class CHAT description "The chat/log window for the game"
+		revised: "27-11-2011"
+	class GUI description "The overall visual representation of the game board"
+	class GUI_ELEMENT description "A visual element on the user interface"
+	class GUI_ELEMENT_FACTORY description "Responsible for creating hierarchies of GUIElements"
+end
+
+cluster_chart MESSAGING
+	class CONNECTION description "Keeps track of the players connection and provides low-level message sending over the network."
+	class CLIENT_CONNECTION description "A client connection"
+	class SERVER_CONNECTION description "A server connection"
+	class EVENT_MANAGER description "Responsible for parsing requests from the network and sending out events to the listeners."
+end
+
+cluster_chart STATE_STUFF
+	indexing
+		author: "Martin Marcher";
+	explanation
+		"All classes related to state, such as state machine and the state class."
+	class STATE_MACHINE description "The handler of all states."
+	class STATE description "Overall state abstraction"
+	class STATE_GROUP description "A group of states."
 end
 
 class_chart PLAYER
 	indexing
-		cluster: "PLAYER";
 		author: "Jonas Breindahl";
 		created: "21-11-2011";
 		revised: "21-11-2011"
@@ -96,7 +114,6 @@ end
 
 class_chart HERO_PARTY
 	indexing
-		cluster: "PLAYER";
 		author: "Jonas Breindahl";
 		created: "21-11-2011";
 		revised: "21-11-2011"
@@ -119,7 +136,6 @@ end
 
 class_chart HERO_PLAYER
 	indexing
-		cluster: "PLAYER";
 		author: "Jonas Breindahl";
 		created: "21-11-2011";
 		revised: "21-11-2011"
@@ -131,7 +147,6 @@ end
 
 class_chart OVERLORD
 	indexing
-		cluster: "PLAYER";
 		author: "Jonas Breindahl";
 		created: "21-11-2011";
 		revised: "21-11-2011"
@@ -149,7 +164,6 @@ end
 
 class_chart FIGURE
 	indexing
-		cluster: "FIGURE";
 		author: "Jonas Breindahl";
 		created: "21-11-2011";
 		revised: "27-11-2011";
@@ -179,7 +193,6 @@ end
 
 class_chart HERO 
 	indexing
-		cluster: "FIGURE";
 		author: "Jonas Breindahl";
 		created: "21-11-2011";
 		revised: "27-11-2011"
@@ -195,7 +208,6 @@ end
 -- THIS IS A BIT IFFY? IS IT A TOKEN OR A FIGURE?
 class_chart PET 
 	indexing
-		cluster: "FIGURE";
 		author: "Jonas Breindahl";
 		created: "21-11-2011";
 		revised: "21-11-2011"
@@ -209,7 +221,6 @@ end
 
 class_chart SKILL
 	indexing
-		cluster: "HERO_STUFF";
 		author: "Jonas Breindahl";
 		created: "21-11-2011";
 		revised: "27-11-2011"
@@ -217,8 +228,8 @@ class_chart SKILL
 		"The skill-cards of a hero"
 	query
 		"What type of skill are you?",
-		"What is your name?"
-		"Who owns you?"
+		"What is your name?",
+		"Who owns you?",
 		"What are your abilities?"
 	command
 		"Add this ability to your list of ability?"
@@ -230,7 +241,6 @@ end
 
 class_chart INVENTORY
 	indexing
-		cluster: "HERO_STUFF";
 		author: "Jonas Breindahl";
 		created: "27-11-2011";
 		revised: "27-11-2011";
@@ -256,7 +266,6 @@ end
 
 class_chart EQUIPMENT
 	indexing
-		cluster: "HERO_STUFF";
 		author: "Jonas Breindahl";
 		created: "21-11-2011";
 		revised: "21-11-2011"
@@ -272,7 +281,6 @@ end
 
 class_chart TRAINING_TOKEN
 	indexing
-		cluster: "HERO_STUFF";
 		author: "Jonas Breindahl";
 		created: "21-11-2011";
 		revised: "21-11-2011"
@@ -286,7 +294,6 @@ end
 
 class_chart POTION
 	indexing
-		cluster: "HERO_STUFF";
 		author: "Jonas Breindahl";
 		created: "21-11-2011";
 		revised: "21-11-2011"
@@ -295,13 +302,12 @@ class_chart POTION
 	inherit
 		EQUIPMENT
 	query
-		"What kind of potion are you?"
+		"What kind of potion are you?",
 		"What power do you grant?"
 end
 
 class_chart OVERLORD_CARD
 	indexing
-		cluster: "OVERLORD_STUFF";
 		author: "Jonas Breindahl";
 		created: "21-11-2011";
 		revised: "21-11-2011"
@@ -320,7 +326,6 @@ end
 
 class_chart TRAP_CARD
 	indexing
-		cluster: "OVERLORD_STUFF";
 		author: "Jonas Breindahl";
 		created: "21-11-2011";
 		revised: "21-11-2011"
@@ -332,7 +337,6 @@ end
 
 class_chart POWER_CARD
 	indexing
-		cluster: "OVERLORD_STUFF";
 		author: "Jonas Breindahl";
 		created: "21-11-2011";
 		revised: "21-11-2011"
@@ -344,7 +348,6 @@ end
 
 class_chart EVENT_CARD
 	indexing
-		cluster: "OVERLORD_STUFF";
 		author: "Jonas Breindahl";
 		created: "21-11-2011";
 		revised: "21-11-2011"
@@ -356,7 +359,6 @@ end
 
 class_chart SPAWN_CARD
 	indexing
-		cluster: "OVERLORD_STUFF";
 		author: "Jonas Breindahl";
 		created: "21-11-2011";
 		revised: "21-11-2011"
@@ -370,7 +372,6 @@ end
 
 class_chart EFFECT
 	indexing
-		cluster: "EVENT";
 		author: "Jonas Breindahl";
 		created: "23-11-2011";
 		revised: "23-11-2011"
@@ -380,7 +381,6 @@ end
 
 class_chart POISON_EFFECT
 	indexing
-		cluster: "EVENT";
 		author: "Jonas Breindahl";
 		created: "23-11-2011";
 		revised: "23-11-2011"
@@ -392,7 +392,6 @@ end
 
 class_chart BURN_EFFECT
 	indexing
-		cluster: "EVENT";
 		author: "Jonas Breindahl";
 		created: "23-11-2011";
 		revised: "23-11-2011"
@@ -404,7 +403,6 @@ end
 
 class_chart STUN_EFFECT
 	indexing
-		cluster: "EVENT";
 		author: "Jonas Breindahl";
 		created: "23-11-2011";
 		revised: "23-11-2011"
@@ -416,7 +414,6 @@ end
 
 class_chart WEB_EFFECT
 	indexing
-		cluster: "EVENT";
 		author: "Jonas Breindahl";
 		created: "23-11-2011";
 		revised: "23-11-2011"
@@ -428,7 +425,6 @@ end
 
 class_chart ABILITY
 	indexing
-		cluster: "EVENT";
 		author: "Jonas Breindahl";
 		created: "23-11-2011";
 		revised: "27-11-2011"
@@ -438,7 +434,6 @@ end
 
 class_chart EVENT
 	indexing
-		cluster: "EVENT";
 		author: "Jonas Breindahl";
 		created: "23-11-2011";
 		revised: "23-11-2011"
@@ -448,7 +443,6 @@ end
 
 class_chart TRIGGERED_EVENT
 	indexing
-		cluster: "EVENT";
 		author: "Jonas Breindahl";
 		created: "23-11-2011";
 		revised: "23-11-2011"
@@ -460,7 +454,6 @@ end
 
 class_chart PASSIVE_EVENT
 	indexing
-		cluster: "EVENT";
 		author: "Jonas Breindahl";
 		created: "23-11-2011";
 		revised: "23-11-2011"
@@ -472,36 +465,33 @@ end
 
 class_chart BOARD
 	indexing
-		cluster: "BOARD";
 		author: "Jonas Breindahl";
 		created: "23-11-2011";
 		revised: "23-11-2011"
 	explanation
 		"The entire gameboard, made up of pieces"
 	query
-		"Is this square pass-/moveable?"
-		"Can the overlord spawn here?"
-		"Is there line of sight from 'here' to 'there'?"
-		"Is there line of sight from 'here' to 'there', not included monsters?"
+		"Is this square pass-/moveable?",
+		"Can the overlord spawn here?",
+		"Is there line of sight from 'here' to 'there'?",
+		"Is there line of sight from 'here' to 'there', not included monsters?",
 		"Is this space visible by the players?"
 end
 
 class_chart SQUARE
 	indexing
-		cluster: "BOARD";
 		author: "Jonas Breindahl";
 		created: "23-11-2011";
 		revised: "23-11-2011"
 	explanation
 		"A single square of the board"
 	query
-		"What marker is on this square?"
+		"What marker is on this square?",
 		"What figure is on this square?"
 end
 
 class_chart TOWN
 	indexing
-		cluster: "BOARD";
 		author: "Jonas Breindahl";
 		created: "23-11-2011";
 		revised: "23-11-2011"
@@ -513,7 +503,6 @@ end
 
 class_chart MARKER
 	indexing
-		cluster: "MARKER";
 		author: "Jonas Breindahl";
 		created: "23-11-2011";
 		revised: "23-11-2011"
@@ -523,7 +512,6 @@ end
 
 class_chart MONEY_MARKER
 	indexing
-		cluster: "MARKER";
 		author: "Jonas Breindahl";
 		created: "23-11-2011";
 		revised: "23-11-2011"
@@ -535,7 +523,6 @@ end
 
 class_chart RUNE_KEY_MARKER
 	indexing
-		cluster: "MARKER";
 		author: "Jonas Breindahl";
 		created: "23-11-2011";
 		revised: "23-11-2011"
@@ -549,7 +536,6 @@ end
 
 class_chart TREASURE_CHEST_MARKER
 	indexing
-		cluster: "MARKER";
 		author: "Jonas Breindahl";
 		created: "23-11-2011";
 		revised: "23-11-2011"
@@ -558,17 +544,16 @@ class_chart TREASURE_CHEST_MARKER
 	inherit
 		MARKER
 	query
-		"What kind of treasure do you have?"
-		"How many treasures do you have?"
-		"How much gold do you have?"
-		"How many conquest tokens do you have?"
+		"What kind of treasure do you have?",
+		"How many treasures do you have?",
+		"How much gold do you have?",
+		"How many conquest tokens do you have?",
 		"How many curses do you have?"
 		
 end
 
 class_chart OBSTACLE_MARKER
 	indexing
-		cluster: "MARKER";
 		author: "Jonas Breindahl";
 		created: "23-11-2011";
 		revised: "23-11-2011"
@@ -580,7 +565,6 @@ end
 
 class_chart GUI
 	indexing
-		cluster: "GUI";
 		author: "Emil Juul Jacobsen";
 		created: "27-11-2011";
 		revised: "27-11-2011"
@@ -590,22 +574,40 @@ class_chart GUI
 		"Handle this mouse click!"
 end
 
-class_chart GUIElement
+class_chart GUI_ELEMENT
 	indexing
-		cluster: "GUI";
 		author: "Emil Juul Jacobsen";
 		created: "27-11-2011";
 		revised: "27-11-2011";
 	explanation
 		"A single element of the user interface that, itself, can contain sub-elements"
 	query
-		"What is your position?"
-		"What is your dimensions?"
+		"What is your position?",
+		"What is your dimensions?",
 		"Is this point within your bondaries?"
 	command
-		"Handle this mouse click!"
+		"Handle this mouse click!",
+		"Add this GUI_ELEMENT to your collection of sub-elements!"
+	constraint
+		"The position must be within the window boundaries",
+		"The dimensions combined with the position must not go beyond the window boundaries",
+		"All sub-elements must be within the boundaries of this GUI_ELEMENT"
 end
 
+class_chart GUI_ELEMENT_FACTORY
+	indexing
+		author: "Emil Juul Jacobsen";
+		created: "27-11-2011";
+		revised: "27-11-2011";
+	explanation
+		"Responsible of making hierarchies of GUIElements mainly for the different states of the game"
+	command
+		"Create the GUI_ELEMENT for the visualization of the board!",
+		"Create the GUI_ELEMENT for this state and this perspective!",
+		"Create the GUI_ELEMENT of the menus, chat and player board for this perspective!"
+end
+
+<<<<<<< HEAD
 class_chart CHAT
 	indexing
 	explanation
@@ -613,3 +615,101 @@ class_chart CHAT
 	command
 end
 
+=======
+class_chart CONNECTION
+	indexing
+		author: "Simon Westh Henriksen";
+		created: "28-11-2011";
+		revised: "28-11-2011";
+	explanation
+		"Contains the connection to the network. The connection can be either a TCP server or a TCP client. Can send and recieve text strings."
+	query
+		"Are you a server or a client?",
+		"Are you connected?"
+	command
+		"Send 'this' text string!"
+	constraint
+		"A connection is always either a server or a client."
+end
+
+class_chart CLIENT_CONNECTION
+	indexing
+		author: "Simon Westh Henriksen";
+		created: "28-11-2011";
+		revised: "28-11-2011";
+	explanation
+		"A TCP client connected to the host server. When sending a message, it will send only to the server at the other end of the connection."
+	inherit
+		CONNECTION
+end
+
+class_chart SERVER_CONNECTION
+	indexing
+		author: "Simon Westh Henriksen";
+		created: "28-11-2011";
+		revised: "28-11-2011";
+	explanation
+		"A TCP server that accepts client connections. Sends message to all the clients. This type of connection will broadcast received messages to everyone but the sender."
+	inherit
+		CONNECTION
+end
+
+class_chart EVENT_MANAGER
+	indexing
+		author: "Simon Westh Henriksen";
+		created: "28-11-2011";
+		revised: "29-11-2011";
+	explanation
+		"Takes strings received from the network and fires the appropriate events. Can also convert an event to a text string and send it."
+	command
+		"Call 'this' method when 'this' event is fired!", -- This command exists for every type of event in our system.
+		"Parse 'this' text string and fire the appropriate event!", -- This also includes descion 
+		"Queue 'this' event!",
+		"Process your event queue!"
+end
+
+class_chart STATE_MACHINE
+	indexing
+		author: "Martin Marcher";
+	explanation
+		"The handler of all states. Knows about the current state and what to do next."
+	query
+		"What is the current state?",
+		"What was the previous 'n' states?",
+		"What are the next possible	 state(s)?"
+	command
+		"Change to this state!",
+		"Notify me when you get to this state!",
+		"Place this state before the current state!"
+	constraint
+		"After game initiation, there must always be a current state",
+		"You can only go from 'current state' to a state part of 'current state's next possible states."
+end
+
+class_chart STATE
+	indexing
+		author: "Martin Marcher";
+	explanation
+		""
+	query
+		"Is this state done?",
+		"What was the previous state?",
+		"What are the next possible state(s)?"
+	command
+		"This is the state machine! (you'll need it!)",
+		"This state is done!",
+		"The previous state was 'this'!",
+		"The next state must be 'this'!"
+	constraint
+		"A state must have a least one next possible state."
+end
+
+class_chart STATE_GROUP
+	indexing
+		author: "Martin Marcher";
+	explanation
+		""
+	inherit STATE
+	query
+		"Which states do you hold?"
+end
