@@ -88,7 +88,10 @@ class_chart PLAYER
 	query
 		"What is your connection?",
 		"What is your role?",
-		"Are you client or server?"
+		"Are you client or server?",
+		"What is your unique player ID?"
+	command
+		"Your unique player ID is this!"
 end
 
 class_chart HERO_PARTY
@@ -153,6 +156,7 @@ class_chart FIGURE
 	explanation
 		"A figure with basic stats"
 	query
+		"What is your unique figure ID?",
 		"What is your name?",
 		"What is your max health?",
 		"What is your health right now?",
