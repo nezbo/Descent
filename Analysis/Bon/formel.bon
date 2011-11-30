@@ -4,7 +4,7 @@ component
 		feature
 			numberOfHeroes: INTEGER -- How many players are in the HeroParty?
 				ensure
-					Result >= 2 && Result <= 4;
+					Result >= 2 and Result <= 4;
 			end
 			numberOfHeroesYetToAct: INTEGER -- How many players have yet to take their turn?
 				ensure
@@ -17,17 +17,16 @@ component
 					hero /= Void
 			end
 			conquestTokens: INTEGER -- How many conquest tokens do the players have?
-			end
 			isConquestPoolEmpty: BOOLEAN -- How many conquest tokens do the players have?
 				ensure
-					Result && conquestTokens = 0;
+					Result -> conquestTokens = 0;
 			end
 			heroHasActed: Void -- Remove 'this' player from the list of players yet to act!
 				-> hero: Hero
 				require
 					hero /= Void;
 				ensure
-					old !hasHeroActed -> hasHeroActedYet = true;
+					old not hasHeroActed -> hasHeroActedYet = true;
 					numberOfHeroesYetToAct + 1 = old numberOfHeroesYetToAct;
 			end
 			resetYetToAct: Void -- Reset list of Hero yet to act!
@@ -51,8 +50,7 @@ component
 					conquestTokens = old conquestTokens + tokens;
 			end
 		invariant
-			numberOfHeroes >= 2 && numberOfHeroes <= 4;
-		end
+			numberOfHeroes >= 2 and numberOfHeroes <= 4;
 	end
 	
 	class OVERLORD -- The role of a overlord, that a hero can be
@@ -66,7 +64,7 @@ component
 			overlordCardsInDeck: INTEGER -- How many cards are in your overlord deck?
 			overlordCardsInDiscard: INTEGER -- How many cards are in your overlord discard?
 			drawOverlordCards: Void -- Draw 'this' many cards!
-				-> INTEGER: cards
+				-> cards: INTERGER
 				require
 					cards > 0;
 				ensure
@@ -82,6 +80,46 @@ component
 		invariant
 			-- When it is not the overlords turn, the overlord cannot have more than 7 cards in hand.
 			true;
+	end	
+end
+static_diagram FORMAL_STATE_STUFF
+component
+	class STATE_MANAGER
+		indexing 
+			author: "Martin Marcher";
+		feature
+			GetInstance: STATE_MANAGER -- Can I have the unique object of this class?
+			CurrentState: STATE -- What is the current state?
+			PreviousStates: SEQUENCE[STATE] -- What was the previous 'n' states?
+				-> count: INTEGER
+				require
+					count > 0;
+				ensure
+					Result.length = count;
+			end
+			NextPossibleStates: SEQUENCE[STATE] -- What are the next possible states?
 	end
-			
-end			
+	class STATE_MACHINE
+		indexing
+			author: "Martin Marcher";
+		feature
+			CurrentState: STATE -- What is the current state?
+			NextState: STATE -- What is the next state?
+			PreviousStates: SEQUENCE[STATE] -- What was the previous 'n' states?
+				-> count: INTEGER
+				require
+					count > 0;
+				ensure
+					Result.length = count;
+			end
+			ChangeToNextState: Void -- Change to next state!
+			PlaceStates: Void -- Place these states after the current state
+				-> states: SEQUENCE[STATE]
+				ensure
+					NextState = states.First;
+			end
+			invariant
+				CurrentState /= Void;
+				NextState /= Void;
+	end
+end
