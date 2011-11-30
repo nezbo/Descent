@@ -700,7 +700,7 @@ class_chart STATE_MANAGER
 		"Can I have the unique object of this class?",
 		"What is the current state?",
 		"What was the previous 'n' states?",
-		"What are the next possible	state(s)?"
+		"What are the next possible state(s)?"
 	command
 		""
 	constraint
