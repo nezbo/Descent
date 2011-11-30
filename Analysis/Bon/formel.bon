@@ -83,5 +83,70 @@ component
 			-- When it is not the overlords turn, the overlord cannot have more than 7 cards in hand.
 			true;
 	end
-			
+	
+	class FIGURE
+		feature
+			uniqueID: INTEGER -- What is your unique figure ID?
+			name: STRING -- What is your name?
+			maxHealth: INTEGER -- What is your max health?
+			health: INTEGER -- What is your health right now?
+			armor: INTEGER -- What is your armor?
+			speed: INTEGER -- What is your speed?
+			speedLeft: INTEGER -- How much speed do you have left?
+			attacksLeft: INTEGER -- How many attacks do you have left?
+			diceForAttacks: SEQUENCE[DICE] -- What dice do you use to attack?
+			abilities: SEQUENCE[ABILITY] -- What abilities do you have?
+			effects: SEQUENCE[EFFECT] -- What effect are on you?
+			addHealth: Void -- Add 'this' amount of health!
+				-> INTEGER: healthAmount
+				require
+					healthAmount > 0;
+				ensure
+					old health + healthAmount > maxHealth -> health = maxHealth;
+					old health + healthAmount <= maxHealth -> health = old health + healthAmount;
+			end
+			removeHealth: Void -- Lose 'this' amount of health!
+				-> INTEGER: healthAmount
+				require
+					healthAmount > 0;
+				ensure
+					old health - healthAmount < 0 -> health = 0;
+					old health - healthAmount >= 0 -> health = old health - healthAmount;
+			end
+		invariant
+			name.length > 0;
+			maxHealth > 0;
+			speed > 0;
+			armor >= 0;
+	end
+	
+	class HERO
+		feature
+			maxFatique: INTEGER -- What is your max fatique?
+			fatique: INTEGER -- What is your fatique right now?
+			numberOfSkills: INTEGER -- How many skills do you have in MELEE/RANGED/MAGIC?
+				-> ATTACK_TYPE: type
+				require
+					type /= Void;
+			end
+			addFatique: Void -- Add 'this' amount of fatique!
+				-> INTEGER: fatiqueAmount
+				require
+					fatiqueAmount > 0;
+				ensure
+					old fatique + fatiqueAmount > maxFatique -> fatique = maxFatique;
+					old fatique + fatiqueAmount <= maxFatique -> fatique = old fatique + fatiqueAmount;
+			end
+			removeFatique: Void -- Lose 'this' amount of fatique!
+				-> INTEGER: fatiqueAmount
+				require
+					fatiqueAmount > 0;
+				ensure
+					old fatique + fatiqueAmount < 0 -> fatique = 0;
+					old fatique + fatiqueAmount >= 0 -> fatique = old fatique + fatiqueAmount;
+			end
+		invariant
+			fatique <= maxFatique;
+			fatique > 0;
+	end
 end			
