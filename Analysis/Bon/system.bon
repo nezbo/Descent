@@ -731,3 +731,4 @@ class_chart STATE_GROUP
 	query
 		"Which states do you hold?"
 end
+
