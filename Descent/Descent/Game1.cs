@@ -101,7 +101,7 @@ namespace XNATutorials
                         board[int.Parse(data[1]), int.Parse(data[2])] = sf.GetSprite(data[3]);
                         break;
                     case "portal":
-                        board[int.Parse(data[1]), int.Parse(data[2])] = sf.GetSprite("portal");
+                        board[int.Parse(data[1]), int.Parse(data[2])] = sf.GetSprite("portal-" + data[3]);
                         break;
                     case "treasure":
                         board[int.Parse(data[1]), int.Parse(data[2])] = sf.GetSprite("treasure-" + data[3]);
