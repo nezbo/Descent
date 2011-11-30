@@ -73,7 +73,8 @@ cluster_chart GUI_CLUSTER
 	indexing
 		author: "Emil Juul Jacobsen";
 		created: "27-11-2011";
-		revised: "27-11-2011"
+		revised: "30-11-2011"
+	class DRAWABLE description "Something that should be able to get drawn"
 	class GUI description "The overall visual representation of the game board"
 	class GUI_ELEMENT description "A visual element on the user interface"
 	class GUI_ELEMENT_FACTORY description "Responsible for creating hierarchies of GUIElements"
@@ -608,6 +609,17 @@ class_chart GUI_ELEMENT
 		"All sub-elements must be within the boundaries of this GUI_ELEMENT"
 end
 
+class_chart DRAWABLE
+	indexing
+		author: "Emil Juul Jacobsen";
+		created: "30-11-2011";
+		revised: "30-11-2011";
+	explanation
+		"Something that should be able to be drawn on the screen"
+	query
+		"What do you look like?"
+end
+
 class_chart GUI_ELEMENT_FACTORY
 	indexing
 		author: "Emil Juul Jacobsen";
@@ -734,3 +746,4 @@ class_chart STATE
 	query
 		"Can I have this state?"
 end
+
