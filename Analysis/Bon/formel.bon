@@ -1,6 +1,29 @@
 static_diagram FORMEL_PLAYER
 component
+	class PLAYER -- The actual player, playing the game
+		indexing
+			author: "Jonas Breindahl";
+			created: "30-11-2011";
+			revised: "30-11-2011";
+		feature
+			connection: Connection -- What is your connection?
+			isOverlord: BOOLEAN -- What is your role?
+			isServer: BOOLEAN -- Are you client or server?
+			uniqueID: INTEGER -- What is your unique player ID?
+			setUniqueID: Void -- Your unique player ID is this!
+				-> id: INTEGER
+				ensure
+					uniqueID = id;
+			end
+		invariant
+			getConnection =/ Void;
+	end
+			
 	class HERO_PARTY -- A party of heroes
+		indexing
+			author: "Jonas Breindahl";
+			created: "28-11-2011";
+			revised: "30-11-2011";
 		feature
 			numberOfHeroes: INTEGER -- How many players are in the HeroParty?
 				ensure
@@ -53,7 +76,18 @@ component
 			numberOfHeroes >= 2 and numberOfHeroes <= 4;
 	end
 	
+	class HERO_PLAYER
+		indexing
+			author: "Jonas Breindahl";
+		feature
+			hero: HERO -- What hero are you playing?
+	end
+	
 	class OVERLORD -- The role of a overlord, that a hero can be
+		indexing
+			author: "Jonas Breindahl";
+			created: "28-11-2011";
+			revised: "30-11-2011";
 		feature
 			numberOfOverlordCardsInHand: INTEGER -- The role of a overlord, that a hero can be
 			threatTokens: INTEGER -- How many threat tokens do you have?
@@ -83,6 +117,10 @@ component
 	end	
 	
 	class FIGURE
+		indexing
+			author: "Jonas Breindahl";
+			created: "28-11-2011";
+			revised: "30-11-2011";
 		feature
 			uniqueID: INTEGER -- What is your unique figure ID?
 			name: STRING -- What is your name?
@@ -119,6 +157,10 @@ component
 	end
 	
 	class HERO
+		indexing
+			author: "Jonas Breindahl";
+			created: "30-11-2011";
+			revised: "30-11-2011";
 		feature
 			maxFatique: INTEGER -- What is your max fatique?
 			fatique: INTEGER -- What is your fatique right now?
@@ -148,6 +190,220 @@ component
 			fatique > 0;
 	end
 end
+
+static_diagram FORMAL_HERO_STUFF
+component
+	class SKILL -- The skill-cards of a hero
+		indexing
+			author: "Jonas Breindahl";
+			created: "30-11-2011";
+			revised: "30-11-2011";
+		feature
+			skillType: ATTACK_TYPE -- What type of skill are you?
+			name: STRING -- What is your name?
+			abilities: SEQUENCE[ABILITY] -- What are your abilities?
+			addAbility: Void -- Add this ability to your list of ability?
+				-> ability: ABILITY
+				require
+					ability =/ Void;
+				ensure
+					abilities.length = old abilities.length + 1;
+			end
+		invariant
+			abilities.length > 0;
+			-- A Skill cannot have more than one type
+	end
+	
+	class INVENTORY
+		indexing
+			author: "Jonas Breindahl";
+			created: "30-11-2011";
+			revised: "30-11-2011";
+		feature
+			maxHands: INTEGER -- How many hands do you have?
+			weaponsEquipped: SEQUENCE[EQUIPMENT] -- What weapons do you have in your hands?
+			armorEquipped: EQUIPMENT -- What armor do you have equipped?
+			otherItemsEquipped: SEQUENCE[EQUIPMENT] -- What other items do you have equipped?
+			potionsEquipped: SEQUENCE[EQUIPMENT] -- What potions do you have equipped?
+			equipmentInBackpack: SEQUENCE[EQUIPMENT] -- What equipment do you have in your backpack?
+			spaceInBackPack: INTEGER -- Is there more space in your backpack?
+				ensure
+					Result = 3 - equipmentInBackpack.length;
+			end
+			equipWeapon: Void -- Equip 'this' Equipment!
+				-> weapon: EQUIPMENT
+				require
+					weaponsEquipped.length < maxHands;
+				ensure
+					weaponsEquipped.length = old weaponsEquipped.length + 1;
+			end
+			equipArmor: Void -- Equip 'this' armor!
+				-> armor: EQUIPMENT
+				require
+					armor = Void;
+				ensure
+					armor =/ Void;
+					armorEquipped = armor;
+			end
+			equipOtherItem: Void -- Equip 'this' other item!
+				-> item: EQUIPMENT
+				require
+					otherItemsEquipped.length < 3;
+				ensure
+					otherItemsEquipped.length = old otherItemsEquipped.length + 1;
+			end
+			equipPotion: Void -- Equip 'this' potion!
+				-> potion: EQUIPMENT
+				require
+					potionsEquipped.length < 3;
+				ensure
+					potionsEquipped.length = old potionsEquipped.length + 1;
+			end
+			addEquipmentToBackpack: Void -- Put 'this' Equipment in your backpack!
+				-> equipment: EQUIPMENT
+				require
+					spaceInBackpack > 0;
+				ensure
+					spaceInBackpack = old spaceInBackpack + 1;
+			end 
+		invariant
+			otherItemsEquipped.length <= 2;
+			potionsEquipped.length <= 3;
+			-- An Inventory can only have weapons or shields in max the number of hands he has
+			spaceInBackpack >= 0 and spaceInBackpack <= 3;
+			spaceInBackpack = 3 - equipmentInBackpack.length;
+	end
+	
+	class EQUIPMENT -- Equipment can be worn by the hero
+		indexing
+			author: "Jonas Breindahl";
+			created: "30-11-2011";
+			revised: "30-11-2011";
+		feature
+			tapped BOOLEAN -- Are you tapped right now?
+			
+			name: STRING -- What is your name?
+			equipmentType: WEAPON_TYPE -- What type of equipment are you?
+			buyPrice: INTEGER -- What is your price?
+			abilities: SEQUENCE[ABILITY] -- What are your abilities?
+			handsToWield: INTEGER -- How many hands do you use?
+		invariant
+			-- "An equipment may only be tapped one time per round"
+			true;
+	end
+		
+	class TRAINING_TOKEN -- A token that give extra dice in a specific kind of attack
+		indexing
+			author: "Jonas Breindahl";
+			created: "30-11-2011";
+			revised: "30-11-2011";
+		feature
+			type: ATTACK_TYPE -- What attack do you grant bonus to?
+	end
+	
+	class POTION -- A potion, that can either be on a square, or equipped on a Hero
+		indexing
+			author: "Jonas Breindahl";
+			created: "30-11-2011";
+			revised: "30-11-2011";
+		inherit
+			EQUIPMENT
+		feature
+			type POTION_TYPE -- What kind of potion are you?
+	end
+end
+
+static_diagram FORMAL_OVERLORD_STUFF
+component
+	class OVERLORD_CARD
+		indexing
+			author: "Jonas Breindahl";
+			created: "30-11-2011";
+			revised: "30-11-2011";
+		feature
+			name STRING -- What is your name? Your name is 'this'!
+			cardDescription STRING -- What is your description? Your description is 'this'!
+			type OVERLORD_CARD_TYPE -- What type of overlord card are you?"
+			abilities: SEQUENCE[ABILITY] -- What abilities do you have?
+	end
+end
+
+static_diagram FORMAL_EVENT_CLUSTER
+component
+	class ABILITY -- Can this ability be used now?
+		indexing
+			author: "Jonas Breindahl";
+			created: "30-11-2011";
+			revised: "30-11-2011";
+		feature
+			canBeUsedNow: BOOLEAN -- Can this ability be used now?
+				-> GAME_STATE
+			end
+	end
+end
+
+static_diagram FORMAL_BOARD_CLUSTER
+component
+	class BOARD -- The entire gameboard, made up of squares
+		indexing
+			author: "Jonas Breindahl";
+			created: "30-11-2011";
+			revised: "30-11-2011";
+		feature
+			width: INTEGER -- What is your width?
+			height: INTEGER -- What is your height?
+			withinBoard: BOOLEAN -- Is the coordinate (x/y) within the board?
+				-> coord: POINT
+				require 
+					coord =/ Void;
+				ensure
+					Result = coord.x >= 0 and coord.x < width \
+					\and coord.y >= 0 and coord.y < height;
+			end
+			canOverlordSpawn: BOOLEAN -- Can the overlord spawn here?
+				-> coord: POINT
+				require
+					withinBoard(coord.x, coord.y);
+					coord =/ Void;
+					
+			end
+			canMoveTo: BOOLEAN -- Is this square pass-/movable?
+				-> coord: POINT
+				require
+					withinBoard(coord.x, coord.y);
+					coord /= Void;
+			end
+			lineOfSight: BOOLEAN -- Is there line of sight from 'here' to 'there'?
+				-> here: POINT
+				-> there: POINT
+				-> monstersBlock: BOOLEAN -- not included monsters?
+				require
+					here =/ Void;
+					there =/ Void;
+			end
+			spaceVisiblyByPlayers: BOOLEAN -- Is this space visible by players?
+	end
+	
+	class SQUARE -- A single square of the board
+		indexing
+			author: "Jonas Breindahl";
+			created: "30-11-2011";
+			revised: "30-11-2011";
+		feature
+			marker: MARKER -- What marker is on this square?
+			figure: FIGURE -- What figure is on this square?
+	end
+	
+	class TOWN -- When in town the players can buy, they also go there when they die
+		indexing
+			author: "Jonas Breindahl";
+			created: "30-11-2011";
+			revised: "30-11-2011";
+		feature
+			heroesInTown: SEQUENCE[HERO] -- What heroes are in town right now
+	end
+end
+
 static_diagram FORMAL_STATE_STUFF
 component
 	class STATE_MANAGER
