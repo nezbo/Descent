@@ -118,6 +118,9 @@ namespace XNATutorials
                     case "potion":
                         board[int.Parse(data[1]), int.Parse(data[2])] = sf.GetSprite("potion-" + data[3]);
                         break;
+                    case "rune":
+                        board[int.Parse(data[1]), int.Parse(data[2])] = sf.GetSprite("rune-" + data[3]);
+                        break;
                 }
             }
         }
