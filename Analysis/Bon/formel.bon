@@ -51,7 +51,37 @@ component
 					conquestTokens = old conquestTokens + tokens;
 			end
 		invariant
-			
+			numberOfHeroes >= 2 && numberOfHeroes <= 4;
 		end
 	end
+	
+	class OVERLORD -- The role of a overlord, that a hero can be
+		feature
+			numberOfOverlordCardsInHand: INTEGER -- The role of a overlord, that a hero can be
+			threatTokens: INTEGER -- How many threat tokens do you have?
+			overlordCardsInHand: SEQUENCE[OVERLORD_CARD] -- What cards do you have?
+				ensure
+					Result.length = numberOfOverlordCardsInHand;
+			end
+			overlordCardsInDeck: INTEGER -- How many cards are in your overlord deck?
+			overlordCardsInDiscard: INTEGER -- How many cards are in your overlord discard?
+			drawOverlordCards: Void -- Draw 'this' many cards!
+				-> INTEGER: cards
+				require
+					cards > 0;
+				ensure
+					overlordCardsInHand = old overlordCardsInHand + cards;
+			end
+			shuffleOverlordDiscardIntoDeck: Void -- Shuffle the overlord discard into the deck!
+				require
+					overlordCardsInDeck = 0;
+				ensure
+					overlordCardsInDiscard = 0;
+					overlordCardsInDeck = old overlordCardsInDiscard;
+			end
+		invariant
+			-- When it is not the overlords turn, the overlord cannot have more than 7 cards in hand.
+			true;
+	end
+			
 end			
