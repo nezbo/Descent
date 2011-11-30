@@ -689,13 +689,12 @@ class_chart STATE_MANAGER
 	explanation
 		"The handler of all states. Knows about the current state and what to do next."
 	query
+		"Can I have the unique object of this class?",
 		"What is the current state?",
 		"What was the previous 'n' states?",
-		"What are the next possible	 state(s)?"
+		"What are the next possible	state(s)?"
 	command
-		"Change to this state!",
-		"Notify me when you get to this state!",
-		"Place this state before the current state!"
+		""
 	constraint
 		"After game initiation, there must always be a current state",
 		"You can only go from 'current state' to a state part of 'current state's next possible states."
@@ -708,22 +707,22 @@ class_chart STATE_MACHINE
 		"The handler of all states. Knows about the current state and what to do next."
 	query
 		"What is the current state?",
-		"What was the previous 'n' states?",
-		"What are the next possible	 state(s)?"
+		"What is the next state?",
+		"What was the previous 'n' states?"
 	command
-		"Change to this state!",
-		"Notify me when you get to this state!",
-		"Place this state before the current state!"
+		"Change to next state!",
+		"Place these states after the current state!"
 	constraint
+		"The StateMachine is only visible to the StateManager.",
 		"After game initiation, there must always be a current state",
-		"You can only go from 'current state' to a state part of 'current state's next possible states."
+		"As long as the game runs there is always a next state"
 end
 
 class_chart STATE
 	indexing
 		author: "Martin Marcher";
 	explanation
-		""
+		"A collection of all different states."
 	query
 		"Can I have this state?"
 end
