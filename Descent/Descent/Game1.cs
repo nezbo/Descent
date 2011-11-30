@@ -1,15 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
 
-namespace Descent
+namespace XNATutorials
 {
     /// <summary>
     /// This is the main type for your game
@@ -19,10 +13,16 @@ namespace Descent
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        private int xDisp, yDisp;
+        private Sprite[,] board;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+
+            graphics.PreferredBackBufferWidth = 1280;
+            graphics.PreferredBackBufferHeight = 720;
         }
 
         /// <summary>
@@ -34,6 +34,9 @@ namespace Descent
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            xDisp = 0;
+            yDisp = 0;
+            this.board = new Sprite[100, 100];
 
             base.Initialize();
         }
@@ -48,6 +51,28 @@ namespace Descent
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+            SpriteFactory sf = new SpriteFactory(this.Content);
+
+            StreamReader reader = File.OpenText("quest1.map");
+
+            string line = null;
+            for (int y = 0; (line = reader.ReadLine()) != null; y++)
+            {
+                for (int x = 0; x < line.Length; x++)
+                {
+                    if (line.StartsWith("#")) continue;
+
+                    switch (line.Substring(x, 1))
+                    {
+                        case " ":
+                            break;
+                        default:
+                            board[x, y] = sf.GetSprite("floor");
+                            break;
+                    }
+
+                }
+            }
         }
 
         /// <summary>
@@ -71,6 +96,11 @@ namespace Descent
                 this.Exit();
 
             // TODO: Add your update logic here
+            KeyboardState keyState = Keyboard.GetState();
+            if (keyState.IsKeyDown(Keys.Left)) xDisp += 10;
+            if (keyState.IsKeyDown(Keys.Right)) xDisp -= 10;
+            if (keyState.IsKeyDown(Keys.Up)) yDisp += 10;
+            if (keyState.IsKeyDown(Keys.Down)) yDisp -= 10;
 
             base.Update(gameTime);
         }
@@ -81,9 +111,19 @@ namespace Descent
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Black);
 
             // TODO: Add your drawing code here
+            spriteBatch.Begin();
+            for (int x = 0; x < board.GetLength(0); x++)
+            {
+                for (int y = 0; y < board.GetLength(1); y++)
+                {
+                    Sprite cur = board[x, y];
+                    if (cur != null) spriteBatch.Draw(cur.Texture, new Vector2(xDisp + x * 95, yDisp + y * 95), Color.White);
+                }
+            }
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }
