@@ -5,6 +5,8 @@ using Microsoft.Xna.Framework.Input;
 
 namespace XNATutorials
 {
+    using System;
+
     /// <summary>
     /// This is the main type for your game
     /// </summary>
@@ -49,15 +51,26 @@ namespace XNATutorials
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            // TODO: use this.Content to load your game content here
+            //********** MONSTERS **********//
+            /*
+            StreamReader reader = File.OpenText("monsters.txt");
+            int length = int.Parse(reader.ReadLine());
+            for(int i = 0; i < length)
+            reader.Close();
+            */
+             
+            //********** LOAD MAP **********//
             SpriteFactory sf = new SpriteFactory(this.Content);
 
             StreamReader reader = File.OpenText("quest1.map");
+            int height = int.Parse(reader.ReadLine());
+            int width = int.Parse(reader.ReadLine());
 
             string line = null;
-            for (int y = 0; (line = reader.ReadLine()) != null; y++)
+            for (int y = 0; y < height; y++)
             {
+                line = reader.ReadLine();
+                System.Diagnostics.Debug.WriteLine(line);
                 for (int x = 0; x < line.Length; x++)
                 {
                     if (line.StartsWith("#")) continue;
@@ -71,6 +84,43 @@ namespace XNATutorials
                             break;
                     }
 
+                }
+            }
+            
+
+            //************* LOAD OTHER STUFF ************//
+            int lines = int.Parse(reader.ReadLine());
+            for (int i = 0; i < lines; i++)
+            {
+                line = reader.ReadLine();
+                System.Diagnostics.Debug.WriteLine(line);
+                string[] data = line.Split(',');
+                switch (data[0])
+                {
+                    case "monster":
+                        board[int.Parse(data[1]), int.Parse(data[2])] = sf.GetSprite(data[3]);
+                        break;
+                    case "portal":
+                        board[int.Parse(data[1]), int.Parse(data[2])] = sf.GetSprite("portal-" + data[3]);
+                        break;
+                    case "treasure":
+                        board[int.Parse(data[1]), int.Parse(data[2])] = sf.GetSprite("treasure-" + data[3]);
+                        break;
+                    case "gold":
+                        board[int.Parse(data[1]), int.Parse(data[2])] = sf.GetSprite("gold");
+                        break;
+                    case "rock":
+                        board[int.Parse(data[1]), int.Parse(data[2])] = sf.GetSprite("rock1");
+                        break;
+                    case "pit":
+                        board[int.Parse(data[1]), int.Parse(data[2])] = sf.GetSprite("pit1");
+                        break;
+                    case "potion":
+                        board[int.Parse(data[1]), int.Parse(data[2])] = sf.GetSprite("potion-" + data[3]);
+                        break;
+                    case "rune":
+                        board[int.Parse(data[1]), int.Parse(data[2])] = sf.GetSprite("rune-" + data[3]);
+                        break;
                 }
             }
         }
