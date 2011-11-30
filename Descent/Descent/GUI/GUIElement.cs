@@ -97,7 +97,7 @@ namespace Descent.GUI
         /// <param name="action">The new On Click action</param>
         public void AddClickAction(string target, Action<StateManager> action)
         {
-            if(this.name == target)
+            if (this.name == target)
             {
                 this.onClick = action;
             }
