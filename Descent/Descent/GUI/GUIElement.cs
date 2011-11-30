@@ -95,9 +95,13 @@ namespace Descent.GUI
         /// the one given.
         /// </summary>
         /// <param name="action">The new On Click action</param>
-        public void AddClickAction(Action<StateManager> action)
+        public void AddClickAction(string target, Action<StateManager> action)
         {
-            this.onClick = action;
+            if (this.name == target)
+            {
+                this.onClick = action;
+            }
+            foreach (GUIElement e in children) e.AddClickAction(target, action);
         }
 
         /// <summary>
@@ -128,16 +132,10 @@ namespace Descent.GUI
         public void Draw(SpriteBatch draw)
         {
             // draw myself
-            foreach (Drawable d in visuals.Keys)
-            {
-                draw.Draw(d.Texture, visuals[d], Color.White);
-            }
+            foreach (Drawable d in visuals.Keys) draw.Draw(d.Texture, visuals[d], Color.White);
 
             // draw the children on top
-            foreach (GUIElement e in children)
-            {
-                e.Draw(draw);
-            }
+            foreach (GUIElement e in children) e.Draw(draw);
         }
     }
 }
