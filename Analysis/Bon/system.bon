@@ -156,9 +156,12 @@ class_chart OVERLORD
 	query
 		"How many cards do you have?",
 		"How many threat tokens do you have?",
-		"What cards do you have?"
+		"What cards do you have?",
+		"How many cards are in your overlord deck?",
+		"How many cards are in your overlord discard?"
 	command
-		"Draw 'this' many cards!"
+		"Draw 'this' many cards!",
+		"Shuffle the overlord discard into the deck!"
 	constraint
 		"When it is not the overlords turn, the overlord cannot have more than 7 cards in hand."
 end

@@ -1,0 +1,87 @@
+static_diagram FORMEL_PLAYER
+component
+	class HERO_PARTY -- A party of heroes
+		feature
+			numberOfHeroes: INTEGER -- How many players are in the HeroParty?
+				ensure
+					Result >= 2 && Result <= 4;
+			end
+			numberOfHeroesYetToAct: INTEGER -- How many players have yet to take their turn?
+				ensure
+					Result >= 0;
+					Result <= numberOfPlayers;
+			end
+			hasHeroesActedYet: BOOLEAN -- Has 'this' player yet to take their turn?
+				-> hero: Hero
+				require
+					hero /= Void
+			end
+			conquestTokens: INTEGER -- How many conquest tokens do the players have?
+			end
+			isConquestPoolEmpty: BOOLEAN -- How many conquest tokens do the players have?
+				ensure
+					Result && conquestTokens = 0;
+			end
+			heroHasActed: Void -- Remove 'this' player from the list of players yet to act!
+				-> hero: Hero
+				require
+					hero /= Void;
+				ensure
+					old !hasHeroActed -> hasHeroActedYet = true;
+					numberOfHeroesYetToAct + 1 = old numberOfHeroesYetToAct;
+			end
+			resetYetToAct: Void -- Reset list of Hero yet to act!
+				require
+					numberOfHeroesYetToAct = 0;
+				ensure
+					numberOfHeroesYetToAct = numberOfHeroes;
+			end
+			removeConquestTokens: Void -- Remove 'this' number of conquest tokens from the pool of tokens!
+				-> INTEGER: tokens
+				require
+					tokens > 0;
+				ensure
+					conquestTokens = old conquestTokens - tokens;
+			end
+			addConquestTokens: Void -- Add 'this' number of conquest tokens to the pool of tokens!
+				-> INTEGER: tokens
+				require
+					tokens > 0;
+				ensure
+					conquestTokens = old conquestTokens + tokens;
+			end
+		invariant
+			numberOfHeroes >= 2 && numberOfHeroes <= 4;
+		end
+	end
+	
+	class OVERLORD -- The role of a overlord, that a hero can be
+		feature
+			numberOfOverlordCardsInHand: INTEGER -- The role of a overlord, that a hero can be
+			threatTokens: INTEGER -- How many threat tokens do you have?
+			overlordCardsInHand: SEQUENCE[OVERLORD_CARD] -- What cards do you have?
+				ensure
+					Result.length = numberOfOverlordCardsInHand;
+			end
+			overlordCardsInDeck: INTEGER -- How many cards are in your overlord deck?
+			overlordCardsInDiscard: INTEGER -- How many cards are in your overlord discard?
+			drawOverlordCards: Void -- Draw 'this' many cards!
+				-> INTEGER: cards
+				require
+					cards > 0;
+				ensure
+					overlordCardsInHand = old overlordCardsInHand + cards;
+			end
+			shuffleOverlordDiscardIntoDeck: Void -- Shuffle the overlord discard into the deck!
+				require
+					overlordCardsInDeck = 0;
+				ensure
+					overlordCardsInDiscard = 0;
+					overlordCardsInDeck = old overlordCardsInDiscard;
+			end
+		invariant
+			-- When it is not the overlords turn, the overlord cannot have more than 7 cards in hand.
+			true;
+	end
+			
+end			
