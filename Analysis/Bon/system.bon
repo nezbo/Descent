@@ -92,9 +92,9 @@ cluster_chart STATE_STUFF
 		author: "Martin Marcher";
 	explanation
 		"All classes related to state, such as state machine and the state class."
+	class STATE_MANAGER description "The external API for state changes."
 	class STATE_MACHINE description "The handler of all states."
-	class STATE description "Overall state abstraction"
-	class STATE_GROUP description "A group of states."
+	class STATE description "A collection of all different states."
 end
 
 class_chart PLAYER
@@ -578,6 +578,7 @@ class_chart GUI
 		"Handles the visual aspects of the game and input from the user"
 	command
 		"Handle this mouse click!",
+		"Change your state GUI_ELEMENT to this one!",
 		"Draw everything!"
 end
 
@@ -596,6 +597,7 @@ class_chart GUI_ELEMENT
 		"Handle this mouse click!",
 		"Do this when clicked",
 		"Add this GUI_ELEMENT to your collection of sub-elements!",
+		"Add this DRAWABLE to be displayed in you at this position!",
 		"Draw yourself!"
 	constraint
 		"The position must be within the window boundaries",
@@ -607,11 +609,12 @@ class_chart GUI_ELEMENT_FACTORY
 	indexing
 		author: "Emil Juul Jacobsen";
 		created: "27-11-2011";
-		revised: "29-11-2011";
+		revised: "30-11-2011";
 	explanation
 		"Responsible of making hierarchies of GUIElements for two of the layers"
 	command
 		"Create the GUI_ELEMENT for the visualization of the board!",
+		"Create the GUI_ELEMENT for this State from this perspective!",
 		"Create the GUI_ELEMENT of the menus, chat and player board for this perspective!"
 	constraint
 		"The position of the root GUI_ELEMENTS must be 0,0",
@@ -619,14 +622,14 @@ class_chart GUI_ELEMENT_FACTORY
 end
 
 class_chart CHAT
-	inherit
-		GUI_ELEMENT
 	indexing
 		author: "Emil Juul Jacobsen";
 		created: "29-11-2011";
 		revised: "29-11-2011";
 	explanation
 		"Handles messages and important game events for presentation on the screen"
+	inherit
+		GUI_ELEMENT
 	command
 		"Here is a new message!"
 	constraint
@@ -685,6 +688,23 @@ class_chart EVENT_MANAGER
 		"Process your event queue!"
 end
 
+class_chart STATE_MANAGER
+	indexing
+		author: "Martin Marcher";
+	explanation
+		"The handler of all states. Knows about the current state and what to do next."
+	query
+		"Can I have the unique object of this class?",
+		"What is the current state?",
+		"What was the previous 'n' states?",
+		"What are the next possible	state(s)?"
+	command
+		""
+	constraint
+		"After game initiation, there must always be a current state",
+		"You can only go from 'current state' to a state part of 'current state's next possible states."
+end
+
 class_chart STATE_MACHINE
 	indexing
 		author: "Martin Marcher";
@@ -692,41 +712,22 @@ class_chart STATE_MACHINE
 		"The handler of all states. Knows about the current state and what to do next."
 	query
 		"What is the current state?",
-		"What was the previous 'n' states?",
-		"What are the next possible	 state(s)?"
+		"What is the next state?",
+		"What was the previous 'n' states?"
 	command
-		"Change to this state!",
-		"Notify me when you get to this state!",
-		"Place this state before the current state!"
+		"Change to next state!",
+		"Place these states after the current state!"
 	constraint
+		"The StateMachine is only visible to the StateManager.",
 		"After game initiation, there must always be a current state",
-		"You can only go from 'current state' to a state part of 'current state's next possible states."
+		"As long as the game runs there is always a next state"
 end
 
 class_chart STATE
 	indexing
 		author: "Martin Marcher";
 	explanation
-		""
+		"A collection of all different states."
 	query
-		"Is this state done?",
-		"What was the previous state?",
-		"What are the next possible state(s)?"
-	command
-		"This is the state machine! (you'll need it!)",
-		"This state is done!",
-		"The previous state was 'this'!",
-		"The next state must be 'this'!"
-	constraint
-		"A state must have a least one next possible state."
-end
-
-class_chart STATE_GROUP
-	indexing
-		author: "Martin Marcher";
-	explanation
-		""
-	inherit STATE
-	query
-		"Which states do you hold?"
+		"Can I have this state?"
 end
