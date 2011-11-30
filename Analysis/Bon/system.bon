@@ -100,6 +100,7 @@ end
 class_chart PLAYER
 	indexing
 		author: "Jonas Breindahl";
+		cluster: "PLAYER_CLUSTER"
 		created: "21-11-2011";
 		revised: "21-11-2011"
 	explanation
@@ -116,6 +117,7 @@ end
 class_chart HERO_PARTY
 	indexing
 		author: "Jonas Breindahl";
+		cluster: "PLAYER_CLUSTER"
 		created: "21-11-2011";
 		revised: "21-11-2011"
 	explanation
@@ -149,8 +151,9 @@ end
 class_chart OVERLORD
 	indexing
 		author: "Jonas Breindahl";
+		cluster: "PLAYER_CLUSTER"
 		created: "21-11-2011";
-		revised: "21-11-2011"
+		revised: "30-11-2011"
 	explanation
 		"The role of a overlord, that a hero can be"
 	query
@@ -170,7 +173,7 @@ class_chart FIGURE
 	indexing
 		author: "Jonas Breindahl";
 		created: "21-11-2011";
-		revised: "27-11-2011";
+		revised: "30-11-2011";
 	explanation
 		"A figure with basic stats"
 	query
@@ -178,8 +181,6 @@ class_chart FIGURE
 		"What is your name?",
 		"What is your max health?",
 		"What is your health right now?",
-		"What is your max fatique?",
-		"What is your fatique right now?",
 		"What is your armor?",
 		"What is your speed?",
 		"How much speed do you have left?",
@@ -188,24 +189,28 @@ class_chart FIGURE
 		"What abilities do you have?",
 		"What effects are on you?"
 	command
-		"Set your health to 'this'!",
-		"Set your fatique to 'this'!"
+		"Add 'this' amount of health!",
+		"Lose 'this' amount of health!",
 	constraint
 		"A Figure must always have more than 0 max health",
 		"A Figure may never have more life than max life"
 end
 
-class_chart HERO 
+class_chart HERO -- A hero, made from a hero-sheet
 	indexing
 		author: "Jonas Breindahl";
 		created: "21-11-2011";
-		revised: "27-11-2011"
+		revised: "30-11-2011"
 	explanation 
 		"A hero, made from a hero-sheet"
 	query
-		"How many skills do you have in MELEE/RANGED/MAGIC?"
+		"How many skills do you have in MELEE/RANGED/MAGIC?",
+		"What is your max fatique?",
+		"What is your fatique right now?"
+	command
+		"Add 'this' amount of fatique!",
+		"Lose 'this' amount of fatique!"
 	constraint
-		"A Hero may only have 0 life when it is your turn",
 		"A Hero may never have more fatique than max fatique"	
 end
 
