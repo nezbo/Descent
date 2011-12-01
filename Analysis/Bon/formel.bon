@@ -181,6 +181,8 @@ component
 			ChangeToNextState: Void -- Change to next state!
 			PlaceStates: Void -- Place these states after the current state
 				-> states: SEQUENCE[STATE]
+				require
+					states /= Void and states.Length > 0;
 				ensure
 					NextState = states.First;
 			end
