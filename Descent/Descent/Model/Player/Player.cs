@@ -20,6 +20,7 @@ namespace Descent.Model.Player
     /// </summary>
     public class Player
     {
+        #region PlayerSingletonPattern
         //************ Singleton Pattern *************//
         /// <summary>
         /// The static field, holding the player instance
@@ -40,16 +41,27 @@ namespace Descent.Model.Player
 
         //********************************************//
 
+        #endregion PlayerSingletonPattern
+
+        #region CONSTRUCTORS
         /// <summary>
         /// Prevents a default instance of the <see cref="Player"/> class from being created. 
         /// 
         /// </summary>
-        [SuppressMessage("StyleCop.CSharp.OrderingRules", "SA1201:ElementsMustAppearInTheCorrectOrder",
-            Justification = "Reviewed. Suppression is OK here.")]
         private Player()
         {
         }
+        #endregion CONSTRUCTORS
 
+        #region FIELDS
+        
+        /// <summary>
+        /// Gets or sets the unique ID.
+        /// What is your unique player ID? Your unique ID is this!
+        /// </summary>
+        public int ID { get; set; }
+
+        #region StateManagerSingletonPattern
         //************ Singleton Pattern *************//
         /// <summary>
         /// The StateManager field, that makes out the Singleton Pattern
@@ -67,5 +79,21 @@ namespace Descent.Model.Player
                 return manager ?? (manager = new StateManager());
             }
         }
+
+        //*********************************************//
+        #endregion StateManagerSingletonPattern
+
+        /// <summary>
+        /// What is your role?
+        /// If the player is overlord, return true, else false
+        /// </summary>
+        public bool IsOverlord { get; set; }
+
+        /// <summary>
+        /// Are you client or server
+        /// </summary>
+        public bool IsServer { get; set; }
+        
+        #endregion
     }
 }
