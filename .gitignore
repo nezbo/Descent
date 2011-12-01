@@ -8,3 +8,4 @@ Descent/DescentContent/obj
 *.sln.cache
 *.ReSharper
 Descent/Descent/StyleCop.Cache
+*.stackdump
