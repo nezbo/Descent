@@ -1,11 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.Xna.Framework.Graphics;
-
-namespace Descent.GUI
+﻿namespace Descent.GUI
 {
     using System.Collections.ObjectModel;
+
+    using Descent.Model.Player;
+    using Descent.State;
+
     using Microsoft.Xna.Framework;
+
+    using System;
+    using System.Collections.Generic;
+
+    using Microsoft.Xna.Framework.Graphics;
 
     /// <summary>
     /// A single element of the user interface that, itself, 
