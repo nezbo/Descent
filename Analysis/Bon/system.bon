@@ -600,7 +600,7 @@ class_chart GUI
 	explanation
 		"Handles the visual aspects of the game and input from the user"
 	command
-		"Handle this mouse click!",
+		"Update yourself!",
 		"Change your state GUI_ELEMENT to this one!",
 		"Draw everything!"
 end
@@ -615,9 +615,11 @@ class_chart GUI_ELEMENT
 	query
 		"What is your position?",
 		"What is your dimensions?",
-		"Is this point within your bondaries?"
+		"Is this point within your bondaries?",
+		"Are you focused?"
 	command
 		"Handle this mouse click!",
+		"Handle this key press!",
 		"Do this when clicked",
 		"Add this GUI_ELEMENT to your collection of sub-elements!",
 		"Add this DRAWABLE to be displayed in you at this position!",

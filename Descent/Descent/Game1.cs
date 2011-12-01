@@ -5,7 +5,6 @@ using Microsoft.Xna.Framework.Input;
 
 namespace XNATutorials
 {
-    using System;
 
     /// <summary>
     /// This is the main type for your game
@@ -65,7 +64,7 @@ namespace XNATutorials
             for(int i = 0; i < length)
             reader.Close();
             */
-             
+
             //********** LOAD MAP **********//
             SpriteFactory sf = new SpriteFactory(this.Content);
 
@@ -94,7 +93,7 @@ namespace XNATutorials
 
                 }
             }
-            
+
 
             //************* LOAD OTHER STUFF ************//
             int lines = int.Parse(reader.ReadLine());
