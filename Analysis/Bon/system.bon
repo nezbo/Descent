@@ -86,11 +86,54 @@ cluster_chart GUI_CLUSTER
 end
 
 cluster_chart MESSAGING
-	class CONNECTION description "Keeps track of the players connection and provides low-level message sending over the network."
+	indexing
+		author: "Simon Westh Henriksen";
+		created: "27-11-2011";
+		revised: "01-12-2011";
+	cluster ASYNC_SOCKETS_CLUSTER description "Implementation of asynchronous TCP sockets server and client."
+	cluster CONNECTION_CLUSTER description "Abstraction of the client/server socket connections"
+	cluster EVENT_CLUSTER description "Classes related to event parsing and execution"
+end
+
+cluster_chart ASYNC_SOCKETS_CLUSTER
+	indexing
+		author: "Simon Westh Henriksen";
+		created: "01-12-2011";
+		revised: "01-12-2011";
+	class ASYNC_SOCKETS_CLIENT description "Implementation of the asynchronous sockets client."
+	class ASYNC_SOCKETS_SERVER description "Implementation of the asynchronous sockets server."
+	class CLIENT_INFO description "Stores information about a client connection."
+end
+
+cluster_chart CONNECTION_CLUSTER
+	indexing
+		author: "Simon Westh Henriksen";
+		created: "01-12-2011";
+		revised: "01-12-2011";
+	class CONNECTION description "Abstraction of a connection. Can send text messages."
 	class CLIENT_CONNECTION description "A client connection"
 	class SERVER_CONNECTION description "A server connection"
-	class EVENT_MANAGER description "Responsible for parsing requests from the network and sending out events to the listeners."
 end
+
+cluster_chart EVENT_CLUSTER
+	indexing
+		author: "Simon Westh Henriksen";
+		created: "01-12-2011";
+		revised: "01-12-2011";
+	class EVENT_MANAGER description "Responsible for parsing requests from the network and sending out events to the listeners."
+	-- EVENT_TYPE is an enum of all event types and is not modelled in BON.
+	cluster EVENT_ARGS description "Arguments for events"
+end
+
+cluster_chart EVENT_ARGS
+	indexing
+		author: "Simon Westh Henriksen";
+		created: "01-12-2011";
+		revised: "01-12-2011";
+	class GAME_EVENT_ARGS description "Implementation of event arguments to use with events."
+	-- A lot more classes (around 40) inheriting from GAME_EVENT_ARGS exists, but we chose not to model them in BON.
+end
+
 
 cluster_chart STATE_STUFF
 	indexing
@@ -671,18 +714,71 @@ class_chart CHAT
 		"The message should not be empty"
 end
 
+class_chart ASYNC_SOCKETS_CLIENT
+	indexing
+		author: "Simon Westh Henriksen";
+		created: "01-12-2011";
+		revised: "01-12-2011";
+	explanation
+		"Implementation of the asynchronous sockets client."
+	query
+		"What is your socket?"
+	command
+		"Give me an instance of you using 'this' address and 'this' port!"
+	constraint
+		"If the object is returned, the connection has been established successfully."
+end
+
+class_chart ASYNC_SOCKETS_SERVER
+	indexing
+		author: "Simon Westh Henriksen";
+		created: "01-12-2011";
+		revised: "01-12-2011";
+	explanation
+		"Implementation of the asynchronous sockets server."
+	query
+		"What is your local IP?"
+	command
+		"Give me an instance of you using 'this' port!",
+		"Start listening for client connections!",
+		"Broadcast 'this' message to all connected clients!",
+		"Broadcast 'this' message to all connected clients except the on with 'this' id!",
+		"Call 'this' delegate when a client has connected"
+end
+
+class_chart CLIENT_INFO
+	indexing
+		author: "Simon Westh Henriksen";
+		created: "01-12-2011";
+		revised: "01-12-2011";
+	explanation
+		"Stores information about a client connection."
+	query
+		"What is your ID?",
+		"What is your local IP?"
+	command
+		"Give me an instance of you using 'this' socket!",
+		"Send 'this' string!",
+		"Begin receiving content!",
+		"Call 'this' delegate when a message was received!",
+		"Call 'this' delegate when the connection was closed!"
+	constraint
+		"The ID will always be unique in the context of the current game and can be used to identify the player."
+end
+
 class_chart CONNECTION
 	indexing
 		author: "Simon Westh Henriksen";
 		created: "28-11-2011";
-		revised: "28-11-2011";
+		revised: "01-12-2011";
 	explanation
-		"Contains the connection to the network. The connection can be either a TCP server or a TCP client. Can send and recieve text strings."
+		"Abstraction of a connection. Can send text messages."
 	query
-		"Are you a server or a client?",
-		"Are you connected?"
+		"What is your connection id?",
+		"What is your local ip?"
 	command
-		"Send 'this' text string!"
+		"Initiate connection and start receiving data!",
+		"Send 'this' string!"
 	constraint
 		"A connection is always either a server or a client."
 end
@@ -691,36 +787,59 @@ class_chart CLIENT_CONNECTION
 	indexing
 		author: "Simon Westh Henriksen";
 		created: "28-11-2011";
-		revised: "28-11-2011";
+		revised: "01-12-2011";
 	explanation
 		"A TCP client connected to the host server. When sending a message, it will send only to the server at the other end of the connection."
 	inherit
 		CONNECTION
+	command
+		"Give me an instance of you using 'this' ip and 'this' port!"
 end
 
 class_chart SERVER_CONNECTION
 	indexing
 		author: "Simon Westh Henriksen";
 		created: "28-11-2011";
-		revised: "28-11-2011";
+		revised: "01-12-2011";
 	explanation
 		"A TCP server that accepts client connections. Sends message to all the clients. This type of connection will broadcast received messages to everyone but the sender."
 	inherit
 		CONNECTION
+	command
+		"Give me an instance of you using 'this' port!"
 end
 
 class_chart EVENT_MANAGER
 	indexing
 		author: "Simon Westh Henriksen";
 		created: "28-11-2011";
-		revised: "29-11-2011";
+		revised: "01-12-2011";
 	explanation
 		"Takes strings received from the network and fires the appropriate events. Can also convert an event to a text string and send it."
 	command
 		"Call 'this' method when 'this' event is fired!", -- This command exists for every type of event in our system.
 		"Parse 'this' text string and fire the appropriate event!", -- This also includes descion 
 		"Queue 'this' event!",
+		"Queue 'this' event-string!",
 		"Process your event queue!"
+	constraint
+		"After game initialization, there must always be one event manager."
+end
+
+class_chart EVENT_ARGS
+	indexing
+		author: "Simon Westh Henriksen";
+		created: "01-12-2011";
+		revised: "01-12-2011";
+	explanation
+		"A base class containing arguments for events. This base class implements the required event arguments fields."
+	query
+		"Who (player_id) sent you?",
+		"What is your event id"?,
+		"What type of event are you?",
+		"Do you need a response?"
+	command
+		"Populate yourself with arguments using this argument array."
 end
 
 class_chart STATE_MANAGER

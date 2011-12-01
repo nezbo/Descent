@@ -2,6 +2,7 @@ _ReSharper.Descent
 Descent/Descent/bin
 Descent/Descent/obj
 Descent/DescentContent/obj
+Descent/Descent/StyleCop.cache
 *.dotCover
 *.ReSharper.user
 *.suo
