@@ -648,11 +648,11 @@ class_chart BOARD_GUI_ELEMENT
 		revised: "01-12-2011";
 	inherit
 		GUI_ELEMENT
+	explanation
+		"The element on the screen that visualizes the game board."
 	command
 		"Mark this field!",
 		"Clear all marks!"
-	explanation
-		"The element on the screen that visualizes the game board."
 end
 
 class_chart GUI_ELEMENT_FACTORY
