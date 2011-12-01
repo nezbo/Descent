@@ -7,3 +7,4 @@ Descent/DescentContent/obj
 *.suo
 *.sln.cache
 *.ReSharper
+Descent/Descent/StyleCop.Cache
