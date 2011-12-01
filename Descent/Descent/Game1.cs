@@ -43,7 +43,6 @@ namespace XNATutorials
             // TODO: Add your initialization logic here
             xDisp = 0;
             yDisp = 0;
-            this.board = new Sprite[100, 100];
 
             //Make the mouse pointer visible in the game window
             this.IsMouseVisible = true;
@@ -73,6 +72,7 @@ namespace XNATutorials
             System.IO.StreamReader reader = new System.IO.StreamReader(TitleContainer.OpenStream("quest1.map"));
             int height = int.Parse(reader.ReadLine());
             int width = int.Parse(reader.ReadLine());
+            this.board = new Sprite[width, height];
 
             string line = null;
             for (int y = 0; y < height; y++)
