@@ -1,15 +1,13 @@
-﻿namespace Descent.GUI
+﻿using Microsoft.Xna.Framework.Input;
+
+namespace Descent.GUI
 {
-    using System.Collections.ObjectModel;
-
-    using Descent.Model.Player;
-    using Descent.State;
-
-    using Microsoft.Xna.Framework;
-
     using System;
     using System.Collections.Generic;
-
+    using System.Collections.ObjectModel;
+    using Descent.Model.Player;
+    using Descent.State;
+    using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
 
     /// <summary>
@@ -29,6 +27,8 @@
         private string name;
         public string Name { get { return name; } }
 
+        private bool focus;
+
         private Collection<GUIElement> children;
 
         private Dictionary<Drawable, Vector2> visuals;
@@ -45,6 +45,7 @@
         public GUIElement(string name, int x, int y, int width, int height)
         {
             this.name = name;
+            this.focus = false;
             bound = new Rectangle(x, y, width, height);
             children = new Collection<GUIElement>();
             visuals = new Dictionary<Drawable, Vector2>();
@@ -59,6 +60,15 @@
         public bool HasPoint(int x, int y)
         {
             return bound.Contains(x, y);
+        }
+
+        /// <summary>
+        /// Tells if the element handled the last click request.
+        /// </summary>
+        /// <returns>True if focused, else false.</returns>
+        public bool HasFocus()
+        {
+            return this.focus;
         }
 
         /// <summary>
@@ -77,6 +87,7 @@
                 {
                     if (e.HandleClick(x, y))
                     {
+                        focus = false;
                         return true;
                     }
                 }
@@ -86,13 +97,25 @@
                 {
                     onClick(manager);
                 }
+                focus = true;
                 return true;
             }
             else
             {
                 // nope, wasnt me :(
+                focus = false;
                 return false;
             }
+        }
+
+        /// <summary>
+        /// Reacts to the given key type if this GUIElement
+        /// is focused.
+        /// </summary>
+        /// <param name="key">The key that has been pressed and wasn't pressed before</param>
+        public void HandleKeyPress(Keys key)
+        {
+            // this method can be overwritten if a GUIElement wants to react to keypresses.
         }
 
         /// <summary>
