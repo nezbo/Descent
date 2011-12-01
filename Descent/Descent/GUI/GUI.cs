@@ -1,4 +1,8 @@
-﻿namespace Descent.GUI
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.Xna.Framework.Input;
+
+namespace Descent.GUI
 {
     using Microsoft.Xna.Framework.Graphics;
 
@@ -12,6 +16,10 @@
     class GUI
     {
         private SpriteBatch draw; // the drawing surface
+
+        //input
+        private bool mouseDownBefore = false;
+        private Dictionary<Keys, bool> keyDownBefore;
 
         /// <summary>
         /// The three layers of the GUI:
@@ -28,6 +36,7 @@
         public GUI(SpriteBatch draw)
         {
             this.draw = draw;
+            this.keyDownBefore = new Dictionary<Keys, bool>();
 
             layers = new GUIElement[3];
         }
@@ -51,11 +60,47 @@
         /// </summary>
         /// <param name="x">The x-coordinate of the click</param>
         /// <param name="y">The y-coordinate of the click</param>
-        public void HandleClick(int x, int y)
+        private void HandleClick(int x, int y)
         {
             for (int i = layers.Length - 1; i >= 0; i--)
             {
                 if (layers[i].HandleClick(x, y)) break;
+            }
+        }
+
+        private void HandleKeyPress(Keys key)
+        {
+            foreach (GUIElement e in layers)
+            {
+                HandleKeyPress(key);
+            }
+        }
+
+        /// <summary>
+        /// Updates the content of the gui by checking for mouse
+        /// clicks and key presses.
+        /// </summary>
+        /// <param name="delta">The number of milliseconds since last update</param>
+        public void Update(int delta)
+        {
+            // mouseclick
+            MouseState ms = Mouse.GetState();
+            if (ms.LeftButton == ButtonState.Pressed && !mouseDownBefore)
+            {
+                HandleClick(ms.X, ms.Y);
+            }
+            mouseDownBefore = (ms.LeftButton == ButtonState.Pressed);
+
+            // keys
+            List<Keys> pressed = new List<Keys>(Keyboard.GetState().GetPressedKeys());
+            foreach (Keys key in Enum.GetValues(typeof(Keys)))
+            {
+                bool isDown = pressed.Contains(key);
+                if (isDown && keyDownBefore.ContainsKey(key) && !keyDownBefore[key])
+                {
+                    HandleKeyPress(key);
+                }
+                keyDownBefore.Add(key, isDown);
             }
         }
 
