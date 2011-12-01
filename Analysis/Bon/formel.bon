@@ -417,7 +417,7 @@ component
 				require
 					count > 0;
 				ensure
-					Result.length = count;
+					Result.length <= count;
 			end
 			NextPossibleStates: SEQUENCE[STATE] -- What are the next possible states?
 	end
@@ -432,7 +432,7 @@ component
 				require
 					count > 0;
 				ensure
-					Result.length = count;
+					Result.length <= count;
 			end
 			ChangeToNextState: Void -- Change to next state!
 			PlaceStates: Void -- Place these states after the current state

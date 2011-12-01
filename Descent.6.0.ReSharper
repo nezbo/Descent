@@ -1,0 +1,8 @@
+<Configuration>
+  <Daemon.SolutionSettings>
+    <SkipFilesAndFolders>
+      <Item>E49125D5-7A25-4372-B9B8-700CC7A3006D/d:State/f:StateMachine.cs</Item>
+      <Item>E49125D5-7A25-4372-B9B8-700CC7A3006D/d:State/f:StateManager.cs</Item>
+    </SkipFilesAndFolders>
+  </Daemon.SolutionSettings>
+</Configuration>
