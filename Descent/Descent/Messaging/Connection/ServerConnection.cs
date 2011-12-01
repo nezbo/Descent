@@ -9,6 +9,8 @@ namespace Descent.Messaging.Connection
     using System;
     using AsyncSockets;
 
+    using Descent.Model.Player;
+
     /// <summary>
     /// TODO: Update summary.
     /// </summary>

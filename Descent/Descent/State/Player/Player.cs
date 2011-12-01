@@ -12,6 +12,8 @@ namespace Descent.Model.Player
     using System.Linq;
     using System.Text;
 
+    using Descent.Messaging.Connection;
+    using Descent.Messaging.Events;
     using Descent.State;
 
     /// <summary>
@@ -54,7 +56,11 @@ namespace Descent.Model.Player
         /// <summary>
         /// The StateManager field, that makes out the Singleton Pattern
         /// </summary>
-        private StateManager manager = null;
+        private StateManager stateManager;
+
+        private EventManager eventManager;
+
+        private Connection connection;
 
         /// <summary>
         /// Gets StateManager.
@@ -64,8 +70,52 @@ namespace Descent.Model.Player
         {
             get
             {
-                return manager ?? (manager = new StateManager());
+                return stateManager ?? (stateManager = new StateManager());
             }
+        }
+
+        public EventManager EventManager
+        {
+            get
+            {
+                return eventManager ?? (eventManager = new EventManager());
+            }
+        }
+
+        public Connection Connection
+        {
+            get
+            {
+                return connection;
+            }
+        }
+
+        public int Id
+        {
+            get
+            {
+                return Connection.Id;
+            }
+        }
+
+        /// <summary>
+        /// Start/host a game. Will set up a server listening for clients.
+        /// </summary>
+        /// <param name="port"></param>
+        public void StartGame(int port)
+        {
+            connection = new ServerConnection(port);
+        }
+
+        /// <summary>
+        /// Join a game hosted by someone else.
+        /// </summary>
+        /// <param name="ip"></param>
+        /// <param name="port"></param>
+        public void JoinGame(string ip, int port)
+        {
+            connection = new ClientConnection(ip, port);
+            connection.Start();
         }
     }
 }

@@ -8,6 +8,8 @@ namespace Descent.Messaging.Connection
 {
     using System;
     using Descent.Messaging.AsyncSockets;
+    using Descent.Messaging.Events;
+    using Descent.Model.Player;
 
     /// <summary>
     /// A TCP client connected to the host server. When sending a message, it will send only to the server at the other end of the connection.

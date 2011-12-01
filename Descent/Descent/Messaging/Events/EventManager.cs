@@ -12,6 +12,8 @@ namespace Descent.Messaging.Events
     using System.Security.Cryptography;
     using System.Text;
 
+    using Descent.Model.Player;
+
     #region Delegate declarations
     public delegate void AllRespondedNoActionHandler(object sender, EventArgs eventArgs); // Special delegate, contains no eventArgs info.
 
@@ -130,7 +132,7 @@ namespace Descent.Messaging.Events
 
             if (sendOnNetwork)
             {
-                Player.Instance.Connection.SendString(EncodeMessage(eventType, eventArgs, true)); 
+                Player.Instance.Connection.SendString(EncodeMessage(eventType, eventArgs)); 
             }
             
         }
@@ -163,7 +165,7 @@ namespace Descent.Messaging.Events
         /// <param name="eventArgs">The <see cref="GameEventArgs"/> object.</param>
         private void AddRequiredEventArgs(EventType eventType, GameEventArgs eventArgs)
         {
-            eventArgs.SenderId = Player.Instance.ID;
+            eventArgs.SenderId = Player.Instance.Id;
             eventArgs.EventId = GenerateEventId();
             eventArgs.EventType = eventType;
             eventArgs.NeedResponse = NeedResponse(eventType);
@@ -215,7 +217,7 @@ namespace Descent.Messaging.Events
         {
             string time = DateTime.Now.Ticks.ToString();
             string ip = Player.Instance.Connection.Ip;
-            string id = Player.Instance.ID.ToString();
+            string id = Player.Instance.Id.ToString();
 
             //Console.WriteLine("Generating MD5 from {0} {1} {2}", time, ip, id);
             return MD5String(time + ip + id);

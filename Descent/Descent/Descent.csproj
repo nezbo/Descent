@@ -107,6 +107,17 @@
     <Compile Include="GUI\Drawable.cs" />
     <Compile Include="GUI\GUI.cs" />
     <Compile Include="GUI\GUIElement.cs" />
+    <Compile Include="Messaging\AsyncSockets\AsyncSocketsClient.cs" />
+    <Compile Include="Messaging\AsyncSockets\AsyncSocketsServer.cs" />
+    <Compile Include="Messaging\AsyncSockets\ClientInfo.cs" />
+    <Compile Include="Messaging\Connection\ClientConnection.cs" />
+    <Compile Include="Messaging\Connection\Connection.cs" />
+    <Compile Include="Messaging\Connection\ServerConnection.cs" />
+    <Compile Include="Messaging\Events\EventArgs\ChatMessageEventArgs.cs" />
+    <Compile Include="Messaging\Events\EventArgs\GameEventArgs.cs" />
+    <Compile Include="Messaging\Events\EventArgs\PlayerJoinedEventArgs.cs" />
+    <Compile Include="Messaging\Events\EventManager.cs" />
+    <Compile Include="Messaging\Events\EventType.cs" />
     <Compile Include="State\Player\Player.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -150,10 +161,12 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Model\" />
     <None Include="quest1.map">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Model\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />
