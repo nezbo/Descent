@@ -99,8 +99,8 @@ namespace Descent.Messaging.Events
                 eventArgs = BuildEventArgs(eventType, eventArgStrings);  
             }
 
-            eventArgs.SenderID = sender;
-            eventArgs.EventID = eventId;
+            eventArgs.SenderId = sender;
+            eventArgs.EventId = eventId;
             eventArgs.EventType = eventType;
             eventArgs.NeedResponse = needResponse;
             
@@ -116,12 +116,12 @@ namespace Descent.Messaging.Events
         /// <param name="sendOnNetwork">Should this event be sent to the other players?</param>
         private void Fire(EventType eventType, GameEventArgs eventArgs, bool sendOnNetwork)
         {
-            Console.WriteLine("[{0}]: {1}", eventArgs.SenderID, eventType.ToString());
+            Console.WriteLine("[{0}]: {1}", eventArgs.SenderId, eventType.ToString());
 
             switch (eventType)
             {
                 case EventType.NoAction:
-                    AddResponse(eventArgs.EventID);
+                    AddResponse(eventArgs.EventId);
                     break;
                 case EventType.ChatMessage:
                     ChatMessageEvent(this, (ChatMessageEventArgs)eventArgs);
@@ -163,8 +163,8 @@ namespace Descent.Messaging.Events
         /// <param name="eventArgs">The <see cref="GameEventArgs"/> object.</param>
         private void AddRequiredEventArgs(EventType eventType, GameEventArgs eventArgs)
         {
-            eventArgs.SenderID = Player.Instance.ID;
-            eventArgs.EventID = GenerateEventId();
+            eventArgs.SenderId = Player.Instance.ID;
+            eventArgs.EventId = GenerateEventId();
             eventArgs.EventType = eventType;
             eventArgs.NeedResponse = NeedResponse(eventType);
         }
@@ -204,7 +204,7 @@ namespace Descent.Messaging.Events
         /// <returns>The message encoded as a string.</returns>
         private string EncodeMessage(EventType eventType, GameEventArgs eventArgs)
         {
-            return string.Join(",", eventArgs.SenderID, eventArgs.EventID, (int)eventArgs.EventType, Convert.ToInt32(eventArgs.NeedResponse), eventArgs.ToString());
+            return string.Join(",", eventArgs.SenderId, eventArgs.EventId, (int)eventArgs.EventType, Convert.ToInt32(eventArgs.NeedResponse), eventArgs.ToString());
         }
 
         /// <summary>
