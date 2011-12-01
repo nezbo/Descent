@@ -20,6 +20,8 @@ namespace XNATutorials
         private int xDisp, yDisp;
         private Sprite[,] board;
 
+        private Texture2D highlightTexture;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -55,6 +57,11 @@ namespace XNATutorials
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            // for highlighting
+            highlightTexture = new Texture2D(GraphicsDevice, 1, 1);
+            highlightTexture.SetData(new Color[] { Color.White });
+
             //********** MONSTERS **********//
             /*
             StreamReader reader = File.OpenText("monsters.txt");
@@ -191,6 +198,9 @@ namespace XNATutorials
                     if (cur != null) spriteBatch.Draw(cur.Texture, new Vector2(x * 95 - xDisp, y * 95 - yDisp), Color.White);
                 }
             }
+
+            spriteBatch.Draw(highlightTexture, new Rectangle(5 * 95 - xDisp, 18 * 95 - yDisp, 95, 95), new Color(0,0,0,155));
+            spriteBatch.Draw(highlightTexture, new Rectangle(5 * 95 - xDisp, 19 * 95 - yDisp, 95, 95), new Color(110, 111, 72, 128));
 
             // FPS
             numOfFrames++;

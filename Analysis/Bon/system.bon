@@ -651,7 +651,7 @@ class_chart BOARD_GUI_ELEMENT
 	explanation
 		"The element on the screen that visualizes the game board."
 	command
-		"Mark this field!",
+		"Mark this field as positive or negative!",
 		"Clear all marks!"
 end
 

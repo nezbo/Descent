@@ -5,7 +5,7 @@ namespace Descent.GUI
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Input;
-
+ 
     /// <summary>
     /// The element on the screen that visualizes the game board and marking
     /// fields on the board if needed.
@@ -17,23 +17,34 @@ namespace Descent.GUI
     {
         private static readonly int TileSize = 95;
         private static readonly int BorderTiles = 2;
+        private static readonly Color NegativeHighlight = new Color(0, 0, 0, 155);
+        private static readonly Color PositiveHighlight = new Color(110, 111, 72, 128);
+
+        private Texture2D markTexture;
+        private GraphicsDevice graphics;
 
         private Board board;
         private int xDisp, yDisp;
-        private Dictionary<Vector2, Color> markedSquares;
+        private Dictionary<Vector2, bool> markedSquares;
 
         // for clicks
         private int xClick, yClick;
 
-        public BoardGUIElement(Board board, int x, int y, int width, int height)
-            : base("board", x, y, width, height)
+        public BoardGUIElement(GraphicsDevice graphics, Board board)
+            : base("board", 0, 0, graphics.DisplayMode.Width, graphics.DisplayMode.Height)
         {
             this.board = board;
-            this.markedSquares = new Dictionary<Vector2, Color>();
             this.xDisp = 0;
             this.yDisp = 0;
 
-            this.AddClickAction(n => n.SquareMarked(xClick, yClick));
+            // marked
+            this.markedSquares = new Dictionary<Vector2, bool>();
+            this.graphics = graphics;
+            this.markTexture = new Texture2D(graphics, TileSize, TileSize);
+            this.markTexture.SetData(new Color[] { Color.White });
+
+            // event on click
+            this.AddClickAction("board",n => n.SquareMarked(xClick, yClick));
         }
 
         public override bool HandleClick(int x, int y)
@@ -41,7 +52,7 @@ namespace Descent.GUI
             //TODO:
             //this.xClick = formel for at finde x square
             //this.yClick = formel for at finde y square
-            base.HandleClick(x, y);
+            return base.HandleClick(x, y);
         }
 
         public override void HandleKeyPress(Keys key)
@@ -50,7 +61,7 @@ namespace Descent.GUI
             {
                 case Keys.Left:
                     {
-                        if (xDisp > -2 * 95)
+                        if (xDisp > -BorderTiles * 95)
                         {
                             xDisp -= 10;
                         }
@@ -59,7 +70,7 @@ namespace Descent.GUI
 
                 case Keys.Right:
                     {
-                        if (xDisp < (board.GetLength(0) + 1) * 95 - graphics.PreferredBackBufferWidth)
+                        if (xDisp < (board.GetLength(0) -1 + BorderTiles) * 95 - this.Bound.Width)
                         {
                             xDisp += 10;
                         }
@@ -67,7 +78,7 @@ namespace Descent.GUI
                     }
                 case Keys.Up:
                     {
-                        if (yDisp > -2 * 95)
+                        if (yDisp > -BorderTiles * 95)
                         {
                             yDisp -= 10;
                         }
@@ -75,7 +86,7 @@ namespace Descent.GUI
                     }
                 case Keys.Down:
                     {
-                        if (yDisp < (board.GetLength(1) + 2) * 95 - graphics.PreferredBackBufferHeight)
+                        if (yDisp < (board.GetLength(1) - 1 + BorderTiles) * 95 - this.Bound.Height)
                         {
                             yDisp += 10;
                         }
@@ -84,21 +95,54 @@ namespace Descent.GUI
             }
         }
 
+        private Vector2 CalcVector(int x, int y)
+        {
+            return new Vector2(x * 95 - xDisp, y * 95 - yDisp);
+        }
+
         public override void Draw(SpriteBatch draw)
         {
             //TODO: Guessed interface from BON
-            // TODO Need to draw floor
-            Square s;
             Vector2 v;
+            // Draw floor
+            for (int x = 0; x < board.Width; x++)
+            {
+                for (int y = 0; y < board.Height; y++)
+                {
+                    if (board.IsWithin(x, y))
+                    {
+                        v = CalcVector(x,y);
+                        draw.Draw(board.FloorTexture, v, Color.White);
+                    }
+                }
+            }
+
+            // Figures and markers
+            Square s;
+
             for (int x = 0; x < board.Width; x++)
             {
                 for (int y = 0; y < board.Height; y++)
                 {
                     s = board[x, y];
-                    v = new Vector2(x * 95 - xDisp, y * 95 - yDisp);
-                    draw.Draw(s.Marker.Texture, v, Color.White);
-                    draw.Draw(s.Figure, v, Color.White);
+                    v = CalcVector(x,y);
+                    if(s.Marker != null) draw.Draw(s.Marker.Texture, v, Color.White);
+                    if(s.Figure != null) draw.Draw(s.Figure.Texture, v, Color.White);
                 }
+            }
+
+            // Marks (if any)
+            foreach (Vector2 pos in markedSquares.Keys)
+            {
+                if (markedSquares[pos])
+                {
+                    draw.Draw(markTexture, pos, PositiveHighlight);
+                }
+                else
+                {
+                    draw.Draw(markTexture, pos, NegativeHighlight);
+                }
+                
             }
         }
 
@@ -107,10 +151,10 @@ namespace Descent.GUI
         /// </summary>
         /// <param name="x">The x-coordinate of the square on the board.</param>
         /// <param name="y">The y-coordinate of the square on the board.</param>
-        /// <param name="color">The color that should be used to transparently mark the square.</param>
-        public void MarkSquare(int x, int y, Color color)
+        /// <param name="positive">True if the highlight should indicate a eligible. False if it should indicate inaccessibility.</param>
+        public void MarkSquare(int x, int y, bool positive)
         {
-            markedSquares.Add(new Vector2(x, y), color);
+            markedSquares.Add(new Vector2(x, y), positive);
         }
 
         /// <summary>
