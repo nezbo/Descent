@@ -1,10 +1,14 @@
 system_chart DESCENT
-	cluster PLAYER_CLUSTER description "The actual player, and his/her role"
-	cluster EVENT_CLUSTER description "Events, effects and abilities"
-	cluster BOARD_CLUSTER description "The game board"
+	cluster MODEL_CLUSTER description "The model of the game parts"
 	cluster GUI_CLUSTER description "The visual representation of the game"
 	cluster MESSAGING description "TODO: Write description"
 	cluster STATE_STUFF description "States, state machine and related stuff"
+end
+
+cluster_chart MODEL_CLUSTER
+	cluster PLAYER_CLUSTER description "The actual player, and his/her role"
+	cluster EVENT_CLUSTER description "Events, effects and abilities"
+	cluster BOARD_CLUSTER description "The game board"
 end
 
 cluster_chart PLAYER_CLUSTER
@@ -73,7 +77,8 @@ cluster_chart GUI_CLUSTER
 	indexing
 		author: "Emil Juul Jacobsen";
 		created: "27-11-2011";
-		revised: "27-11-2011"
+		revised: "30-11-2011"
+	class DRAWABLE description "Something that should be able to get drawn"
 	class GUI description "The overall visual representation of the game board"
 	class GUI_ELEMENT description "A visual element on the user interface"
 	class GUI_ELEMENT_FACTORY description "Responsible for creating hierarchies of GUIElements"
@@ -100,7 +105,7 @@ end
 class_chart PLAYER
 	indexing
 		author: "Jonas Breindahl";
-		cluster: "PLAYER_CLUSTER"
+		in_cluster: "PLAYER_CLUSTER"
 		created: "21-11-2011";
 		revised: "21-11-2011"
 	explanation
@@ -117,7 +122,7 @@ end
 class_chart HERO_PARTY
 	indexing
 		author: "Jonas Breindahl";
-		cluster: "PLAYER_CLUSTER"
+		in_cluster: "PLAYER_CLUSTER"
 		created: "21-11-2011";
 		revised: "21-11-2011"
 	explanation
@@ -151,7 +156,7 @@ end
 class_chart OVERLORD
 	indexing
 		author: "Jonas Breindahl";
-		cluster: "PLAYER_CLUSTER"
+		in_cluster: "PLAYER_CLUSTER"
 		created: "21-11-2011";
 		revised: "30-11-2011"
 	explanation
@@ -238,19 +243,18 @@ class_chart SKILL
 	query
 		"What type of skill are you?",
 		"What is your name?",
-		"Who owns you?",
 		"What are your abilities?"
 	command
 		"Add this ability to your list of ability?"
 	constraint
 		"A Skill must have atleast one ability",
-		"A Skill can be owned by at most one Hero",
 		"A Skill cannot have more than one type"
 end
 
 class_chart INVENTORY
 	indexing
 		author: "Jonas Breindahl";
+		cluster: "HERO_STUFF"
 		created: "27-11-2011";
 		revised: "27-11-2011";
 	explanation
@@ -258,13 +262,16 @@ class_chart INVENTORY
 	query
 		"How many hands do you have?",
 		"What weapons do you have in your hands?",
-		"What equipment do you have equipped?",
+		"What armor do you have equipped?",
+		"What other-items do you have equipped?",
 		"What potions do you have equipped?",
 		"What equipment do you have in your backpack?",
 		"Is there more space in your backpack?"		
 	command
-		"Equip 'this' Equipment!",
-		"Remove 'this' Equipment!",
+		"Equip 'this' weapon!",
+		"Equip 'this' armor!",
+		"Equip 'this' other item!",
+		"Equip 'this' potion!",
 		"Put this Equipment in your backpack!",
 		"Remove this Equipment from your backpack!"		
 	constraint
@@ -283,9 +290,14 @@ class_chart EQUIPMENT
 	query
 		"What is your name?",
 		"What type of equipment are you?",
-		"Can you be bought right now?",
 		"What is your price?",
+		"How many hands do you use?",
+		"Are you tapped right now?",
 		"What are your abilities?"
+	command
+		"Tap/untap!"
+	constraint
+		"An equipment may only be tapped one time per round"
 end
 
 class_chart TRAINING_TOKEN
@@ -297,8 +309,6 @@ class_chart TRAINING_TOKEN
 		"A token that give extra dice in a specific kind of attack"
 	query
 		"What attack do you grant bonus to?"
-	command
-		"Give a dice bonus to 'this' player!"
 end
 
 class_chart POTION
@@ -311,13 +321,13 @@ class_chart POTION
 	inherit
 		EQUIPMENT
 	query
-		"What kind of potion are you?",
-		"What power do you grant?"
+		"What kind of potion are you?"
 end
 
 class_chart OVERLORD_CARD
 	indexing
 		author: "Jonas Breindahl";
+		in_cluster: "OVERLORD_STUFF";
 		created: "21-11-2011";
 		revised: "21-11-2011"
 	explanation
@@ -325,8 +335,8 @@ class_chart OVERLORD_CARD
 	query
 		"What is your name?",
 		"What is your description?",
-		"What abilities do you have?",
-		"Is this card legal to play now?"
+		"What type of overlord card are you?",
+		"What abilities do you have?"
 	command
 		"Your name is 'this'!",
 		"Your description is 'this'!",
@@ -435,10 +445,13 @@ end
 class_chart ABILITY
 	indexing
 		author: "Jonas Breindahl";
+		in_cluster: "EVENT_CLUSTER";
 		created: "23-11-2011";
-		revised: "27-11-2011"
+		revised: "30-11-2011"
 	explanation
 		"An ability"
+	query
+		"Can this ability be used now?"
 end
 
 class_chart EVENT
@@ -475,11 +488,15 @@ end
 class_chart BOARD
 	indexing
 		author: "Jonas Breindahl";
+		in_cluster: "BOARD";
 		created: "23-11-2011";
-		revised: "23-11-2011"
+		revised: "30-11-2011"
 	explanation
-		"The entire gameboard, made up of pieces"
+		"The entire gameboard, made up of squares"
 	query
+		"What is your width?",
+		"What is your height?",
+		"Is the coordinate (x/y) within the board?",
 		"Is this square pass-/moveable?",
 		"Can the overlord spawn here?",
 		"Is there line of sight from 'here' to 'there'?",
@@ -490,6 +507,7 @@ end
 class_chart SQUARE
 	indexing
 		author: "Jonas Breindahl";
+		in_cluster: "BOARD";
 		created: "23-11-2011";
 		revised: "23-11-2011"
 	explanation
@@ -502,12 +520,13 @@ end
 class_chart TOWN
 	indexing
 		author: "Jonas Breindahl";
+		in_cluster: "BOARD";
 		created: "23-11-2011";
 		revised: "23-11-2011"
 	explanation
 		"When in town the players can buy, they also go there when they die"
 	query
-		"What players are in town right now?"
+		"What heroes are in town right now?"
 end
 
 class_chart MARKER
@@ -606,6 +625,17 @@ class_chart GUI_ELEMENT
 		"The position must be within the window boundaries",
 		"The dimensions combined with the position must not go beyond the window boundaries",
 		"All sub-elements must be within the boundaries of this GUI_ELEMENT"
+end
+
+class_chart DRAWABLE
+	indexing
+		author: "Emil Juul Jacobsen";
+		created: "30-11-2011";
+		revised: "30-11-2011";
+	explanation
+		"Something that should be able to be drawn on the screen"
+	query
+		"What do you look like?"
 end
 
 class_chart GUI_ELEMENT_FACTORY
@@ -734,3 +764,4 @@ class_chart STATE
 	query
 		"Can I have this state?"
 end
+

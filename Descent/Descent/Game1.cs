@@ -100,8 +100,8 @@ namespace XNATutorials
                     case "monster":
                         board[int.Parse(data[1]), int.Parse(data[2])] = sf.GetSprite(data[3]);
                         break;
-                    case "portal":
-                        board[int.Parse(data[1]), int.Parse(data[2])] = sf.GetSprite("portal");
+                    case "glyph":
+                        board[int.Parse(data[1]), int.Parse(data[2])] = sf.GetSprite("portal-" + data[3]);
                         break;
                     case "treasure":
                         board[int.Parse(data[1]), int.Parse(data[2])] = sf.GetSprite("treasure-" + data[3]);
@@ -117,6 +117,9 @@ namespace XNATutorials
                         break;
                     case "potion":
                         board[int.Parse(data[1]), int.Parse(data[2])] = sf.GetSprite("potion-" + data[3]);
+                        break;
+                    case "rune":
+                        board[int.Parse(data[1]), int.Parse(data[2])] = sf.GetSprite("rune-" + data[3]);
                         break;
                 }
             }
