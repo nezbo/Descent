@@ -592,11 +592,22 @@ class_chart OBSTACLE_MARKER
 		MARKER
 end
 
+class_chart DRAWABLE
+	indexing
+		author: "Emil Juul Jacobsen";
+		created: "30-11-2011";
+		revised: "30-11-2011";
+	explanation
+		"Something that should be able to be drawn on the screen"
+	query
+		"What do you look like?"
+end
+
 class_chart GUI
 	indexing
 		author: "Emil Juul Jacobsen";
 		created: "27-11-2011";
-		revised: "27-11-2011"
+		revised: "01-12-2011"
 	explanation
 		"Handles the visual aspects of the game and input from the user"
 	command
@@ -609,7 +620,7 @@ class_chart GUI_ELEMENT
 	indexing
 		author: "Emil Juul Jacobsen";
 		created: "27-11-2011";
-		revised: "29-11-2011";
+		revised: "01-12-2011";
 	explanation
 		"A single element of the user interface that, itself, can contain sub-elements"
 	query
@@ -630,15 +641,18 @@ class_chart GUI_ELEMENT
 		"All sub-elements must be within the boundaries of this GUI_ELEMENT"
 end
 
-class_chart DRAWABLE
+class_chart BOARD_GUI_ELEMENT
 	indexing
 		author: "Emil Juul Jacobsen";
-		created: "30-11-2011";
-		revised: "30-11-2011";
+		created: "01-12-2011";
+		revised: "01-12-2011";
+	inherit
+		GUI_ELEMENT
 	explanation
-		"Something that should be able to be drawn on the screen"
-	query
-		"What do you look like?"
+		"The element on the screen that visualizes the game board."
+	command
+		"Mark this field!",
+		"Clear all marks!"
 end
 
 class_chart GUI_ELEMENT_FACTORY
