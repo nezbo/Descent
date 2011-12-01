@@ -66,7 +66,7 @@ namespace Descent.GUI
         /// Tells if the element handled the last click request.
         /// </summary>
         /// <returns>True if focused, else false.</returns>
-        public bool HasFocus()
+        public virtual bool HasFocus()
         {
             return this.focus;
         }
@@ -77,7 +77,7 @@ namespace Descent.GUI
         /// </summary>
         /// <param name="x">The x-coordinate of the click</param>
         /// <param name="y">The y-coordinate of the click</param>
-        public bool HandleClick(int x, int y)
+        public virtual bool HandleClick(int x, int y)
         {
             // is it within me
             if (this.HasPoint(x, y))
@@ -113,7 +113,7 @@ namespace Descent.GUI
         /// is focused.
         /// </summary>
         /// <param name="key">The key that has been pressed and wasn't pressed before</param>
-        public void HandleKeyPress(Keys key)
+        public virtual void HandleKeyPress(Keys key)
         {
             // this method can be overwritten if a GUIElement wants to react to keypresses.
         }
@@ -157,7 +157,7 @@ namespace Descent.GUI
         /// Draws this GUIElement and then all children on top of it
         /// </summary>
         /// <param name="draw">The SpriteBatch to draw on</param>
-        public void Draw(SpriteBatch draw)
+        public virtual void Draw(SpriteBatch draw)
         {
             // draw myself
             foreach (Drawable d in visuals.Keys) draw.Draw(d.Texture, visuals[d], Color.White);
