@@ -108,7 +108,7 @@
     <Compile Include="GUI\Drawable.cs" />
     <Compile Include="GUI\GUI.cs" />
     <Compile Include="GUI\GUIElement.cs" />
-    <Compile Include="State\Player\Player.cs" />
+    <Compile Include="Model\Player\Player.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sprite.cs" />

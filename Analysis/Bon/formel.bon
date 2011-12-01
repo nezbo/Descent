@@ -6,7 +6,7 @@ component
 			created: "30-11-2011";
 			revised: "30-11-2011";
 		feature
-			connection: Connection -- What is your connection?
+			connection: CONNECTION -- What is your connection?
 			isOverlord: BOOLEAN -- What is your role?
 			isServer: BOOLEAN -- Are you client or server?
 			uniqueID: INTEGER -- What is your unique player ID?
@@ -15,26 +15,21 @@ component
 				ensure
 					uniqueID = id;
 			end
-		invariant
-			getConnection =/ Void;
 	end
 			
 	class HERO_PARTY -- A party of heroes
 		indexing
 			author: "Jonas Breindahl";
 			created: "28-11-2011";
-			revised: "30-11-2011";
+			revised: "01-12-2011";
 		feature
 			numberOfHeroes: INTEGER -- How many players are in the HeroParty?
-				ensure
-					Result >= 2 and Result <= 4;
-			end
 			numberOfHeroesYetToAct: INTEGER -- How many players have yet to take their turn?
 				ensure
 					Result >= 0;
 					Result <= numberOfPlayers;
 			end
-			hasHeroesActedYet: BOOLEAN -- Has 'this' player yet to take their turn?
+			hasHeroActedYet: BOOLEAN -- Has 'this' player yet to take their turn?
 				-> hero: Hero
 				require
 					hero /= Void
@@ -48,9 +43,10 @@ component
 				-> hero: Hero
 				require
 					hero /= Void;
+					hasHeroActedYet = false;
 				ensure
-					old not hasHeroActed -> hasHeroActedYet = true;
-					numberOfHeroesYetToAct + 1 = old numberOfHeroesYetToAct;
+					hasHeroActedYet = true;
+					numberOfHeroesYetToAct = old numberOfHeroesYetToAct - 1;
 			end
 			resetYetToAct: Void -- Reset list of Hero yet to act!
 				require
@@ -74,6 +70,7 @@ component
 			end
 		invariant
 			numberOfHeroes >= 2 and numberOfHeroes <= 4;
+			conquestTokens >= 0;
 	end
 	
 	class HERO_PLAYER

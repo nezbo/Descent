@@ -1,16 +1,10 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="StateManager.cs" company="">
-// TODO: Update copyright text.
-// </copyright>
-// -----------------------------------------------------------------------
-
-namespace Descent.State
+﻿namespace Descent.State
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
-using System.Diagnostics.Contracts;
+    using System.Diagnostics.Contracts;
 
     /// <summary>
     /// The handler of all states. Knows about the current state and what to do next.
