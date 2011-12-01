@@ -167,22 +167,23 @@ class_chart HERO_PARTY
 		author: "Jonas Breindahl";
 		in_cluster: "PLAYER_CLUSTER"
 		created: "21-11-2011";
-		revised: "21-11-2011"
+		revised: "01-12-2011"
 	explanation
 		"A party of heroes"
 	query
-		"How many players are in the HeroParty?",
-		"How many players have yet to take their turn?",
-		"Has 'this' player yet to take their turn?",
-		"How many conquest tokens do the players have?",
+		"How many heroes are in the HeroParty?",
+		"How many heroes have yet to take their turn?",
+		"Has 'this' heroes yet to take their turn?",
+		"How many conquest tokens do the heroes have?",
 		"Is the pool of conquest tokens empty?"
 	command
-		"Remove 'this' player from the list of players yet to act!",
-		"Reset list of players yet to act!",
+		"Add 'this' hero to the list of heroes in the HeroParty!",
+		"Remove 'this' hero from the list of heroes yet to act!",
+		"Reset list of heroes yet to act!",
 		"Remove 'this' number of conquest tokens from the pool of tokens!",
 		"Add 'this' number of conquest tokens to the pool of tokens!"
 	constraint
-		"A HeroParty must always have 2 to 4 players."
+		"A HeroParty must always have 2 to 4 heroes."
 end
 
 class_chart HERO_PLAYER
@@ -634,11 +635,22 @@ class_chart OBSTACLE_MARKER
 		MARKER
 end
 
+class_chart DRAWABLE
+	indexing
+		author: "Emil Juul Jacobsen";
+		created: "30-11-2011";
+		revised: "30-11-2011";
+	explanation
+		"Something that should be able to be drawn on the screen"
+	query
+		"What do you look like?"
+end
+
 class_chart GUI
 	indexing
 		author: "Emil Juul Jacobsen";
 		created: "27-11-2011";
-		revised: "27-11-2011"
+		revised: "01-12-2011"
 	explanation
 		"Handles the visual aspects of the game and input from the user"
 	command
@@ -651,7 +663,7 @@ class_chart GUI_ELEMENT
 	indexing
 		author: "Emil Juul Jacobsen";
 		created: "27-11-2011";
-		revised: "29-11-2011";
+		revised: "01-12-2011";
 	explanation
 		"A single element of the user interface that, itself, can contain sub-elements"
 	query
@@ -672,15 +684,18 @@ class_chart GUI_ELEMENT
 		"All sub-elements must be within the boundaries of this GUI_ELEMENT"
 end
 
-class_chart DRAWABLE
+class_chart BOARD_GUI_ELEMENT
 	indexing
 		author: "Emil Juul Jacobsen";
-		created: "30-11-2011";
-		revised: "30-11-2011";
+		created: "01-12-2011";
+		revised: "01-12-2011";
+	inherit
+		GUI_ELEMENT
 	explanation
-		"Something that should be able to be drawn on the screen"
-	query
-		"What do you look like?"
+		"The element on the screen that visualizes the game board."
+	command
+		"Mark this field as positive or negative!",
+		"Clear all marks!"
 end
 
 class_chart GUI_ELEMENT_FACTORY

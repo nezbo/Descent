@@ -1,4 +1,4 @@
-using System.IO;
+using Descent;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -16,11 +16,11 @@ namespace XNATutorials
 
         private int numOfFrames = 0;
         private double FPS = 0;
-        private SpriteFont font;
-        private Vector2 FPSPosition = new Vector2(50,50);
 
         private int xDisp, yDisp;
         private Sprite[,] board;
+
+        private Texture2D highlightTexture;
 
         public Game1()
         {
@@ -40,9 +40,8 @@ namespace XNATutorials
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            xDisp = 0;
-            yDisp = 0;
-            this.board = new Sprite[100, 100];
+            xDisp = -2 * 95;
+            yDisp = 17 * 95;
 
             //Make the mouse pointer visible in the game window
             this.IsMouseVisible = true;
@@ -58,6 +57,11 @@ namespace XNATutorials
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            // for highlighting
+            highlightTexture = new Texture2D(GraphicsDevice, 1, 1);
+            highlightTexture.SetData(new Color[] { Color.White });
+
             //********** MONSTERS **********//
             /*
             StreamReader reader = File.OpenText("monsters.txt");
@@ -72,6 +76,9 @@ namespace XNATutorials
             System.IO.StreamReader reader = new System.IO.StreamReader(TitleContainer.OpenStream("quest1.map"));
             int height = int.Parse(reader.ReadLine());
             int width = int.Parse(reader.ReadLine());
+            this.board = new Sprite[width, height];
+
+            this.board = new Sprite[width, height];
 
             string line = null;
             for (int y = 0; y < height; y++)
@@ -130,9 +137,6 @@ namespace XNATutorials
                         break;
                 }
             }
-
-            //************* OTHER OTHER STUFF ******************//
-            font = Content.Load<SpriteFont>("Courier New");
         }
 
         /// <summary>
@@ -151,9 +155,6 @@ namespace XNATutorials
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
-                this.Exit();
 
             // TODO: Add your update logic here
             // FPS
@@ -166,10 +167,11 @@ namespace XNATutorials
 
             // Controls
             KeyboardState keyState = Keyboard.GetState();
-            if (keyState.IsKeyDown(Keys.Left)) xDisp += 10;
-            if (keyState.IsKeyDown(Keys.Right)) xDisp -= 10;
-            if (keyState.IsKeyDown(Keys.Up)) yDisp += 10;
-            if (keyState.IsKeyDown(Keys.Down)) yDisp -= 10;
+            if (keyState.IsKeyDown(Keys.Left) && xDisp > -2 * 95) xDisp -= 10;
+            if (keyState.IsKeyDown(Keys.Right) && xDisp < (board.GetLength(0) + 1) * 95 - graphics.PreferredBackBufferWidth) xDisp += 10;
+            if (keyState.IsKeyDown(Keys.Up) && yDisp > -2 * 95) yDisp -= 10;
+            if (keyState.IsKeyDown(Keys.Down) && yDisp < (board.GetLength(1) + 2) * 95 - graphics.PreferredBackBufferHeight) yDisp += 10;
+            if (keyState.IsKeyDown(Keys.Escape)) this.Exit();
 
             base.Update(gameTime);
         }
@@ -183,7 +185,7 @@ namespace XNATutorials
             GraphicsDevice.Clear(Color.Black);
 
             // TODO: Add your drawing code here
-            
+
 
             // Draw screen
             spriteBatch.Begin();
@@ -193,27 +195,18 @@ namespace XNATutorials
                 for (int y = 0; y < board.GetLength(1); y++)
                 {
                     Sprite cur = board[x, y];
-                    if (cur != null) spriteBatch.Draw(cur.Texture, new Vector2(xDisp + x * 95, yDisp + y * 95), Color.White);
+                    if (cur != null) spriteBatch.Draw(cur.Texture, new Vector2(x * 95 - xDisp, y * 95 - yDisp), Color.White);
                 }
             }
+
+            spriteBatch.Draw(highlightTexture, new Rectangle(5 * 95 - xDisp, 18 * 95 - yDisp, 95, 95), new Color(0,0,0,155));
+            spriteBatch.Draw(highlightTexture, new Rectangle(5 * 95 - xDisp, 19 * 95 - yDisp, 95, 95), new Color(110, 111, 72, 128));
 
             // FPS
             numOfFrames++;
             Window.Title = "Descent - " + FPS + " FPS";
-            /*
-            spriteBatch.DrawString(
-                font,
-                FPS.ToString(),
-                FPSPosition,
-                Color.LightGreen,
-                0,
-                font.MeasureString(FPS.ToString()),
-                1.0f,
-                SpriteEffects.None,
-                0.5f);
-            */
             spriteBatch.End();
-            
+
             base.Draw(gameTime);
         }
     }

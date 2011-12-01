@@ -57,31 +57,5 @@
             states.Reverse();
             return states.ToArray();
         }
-
-        public override string ToString()
-        {
-            string ret = "";
-            foreach (var state in _states)
-            {
-                ret += state +", ";
-            }
-            return ret;
-        }
-
-        public static void Main(string[] args)
-        {
-            var machine = new StateMachine( new State[] {State.HeroPartyTurn, State.HeroPartyInitiation});
-            System.Diagnostics.Debug.WriteLine(machine.CurrentState);
-            machine.PlaceStates(new State[] {State.DrawSkillCards, State.BuyEquipment, State.TradeCard});
-            machine.ChangeToNextState();
-            System.Diagnostics.Debug.WriteLine(machine);
-            machine.ChangeToNextState();
-            machine.ChangeToNextState();
-            System.Diagnostics.Debug.WriteLine(machine.CurrentState);
-            foreach (var state in machine.PreviousStates(5))
-            {
-                System.Diagnostics.Debug.WriteLine(state);
-            }
-        }
     }
 }
