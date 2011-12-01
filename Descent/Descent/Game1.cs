@@ -15,6 +15,11 @@ namespace XNATutorials
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        private int numOfFrames = 0;
+        private double FPS = 0;
+        private SpriteFont font;
+        private Vector2 FPSPosition = new Vector2(50,50);
+
         private int xDisp, yDisp;
         private Sprite[,] board;
 
@@ -40,6 +45,9 @@ namespace XNATutorials
             yDisp = 0;
             this.board = new Sprite[100, 100];
 
+            //Make the mouse pointer visible in the game window
+            this.IsMouseVisible = true;
+
             base.Initialize();
         }
 
@@ -62,7 +70,7 @@ namespace XNATutorials
             //********** LOAD MAP **********//
             SpriteFactory sf = new SpriteFactory(this.Content);
 
-            StreamReader reader = File.OpenText("quest1.map");
+            System.IO.StreamReader reader = new System.IO.StreamReader(TitleContainer.OpenStream("quest1.map"));
             int height = int.Parse(reader.ReadLine());
             int width = int.Parse(reader.ReadLine());
 
@@ -80,7 +88,7 @@ namespace XNATutorials
                         case " ":
                             break;
                         default:
-                            board[x, y] = sf.GetSprite("floor");
+                            board[x, y] = sf.GetSprite("Images/Board/floor");
                             break;
                     }
 
@@ -98,31 +106,34 @@ namespace XNATutorials
                 switch (data[0])
                 {
                     case "monster":
-                        board[int.Parse(data[1]), int.Parse(data[2])] = sf.GetSprite(data[3]);
+                        board[int.Parse(data[1]), int.Parse(data[2])] = sf.GetSprite("Images/Monsters/" + data[3]);
                         break;
                     case "glyph":
-                        board[int.Parse(data[1]), int.Parse(data[2])] = sf.GetSprite("portal-" + data[3]);
+                        board[int.Parse(data[1]), int.Parse(data[2])] = sf.GetSprite("Images/Board/portal-" + data[3]);
                         break;
                     case "treasure":
-                        board[int.Parse(data[1]), int.Parse(data[2])] = sf.GetSprite("treasure-" + data[3]);
+                        board[int.Parse(data[1]), int.Parse(data[2])] = sf.GetSprite("Images/Board/treasure-" + data[3]);
                         break;
                     case "gold":
-                        board[int.Parse(data[1]), int.Parse(data[2])] = sf.GetSprite("gold");
+                        board[int.Parse(data[1]), int.Parse(data[2])] = sf.GetSprite("Images/Board/gold");
                         break;
                     case "rock":
-                        board[int.Parse(data[1]), int.Parse(data[2])] = sf.GetSprite("rock1");
+                        board[int.Parse(data[1]), int.Parse(data[2])] = sf.GetSprite("Images/Board/rock1");
                         break;
                     case "pit":
-                        board[int.Parse(data[1]), int.Parse(data[2])] = sf.GetSprite("pit1");
+                        board[int.Parse(data[1]), int.Parse(data[2])] = sf.GetSprite("Images/Board/pit1");
                         break;
                     case "potion":
-                        board[int.Parse(data[1]), int.Parse(data[2])] = sf.GetSprite("potion-" + data[3]);
+                        board[int.Parse(data[1]), int.Parse(data[2])] = sf.GetSprite("Images/Board/potion-" + data[3]);
                         break;
                     case "rune":
-                        board[int.Parse(data[1]), int.Parse(data[2])] = sf.GetSprite("rune-" + data[3]);
+                        board[int.Parse(data[1]), int.Parse(data[2])] = sf.GetSprite("Images/Board/rune-" + data[3]);
                         break;
                 }
             }
+
+            //************* OTHER OTHER STUFF ******************//
+            font = Content.Load<SpriteFont>("Courier New");
         }
 
         /// <summary>
@@ -146,6 +157,15 @@ namespace XNATutorials
                 this.Exit();
 
             // TODO: Add your update logic here
+            // FPS
+            if (gameTime.TotalGameTime.Milliseconds == 0)
+            {
+                FPS = numOfFrames;
+                numOfFrames = 0;
+
+            }
+
+            // Controls
             KeyboardState keyState = Keyboard.GetState();
             if (keyState.IsKeyDown(Keys.Left)) xDisp += 10;
             if (keyState.IsKeyDown(Keys.Right)) xDisp -= 10;
@@ -164,7 +184,11 @@ namespace XNATutorials
             GraphicsDevice.Clear(Color.Black);
 
             // TODO: Add your drawing code here
+            
+
+            // Draw screen
             spriteBatch.Begin();
+
             for (int x = 0; x < board.GetLength(0); x++)
             {
                 for (int y = 0; y < board.GetLength(1); y++)
@@ -173,8 +197,24 @@ namespace XNATutorials
                     if (cur != null) spriteBatch.Draw(cur.Texture, new Vector2(xDisp + x * 95, yDisp + y * 95), Color.White);
                 }
             }
-            spriteBatch.End();
 
+            // FPS
+            numOfFrames++;
+            Window.Title = "Descent - " + FPS + " FPS";
+            /*
+            spriteBatch.DrawString(
+                font,
+                FPS.ToString(),
+                FPSPosition,
+                Color.LightGreen,
+                0,
+                font.MeasureString(FPS.ToString()),
+                1.0f,
+                SpriteEffects.None,
+                0.5f);
+            */
+            spriteBatch.End();
+            
             base.Draw(gameTime);
         }
     }
