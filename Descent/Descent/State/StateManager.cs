@@ -1,4 +1,7 @@
-﻿namespace Descent.State
+﻿using Descent.Messaging.Events;
+using Descent.Model.Player;
+
+namespace Descent.State
 {
     using System;
     using System.Collections.Generic;
@@ -12,13 +15,17 @@
     /// <author>Martin Marcher</author>
     public class StateManager
     {
-        private StateMachine stateMachine;
-
-        public State CurrentState { get { return stateMachine.CurrentState; } }
+        private readonly StateMachine stateMachine;
+        private EventManager eventManager = Player.Instance.EventManager;
 
         public StateManager()
         {
-            stateMachine = new StateMachine(new State[] {State.HeroPartyTurn, State.HeroPartyInitiation});
+            stateMachine = new StateMachine(new State[] { State.Initiation, State.NewRound });
+        }
+
+        public State CurrentState
+        {
+            get { return stateMachine.CurrentState; }
         }
 
         public State[] PreviousStates(int count)

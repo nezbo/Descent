@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Descent.Model.Board;
 
 namespace Descent.GUI
 {
@@ -44,7 +45,7 @@ namespace Descent.GUI
             this.markTexture.SetData(new Color[] { Color.White });
 
             // event on click
-            this.AddClickAction("board",n => n.SquareMarked(xClick, yClick));
+            //TODO: Wait for call available! this.AddClickAction("board",n => n.SquareMarked(xClick, yClick));
         }
 
         public override bool HandleClick(int x, int y)
@@ -70,7 +71,7 @@ namespace Descent.GUI
 
                 case Keys.Right:
                     {
-                        if (xDisp < (board.GetLength(0) -1 + BorderTiles) * 95 - this.Bound.Width)
+                        if (xDisp < (/*TODO: Did you mean width? board.GetLength(0)*/ -1 + BorderTiles) * 95 - this.Bound.Width)
                         {
                             xDisp += 10;
                         }
@@ -86,7 +87,7 @@ namespace Descent.GUI
                     }
                 case Keys.Down:
                     {
-                        if (yDisp < (board.GetLength(1) - 1 + BorderTiles) * 95 - this.Bound.Height)
+                        if (yDisp < (/*TODO: Did you mean height? board.GetLength(1)*/ - 1 + BorderTiles) * 95 - this.Bound.Height)
                         {
                             yDisp += 10;
                         }
@@ -109,10 +110,10 @@ namespace Descent.GUI
             {
                 for (int y = 0; y < board.Height; y++)
                 {
-                    if (board.IsWithin(x, y))
+                    if (true)//TODO: FIX board.IsWithin(x, y))
                     {
                         v = CalcVector(x,y);
-                        draw.Draw(board.FloorTexture, v, Color.White);
+                        //TODO: FIX draw.Draw(board.FloorTexture, v, Color.White);
                     }
                 }
             }
@@ -124,10 +125,12 @@ namespace Descent.GUI
             {
                 for (int y = 0; y < board.Height; y++)
                 {
+                    /* TODO FIX
                     s = board[x, y];
                     v = CalcVector(x,y);
                     if(s.Marker != null) draw.Draw(s.Marker.Texture, v, Color.White);
                     if(s.Figure != null) draw.Draw(s.Figure.Texture, v, Color.White);
+                     */
                 }
             }
 

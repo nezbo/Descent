@@ -15,21 +15,21 @@
         private List<State> _states = new List<State>();
         private int currentIndex;
 
-        public State CurrentState { get { return _states[currentIndex]; } }
-        public State NextState { get { return _states[currentIndex + 1]; } }
-
-        [ContractInvariantMethod]
-        private void Invariant()
-        {
-            // Ensures that are always a current and next state
-            Contract.Invariant(currentIndex < _states.Count - 1);
-        }
-
         public StateMachine(State[] startStates)
         {
             Contract.Requires(startStates != null && startStates.Length > 1);
             currentIndex = 0;
             _states.AddRange(startStates);
+        }
+
+        public State CurrentState
+        {
+            get { return _states[currentIndex]; }
+        }
+
+        public State NextState
+        {
+            get { return _states[currentIndex + 1]; }
         }
 
         public void ChangeToNextState()
@@ -56,6 +56,13 @@
             var states = _states.GetRange(currentIndex - count, currentIndex);
             states.Reverse();
             return states.ToArray();
+        }
+
+        [ContractInvariantMethod]
+        private void Invariant()
+        {
+            // Ensures that are always a current and next state
+            Contract.Invariant(currentIndex < _states.Count - 1);
         }
     }
 }

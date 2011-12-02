@@ -15,6 +15,8 @@ namespace Descent.Messaging.Events
     using Descent.Model.Player;
 
     #region Delegate declarations
+    public delegate void Action();
+
     public delegate void AllRespondedNoActionHandler(object sender, EventArgs eventArgs); // Special delegate, contains no eventArgs info.
 
     public delegate void ChatMessageHandler(object sender, ChatMessageEventArgs eventArgs);
@@ -34,6 +36,12 @@ namespace Descent.Messaging.Events
         private Random random = new Random();
 
         #region Event declarations
+
+        #region GameEvents
+
+        public event Action NewRound;
+        
+        #endregion
 
         public event AllRespondedNoActionHandler AllRespondedNoActionEvent;
 
@@ -127,6 +135,9 @@ namespace Descent.Messaging.Events
                     break;
                 case EventType.ChatMessage:
                     ChatMessageEvent(this, (ChatMessageEventArgs)eventArgs);
+                    break;
+                case EventType.NewRound:
+                    NewRound();
                     break;
             }
 

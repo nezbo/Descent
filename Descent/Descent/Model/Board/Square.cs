@@ -10,9 +10,8 @@ namespace Descent.Model.Board
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
-
-    using Descent.Model.Player.Figure;
-    using Descent.Model.Board.Marker;
+    using Player;
+    using Player.Figure;
 
     /// <summary>
     /// A single square of the board
