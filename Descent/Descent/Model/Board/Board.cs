@@ -22,7 +22,7 @@ namespace Descent.Model.Board
     public class Board
     {
 
-        #region FIELDS
+        #region Properties
 
         /// <summary>
         /// What is your width?
@@ -52,7 +52,32 @@ namespace Descent.Model.Board
 
         #endregion
 
-        #region CONSTRUCTORS
+        #region Indexers
+
+        /// <summary>
+        /// Access the (x, y)'th in the board
+        /// </summary>
+        /// <param name="x">
+        /// The x coordinate
+        /// </param>
+        /// <param name="y">
+        /// The y coordinate
+        /// </param>
+        public Square this[int x, int y]
+        {
+            get
+            {
+                return board[x, y];
+            }
+            set
+            {
+                board[x, y] = value;
+            }
+        }
+
+        #endregion
+
+        #region Constructors
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Board"/> class.
@@ -77,7 +102,7 @@ namespace Descent.Model.Board
         }
         #endregion
 
-        #region METHODS
+        #region Methods
 
         /// <summary>
         /// Determines wether the point (x, y) is within the board,
