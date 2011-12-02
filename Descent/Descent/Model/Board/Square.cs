@@ -11,6 +11,9 @@ namespace Descent.Model.Board
     using System.Linq;
     using System.Text;
 
+    using Descent.Model.Player.Figure;
+    using Descent.Model.Board.Marker;
+
     /// <summary>
     /// A single square of the board
     /// </summary>
@@ -30,7 +33,10 @@ namespace Descent.Model.Board
 
         #region FIELDS
 
-        public Marker Marker { get; set; }
+        /// <summary>
+        /// Gets or sets Marker.
+        /// </summary>
+        public Marker.Marker Marker { get; set; }
 
         public Figure Figure { get; set; }
 
