@@ -12,6 +12,8 @@ namespace Descent.Model.Player
     using System.Linq;
     using System.Text;
 
+    using Descent.Messaging.Connection;
+    using Descent.Messaging.Events;
     using Descent.State;
 
     /// <summary>
@@ -54,19 +56,13 @@ namespace Descent.Model.Player
         #endregion CONSTRUCTORS
 
         #region FIELDS
-        
-        /// <summary>
-        /// Gets or sets the unique ID.
-        /// What is your unique player ID? Your unique ID is this!
-        /// </summary>
-        public int ID { get; set; }
 
         #region StateManagerSingletonPattern
         //************ Singleton Pattern *************//
         /// <summary>
         /// The StateManager field, that makes out the Singleton Pattern
         /// </summary>
-        private StateManager manager = null;
+        private StateManager stateManager = null;
 
         /// <summary>
         /// Gets StateManager.
@@ -76,12 +72,37 @@ namespace Descent.Model.Player
         {
             get
             {
-                return manager ?? (manager = new StateManager());
+                return this.stateManager ?? (this.stateManager = new StateManager());
             }
         }
 
         //*********************************************//
         #endregion StateManagerSingletonPattern
+
+        #region EventManagerSingletonPattern
+        //************ Singleton Pattern *************//
+        /// <summary>
+        /// The EventManager field, that makes out the Singleton Pattern
+        /// </summary>
+        private EventManager eventManager = null;
+
+        /// <summary>
+        /// Gets EventManager.
+        /// </summary>
+        public EventManager EventManager
+        {
+            get
+            {
+                return eventManager ?? (eventManager = new EventManager());
+            }
+        }
+
+        //*********************************************//
+        #endregion EventManagerSingletonPattern
+
+        private Connection connection;
+
+        public Connection Connection { get { return connection; } }
 
         /// <summary>
         /// What is your role?
@@ -93,6 +114,39 @@ namespace Descent.Model.Player
         /// Are you client or server
         /// </summary>
         public bool IsServer { get; set; }
+
+        /// <summary>
+        /// Gets the unique ID.
+        /// What is your unique player ID?
+        /// </summary>
+        public int Id
+        {
+            get
+            {
+                return Connection.Id;
+            }
+        }
+
+        /// <summary>
+        /// Start/host a game on the following port.
+        /// </summary>
+        /// <param name="port">Port to listen on.</param>
+        public void StartGame(int port)
+        {
+            this.connection = new ServerConnection(port);
+            this.connection.Start();
+        }
+
+        /// <summary>
+        /// Join an already started game.
+        /// </summary>
+        /// <param name="ip">Ip of host.</param>
+        /// <param name="port">Port of host.</param>
+        public void JoinGame(string ip, int port)
+        {
+            this.connection = new ClientConnection(ip, port);
+            this.connection.Start();
+        }
         
         #endregion
     }
