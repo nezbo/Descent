@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="HeroParty.cs" company="">
-// TODO: Update copyright text.
-// </copyright>
-// -----------------------------------------------------------------------
-
+﻿
 namespace Descent.Model.Player
 {
 	using System;
@@ -16,10 +11,13 @@ namespace Descent.Model.Player
 
 	/// <summary>
 	/// TODO: Update summary.
-	/// </summary>
+    /// </summary>
+    /// <author>
+    /// Jonas Breindahl (jobre@itu.dk)
+    /// </author>
 	public class HeroParty
 	{
-		#region FIELDS
+		#region Fields
 
 		/// <summary>
 		/// Gets numberOfHeroes.
@@ -83,10 +81,11 @@ namespace Descent.Model.Player
 
 		#endregion FIELDS
 
-		#region CONSTRUCTORS
-		#endregion CONSTRUCTORS
+		#region Initialization
 
-		#region METHODS
+		#endregion 
+
+		#region Methods
 
 		/// <summary>
 		/// Has 'this' heroes yet to take their turn? 
@@ -169,7 +168,4 @@ namespace Descent.Model.Player
         }
 		#endregion METHODS 
 	}
-	
-
-   
 }

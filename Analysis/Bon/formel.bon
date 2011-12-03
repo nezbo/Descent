@@ -146,11 +146,29 @@ component
 					old health - healthAmount < 0 -> health = 0;
 					old health - healthAmount >= 0 -> health = old health - healthAmount;
 			end
+			addSpeed: Void -- Add 'this' amount of speed!
+				-> INTEGER: speedAmount
+				require
+					speedAmount > 0;
+				ensure 
+					speed = old speed + speedAmount;
+			end
+			removeSpeed: Void -- Lose 'this' amount of speed!
+				-> INTEGER: speedAmount
+				require
+					speedAmount > 0;
+				ensure
+					old speed - speedAmount < 0 -> speed = 0;
+					old speed - speedAmount >= 0 -> speed = old speed - speedAmound;
+			end
 		invariant
 			name.length > 0;
 			maxHealth > 0;
 			speed > 0;
 			armor >= 0;
+			speedLeft >= 0
+			attacksLeft >= 0;
+			
 	end
 	
 	class HERO
@@ -186,6 +204,16 @@ component
 			fatique <= maxFatique;
 			fatique > 0;
 	end
+	
+	class MONSTER -- A monster, controlled by the overlord
+		indexing
+			author: "Jonas Breindahl";
+			created: "30-11-2011";
+			revised: "02-12-2011";
+		inherit
+			FIGURE
+	end
+			
 end
 
 static_diagram FORMAL_HERO_STUFF
@@ -345,10 +373,11 @@ component
 		indexing
 			author: "Jonas Breindahl";
 			created: "30-11-2011";
-			revised: "30-11-2011";
+			revised: "02-12-2011";
 		feature
 			width: INTEGER -- What is your width?
 			height: INTEGER -- What is your height?
+			heroesInTown; SEQUENCE[HERO] -- What heroes are currently in town?
 			withinBoard: BOOLEAN -- Is the coordinate (x/y) within the board?
 				-> coord: POINT
 				require 
