@@ -253,5 +253,11 @@ namespace Descent.Messaging.Events
             return sb.ToString();
         }
         #endregion
+
+        //TODO: present from Emil ... i needs this
+        internal object SquareMarked(int xClick, int yClick)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

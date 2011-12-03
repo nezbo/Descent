@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Input;
 namespace Descent.GUI
 {
     using Microsoft.Xna.Framework.Graphics;
+    using Microsoft.Xna.Framework;
 
     /// <summary>
     /// Handles the visual aspects of the game and input
@@ -13,9 +14,10 @@ namespace Descent.GUI
     /// <author>
     /// Emil Juul Jacobsen
     /// </author>
-    class GUI
+    class GUI : DrawableGameComponent
     {
-        private SpriteBatch draw; // the drawing surface
+        // drawing surface
+        private SpriteBatch draw;
 
         //input
         private bool mouseDownBefore = false;
@@ -33,9 +35,9 @@ namespace Descent.GUI
         /// Creates a Graphical User Interface.
         /// </summary>
         /// <param name="draw">The surface to draw on.</param>
-        public GUI(SpriteBatch draw)
+        public GUI(Game game) : base(game)
         {
-            this.draw = draw;
+            draw = new SpriteBatch(GraphicsDevice);
             this.lastKeyboardState = Keyboard.GetState();
 
             layers = new GUIElement[3];
@@ -44,7 +46,7 @@ namespace Descent.GUI
         /// <summary>
         /// Draws the GUI to the screen.
         /// </summary>
-        public void Draw()
+        public override void Draw(GameTime gameTime)
         {
             draw.Begin();
             foreach (GUIElement element in layers)
@@ -81,7 +83,7 @@ namespace Descent.GUI
         /// clicks and key presses.
         /// </summary>
         /// <param name="delta">The number of milliseconds since last update</param>
-        public void Update(int delta)
+        public override void Update(GameTime gameTime)
         {
             // mouseclick
             MouseState ms = Mouse.GetState();

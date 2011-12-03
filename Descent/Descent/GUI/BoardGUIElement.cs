@@ -45,7 +45,7 @@ namespace Descent.GUI
             this.markTexture.SetData(new Color[] { Color.White });
 
             // event on click
-            //TODO: Wait for call available! this.AddClickAction("board",n => n.SquareMarked(xClick, yClick));
+            this.AddClickAction("board",n => n.SquareMarked(xClick, yClick));
         }
 
         public override bool HandleClick(int x, int y)

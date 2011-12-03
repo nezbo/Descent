@@ -10,6 +10,7 @@ namespace Descent.GUI
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Input;
+    using Descent.Messaging.Events;
 
     /// <summary>
     /// A single element of the user interface that, itself, 
@@ -20,10 +21,9 @@ namespace Descent.GUI
     /// </author>
     class GUIElement
     {
-        private static StateManager manager = Player.Instance.StateManager;
+        private static EventManager manager = Player.Instance.EventManager; //TODO: Where to find this?
 
-        private Rectangle bound;
-        public Rectangle Bound { get { return bound; } }
+        public Rectangle Bound { get; set; }
 
         private string name;
         public string Name { get { return name; } }
@@ -33,7 +33,7 @@ namespace Descent.GUI
         private Collection<GUIElement> children;
 
         private Dictionary<Drawable, Vector2> visuals;
-        private Action<StateManager> onClick = null;
+        private Action<EventManager> onClick = null;
 
         /// <summary>
         /// Creates a GUIElement with the given boundaries.
@@ -47,7 +47,7 @@ namespace Descent.GUI
         {
             this.name = name;
             this.focus = false;
-            bound = new Rectangle(x, y, width, height);
+            Bound = new Rectangle(x, y, width, height);
             children = new Collection<GUIElement>();
             visuals = new Dictionary<Drawable, Vector2>();
         }
@@ -60,7 +60,7 @@ namespace Descent.GUI
         /// <returns></returns>
         public bool HasPoint(int x, int y)
         {
-            return bound.Contains(x, y);
+            return Bound.Contains(x, y);
         }
 
         /// <summary>
@@ -124,7 +124,7 @@ namespace Descent.GUI
         /// the one given.
         /// </summary>
         /// <param name="action">The new On Click action</param>
-        public void AddClickAction(string target, Action<StateManager> action)
+        public void AddClickAction(string target, Action<EventManager> action)
         {
             if (this.name == target)
             {
