@@ -77,6 +77,7 @@ namespace Descent.State
                 case State.DrawHeroCard:
                     {
                         newGUIE.AddClickAction("hero", n => n.QueueEvent(EventType.AssignHero,/*WTF Simon??? WHAT DO I DO*/ null));
+                        break;
                     }
             }
 
