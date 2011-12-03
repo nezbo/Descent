@@ -19,7 +19,7 @@ namespace Descent.GUI
 
         //input
         private bool mouseDownBefore = false;
-        private Dictionary<Keys, bool> keyDownBefore;
+        private KeyboardState lastKeyboardState;
 
         /// <summary>
         /// The three layers of the GUI:
@@ -36,7 +36,7 @@ namespace Descent.GUI
         public GUI(SpriteBatch draw)
         {
             this.draw = draw;
-            this.keyDownBefore = new Dictionary<Keys, bool>();
+            this.lastKeyboardState = Keyboard.GetState();
 
             layers = new GUIElement[3];
         }
@@ -92,16 +92,18 @@ namespace Descent.GUI
             mouseDownBefore = (ms.LeftButton == ButtonState.Pressed);
 
             // keys
-            List<Keys> pressed = new List<Keys>(Keyboard.GetState().GetPressedKeys());
+            KeyboardState keyState = Keyboard.GetState();
+            List<Keys> pressed = new List<Keys>(keyState.GetPressedKeys());
             foreach (Keys key in Enum.GetValues(typeof(Keys)))
             {
                 bool isDown = pressed.Contains(key);
-                if (isDown && keyDownBefore.ContainsKey(key) && !keyDownBefore[key])
+                if (isDown && lastKeyboardState.IsKeyUp(key))
                 {
                     HandleKeyPress(key);
                 }
-                keyDownBefore.Add(key, isDown);
             }
+
+            lastKeyboardState = keyState;
         }
 
         /// <summary>
