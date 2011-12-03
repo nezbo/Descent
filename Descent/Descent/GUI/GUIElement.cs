@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework.Input;
+﻿
 
 namespace Descent.GUI
 {
@@ -9,6 +9,7 @@ namespace Descent.GUI
     using Descent.State;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
+    using Microsoft.Xna.Framework.Input;
 
     /// <summary>
     /// A single element of the user interface that, itself, 
