@@ -178,7 +178,7 @@ namespace Descent.Model.Board
         {
             Contract.Requires(point != null);
             Contract.Requires(IsSquareWithinBoard(point));
-            if (board[(int)point.X, (int)point.Y].Figure == Figure.NONE) return false;
+            if (board[(int)point.X, (int)point.Y].Figure == Figure.None) return false;
             return true;
         }
 
