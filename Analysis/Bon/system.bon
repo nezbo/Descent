@@ -12,9 +12,9 @@ cluster_chart MODEL_CLUSTER
 end
 
 cluster_chart PLAYER_CLUSTER
+	class ROLE description "The role of a player in the game" 
 	class PLAYER description "The actual player, playing the game"
 	class HERO_PARTY description "A party of heroes"
-	class HERO_PLAYER description "The role of a hero that a player can take"
 	class OVERLORD description "The role of an overlord that a player can take"
 	cluster FIGURE_CLUSTER description "A figure with basic stats"
 	cluster OVERLORD_STUFF description "Stuff that is specific for an overlord"
@@ -145,6 +145,18 @@ cluster_chart STATE_STUFF
 	class STATE description "A collection of all different states."
 end
 
+class_chart ROLE
+	indexing
+		author: "Emil Juul Jacobsen";
+		in_cluster: "PLAYER_CLUSTER"
+		created: "03-12-2011";
+		revised: "03-12-2011";
+	explanation
+		"Describes what Role a given player has at the moment."
+	query
+		"Can i get this role?"
+end
+
 class_chart PLAYER
 	indexing
 		author: "Jonas Breindahl";
@@ -184,17 +196,6 @@ class_chart HERO_PARTY
 		"Add 'this' number of conquest tokens to the pool of tokens!"
 	constraint
 		"A HeroParty must always have 2 to 4 heroes."
-end
-
-class_chart HERO_PLAYER
-	indexing
-		author: "Jonas Breindahl";
-		created: "21-11-2011";
-		revised: "21-11-2011"
-	explanation
-		"The role of a hero, that a player can have"
-	query
-		"What hero are you playing?"
 end
 
 class_chart OVERLORD

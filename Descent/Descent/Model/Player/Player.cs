@@ -17,6 +17,22 @@ namespace Descent.Model.Player
     using Descent.State;
 
     /// <summary>
+    /// Describes the current role of a Player in the game. The Overlord's
+    /// role will not change throughout the game, but the Hero's will frequently
+    /// change from the ActiveHero to the InactiveHero denoting wether or not
+    /// they are allowed to do stuff in the game.
+    /// </summary>
+    /// <author>
+    /// Emil Juul Jacobsen
+    /// </author>
+    public enum Role
+    {
+        Overlord,
+        ActiveHero,
+        InactiveHero
+    }
+
+    /// <summary>
     /// The actual player, playing the game
     /// TODO: Write Player class
     /// </summary>
