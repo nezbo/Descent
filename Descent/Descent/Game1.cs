@@ -5,12 +5,14 @@ using Microsoft.Xna.Framework.Input;
 
 namespace XNATutorials
 {
+    using System.IO;
 
     /// <summary>
     /// This is the main type for your game
     /// </summary>
     public class Game1 : Microsoft.Xna.Framework.Game
     {
+        #region Fields
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
@@ -21,7 +23,9 @@ namespace XNATutorials
         private Sprite[,] board;
 
         private Texture2D highlightTexture;
+        #endregion
 
+        #region Initialization
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -70,10 +74,19 @@ namespace XNATutorials
             reader.Close();
             */
 
+            StreamReader reader = new System.IO.StreamReader(TitleContainer.OpenStream("quest1.map"));
+
+            // ORDER IS VERY IMPORTANT! Map first, then other!
+            this.LoadMap(reader);
+            this.LoadOther(reader);
+
+        }
+
+        private void LoadMap(StreamReader reader)
+        {
             //********** LOAD MAP **********//
             SpriteFactory sf = new SpriteFactory(this.Content);
 
-            System.IO.StreamReader reader = new System.IO.StreamReader(TitleContainer.OpenStream("quest1.map"));
             int height = int.Parse(reader.ReadLine());
             int width = int.Parse(reader.ReadLine());
             this.board = new Sprite[width, height];
@@ -100,9 +113,12 @@ namespace XNATutorials
 
                 }
             }
-
-
+        }
+        
+        private void LoadOther(StreamReader reader)
+        {
             //************* LOAD OTHER STUFF ************//
+            string line;
             int lines = int.Parse(reader.ReadLine());
             for (int i = 0; i < lines; i++)
             {
@@ -138,7 +154,6 @@ namespace XNATutorials
                 }
             }
         }
-
         /// <summary>
         /// UnloadContent will be called once per game and is the place to unload
         /// all content.
@@ -147,7 +162,9 @@ namespace XNATutorials
         {
             // TODO: Unload any non ContentManager content here
         }
+        #endregion
 
+        #region Update and Draw
         /// <summary>
         /// Allows the game to run logic such as updating the world,
         /// checking for collisions, gathering input, and playing audio.
@@ -209,5 +226,6 @@ namespace XNATutorials
 
             base.Draw(gameTime);
         }
+        #endregion
     }
 }

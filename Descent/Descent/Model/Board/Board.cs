@@ -19,12 +19,29 @@ namespace Descent.Model.Board
     /// <summary>
     /// TODO: Update summary.
     /// </summary>
+    /// <author>
+    /// Jonas Breindahl (jobre@itu.dk)
+    /// </author>
     public class Board
     {
+
+        #region Fields
+
+        /// <summary>
+        /// The board, made up of squares
+        /// </summary>
+        private Square[,] board;
+
+        private Rectangle bounds;
+
+        private List<Hero> town = new List<Hero>(); 
+
+        #endregion
 
         #region Properties
 
         /// <summary>
+        /// Gets the width of the board
         /// What is your width?
         /// </summary>
         public int Width 
@@ -36,6 +53,7 @@ namespace Descent.Model.Board
         }
 
         /// <summary>
+        /// Gets the height of the board
         /// What is your height?
         /// </summary>
         public int Height
@@ -46,9 +64,16 @@ namespace Descent.Model.Board
             }
         }
 
-        private Square[,] board;
-
-        private Rectangle bounds;
+        /// <summary>
+        /// Gets the list of heroes in Town
+        /// </summary>
+        public List<Hero> Town
+        {
+            get
+            {
+                return town;
+            }
+        } 
 
         #endregion
 
