@@ -103,10 +103,10 @@ namespace Descent.Model.Player
 		}
 
 	    /// <summary>
-        /// Has 'this' heroes yet to take their turn?
+        /// Removes the hero from the list of heroes yet to act
 	    /// </summary>
 	    /// <param name="hero">
-	    /// The hero to check
+	    /// The hero that has now acted
 	    /// </param>
 	    public void HeroHasActed(Hero hero)
         {

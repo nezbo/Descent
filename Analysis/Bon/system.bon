@@ -883,7 +883,8 @@ class_chart STATE_MACHINE
 	query
 		"What is the current state?",
 		"What is the next state?",
-		"What was the previous 'n' states?"
+		"What was the previous 'n' states?",
+		"Going back, do I find this one before that?"
 	command
 		"Change to next state!",
 		"Place these states after the current state!"

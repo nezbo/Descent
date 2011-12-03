@@ -58,6 +58,17 @@
             return states.ToArray();
         }
 
+        public bool IsOneBeforeOther(State one, State other)
+        {
+            int index = currentIndex;
+            while (index >= 0 &&(_states[index] != one || _states[index] != other)) index--;
+            if (index >= 0)
+            {
+                return _states[index] == one;
+            }
+            return false; // there were no "one" at all
+        }
+
         [ContractInvariantMethod]
         private void Invariant()
         {

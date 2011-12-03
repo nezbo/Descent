@@ -8,7 +8,7 @@
     /// <author>
     /// Emil Juul Jacobsen
     /// </author>
-    interface Drawable
+    public interface Drawable
     {
         Texture2D Texture { get; }
     }

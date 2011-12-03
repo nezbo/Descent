@@ -15,6 +15,7 @@ namespace Descent.Model.Player
     using Descent.Messaging.Connection;
     using Descent.Messaging.Events;
     using Descent.State;
+    using Figure;
 
     /// <summary>
     /// Describes the current role of a Player in the game. The Overlord's
@@ -125,6 +126,8 @@ namespace Descent.Model.Player
         /// If the player is overlord, return true, else false
         /// </summary>
         public bool IsOverlord { get; set; }
+
+        public Hero Hero { get; set; } // stub created by Emil, if it needs to be different change it, then remove this comment
 
         /// <summary>
         /// Are you client or server

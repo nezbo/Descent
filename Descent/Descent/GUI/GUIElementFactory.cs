@@ -19,25 +19,43 @@
     /// <author>
     /// Emil Juul Jacobsen
     /// </author>
-    class GUIElementFactory
+    public class GUIElementFactory
     {
         private static GUIElement CreateRoot(GraphicsDevice graphics)
         {
             return new GUIElement("state", 0, 0, graphics.DisplayMode.Width, graphics.DisplayMode.Height);
         }
 
+        private static int RelW(GraphicsDevice graphics, int percentage)
+        {
+            return (int) (graphics.DisplayMode.Width*(3.0/4.0) * (percentage/100.0));
+        }
+
+        private static int RelH(GraphicsDevice graphics, int percentage)
+        {
+            return (int)(graphics.DisplayMode.Height * (percentage / 100.0));
+        }
+
+        // public
+
         public static GUIElement CreateBoardElement(GraphicsDevice graphics, Board board)
         {
             return new BoardGUIElement(graphics, board);
         }
 
-        public static GUIElement CreateStateElement(GraphicsDevice graphics, State state, Role role)
+        public static GUIElement CreateStateElement(GraphicsDevice g, State state, Role role)
         {
-            GUIElement root = CreateRoot(graphics);
+            GUIElement root = CreateRoot(g);
 
             switch(state)
             {
-                // TODO: fill the root here.
+                // TODO: fill the root here for all states that is drawn
+                case State.DrawHeroCard:
+                    {
+                        GUIElement cardE = new GUIElement("hero", RelW(g,25), RelH(g,40), RelW(g,50), RelH(g,20)); //TODO: proper values
+                        root.AddChild(cardE);
+                        break;
+                    }
                 default: { break; }
             }
 

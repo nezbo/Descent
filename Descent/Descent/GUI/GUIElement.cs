@@ -19,7 +19,7 @@ namespace Descent.GUI
     /// <author>
     /// Emil Juul Jacobsen
     /// </author>
-    class GUIElement
+    public class GUIElement
     {
         private static EventManager manager = Player.Instance.EventManager; //TODO: Where to find this?
 

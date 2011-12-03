@@ -14,7 +14,7 @@ namespace Descent.GUI
     /// <author>
     /// Emil Juul Jacobsen
     /// </author>
-    class GUI : DrawableGameComponent
+    public class GUI : DrawableGameComponent
     {
         // drawing surface
         private SpriteBatch draw;
