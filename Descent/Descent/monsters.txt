@@ -1,3 +1,4 @@
+24
 1,'Bane Spider',false,5,2/2/3/4,1,MAGIC,W G,Poison,2,2
 2,'Bane Spider',true,5,3/3/4/5,2,MAGIC,W G B,Poison/Web,2,2
 3,'Beastman',false,5,3/3/4/5,2,MELEE,R G,Damage 1,1,1

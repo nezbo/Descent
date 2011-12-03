@@ -75,17 +75,17 @@ namespace XNATutorials
             */
 
             StreamReader reader = new System.IO.StreamReader(TitleContainer.OpenStream("quest1.map"));
+            SpriteFactory sf = new SpriteFactory(this.Content);
 
             // ORDER IS VERY IMPORTANT! Map first, then other!
-            this.LoadMap(reader);
-            this.LoadOther(reader);
+            this.LoadMap(reader, sf);
+            this.LoadOther(reader, sf);
 
         }
 
-        private void LoadMap(StreamReader reader)
+        private void LoadMap(StreamReader reader, SpriteFactory sf)
         {
             //********** LOAD MAP **********//
-            SpriteFactory sf = new SpriteFactory(this.Content);
 
             int height = int.Parse(reader.ReadLine());
             int width = int.Parse(reader.ReadLine());
@@ -115,7 +115,7 @@ namespace XNATutorials
             }
         }
         
-        private void LoadOther(StreamReader reader)
+        private void LoadOther(StreamReader reader, SpriteFactory sf)
         {
             //************* LOAD OTHER STUFF ************//
             string line;

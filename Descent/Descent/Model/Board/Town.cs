@@ -28,7 +28,10 @@ namespace Descent.Model.Board
 
         public List<Hero> HeroesInTown
         {
-            get{}
+            get
+            {
+                return heroes;
+            }
         } 
 
         #endregion

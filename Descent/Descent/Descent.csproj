@@ -79,6 +79,7 @@
     <Compile Include="GUI\Drawable.cs" />
     <Compile Include="GUI\GUI.cs" />
     <Compile Include="GUI\GUIElement.cs" />
+    <Compile Include="GUI\Model.cs" />
     <Compile Include="Messaging\AsyncSockets\AsyncSocketsClient.cs" />
     <Compile Include="Messaging\AsyncSockets\AsyncSocketsServer.cs" />
     <Compile Include="Messaging\AsyncSockets\ClientInfo.cs" />
@@ -93,8 +94,13 @@
     <Compile Include="Model\Board\Board.cs" />
     <Compile Include="Model\Board\Marker\Marker.cs" />
     <Compile Include="Model\Board\Square.cs" />
+    <Compile Include="Model\Board\Town.cs" />
+    <Compile Include="Model\Dice.cs" />
+    <Compile Include="Model\Event\Ability.cs" />
+    <Compile Include="Model\Event\Effect.cs" />
     <Compile Include="Model\Player\Figure\Figure.cs" />
     <Compile Include="Model\Player\Figure\Hero.cs" />
+    <Compile Include="Model\Player\Figure\Monster.cs" />
     <Compile Include="Model\Player\HeroParty.cs" />
     <Compile Include="Model\Player\Player.cs" />
     <Compile Include="Program.cs" />
@@ -143,7 +149,11 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="monsters.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />
   <!--

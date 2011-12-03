@@ -33,9 +33,25 @@ namespace Descent.Model.Player
     }
 
     /// <summary>
+    /// There are 3 different kinds of attack,
+    /// Magic, Melee and Ranged. 
+    /// An attack have to be one of these 3 types.
+    /// </summary>
+    /// <author>
+    /// Jonas Breindahl (jobre@itu.dk)
+    /// </author>
+    public enum EAttackType
+    {
+        MAGIC, MELEE, RANGED
+    }
+
+    /// <summary>
     /// The actual player, playing the game
     /// TODO: Write Player class
     /// </summary>
+    /// <author>
+    /// Jonas Breindahl (jobre@itu.dk)
+    /// </author>
     public class Player
     {
         #region PlayerSingletonPattern
