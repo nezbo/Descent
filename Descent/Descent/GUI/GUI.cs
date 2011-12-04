@@ -16,8 +16,6 @@ namespace Descent.GUI
     /// </author>
     public class GUI : DrawableGameComponent
     {
-        // drawing surface
-        private SpriteBatch draw;
 
         //input
         private bool mouseDownBefore = false;
@@ -37,7 +35,6 @@ namespace Descent.GUI
         /// <param name="draw">The surface to draw on.</param>
         public GUI(Game game) : base(game)
         {
-            draw = new SpriteBatch(GraphicsDevice);
             this.lastKeyboardState = Keyboard.GetState();
 
             layers = new GUIElement[3];
@@ -48,6 +45,9 @@ namespace Descent.GUI
         /// </summary>
         public override void Draw(GameTime gameTime)
         {
+            SpriteBatch draw = new SpriteBatch(GraphicsDevice);
+            System.Diagnostics.Debug.WriteLine("Drawing");
+
             draw.Begin();
             foreach (GUIElement element in layers)
             {

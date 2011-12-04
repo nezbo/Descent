@@ -101,13 +101,14 @@ namespace Descent.Model.Player
         /// Gets StateManager.
         /// TODO: Atm the Statemanager is empty!
         /// </summary>
-        /*public StateManager StateManager
+        public StateManager StateManager
         {
             get
             {
-                return this.stateManager ?? (this.stateManager = new StateManager());
+                return this.stateManager;
             }
-        }*/
+            private set { stateManager = value; }
+        }
 
         //*********************************************//
         #endregion StateManagerSingletonPattern

@@ -1,6 +1,4 @@
-﻿
-
-namespace Descent.GUI
+﻿namespace Descent.GUI
 {
     using System;
     using System.Collections.Generic;
@@ -11,6 +9,7 @@ namespace Descent.GUI
     using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Input;
     using Descent.Messaging.Events;
+    using System.Text;
 
     /// <summary>
     /// A single element of the user interface that, itself, 
@@ -19,7 +18,7 @@ namespace Descent.GUI
     /// <author>
     /// Emil Juul Jacobsen
     /// </author>
-    public class GUIElement
+    public class GUIElement : DrawableGameComponent
     {
         private static EventManager manager = Player.Instance.EventManager; //TODO: Where to find this?
 
@@ -33,6 +32,7 @@ namespace Descent.GUI
         private Collection<GUIElement> children;
 
         private Dictionary<Drawable, Vector2> visuals;
+        private Collection<Text> texts;
         private Action<EventManager> onClick = null;
 
         /// <summary>
@@ -43,13 +43,14 @@ namespace Descent.GUI
         /// <param name="y">The y-coordinate of the upper-left corner</param>
         /// <param name="width">The width of the element</param>
         /// <param name="height">The height of the element</param>
-        public GUIElement(string name, int x, int y, int width, int height)
+        public GUIElement(Game game,string name, int x, int y, int width, int height) : base(game)
         {
             this.name = name;
             this.focus = false;
             Bound = new Rectangle(x, y, width, height);
             children = new Collection<GUIElement>();
             visuals = new Dictionary<Drawable, Vector2>();
+            texts = new Collection<Text>();
         }
 
         /// <summary>
@@ -154,14 +155,58 @@ namespace Descent.GUI
             visuals.Add(visual, position);
         }
 
+        public void AddText(string text, Vector2 position)
+        {
+            texts.Add(new Text(WordWrap(text,position),position));
+        }
+
+        /// <summary>
+        /// Word Wraps the given string so when displayed at the given
+        /// position, it will not draw outside the width of the GUIElement.
+        /// If too long, the text will however draw outside the bottom
+        /// of the box.
+        /// </summary>
+        /// <param name="text">The text to word wrap</param>
+        /// <param name="position">Where the upper-left corner of the drawable should be</param>
+        /// <returns>A string with linebreaks so the text will be drawn correctly.</returns>
+        private string WordWrap(string text, Vector2 position)
+        {
+            int wordsIndex = 0;
+            string[] words = text.Split();
+            StringBuilder builder = new StringBuilder();
+
+            int boxWidth = (Bound.X + Bound.Width) - (int) position.X;
+            string currentLine = "";
+            string nextWord;
+            while (wordsIndex < words.Length-1)
+            {
+                nextWord = words[wordsIndex]+" ";
+                if (FontHolder.Font.MeasureString(currentLine + nextWord).X < boxWidth)
+                {
+                    currentLine += nextWord;
+                }
+                else
+                {
+                    builder.Append(currentLine+"\n");
+                    currentLine = "";
+                }
+                wordsIndex++;
+            }
+
+            return builder.ToString();
+        }
+
         /// <summary>
         /// Draws this GUIElement and then all children on top of it
         /// </summary>
         /// <param name="draw">The SpriteBatch to draw on</param>
         public virtual void Draw(SpriteBatch draw)
         {
-            // draw myself
+            // draw my own "pictures"
             foreach (Drawable d in visuals.Keys) draw.Draw(d.Texture, visuals[d], Color.White);
+
+            // draw my own text
+            foreach (Text t in texts) draw.DrawString(FontHolder.Font, t.Line, t.Position, Color.Black);
 
             // draw the children on top
             foreach (GUIElement e in children) e.Draw(draw);

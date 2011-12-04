@@ -22,7 +22,6 @@ namespace Descent.GUI
         private static readonly Color PositiveHighlight = new Color(110, 111, 72, 128);
 
         private Texture2D markTexture;
-        private GraphicsDevice graphics;
 
         private Board board;
         private int xDisp, yDisp;
@@ -31,8 +30,8 @@ namespace Descent.GUI
         // for clicks
         private int xClick, yClick;
 
-        public BoardGUIElement(GraphicsDevice graphics, Board board)
-            : base("board", 0, 0, graphics.DisplayMode.Width, graphics.DisplayMode.Height)
+        public BoardGUIElement(Game game, Board board)
+            : base(game, "board", 0, 0, game.GraphicsDevice.DisplayMode.Width, game.GraphicsDevice.DisplayMode.Height)
         {
             this.board = board;
             this.xDisp = 0;
@@ -40,8 +39,7 @@ namespace Descent.GUI
 
             // marked
             this.markedSquares = new Dictionary<Vector2, bool>();
-            this.graphics = graphics;
-            this.markTexture = new Texture2D(graphics, TileSize, TileSize);
+            this.markTexture = new Texture2D(GraphicsDevice, TileSize, TileSize);
             this.markTexture.SetData(new Color[] { Color.White });
 
             // event on click

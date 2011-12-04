@@ -79,8 +79,10 @@ cluster_chart GUI_CLUSTER
 		created: "27-11-2011";
 		revised: "30-11-2011"
 	class DRAWABLE description "Something that should be able to get drawn"
-	class GUI description "The overall visual representation of the game board"
+	class GUI description "The overall visual representation of the game"
 	class GUI_ELEMENT description "A visual element on the user interface"
+	class BOARD_GUI_ELEMENT description "The visualization of the squares of the board"
+	class TEXT description "A single line of text"
 	class GUI_ELEMENT_FACTORY description "Responsible for creating hierarchies of GUIElements"
 	class CHAT description "Lists chat messages and useful game events on the screen"
 end
@@ -697,6 +699,21 @@ class_chart BOARD_GUI_ELEMENT
 	command
 		"Mark this field as positive or negative!",
 		"Clear all marks!"
+end
+
+class_chart TEXT
+	indexing
+		author: "Emil Juul Jacobsen";
+		created: "04-12-2011";
+		revised: "04-12-2011";
+	explanation
+		"Information about a text to be displayed on the screen."
+	query
+		"What is your font size?",
+		"What text do you contain?",
+		"At what position should you be drawn?"
+	constraint
+		"The text should not exceed the boundaries of it's enclosing GUI_ELEMENT"
 end
 
 class_chart GUI_ELEMENT_FACTORY

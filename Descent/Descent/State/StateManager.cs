@@ -70,7 +70,7 @@ namespace Descent.State
         {
             State newState = stateMachine.CurrentState;
 
-            GUIElement newGUIE = GUIElementFactory.CreateStateElement(gui.GraphicsDevice, newState, DetermineRole()); // get new GUIElement
+            GUIElement newGUIE = GUIElementFactory.CreateStateElement(gui.Game, newState, DetermineRole()); // get new GUIElement
 
             switch (newState) // Fill in events and drawables
             {

@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Text;
     using Microsoft.Xna.Framework.Graphics;
+    using Microsoft.Xna.Framework;
     using Descent.Model.Board;
     using Descent.Model.Player;
     using Descent.State;
@@ -21,9 +22,9 @@
     /// </author>
     public class GUIElementFactory
     {
-        private static GUIElement CreateRoot(GraphicsDevice graphics)
+        private static GUIElement CreateRoot(Game game)
         {
-            return new GUIElement("state", 0, 0, graphics.DisplayMode.Width, graphics.DisplayMode.Height);
+            return new GUIElement(game,"state", 0, 0, game.GraphicsDevice.DisplayMode.Width, game.GraphicsDevice.DisplayMode.Width);
         }
 
         private static int RelW(GraphicsDevice graphics, int percentage)
@@ -38,21 +39,23 @@
 
         // public
 
-        public static GUIElement CreateBoardElement(GraphicsDevice graphics, Board board)
+        public static GUIElement CreateBoardElement(Game game, Board board)
         {
-            return new BoardGUIElement(graphics, board);
+            return new BoardGUIElement(game, board);
         }
 
-        public static GUIElement CreateStateElement(GraphicsDevice g, State state, Role role)
+        public static GUIElement CreateStateElement(Game game, State state, Role role)
         {
-            GUIElement root = CreateRoot(g);
+            GraphicsDevice g = game.GraphicsDevice;
+
+            GUIElement root = CreateRoot(game);
 
             switch(state)
             {
                 // TODO: fill the root here for all states that is drawn
                 case State.DrawHeroCard:
                     {
-                        GUIElement cardE = new GUIElement("hero", RelW(g,25), RelH(g,40), RelW(g,50), RelH(g,20)); //TODO: proper values
+                        GUIElement cardE = new GUIElement(game,"hero", RelW(g,25), RelH(g,40), RelW(g,50), RelH(g,20)); //TODO: proper values
                         root.AddChild(cardE);
                         break;
                     }
@@ -62,9 +65,9 @@
             return root;
         }
 
-        public static GUIElement CreateMenuElement(GraphicsDevice graphics)
+        public static GUIElement CreateMenuElement(Game game)
         {
-            GUIElement root = CreateRoot(graphics);
+            GUIElement root = CreateRoot(game);
 
             //TODO: Fill with stuff to draw.
 

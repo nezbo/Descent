@@ -74,12 +74,14 @@
     <Reference Include="System.Net" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FontHolder.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="GUI\BoardGUIElement.cs" />
     <Compile Include="GUI\Drawable.cs" />
     <Compile Include="GUI\GUI.cs" />
     <Compile Include="GUI\GUIElement.cs" />
     <Compile Include="GUI\GUIElementFactory.cs" />
+    <Compile Include="GUI\Text.cs" />
     <Compile Include="Messaging\AsyncSockets\AsyncSocketsClient.cs" />
     <Compile Include="Messaging\AsyncSockets\AsyncSocketsServer.cs" />
     <Compile Include="Messaging\AsyncSockets\ClientInfo.cs" />
