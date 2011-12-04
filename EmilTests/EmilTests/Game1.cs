@@ -55,15 +55,29 @@ namespace EmilTests
             Descent.FontHolder.Font = Content.Load<SpriteFont>("font");
             // TODO: use this.Content to load your game content here
             
+            // creation of elements
             this.gui = new GUI(this);
             GUIElement root = GUIElementFactory.CreateStateElement(this, Descent.State.State.ActivateMonsters, Descent.Model.Player.Role.Overlord);
-            root.AddClickAction(root.Name, n => System.Diagnostics.Debug.WriteLine("Root clicked"));
-            
-            GUIElement stuff = new GUIElement(this, "stuff", 200, 200, 200, 200);
-            root.AddChild(stuff);
-            root.AddClickAction("stuff", n => System.Diagnostics.Debug.WriteLine("Stuff clicked"));
-            stuff.AddText("stuff","Hello World Hello World Hello World Hello World Ho World Hello World Hello World Hello World Hello World", new Vector2(0, 0));
+            GUIElement stuff = new GUIElement(this, "stuff", 200, 200, 250, 400);
+            GUIElement moreStuff = new GUIElement(this, "stuff", 500, 200, 500, 100);
+            GUIElement innerStuff = new GUIElement(this, "stuff", 200, 350, 225, 200);
+
+            innerStuff.SetDrawBackground(true);
+            root.SetDrawBackground(true);
             stuff.SetDrawBackground(true);
+            moreStuff.SetDrawBackground(true);
+
+            // assembling tree
+            root.AddChild(stuff);
+            stuff.AddChild(innerStuff);
+            root.AddChild(moreStuff);
+
+            // adding logic to tree
+            root.AddClickAction(root.Name, n => System.Diagnostics.Debug.WriteLine("Root clicked"));
+            root.AddClickAction("stuff", n => System.Diagnostics.Debug.WriteLine("Stuff clicked"));
+            root.AddText("stuff", "Hello World Hello World Hello World Hello World Ho World Hello World Hello World Hello World Hello World", new Vector2(0, 0));
+
+            // placing the root in the gui
             gui.ChangeStateGUI(root);
             
         }
