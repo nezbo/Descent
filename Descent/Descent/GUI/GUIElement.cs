@@ -178,7 +178,7 @@
             int boxWidth = (Bound.X + Bound.Width) - (int) position.X;
             string currentLine = "";
             string nextWord;
-            while (wordsIndex < words.Length-1)
+            while (wordsIndex < words.Length)
             {
                 nextWord = words[wordsIndex]+" ";
                 if (FontHolder.Font.MeasureString(currentLine + nextWord).X < boxWidth)
@@ -187,11 +187,12 @@
                 }
                 else
                 {
-                    builder.Append(currentLine+"\n");
+                    builder.AppendLine(currentLine);
                     currentLine = "";
                 }
                 wordsIndex++;
             }
+            builder.AppendLine(currentLine);
 
             return builder.ToString();
         }

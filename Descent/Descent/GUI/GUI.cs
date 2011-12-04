@@ -43,15 +43,14 @@ namespace Descent.GUI
         /// <summary>
         /// Draws the GUI to the screen.
         /// </summary>
-        public override void Draw(GameTime gameTime)
+        public void Draw(SpriteBatch draw)
         {
-            SpriteBatch draw = new SpriteBatch(GraphicsDevice);
             System.Diagnostics.Debug.WriteLine("Drawing");
 
             draw.Begin();
             foreach (GUIElement element in layers)
             {
-                element.Draw(draw);
+                if(element != null) element.Draw(draw);
             }
             draw.End();
         }
@@ -66,7 +65,10 @@ namespace Descent.GUI
         {
             for (int i = layers.Length - 1; i >= 0; i--)
             {
-                if (layers[i].HandleClick(x, y)) break;
+                if (layers[i] != null)
+                {
+                    if (layers[i].HandleClick(x, y)) break;
+                }
             }
         }
 

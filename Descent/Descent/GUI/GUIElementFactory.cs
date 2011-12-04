@@ -24,7 +24,7 @@
     {
         private static GUIElement CreateRoot(Game game)
         {
-            return new GUIElement(game,"state", 0, 0, game.GraphicsDevice.DisplayMode.Width, game.GraphicsDevice.DisplayMode.Width);
+            return new GUIElement(game, "state", 0, 0, game.Window.ClientBounds.Width, game.Window.ClientBounds.Height);
         }
 
         private static int RelW(GraphicsDevice graphics, int percentage)

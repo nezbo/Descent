@@ -26,7 +26,9 @@ namespace EmilTests
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            
+
+            graphics.PreferredBackBufferWidth = 1280;
+            graphics.PreferredBackBufferHeight = 720;
         }
 
         /// <summary>
@@ -38,8 +40,7 @@ namespace EmilTests
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            this.Components.Add(gui);
-
+            this.IsMouseVisible = true;
             base.Initialize();
         }
 
@@ -57,7 +58,7 @@ namespace EmilTests
             this.gui = new GUI(this);
             GUIElement stuff = GUIElementFactory.CreateStateElement(this, Descent.State.State.ActivateMonsters, Descent.Model.Player.Role.Overlord);
 
-            stuff.AddText("Hello World", new Vector2(0, 0));
+            stuff.AddText("Hello World Hello World Hello World Hello World Hello World Hello LOLZZZOR World Hello World Hello World Hello World Hello World Hello World Hello World Hello World Hello World Hello World Hello World Hello World Hello World Hello World Hello World", new Vector2(0, 0));
 
             gui.ChangeStateGUI(stuff);
             
@@ -84,6 +85,7 @@ namespace EmilTests
                 this.Exit();
 
             // TODO: Add your update logic here
+            gui.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -97,6 +99,7 @@ namespace EmilTests
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
+            gui.Draw(spriteBatch);
 
             base.Draw(gameTime);
         }
