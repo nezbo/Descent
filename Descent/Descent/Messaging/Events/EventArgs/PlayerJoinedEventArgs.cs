@@ -8,6 +8,7 @@ namespace Descent.Messaging.Events
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Text;
 
@@ -18,12 +19,15 @@ namespace Descent.Messaging.Events
     {
         public PlayerJoinedEventArgs(int playerId, string playerNick)
         {
+            Contract.Requires(playerId > 0);
+            Contract.Requires(playerNick != null);
             PlayerId = playerId;
             PlayerNick = playerNick;
         }
 
         public PlayerJoinedEventArgs(string[] stringArgs)
         {
+            Contract.Requires(stringArgs.Length >= 2);
             PopulateWithArgs(stringArgs);
         }
 
@@ -33,6 +37,7 @@ namespace Descent.Messaging.Events
 
         public override void PopulateWithArgs(string[] stringArgs)
         {
+            Contract.Requires(stringArgs.Length >= 2);
             this.PlayerId = int.Parse(stringArgs[0]);
             PlayerNick = stringArgs[1];
         }

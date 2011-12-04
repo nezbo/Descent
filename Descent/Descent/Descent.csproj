@@ -87,6 +87,7 @@
     <Compile Include="Messaging\Connection\Connection.cs" />
     <Compile Include="Messaging\Connection\ServerConnection.cs" />
     <Compile Include="Messaging\Events\EventArgs\ChatMessageEventArgs.cs" />
+    <Compile Include="Messaging\Events\EventArgs\PlayersInGameEventArgs.cs" />
     <Compile Include="Messaging\Events\EventArgs\GameEventArgs.cs" />
     <Compile Include="Messaging\Events\EventArgs\PlayerJoinedEventArgs.cs" />
     <Compile Include="Messaging\Events\EventManager.cs" />

@@ -15,6 +15,11 @@ namespace Descent.Messaging.Events
     using Descent.Model.Player;
 
     #region Delegate declarations
+
+    public delegate void PlayerJoinedHandler(object sender, PlayerJoinedEventArgs eventArgs);
+
+    public delegate void PlayersInGameHandler(object sender, PlayersInGameEventArgs eventArgs);
+
     public delegate void Action();
 
     public delegate void AllRespondedNoActionHandler(object sender, EventArgs eventArgs); // Special delegate, contains no eventArgs info.
@@ -38,6 +43,10 @@ namespace Descent.Messaging.Events
         #region Event declarations
 
         #region GameEvents
+
+        public event PlayerJoinedHandler PlayerJoinedEvent;
+
+        public event PlayersInGameHandler PlayersInGameEvent;
 
         public event Action NewRound;
         
