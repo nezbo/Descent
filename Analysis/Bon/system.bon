@@ -679,7 +679,8 @@ class_chart GUI_ELEMENT
 		"Handle this key press!",
 		"Do this when clicked",
 		"Add this GUI_ELEMENT to your collection of sub-elements!",
-		"Add this DRAWABLE to be displayed in you at this position!",
+		"Add this DRAWABLE to be displayed in you (or your children) at this position!",
+		"Add this text to be displayed in you (or your children) at this position!",
 		"Draw yourself!"
 	constraint
 		"The position must be within the window boundaries",
@@ -709,7 +710,6 @@ class_chart TEXT
 	explanation
 		"Information about a text to be displayed on the screen."
 	query
-		"What is your font size?",
 		"What text do you contain?",
 		"At what position should you be drawn?"
 	constraint

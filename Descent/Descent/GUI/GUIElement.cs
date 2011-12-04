@@ -155,14 +155,29 @@
         /// </summary>
         /// <param name="visual">The drawable to display</param>
         /// <param name="position">Where the upper-left corner of the drawable should be</param>
-        public void AddDrawable(Drawable visual, Vector2 position)
+        public void AddDrawable(string target, Drawable visual, Vector2 position)
         {
-            visuals.Add(visual, position);
+            if (Name == target)
+            {
+                visuals.Add(visual, position);
+            }
+            foreach (GUIElement e in children) e.AddDrawable(target, visual, position);
         }
 
-        public void AddText(string text, Vector2 position)
+        /// <summary>
+        /// Adds the given string to be drawn on the screen on all children (or this)
+        /// with the target name.
+        /// </summary>
+        /// <param name="target">Only GUIElements with this name should display the text.</param>
+        /// <param name="text">The text to be drawn to the screen.</param>
+        /// <param name="position">Where the upper-left corner of the text should be</param>
+        public void AddText(string target, string text, Vector2 position)
         {
-            texts.Add(new Text(WordWrap(text,position),position));
+            if (Name == target)
+            {
+                texts.Add(new Text(WordWrap(text, position), position));
+            }
+            foreach (GUIElement e in children) e.AddText(target, text, position);
         }
 
         /// <summary>
