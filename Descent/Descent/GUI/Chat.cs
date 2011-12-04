@@ -7,18 +7,20 @@
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Input;
     using Descent.Messaging.Events;
+    using Microsoft.Xna.Framework.Graphics;
+    using Descent.Model.Player;
 
     public class Chat : GUIElement
     {
         private Text input;
-        private List<string> messages;
+        private LinkedList<string> messages;
 
         public Chat(Game game)
-            : base(game, "chat", (int) (game.Window.ClientBounds.Width*(3/4.0)), game.Window.ClientBounds.Height/2,(int) (game.Window.ClientBounds.Width*(1/4.0)),game.Window.ClientBounds.Height/2)
+            : base(game, "chat", (int) (game.Window.ClientBounds.Width*(3/4.0)), game.Window.ClientBounds.Height/2, game.Window.ClientBounds.Width/4 - 10,game.Window.ClientBounds.Height/2)
         {
-            AddText("chat", "", new Vector2(10, 300));
+            AddText("chat", "", new Vector2(10, Bound.Height - 50));
             input = texts[0];
-            messages = new List<string>();
+            messages = new LinkedList<string>();
 
             manager.ChatMessageEvent += new ChatMessageHandler(GetMessage);
 
@@ -27,8 +29,13 @@
 
         private void GetMessage(object sender, ChatMessageEventArgs eventArgs)
         {
-            string[] lines = WordWrap(eventArgs.ToString(), new Vector2(10, 0)).Split('\n');
-            foreach (string s in lines) messages.Add(s);
+            FormatAndAdd(eventArgs.ToString());
+        }
+
+        private void FormatAndAdd(string text)
+        {
+            string[] lines = WordWrap(Player.Instance.Name+": "+ text, new Vector2(10, 0)).Split('\n');
+            foreach (string s in lines) messages.AddFirst(s);
         }
 
         public override void HandleKeyPress(Keys key)
@@ -38,7 +45,7 @@
                 bool isShift = Keyboard.GetState().IsKeyDown(Keys.LeftShift) || Keyboard.GetState().IsKeyDown(Keys.RightShift);
                 switch (key)
                 {
-                    case Keys.Enter: { messages.Add(input.Line); input.Line = ""; break; }
+                    case Keys.Enter: { if (input.Line.Length > 0) { FormatAndAdd(input.Line); input.Line = ""; } break; }
                     case Keys.Back: { if (input.Line.Length > 0) { input.Line = input.Line.Substring(0, input.Line.Length - 1); } break; }
                     case Keys.Space: { input.Line += " "; break; }
                     case Keys.OemPeriod: { input.Line += (isShift == true) ? ":" : "."; break; }
@@ -64,6 +71,22 @@
                     case Keys.D0: { input.Line += (isShift == true) ? "=" : "0"; break; }
                     default: { if (key.ToString().Length == 1) { input.Line += ((isShift == true) ? key.ToString() : key.ToString().ToLower()); } break; }
                 }
+            }
+        }
+
+        public override void Draw(SpriteBatch draw)
+        {
+            base.Draw(draw);
+
+            int textHeight = (int) FontHolder.Font.MeasureString("A").Y;
+            int yPos = Bound.Height*2 - 80 ;
+
+            LinkedListNode<string> currentNode = messages.First;
+            while(yPos > Bound.Y && currentNode != null)
+            {
+                draw.DrawString(FontHolder.Font, currentNode.Value, new Vector2(10 + Bound.X, yPos), Color.Black);
+                currentNode = currentNode.Next;
+                yPos -= textHeight;
             }
         }
     }

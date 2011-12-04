@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
 using Descent.GUI;
+using Descent.Model.Player;
 
 namespace EmilTests
 {
@@ -41,6 +42,7 @@ namespace EmilTests
         {
             // TODO: Add your initialization logic here
             this.IsMouseVisible = true;
+            Player.Instance.Name = "Nezbo";
             base.Initialize();
         }
 
@@ -77,7 +79,7 @@ namespace EmilTests
             // adding logic to tree
             root.AddClickAction(root.Name, n => System.Diagnostics.Debug.WriteLine("Root clicked"));
             root.AddClickAction("stuff", n => System.Diagnostics.Debug.WriteLine("Stuff clicked"));
-            root.AddText("stuff", "Hello World Hello World Hello World Hello World Ho World Hello World Hello World Hello World Hello World", new Vector2(0, 0));
+            root.AddText("stuff", "One Two Three Four Five Six Seven Eight Nine Ten Eleven Twelve Thirteen Fourteen Fifteen Sixteen Seventeen etc etc", new Vector2(0, 0));
 
             // placing the root in the gui
             gui.ChangeStateGUI(root);

@@ -201,20 +201,32 @@
             while (wordsIndex < words.Length)
             {
                 nextWord = words[wordsIndex]+" ";
-                if (FontHolder.Font.MeasureString(currentLine + nextWord).X < Bound.Width)
+
+                if (FontHolder.Font.MeasureString(currentLine + nextWord).X < Bound.Width) // word fits
                 {
                     currentLine += nextWord;
-                }
-                else
+                    wordsIndex++;
+                }else if (FontHolder.Font.MeasureString(nextWord).X > Bound.Width) // cut word
+                {
+                    int end = nextWord.Length -1;
+                    while (FontHolder.Font.MeasureString(currentLine + nextWord.Substring(0, end) + "-").X > Bound.Width) // see what we have space for
+                    {
+                        end--;
+                    }
+                    builder.Append(currentLine + nextWord.Substring(0, end)+"-\n"); // add what we had space for
+                    currentLine = "";
+                    words[wordsIndex] = words[wordsIndex].Substring(end, words[wordsIndex].Length - end); // let the remaining be
+                    
+                }else// word doesn't fit, bit is not too long
                 {
                     builder.Append(currentLine+"\n");
                     currentLine = "";
                 }
-                wordsIndex++;
+                
             }
             builder.AppendLine(currentLine);
 
-            return builder.ToString();
+            return builder.ToString().Trim();
         }
 
         /// <summary>

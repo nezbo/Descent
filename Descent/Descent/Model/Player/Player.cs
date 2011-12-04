@@ -185,5 +185,7 @@ namespace Descent.Model.Player
         }
         
         #endregion
+
+        public string Name { get; set; }
     }
 }
