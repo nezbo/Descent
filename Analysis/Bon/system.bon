@@ -6,8 +6,9 @@ system_chart DESCENT
 end
 
 cluster_chart MODEL_CLUSTER
+    class MODEL description "Holds references to all model related classes"
 	cluster PLAYER_CLUSTER description "The actual player, and his/her role"
-	cluster EVENT_CLUSTER description "Events, effects and abilities"
+	cluster EVENT_MODEL_CLUSTER description "Events, effects and abilities"
 	cluster BOARD_CLUSTER description "The game board"
 end
 
@@ -45,7 +46,7 @@ cluster_chart OVERLORD_STUFF
 end
 
 -- HOW TO DO/DESCRIBE EVENTS AND ABILITIES??!
-cluster_chart EVENT_CLUSTER
+cluster_chart EVENT_MODEL_CLUSTER
 	class EFFECT description "An Effect that can be on an figure"
 	class POISON_EFFECT description "A poison Effect, that has to be healed through"
 	class BURN_EFFECT description "A burn Effect that damages a figure"
@@ -82,7 +83,8 @@ cluster_chart GUI_CLUSTER
 	class GUI description "The overall visual representation of the game board"
 	class GUI_ELEMENT description "A visual element on the user interface"
 	class GUI_ELEMENT_FACTORY description "Responsible for creating hierarchies of GUIElements"
-	class CHAT description "Lists chat messages and useful game events on the screen"
+	class BOARD_GUI_ELEMENT description "The element on the screen that visualizes the game board."
+    class CHAT description "Lists chat messages and useful game events on the screen"
 end
 
 cluster_chart MESSAGING
@@ -145,10 +147,19 @@ cluster_chart STATE_STUFF
 	class STATE description "A collection of all different states."
 end
 
+class_chart MODEL
+    indexing
+        author: "Martin Marcher";
+    query
+        "Can I have the board?",
+        "Can I have the player with this id?",
+        "Can I have the hero party?"
+end
+
 class_chart ROLE
 	indexing
 		author: "Emil Juul Jacobsen";
-		in_cluster: "PLAYER_CLUSTER"
+		in_cluster: "PLAYER_CLUSTER";
 		created: "03-12-2011";
 		revised: "03-12-2011";
 	explanation
@@ -160,7 +171,7 @@ end
 class_chart PLAYER
 	indexing
 		author: "Jonas Breindahl";
-		in_cluster: "PLAYER_CLUSTER"
+		in_cluster: "PLAYER_CLUSTER";
 		created: "21-11-2011";
 		revised: "21-11-2011"
 	explanation
@@ -177,7 +188,7 @@ end
 class_chart HERO_PARTY
 	indexing
 		author: "Jonas Breindahl";
-		in_cluster: "PLAYER_CLUSTER"
+		in_cluster: "PLAYER_CLUSTER";
 		created: "21-11-2011";
 		revised: "01-12-2011"
 	explanation
@@ -201,7 +212,7 @@ end
 class_chart OVERLORD
 	indexing
 		author: "Jonas Breindahl";
-		in_cluster: "PLAYER_CLUSTER"
+		in_cluster: "PLAYER_CLUSTER";
 		created: "21-11-2011";
 		revised: "30-11-2011"
 	explanation
@@ -299,7 +310,7 @@ end
 class_chart INVENTORY
 	indexing
 		author: "Jonas Breindahl";
-		cluster: "HERO_STUFF"
+		in_cluster: "HERO_STUFF";
 		created: "27-11-2011";
 		revised: "27-11-2011";
 	explanation
@@ -690,10 +701,10 @@ class_chart BOARD_GUI_ELEMENT
 		author: "Emil Juul Jacobsen";
 		created: "01-12-2011";
 		revised: "01-12-2011";
-	inherit
-		GUI_ELEMENT
 	explanation
 		"The element on the screen that visualizes the game board."
+	inherit
+		GUI_ELEMENT
 	command
 		"Mark this field as positive or negative!",
 		"Clear all marks!"
@@ -842,7 +853,7 @@ class_chart EVENT_MANAGER
 		"After game initialization, there must always be one event manager."
 end
 
-class_chart EVENT_ARGS
+class_chart GAME_EVENT_ARGS
 	indexing
 		author: "Simon Westh Henriksen";
 		created: "01-12-2011";
@@ -851,7 +862,7 @@ class_chart EVENT_ARGS
 		"A base class containing arguments for events. This base class implements the required event arguments fields."
 	query
 		"Who (player_id) sent you?",
-		"What is your event id"?,
+		"What is your event id?",
 		"What type of event are you?",
 		"Do you need a response?"
 	command
