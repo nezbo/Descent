@@ -143,7 +143,6 @@ namespace Descent.GUI
                 {
                     draw.Draw(markTexture, pos, NegativeHighlight);
                 }
-                
             }
         }
 

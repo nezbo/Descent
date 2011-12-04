@@ -2,6 +2,10 @@ _ReSharper.Descent
 Descent/Descent/bin
 Descent/Descent/obj
 Descent/DescentContent/obj
+EmilTests/EmilTests/bin
+EmilTests/EmilTests/obj
+EmilTests/EmilTestsContent/obj
+EmilTests/EmilTestsContent/bin
 *.dotCover
 *.ReSharper.user
 *.suo

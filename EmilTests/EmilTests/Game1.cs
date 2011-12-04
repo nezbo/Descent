@@ -56,11 +56,15 @@ namespace EmilTests
             // TODO: use this.Content to load your game content here
             
             this.gui = new GUI(this);
-            GUIElement stuff = GUIElementFactory.CreateStateElement(this, Descent.State.State.ActivateMonsters, Descent.Model.Player.Role.Overlord);
-
-            stuff.AddText("Hello World Hello World Hello World Hello World Hello World Hello LOLZZZOR World Hello World Hello World Hello World Hello World Hello World Hello World Hello World Hello World Hello World Hello World Hello World Hello World Hello World Hello World", new Vector2(0, 0));
-
-            gui.ChangeStateGUI(stuff);
+            GUIElement root = GUIElementFactory.CreateStateElement(this, Descent.State.State.ActivateMonsters, Descent.Model.Player.Role.Overlord);
+            root.AddClickAction(root.Name, n => System.Diagnostics.Debug.WriteLine("Root clicked"));
+            
+            GUIElement stuff = new GUIElement(this, "stuff", 200, 200, 200, 200);
+            root.AddChild(stuff);
+            root.AddClickAction("stuff", n => System.Diagnostics.Debug.WriteLine("Stuff clicked"));
+            stuff.AddText("Hello World Hello World Hello World Hello World Ho World Hello World Hello World Hello World Hello World", new Vector2(stuff.Bound.X, stuff.Bound.Y));
+            stuff.SetDrawBackground(true);
+            gui.ChangeStateGUI(root);
             
         }
 
@@ -96,7 +100,7 @@ namespace EmilTests
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Black);
 
             // TODO: Add your drawing code here
             gui.Draw(spriteBatch);

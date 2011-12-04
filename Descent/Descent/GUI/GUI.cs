@@ -45,8 +45,6 @@ namespace Descent.GUI
         /// </summary>
         public void Draw(SpriteBatch draw)
         {
-            System.Diagnostics.Debug.WriteLine("Drawing");
-
             draw.Begin();
             foreach (GUIElement element in layers)
             {
@@ -76,7 +74,10 @@ namespace Descent.GUI
         {
             foreach (GUIElement e in layers)
             {
-                HandleKeyPress(key);
+                if (e != null)
+                {
+                    e.HandleKeyPress(key);
+                }
             }
         }
 

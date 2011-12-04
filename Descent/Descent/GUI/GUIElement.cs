@@ -21,11 +21,14 @@
     public class GUIElement : DrawableGameComponent
     {
         private static EventManager manager = Player.Instance.EventManager; //TODO: Where to find this?
+        protected static Texture2D background;
 
         public Rectangle Bound { get; set; }
 
         private string name;
         public string Name { get { return name; } }
+
+        private bool drawBg = false;
 
         private bool focus;
 
@@ -51,6 +54,8 @@
             children = new Collection<GUIElement>();
             visuals = new Dictionary<Drawable, Vector2>();
             texts = new Collection<Text>();
+
+            if (background == null) background = game.Content.Load<Texture2D>("boxbg");
         }
 
         /// <summary>
@@ -198,11 +203,26 @@
         }
 
         /// <summary>
+        /// Makes the current GUIElement draw a background beneath itself.
+        /// </summary>
+        /// <param name="toDraw">True if the current GUIElement should draw background</param>
+        public void SetDrawBackground(bool toDraw)
+        {
+            drawBg = toDraw;
+        }
+
+        /// <summary>
         /// Draws this GUIElement and then all children on top of it
         /// </summary>
         /// <param name="draw">The SpriteBatch to draw on</param>
         public virtual void Draw(SpriteBatch draw)
         {
+            // draw my own background
+            if (drawBg)
+            {
+                draw.Draw(background, Bound, Color.White);
+            }
+
             // draw my own "pictures"
             foreach (Drawable d in visuals.Keys) draw.Draw(d.Texture, visuals[d], Color.White);
 
