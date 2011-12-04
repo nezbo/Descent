@@ -79,7 +79,6 @@
     <Compile Include="GUI\Drawable.cs" />
     <Compile Include="GUI\GUI.cs" />
     <Compile Include="GUI\GUIElement.cs" />
-    <Compile Include="GUI\Model.cs" />
     <Compile Include="GUI\GUIElementFactory.cs" />
     <Compile Include="Messaging\AsyncSockets\AsyncSocketsClient.cs" />
     <Compile Include="Messaging\AsyncSockets\AsyncSocketsServer.cs" />

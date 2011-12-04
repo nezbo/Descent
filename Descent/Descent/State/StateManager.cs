@@ -56,7 +56,7 @@ namespace Descent.State
             {
                 return Player.Instance.Hero.Id == currentHeroId ? Role.ActiveHero : Role.InactiveHero; 
             }
-
+            return Role.InactiveHero; // its not the hero's turns so they are all inactive
         }
 
         /// <summary>
