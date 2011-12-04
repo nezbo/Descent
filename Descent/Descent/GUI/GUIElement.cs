@@ -20,7 +20,7 @@
     /// </author>
     public class GUIElement : DrawableGameComponent
     {
-        private static EventManager manager = Player.Instance.EventManager; //TODO: Where to find this?
+        protected static EventManager manager = Player.Instance.EventManager; //TODO: Where to find this?
         protected static Texture2D background;
 
         public Rectangle Bound { get; set; }
@@ -35,7 +35,7 @@
         private Collection<GUIElement> children;
 
         private Dictionary<Drawable, Rectangle> visuals;
-        private Collection<Text> texts;
+        protected Collection<Text> texts;
         private Action<EventManager> onClick = null;
 
         /// <summary>
@@ -122,6 +122,7 @@
         /// <param name="key">The key that has been pressed and wasn't pressed before</param>
         public virtual void HandleKeyPress(Keys key)
         {
+            foreach (GUIElement e in children) e.HandleKeyPress(key);
             // this method can be overwritten if a GUIElement wants to react to keypresses.
         }
 
@@ -189,7 +190,7 @@
         /// <param name="text">The text to word wrap</param>
         /// <param name="position">Where the upper-left corner of the drawable should be</param>
         /// <returns>A string with linebreaks so the text will be drawn correctly.</returns>
-        private string WordWrap(string text, Vector2 position)
+        protected string WordWrap(string text, Vector2 position)
         {
             int wordsIndex = 0;
             string[] words = text.Split();
@@ -206,7 +207,7 @@
                 }
                 else
                 {
-                    builder.AppendLine(currentLine);
+                    builder.Append(currentLine+"\n");
                     currentLine = "";
                 }
                 wordsIndex++;
@@ -241,7 +242,10 @@
             foreach (Drawable d in visuals.Keys) draw.Draw(d.Texture, visuals[d], Color.White);
 
             // draw my own text
-            foreach (Text t in texts) draw.DrawString(FontHolder.Font, t.Line, t.Position, Color.Black);
+            foreach (Text t in texts)
+            {
+                draw.DrawString(FontHolder.Font, t.Line, t.Position, Color.Black);
+            } 
 
             // draw the children on top
             foreach (GUIElement e in children) e.Draw(draw);

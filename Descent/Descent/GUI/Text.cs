@@ -12,7 +12,7 @@
     /// <author>
     /// Emil Juul Jacobsen
     /// </author>
-    public struct Text
+    public class Text
     {
         public string Line { get; internal set; }
         public Vector2 Position { get; internal set; }
@@ -22,7 +22,7 @@
         /// </summary>
         /// <param name="line">The string to be displayed as a line on the screen.</param>
         /// <param name="position">The position for the upper-left corner of the drawn text.</param>
-        public Text(string line, Vector2 position) : this()
+        public Text(string line, Vector2 position)
         {
             this.Line = line;
             this.Position = position;

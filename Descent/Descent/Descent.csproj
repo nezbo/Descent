@@ -77,6 +77,7 @@
     <Compile Include="FontHolder.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="GUI\BoardGUIElement.cs" />
+    <Compile Include="GUI\Chat.cs" />
     <Compile Include="GUI\Drawable.cs" />
     <Compile Include="GUI\GUI.cs" />
     <Compile Include="GUI\GUIElement.cs" />

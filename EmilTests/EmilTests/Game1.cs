@@ -61,6 +61,7 @@ namespace EmilTests
             GUIElement stuff = new GUIElement(this, "stuff", 200, 200, 250, 400);
             GUIElement moreStuff = new GUIElement(this, "stuff", 500, 200, 500, 100);
             GUIElement innerStuff = new GUIElement(this, "stuff", 200, 350, 225, 200);
+            GUIElement chat = new Chat(this);
 
             innerStuff.SetDrawBackground(true);
             root.SetDrawBackground(true);
@@ -68,6 +69,7 @@ namespace EmilTests
             moreStuff.SetDrawBackground(true);
 
             // assembling tree
+            root.AddChild(chat);
             root.AddChild(stuff);
             stuff.AddChild(innerStuff);
             root.AddChild(moreStuff);
