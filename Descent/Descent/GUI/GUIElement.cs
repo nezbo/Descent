@@ -34,7 +34,7 @@
 
         private Collection<GUIElement> children;
 
-        private Dictionary<Drawable, Vector2> visuals;
+        private Dictionary<Drawable, Rectangle> visuals;
         private Collection<Text> texts;
         private Action<EventManager> onClick = null;
 
@@ -52,7 +52,7 @@
             this.focus = false;
             Bound = new Rectangle(x, y, width, height);
             children = new Collection<GUIElement>();
-            visuals = new Dictionary<Drawable, Vector2>();
+            visuals = new Dictionary<Drawable, Rectangle>();
             texts = new Collection<Text>();
 
             if (background == null) background = game.Content.Load<Texture2D>("boxbg");
@@ -159,7 +159,7 @@
         {
             if (Name == target)
             {
-                visuals.Add(visual, position);
+                visuals.Add(visual, new Rectangle((int)position.X,(int)position.Y,visual.Texture.Width,visual.Texture.Height));
             }
             foreach (GUIElement e in children) e.AddDrawable(target, visual, position);
         }
@@ -175,7 +175,7 @@
         {
             if (Name == target)
             {
-                texts.Add(new Text(WordWrap(text, position), position));
+                texts.Add(new Text(WordWrap(text, position), new Vector2(position.X + Bound.X, position.Y + Bound.Y)));
             }
             foreach (GUIElement e in children) e.AddText(target, text, position);
         }
@@ -195,13 +195,12 @@
             string[] words = text.Split();
             StringBuilder builder = new StringBuilder();
 
-            int boxWidth = (Bound.X + Bound.Width) - (int) position.X;
             string currentLine = "";
             string nextWord;
             while (wordsIndex < words.Length)
             {
                 nextWord = words[wordsIndex]+" ";
-                if (FontHolder.Font.MeasureString(currentLine + nextWord).X < boxWidth)
+                if (FontHolder.Font.MeasureString(currentLine + nextWord).X < Bound.Width)
                 {
                     currentLine += nextWord;
                 }

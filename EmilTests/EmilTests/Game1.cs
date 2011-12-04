@@ -62,7 +62,7 @@ namespace EmilTests
             GUIElement stuff = new GUIElement(this, "stuff", 200, 200, 200, 200);
             root.AddChild(stuff);
             root.AddClickAction("stuff", n => System.Diagnostics.Debug.WriteLine("Stuff clicked"));
-            stuff.AddText("stuff","Hello World Hello World Hello World Hello World Ho World Hello World Hello World Hello World Hello World", new Vector2(stuff.Bound.X, stuff.Bound.Y));
+            stuff.AddText("stuff","Hello World Hello World Hello World Hello World Ho World Hello World Hello World Hello World Hello World", new Vector2(0, 0));
             stuff.SetDrawBackground(true);
             gui.ChangeStateGUI(root);
             
@@ -100,7 +100,7 @@ namespace EmilTests
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.Black);
+            GraphicsDevice.Clear(Color.Yellow);
 
             // TODO: Add your drawing code here
             gui.Draw(spriteBatch);
