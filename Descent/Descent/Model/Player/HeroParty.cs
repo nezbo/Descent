@@ -31,22 +31,12 @@ namespace Descent.Model.Player
 			}
 		}
 
-		/// <summary>
-		/// Gets Number of heroes yet to act.
-		/// How many heroes have yet to take their turn?
-		/// </summary>
-		public int NumberOfHeroesYetToAct
-		{
-			get
-			{
-				Contract.Ensures(Contract.Result<int>() >= 0);
-				Contract.Ensures(Contract.Result<int>() <= NumberOfHeroes);
-				
-				return heroesYetToAct.Count;
-			}
-		}
+	    public Hero[] AllHeroes
+	    {
+	        get { return heroesInHeroParty.ToArray(); }
+	    }
 
-		/// <summary>
+	    /// <summary>
 		/// Gets or sets ConquestTokens.
 		/// How many conquest tokens do the players have?
 		/// </summary>
@@ -76,7 +66,6 @@ namespace Descent.Model.Player
 		}
 
 		private List<Hero> heroesInHeroParty = new List<Hero>(); 
-		private List<Hero> heroesYetToAct = new List<Hero>();
 		private int conquestTokens = 0;
 
 		#endregion FIELDS
@@ -86,48 +75,6 @@ namespace Descent.Model.Player
 		#endregion 
 
 		#region Methods
-
-		/// <summary>
-		/// Has 'this' heroes yet to take their turn? 
-		/// </summary>
-		/// <param name="hero">
-		/// The hero
-		/// </param>
-		/// <returns>
-		/// True if the hero has already had his turn
-		/// </returns>
-		public bool HasHeroActedYet(Hero hero)
-		{
-			Contract.Requires(hero != null, "Hero was null");
-			return !heroesYetToAct.Contains(hero);
-		}
-
-	    /// <summary>
-        /// Removes the hero from the list of heroes yet to act
-	    /// </summary>
-	    /// <param name="hero">
-	    /// The hero that has now acted
-	    /// </param>
-	    public void HeroHasActed(Hero hero)
-        {
-            Contract.Requires(hero != null);
-            Contract.Requires(!HasHeroActedYet(hero));
-            Contract.Ensures(HasHeroActedYet(hero));
-            Contract.Ensures(NumberOfHeroesYetToAct == Contract.OldValue(NumberOfHeroesYetToAct) - 1);
-
-            heroesYetToAct.Remove(hero);
-        }
-
-	    /// <summary>
-	    /// Resets the list of heroes yet to act
-        /// Reset list of heroes yet to act!
-	    /// </summary>
-	    public void ResetYetToAct()
-        {
-            Contract.Requires(NumberOfHeroesYetToAct == 0);
-            Contract.Ensures(NumberOfHeroesYetToAct == NumberOfHeroes);
-	        heroesYetToAct = heroesInHeroParty;
-        }
 
 	    /// <summary>
 	    /// Add a number of tokens to the pool

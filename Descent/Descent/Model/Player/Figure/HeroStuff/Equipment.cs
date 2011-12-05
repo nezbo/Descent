@@ -22,6 +22,7 @@ namespace Descent.Model.Player.Figure.HeroStuff
         #region Fields
 
         private bool tapped = false;
+        private string name;
 
         #endregion
 
@@ -33,6 +34,11 @@ namespace Descent.Model.Player.Figure.HeroStuff
             {
                 return tapped;
             }
+        }
+
+        public string Name
+        {
+            get { return name; }
         }
 
         #endregion
