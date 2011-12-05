@@ -54,7 +54,7 @@ namespace EmilTests
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            Descent.FontHolder.Font = Content.Load<SpriteFont>("font");
+            Descent.GUIHolder.Font = Content.Load<SpriteFont>("font");
             // TODO: use this.Content to load your game content here
             
             // creation of elements

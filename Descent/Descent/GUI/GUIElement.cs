@@ -3,13 +3,12 @@
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.Text;
+    using Descent.Messaging.Events;
     using Descent.Model.Player;
-    using Descent.State;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Input;
-    using Descent.Messaging.Events;
-    using System.Text;
 
     /// <summary>
     /// A single element of the user interface that, itself, 
@@ -32,7 +31,7 @@
 
         private bool focus;
 
-        private Collection<GUIElement> children;
+        protected Collection<GUIElement> children;
 
         private Dictionary<Drawable, Rectangle> visuals;
         protected Collection<Text> texts;
@@ -46,7 +45,8 @@
         /// <param name="y">The y-coordinate of the upper-left corner</param>
         /// <param name="width">The width of the element</param>
         /// <param name="height">The height of the element</param>
-        public GUIElement(Game game,string name, int x, int y, int width, int height) : base(game)
+        public GUIElement(Game game, string name, int x, int y, int width, int height)
+            : base(game)
         {
             this.name = name;
             this.focus = false;
@@ -160,7 +160,7 @@
         {
             if (Name == target)
             {
-                visuals.Add(visual, new Rectangle((int)position.X,(int)position.Y,visual.Texture.Width,visual.Texture.Height));
+                visuals.Add(visual, new Rectangle((int)position.X, (int)position.Y, visual.Texture.Width, visual.Texture.Height));
             }
             foreach (GUIElement e in children) e.AddDrawable(target, visual, position);
         }
@@ -200,29 +200,31 @@
             string nextWord;
             while (wordsIndex < words.Length)
             {
-                nextWord = words[wordsIndex]+" ";
+                nextWord = words[wordsIndex] + " ";
 
-                if (FontHolder.Font.MeasureString(currentLine + nextWord).X < Bound.Width) // word fits
+                if (GUIHolder.Font.MeasureString(currentLine + nextWord).X < Bound.Width) // word fits
                 {
                     currentLine += nextWord;
                     wordsIndex++;
-                }else if (FontHolder.Font.MeasureString(nextWord).X > Bound.Width) // cut word
+                }
+                else if (GUIHolder.Font.MeasureString(nextWord).X > Bound.Width) // cut word
                 {
-                    int end = nextWord.Length -1;
-                    while (FontHolder.Font.MeasureString(currentLine + nextWord.Substring(0, end) + "-").X > Bound.Width) // see what we have space for
+                    int end = nextWord.Length - 1;
+                    while (GUIHolder.Font.MeasureString(currentLine + nextWord.Substring(0, end) + "-").X > Bound.Width) // see what we have space for
                     {
                         end--;
                     }
-                    builder.Append(currentLine + nextWord.Substring(0, end)+"-\n"); // add what we had space for
+                    builder.Append(currentLine + nextWord.Substring(0, end) + "-\n"); // add what we had space for
                     currentLine = "";
                     words[wordsIndex] = words[wordsIndex].Substring(end, words[wordsIndex].Length - end); // let the remaining be
-                    
-                }else// word doesn't fit, bit is not too long
+
+                }
+                else// word doesn't fit, bit is not too long
                 {
-                    builder.Append(currentLine+"\n");
+                    builder.Append(currentLine + "\n");
                     currentLine = "";
                 }
-                
+
             }
             builder.AppendLine(currentLine);
 
@@ -256,8 +258,8 @@
             // draw my own text
             foreach (Text t in texts)
             {
-                draw.DrawString(FontHolder.Font, t.Line, t.Position, Color.Black);
-            } 
+                draw.DrawString(GUIHolder.Font, t.Line, t.Position, Color.Black);
+            }
 
             // draw the children on top
             foreach (GUIElement e in children) e.Draw(draw);
