@@ -161,7 +161,7 @@ namespace Descent.Model.Player.Figure
             Armor = armor;
             attackType = type;
             DiceForAttack = dice;
-            texture = null;//FullModel.Game.Content.Load<Texture2D>("Images/Monsters/" + id);
+            texture = FullModel.Game.Content.Load<Texture2D>("Images/Monsters/" + id);
             System.Diagnostics.Debug.WriteLine("Images/Monsters/" + id + " - " + name);
         }
         #endregion
