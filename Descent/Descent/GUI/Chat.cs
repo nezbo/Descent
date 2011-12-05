@@ -35,8 +35,7 @@
         private void SendMessage(string text)
         {
             string message = Player.Instance.Name + ": " + text;
-            FormatAndAdd(message);
-            //manager.QueueEvent(EventType.ChatMessage, new ChatMessageEventArgs(message));
+            manager.QueueEvent(EventType.ChatMessage, new ChatMessageEventArgs(message));
         }
 
         private void FormatAndAdd(string text)

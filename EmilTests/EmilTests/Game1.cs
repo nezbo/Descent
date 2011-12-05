@@ -53,22 +53,23 @@ namespace EmilTests
             // creation of elements
             this.gui = new GUI(this);
             GUIElement root = GUIElementFactory.CreateStateElement(this, Descent.State.State.ActivateMonsters, Descent.Model.Player.Role.Overlord);
+            GUIElement chat = new Chat(this);
             GUIElement createGame = new GUIElement(this, "create", 100, 50, 300, 100);
             GUIElement joinGame = new GUIElement(this, "join", 100, 350, 300, 100);
+            GUIElement changeName = new GUIElement(this, "changeName", 500, 50, 400, 100);
+            InputElement nameInput = new InputElement(this, "nameInput", changeName.Bound.X + 10, changeName.Bound.Y + (changeName.Bound.Height - 30) / 2, 150, 30);
             InputElement connectInput = new InputElement(this, "connectInput", joinGame.Bound.X + 10, joinGame.Bound.Y + (joinGame.Bound.Height - 30) / 2, 150, 30);
             GUIElement buttonCreateGame = new GUIElement(this, "doneCreate", createGame.Bound.X + 200, createGame.Bound.Y + (createGame.Bound.Height - 30) / 2, 80, 30);
             GUIElement buttonJoinGame = new GUIElement(this, "doneJoin", joinGame.Bound.X + 200, joinGame.Bound.Y + (joinGame.Bound.Height - 30) / 2, 80, 30);
-
-            buttonCreateGame.SetDrawBackground(true);
-            buttonJoinGame.SetDrawBackground(true);
-            root.SetDrawBackground(true);
-            createGame.SetDrawBackground(true);
-            joinGame.SetDrawBackground(true);
-            connectInput.SetDrawBackground(true);
+            GUIElement buttonChangeName = new GUIElement(this, "doneName", changeName.Bound.X + 200, changeName.Bound.Y + (changeName.Bound.Height - 30) / 2, 150, 30);
 
             // assembling tree
             root.AddChild(createGame);
             root.AddChild(joinGame);
+            root.AddChild(chat);
+            root.AddChild(changeName);
+            changeName.AddChild(nameInput);
+            changeName.AddChild(buttonChangeName);
             createGame.AddChild(buttonCreateGame);
             joinGame.AddChild(connectInput);
             joinGame.AddChild(buttonJoinGame);
@@ -77,6 +78,8 @@ namespace EmilTests
             root.AddClickAction(root.Name, n => System.Diagnostics.Debug.WriteLine("Root clicked"));
             root.AddText("doneCreate", "Create!", new Vector2(0, 0));
             root.AddText("doneJoin", "Join!", new Vector2(0, 0));
+            root.AddText("doneName", "Change Name!", new Vector2(0, 0));
+            root.AddClickAction("doneName", n => n.Name = GUIHolder.GetInputFrom("nameInput"));
             root.AddClickAction("doneCreate", n => n.StartGame(1337));
             root.AddClickAction("doneJoin", n => n.JoinGame(GUIHolder.GetInputFrom("connectInput"), 1337));
 
@@ -107,6 +110,7 @@ namespace EmilTests
 
             // TODO: Add your update logic here
             gui.Update(gameTime);
+            Player.Instance.EventManager.ProcessEventQueue();
 
             base.Update(gameTime);
         }

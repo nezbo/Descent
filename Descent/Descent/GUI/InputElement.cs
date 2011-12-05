@@ -16,6 +16,7 @@ namespace Descent.GUI
 
         public override void HandleKeyPress(Keys key)
         {
+            string name = Name;
             if (HasFocus())
             {
                 string soFar = GUIHolder.GetInputFrom(this.Name);

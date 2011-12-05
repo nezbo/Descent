@@ -27,7 +27,7 @@
         private string name;
         public string Name { get { return name; } }
 
-        private bool drawBg = false;
+        private bool drawBg = true;
 
         private bool focus;
 
