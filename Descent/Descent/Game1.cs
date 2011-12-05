@@ -7,6 +7,7 @@ namespace XNATutorials
 {
     using System.IO;
 
+
     /// <summary>
     /// This is the main type for your game
     /// </summary>
@@ -49,6 +50,8 @@ namespace XNATutorials
 
             //Make the mouse pointer visible in the game window
             this.IsMouseVisible = true;
+
+            //FullModel.Game = this;
 
             base.Initialize();
         }
@@ -114,7 +117,7 @@ namespace XNATutorials
                 }
             }
         }
-        
+
         private void LoadOther(StreamReader reader, SpriteFactory sf)
         {
             //************* LOAD OTHER STUFF ************//
@@ -216,7 +219,7 @@ namespace XNATutorials
                 }
             }
 
-            spriteBatch.Draw(highlightTexture, new Rectangle(5 * 95 - xDisp, 18 * 95 - yDisp, 95, 95), new Color(0,0,0,155));
+            spriteBatch.Draw(highlightTexture, new Rectangle(5 * 95 - xDisp, 18 * 95 - yDisp, 95, 95), new Color(0, 0, 0, 155));
             spriteBatch.Draw(highlightTexture, new Rectangle(5 * 95 - xDisp, 19 * 95 - yDisp, 95, 95), new Color(110, 111, 72, 128));
 
             // FPS

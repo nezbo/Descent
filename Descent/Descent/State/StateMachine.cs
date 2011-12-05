@@ -6,14 +6,18 @@
     using System.Linq;
     using System.Text;
 
+    public delegate void StateChanged();
+
     /// <summary>
     /// The handler of all states. Knows about the current state and what to do next.
     /// </summary>
     /// <author>Martin Marcher</author>
     public class StateMachine
     {
-        private List<State> _states = new List<State>();
+        private readonly List<State> _states = new List<State>();
         private int currentIndex;
+
+        public event StateChanged StateChanged;
 
         public StateMachine(State[] startStates)
         {
@@ -36,9 +40,10 @@
         {
             Contract.Ensures(currentIndex < _states.Count);
             currentIndex++;
+            StateChanged();
         }
 
-        public void PlaceStates(State[] states)
+        public void PlaceStates(params State[] states)
         {
             Contract.Requires(states != null && states.Length > 0);
             Contract.Ensures(NextState == states[0]);
@@ -58,10 +63,20 @@
             return states.ToArray();
         }
 
-        public bool IsOneBeforeOther(State one, State other)
+        /// <summary>
+        /// Performs backwards search beginning at the current state, searching for two different States.
+        /// </summary>
+        /// <param name="one">The first state to search for.</param>
+        /// <param name="other">The second state to search for.</param>
+        /// <returns>True if <code>one</code> is found before <code>other</code> otherwise returns false.</returns>
+        public bool IsOneMoreRecentThanOther(State one, State other)
         {
             int index = currentIndex;
-            while (index >= 0 &&(_states[index] != one || _states[index] != other)) index--;
+            while (index >= 0 && (_states[index] != one || _states[index] != other))
+            {
+                index--;
+            }
+
             if (index >= 0)
             {
                 return _states[index] == one;

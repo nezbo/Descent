@@ -6,11 +6,9 @@
 
 namespace Descent.Model.Player.Figure
 {
-    using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-    using System.Text;
     using Descent.GUI;
 
     using Microsoft.Xna.Framework;
@@ -19,13 +17,17 @@ namespace Descent.Model.Player.Figure
     /// <summary>
     /// TODO: Update summary.
     /// </summary>
+    /// <author>
+    /// Jonas Breindahl (jobre@itu.dk)
+    /// </author>
     public class Monster : Figure, Drawable
     {
+        #region Static Loading
         /// <summary>
         /// The list of unique standard monsters
         /// </summary>
         private static List<Monster> monsters = LoadMonsters();
- 
+
         /// <summary>
         /// Loads the monsters from the file monsters.txt
         /// </summary>
@@ -50,17 +52,19 @@ namespace Descent.Model.Player.Figure
                 bool master = bool.Parse(data[2]);
                 int speed = int.Parse(data[3]);
                 string health = data[4];
-                EAttackType type = (data[5].Equals("MELEE")
+                int armor = int.Parse(data[5]);
+                EAttackType type = (data[6].Equals("MELEE")
                                        ? EAttackType.MELEE
                                        : (data[5].Equals("MAGIC") ? EAttackType.MAGIC : EAttackType.RANGED));
-               
+
                 List<Dice> attackDice = (
-                    from string dice 
-                        in data[6].Split(' ') 
+                    from string dice
+                        in data[7].Split(' ')
                     select Dice.GetDice(dice)).ToList();
 
-                monsters.Add(new Monster(id, name, master, speed, health, type, attackDice));
+                monsters.Add(new Monster(id, name, master, speed, health, armor, type, attackDice));
             }
+
             return monsters;
         }
 
@@ -78,7 +82,47 @@ namespace Descent.Model.Player.Figure
         {
             return monsters.Single(monster => monster.Id == id);
         }
+        #endregion
 
+        #region Fields
+
+        private bool isMaster;
+
+        private EAttackType attackType;
+
+        private Texture2D texture;
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Gets a value indicating whether the monster is a master
+        /// </summary>
+        public bool IsMaster
+        {
+            get
+            {
+                return isMaster;
+            }
+        }
+
+        public Texture2D Texture
+        {
+            get
+            {
+                return texture;
+            }
+
+            private set
+            {
+                texture = value;
+            }
+        }
+
+        #endregion
+
+        #region Initialization
         /// <summary>
         /// Initializes a new instance of the <see cref="Monster"/> class.
         /// </summary>
@@ -99,24 +143,27 @@ namespace Descent.Model.Player.Figure
         /// <param name="health">
         /// The health.
         /// </param>
+        /// <param name="armor">
+        /// The armor.
+        /// </param>
         /// <param name="type">
         /// The type.
         /// </param>
         /// <param name="dice">
         /// The dice.
         /// </param>
-        private Monster(int id, string name, bool master, int speed, string health, EAttackType type, List<Dice> dice)
+        private Monster(int id, string name, bool master, int speed, string health, int armor, EAttackType type, List<Dice> dice)
             : base(id, name)
         {
-           
+            isMaster = master;
+            Speed = speed;
+            MaxHealth = int.Parse(health.Split('/')[2]); // TODO: Somehow we need to determine how many players there exist.
+            Armor = armor;
+            attackType = type;
+            DiceForAttack = dice;
+            texture = null;//FullModel.Game.Content.Load<Texture2D>("Images/Monsters/" + id);
+            System.Diagnostics.Debug.WriteLine("Images/Monsters/" + id + " - " + name);
         }
-
-        public Texture2D Texture
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-        }
+        #endregion
     }
 }
