@@ -20,7 +20,7 @@
     public class GUIElement : DrawableGameComponent
     {
         protected static EventManager manager = Player.Instance.EventManager; //TODO: Where to find this?
-        protected static Texture2D background;
+        protected static Texture2D defaultBG;
 
         public Rectangle Bound { get; set; }
 
@@ -28,6 +28,7 @@
         public string Name { get { return name; } }
 
         private bool drawBg = true;
+        private Texture2D background = null;
 
         private bool focus;
 
@@ -55,7 +56,7 @@
             visuals = new Dictionary<Drawable, Rectangle>();
             texts = new Collection<Text>();
 
-            if (background == null) background = game.Content.Load<Texture2D>("boxbg");
+            if (defaultBG == null) defaultBG = game.Content.Load<Texture2D>("boxbg");
         }
 
         /// <summary>
@@ -197,21 +198,22 @@
             string[] words = text.Split();
             StringBuilder builder = new StringBuilder();
 
+            int totalSpace = Bound.Width - (int) position.X;
             string currentLine = "";
             string nextWord;
             while (wordsIndex < words.Length)
             {
                 nextWord = words[wordsIndex] + " ";
 
-                if (GUIHolder.Font.MeasureString(currentLine + nextWord).X < Bound.Width) // word fits
+                if (GUIHolder.Font.MeasureString(currentLine + nextWord).X < totalSpace) // word fits
                 {
                     currentLine += nextWord;
                     wordsIndex++;
                 }
-                else if (GUIHolder.Font.MeasureString(nextWord).X > Bound.Width) // cut word
+                else if (GUIHolder.Font.MeasureString(nextWord).X > totalSpace) // cut word
                 {
                     int end = nextWord.Length - 1;
-                    while (GUIHolder.Font.MeasureString(currentLine + nextWord.Substring(0, end) + "-").X > Bound.Width) // see what we have space for
+                    while (GUIHolder.Font.MeasureString(currentLine + nextWord.Substring(0, end) + "-").X > totalSpace) // see what we have space for
                     {
                         end--;
                     }
@@ -242,6 +244,17 @@
         }
 
         /// <summary>
+        /// Changes the background to the given asset and enables
+        /// background drawing.
+        /// </summary>
+        /// <param name="assetName">The name of the asset in the Content project.</param>
+        public void SetBackground(string assetName)
+        {
+            background = Game.Content.Load<Texture2D>(assetName);
+            SetDrawBackground(true);
+        }
+
+        /// <summary>
         /// Draws this GUIElement and then all children on top of it
         /// </summary>
         /// <param name="draw">The SpriteBatch to draw on</param>
@@ -250,7 +263,7 @@
             // draw my own background
             if (drawBg)
             {
-                draw.Draw(background, Bound, Color.White);
+                draw.Draw((background == null) ? defaultBG : background, Bound, Color.White);
             }
 
             // draw my own "pictures"
