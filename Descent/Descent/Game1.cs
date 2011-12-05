@@ -7,6 +7,8 @@ namespace XNATutorials
 {
     using System.IO;
 
+    using Descent.Model;
+
     /// <summary>
     /// This is the main type for your game
     /// </summary>
@@ -49,6 +51,8 @@ namespace XNATutorials
 
             //Make the mouse pointer visible in the game window
             this.IsMouseVisible = true;
+
+            FullModel.Game = this;
 
             base.Initialize();
         }

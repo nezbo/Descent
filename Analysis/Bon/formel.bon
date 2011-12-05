@@ -196,6 +196,7 @@ component
 				-> INTEGER: fatiqueAmount
 				require
 					fatiqueAmount > 0;
+					fatigueAmount <= fatigue;
 				ensure
 					old fatique + fatiqueAmount < 0 -> fatique = 0;
 					old fatique + fatiqueAmount >= 0 -> fatique = old fatique + fatiqueAmount;
@@ -227,15 +228,8 @@ component
 			skillType: ATTACK_TYPE -- What type of skill are you?
 			name: STRING -- What is your name?
 			abilities: SEQUENCE[ABILITY] -- What are your abilities?
-			addAbility: Void -- Add this ability to your list of ability?
-				-> ability: ABILITY
-				require
-					ability =/ Void;
-				ensure
-					abilities.length = old abilities.length + 1;
-			end
 		invariant
-			abilities.length > 0;
+			true;
 			-- A Skill cannot have more than one type
 	end
 	

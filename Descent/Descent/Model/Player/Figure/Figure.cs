@@ -1,5 +1,6 @@
 ﻿namespace Descent.Model.Player.Figure
 {
+    using System;
     using System.Collections.Generic;
     using System.Diagnostics.Contracts;
     using System.Linq;
@@ -25,7 +26,7 @@
     /// <author>
     /// Jonas Breindahl (jobre@itu.dk)
     /// </author>
-    public class Figure
+    public abstract class Figure
     {
         #region Figure.None
 
@@ -41,7 +42,7 @@
         {
             get
             {
-                return none ?? (none = new Figure(int.MinValue, "None"));
+                return none ?? (none = Monster.GetMonster(0));
             }
         }
 
@@ -137,7 +138,7 @@
         }
 
         /// <summary>
-        /// Gets the max health, including all contributors to max health
+        /// Gets the max health, including all contributors
         /// Sets the internal value, not including all contributors.
         /// </summary>
         public int MaxHealth
@@ -148,7 +149,7 @@
                 return maxHealth + total;
             }
 
-            internal set
+            protected set
             {
                 maxHealth = value;
             }
@@ -177,7 +178,7 @@
                 return armor + total;
             }
 
-            internal set
+            protected set
             {
                 armor = value;
             }
@@ -195,7 +196,7 @@
                 return speed + total;
             }
 
-            internal set
+            protected set
             {
                 speed = value;
             }
@@ -209,6 +210,11 @@
             get
             {
                 return speedLeft;
+            }
+
+            private set
+            {
+                speedLeft = value;
             }
         }
 
@@ -242,7 +248,7 @@
                 return total;
             }
 
-            internal set
+            protected set
             {
                 diceForAttacks = value;
             }
@@ -266,7 +272,7 @@
                 return total;
             }
 
-            internal set
+            protected set
             {
                 abilities = value;
             }
@@ -289,7 +295,7 @@
                 return effects;
             }
 
-            internal set
+            protected set
             {
                 effects = value;
             }
@@ -388,6 +394,17 @@
         public void AddAbility(Ability ability)
         {
             abilities.Add(ability);
+        }
+
+        /// <summary>
+        /// Gets the type of attack this figure would do if it attacked right now.
+        /// </summary>
+        /// <returns>
+        /// Returns the EAttackType of this figure
+        /// </returns>
+        public virtual EAttackType AttackType()
+        {
+            return EAttackType.NONE;
         }
 
         /// <summary>

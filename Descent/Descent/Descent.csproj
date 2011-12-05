@@ -16,10 +16,10 @@
     <XnaProfile>Reach</XnaProfile>
     <XnaCrossPlatformGroupID>95bfd38f-d0c6-4871-9fc1-decf79e59b91</XnaCrossPlatformGroupID>
     <XnaOutputType>Game</XnaOutputType>
-    <ApplicationIcon>
-    </ApplicationIcon>
+    <ApplicationIcon>Game.ico</ApplicationIcon>
     <Thumbnail>
     </Thumbnail>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -32,7 +32,6 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -60,6 +59,9 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <PlatformTarget>x86</PlatformTarget>
     <XnaCompressContent>true</XnaCompressContent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>XNATutorials.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
@@ -101,8 +103,13 @@
     <Compile Include="Model\Dice.cs" />
     <Compile Include="Model\Event\Ability.cs" />
     <Compile Include="Model\Event\Effect.cs" />
+    <Compile Include="Model\FullModel.cs" />
     <Compile Include="Model\Player\Figure\Figure.cs" />
     <Compile Include="Model\Player\Figure\Hero.cs" />
+    <Compile Include="Model\Player\Figure\HeroStuff\Equipment.cs" />
+    <Compile Include="Model\Player\Figure\HeroStuff\Inventory.cs" />
+    <Compile Include="Model\Player\Figure\HeroStuff\Potion.cs" />
+    <Compile Include="Model\Player\Figure\HeroStuff\Skill.cs" />
     <Compile Include="Model\Player\Figure\Monster.cs" />
     <Compile Include="Model\Player\HeroParty.cs" />
     <Compile Include="Model\Player\Player.cs" />
@@ -154,6 +161,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Game.ico" />
     <Content Include="monsters.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

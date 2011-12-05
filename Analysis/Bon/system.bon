@@ -136,7 +136,6 @@ cluster_chart EVENT_ARGS
 	-- A lot more classes (around 40) inheriting from GAME_EVENT_ARGS exists, but we chose not to model them in BON.
 end
 
-
 cluster_chart STATE_STUFF
 	indexing
 		author: "Martin Marcher";
@@ -252,16 +251,19 @@ class_chart HERO -- A hero, made from a hero-sheet
 	indexing
 		author: "Jonas Breindahl";
 		created: "21-11-2011";
-		revised: "30-11-2011"
+		revised: "05-12-2011"
 	explanation 
 		"A hero, made from a hero-sheet"
 	query
 		"How many skills do you have in MELEE/RANGED/MAGIC?",
+		"What skills do you have in MELEE/RANGED/MAGIC?",
 		"What is your max fatique?",
 		"What is your fatique right now?"
 	command
 		"Add 'this' amount of fatique!",
-		"Lose 'this' amount of fatique!"
+		"Lose 'this' amount of fatique!",
+		"Add 'this' skill!",
+		"Remove 'this' skill!"		
 	constraint
 		"A Hero may never have more fatique than max fatique"	
 end
@@ -278,6 +280,17 @@ class_chart PET
 		"What hero owns you?",
 		"What are your abilities?",
 		"What is you max speed?"
+end
+
+class_chart MONSTER
+	indexing
+		author: "Jonas Breindahl";
+		created: "05-12-2011";
+		revised: "05-12-2011"
+	explanation
+		"A monster, controlled by the Overlord"
+	query
+		"Are you a master?"
 end
 
 class_chart SKILL

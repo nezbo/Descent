@@ -43,7 +43,7 @@ namespace Descent.Model.Player
     /// </author>
     public enum EAttackType
     {
-        MAGIC, MELEE, RANGED
+        MAGIC, MELEE, RANGED, NONE
     }
 
     /// <summary>
@@ -134,6 +134,8 @@ namespace Descent.Model.Player
         //*********************************************//
         #endregion EventManagerSingletonPattern
 
+        private string name;
+
         private Connection connection;
 
         public Connection Connection { get { return connection; } }
@@ -183,9 +185,20 @@ namespace Descent.Model.Player
             this.connection = new ClientConnection(ip, port);
             this.connection.Start();
         }
-        
-        #endregion
 
-        public string Name { get; set; }
+        public string Name
+        {
+            get
+            {
+                return name;
+            }
+
+            set
+            {
+                name = value;
+            }
+        }
+
+        #endregion
     }
 }
