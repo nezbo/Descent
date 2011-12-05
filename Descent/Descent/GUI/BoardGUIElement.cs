@@ -6,7 +6,7 @@ namespace Descent.GUI
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Input;
- 
+
     /// <summary>
     /// The element on the screen that visualizes the game board and marking
     /// fields on the board if needed.
@@ -43,7 +43,7 @@ namespace Descent.GUI
             this.markTexture.SetData(new Color[] { Color.White });
 
             // event on click
-            this.AddClickAction("board",n => n.SquareMarked(xClick, yClick));
+            this.AddClickAction("board", n => System.Diagnostics.Debug.WriteLine("TODO: board clicks")); //TODO
         }
 
         public override bool HandleClick(int x, int y)
@@ -85,7 +85,7 @@ namespace Descent.GUI
                     }
                 case Keys.Down:
                     {
-                        if (yDisp < (/*TODO: Did you mean height? board.GetLength(1)*/ - 1 + BorderTiles) * 95 - this.Bound.Height)
+                        if (yDisp < (/*TODO: Did you mean height? board.GetLength(1)*/ -1 + BorderTiles) * 95 - this.Bound.Height)
                         {
                             yDisp += 10;
                         }
@@ -110,7 +110,7 @@ namespace Descent.GUI
                 {
                     if (true)//TODO: FIX board.IsWithin(x, y))
                     {
-                        v = CalcVector(x,y);
+                        v = CalcVector(x, y);
                         //TODO: FIX draw.Draw(board.FloorTexture, v, Color.White);
                     }
                 }

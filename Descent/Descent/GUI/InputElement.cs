@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Descent.GUI
 {
-    class InputElement : GUIElement
+    public class InputElement : GUIElement
     {
         private Vector2 pos;
 
@@ -24,7 +24,7 @@ namespace Descent.GUI
                 switch (key)
                 {
                     //case Keys.Enter: { if (soFar.Length > 0) { SendMessage(soFar); soFar = ""; } break; }
-                    case Keys.Back: { if (soFar.Length > 0) { GUIHolder.SetInput(this.Name, soFar.Substring(0, soFar.Length - 1)); } break; }
+                    case Keys.Back: { if (soFar.Length > 0) { soFar = soFar.Substring(0, soFar.Length - 1); } break; }
                     case Keys.Space: { soFar += " "; break; }
                     case Keys.OemPeriod: { soFar += isShift ? ":" : "."; break; }
                     case Keys.OemComma: { soFar += isShift ? ";" : ","; break; }
