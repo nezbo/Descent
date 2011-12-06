@@ -20,7 +20,10 @@
     {
         private static GUIElement CreateEmptyRoot(Game game)
         {
-            return new GUIElement(game, "state", 0, 0, game.Window.ClientBounds.Width, game.Window.ClientBounds.Height);
+            GUIElement result = new GUIElement(game, "state", 0, 0, game.Window.ClientBounds.Width, game.Window.ClientBounds.Height);
+            result.SetDrawBackground(false);
+
+            return result;
         }
 
         private static int RelW(Viewport viewport, int percentage)
@@ -55,7 +58,6 @@
                         root.AddChild(cardE);
                         break;
                     }
-                default: { break; }
             }
 
             return root;
@@ -65,7 +67,7 @@
         {
             GUIElement root = CreateEmptyRoot(game);
 
-            //TODO: Fill with stuff to draw.
+            root.AddChild(new Chat(game));
 
             return root;
         }

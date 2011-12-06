@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Descent.GUI
 {
-    class Image : Drawable
+    public class Image : Drawable
     {
         private Texture2D tex;
 

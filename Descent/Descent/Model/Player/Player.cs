@@ -4,13 +4,10 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using System.Diagnostics.Contracts;
+
 namespace Descent.Model.Player
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Linq;
-    using System.Text;
 
     using Descent.Messaging.Connection;
     using Descent.Messaging.Events;
@@ -99,16 +96,8 @@ namespace Descent.Model.Player
 
         /// <summary>
         /// Gets StateManager.
-        /// TODO: Atm the Statemanager is empty!
         /// </summary>
-        public StateManager StateManager
-        {
-            get
-            {
-                return this.stateManager;
-            }
-            private set { stateManager = value; }
-        }
+        public StateManager StateManager { get { return stateManager; } set { Contract.Requires(stateManager == null); stateManager = value; } }
 
         //*********************************************//
         #endregion StateManagerSingletonPattern

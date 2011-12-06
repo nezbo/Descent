@@ -23,6 +23,7 @@
             manager.ChatMessageEvent += new ChatMessageHandler(GetMessage);
 
             this.SetDrawBackground(true);
+            this.SetBackground("chatbg");
         }
 
         private void GetMessage(object sender, ChatMessageEventArgs eventArgs)

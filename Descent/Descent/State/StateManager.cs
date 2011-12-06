@@ -19,7 +19,7 @@ namespace Descent.State
     {
         private readonly StateMachine stateMachine;
         private readonly GUI gui;
-        private readonly Model model;
+        private readonly FullModel model;
         private HeroParty heroParty;
         private EventManager eventManager = Player.Instance.EventManager;
 
@@ -27,14 +27,14 @@ namespace Descent.State
         private Hero currentHero;
         private Collection<Hero> heroesYetToAct;
 
-        public StateManager(GUI gui, Model model)
+        public StateManager(GUI gui, FullModel model)
         {
             this.gui = gui;
             this.model = model;
             stateMachine = new StateMachine(new State[] { State.Initiation, State.NewRound });
             stateMachine.StateChanged += StateChanged;
 
-
+            gui.ChangeStateGUI(GUIElementFactory.CreateMenuElement(gui.Game));
         }
 
         public State CurrentState

@@ -268,7 +268,7 @@
             // draw my own background
             if (drawBg)
             {
-                draw.Draw((background == null) ? defaultBG : background, Bound, Color.White);
+                draw.Draw(background ?? defaultBG, Bound, Color.White);
             }
 
             // draw my own "pictures"
