@@ -16,5 +16,9 @@ namespace Descent.Model.Event
     /// </summary>
     public class Ability
     {
+        public static Ability GetAbility(string ability)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

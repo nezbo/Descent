@@ -41,14 +41,19 @@ namespace Descent.Model
     /// <summary>
     /// TODO: Update summary.
     /// </summary>
+    /// <author>
+    /// Jonas Breindahl (jobre@itu.dk)
+    /// </author>
     public class Dice
     {
         #region Static Dice Loading
 
-        private static Dictionary<EDice, Dice> diceDictionary = LoadDice();
+        private static Dictionary<EDice, Dice> diceDictionary;
 
-        private static Dictionary<EDice, Dice> LoadDice()
+        public static Dictionary<EDice, Dice> LoadDice()
         {
+            if (diceDictionary != null) return diceDictionary;
+
             StreamReader reader = new StreamReader(TitleContainer.OpenStream("dice.txt"));
 
             int n = int.Parse(reader.ReadLine());
@@ -68,7 +73,8 @@ namespace Descent.Model
                 dice[eDice] = new Dice(eDice, sides);
             }
 
-            return dice;
+            diceDictionary = dice;
+            return diceDictionary;
         }
 
         private static int[][] AddSides(string[] data)
@@ -122,14 +128,12 @@ namespace Descent.Model
         private EDice color;
 
         private int activeSideIndex;
-
-        private int[] activeSide;
         #endregion
 
         #region Properties
 
         /// <summary>
-        /// Returns the up side of the dice
+        /// Gets the up side of the dice
         /// The 4 long array are these values:
         /// Range, Damage, Surges, X´s
         /// </summary>
@@ -137,16 +141,23 @@ namespace Descent.Model
         {
             get
             {
-                activeSide = sides[activeSideIndex];
-                return activeSide;
+                return sides[activeSideIndex];
             }
         }
 
+        /// <summary>
+        /// Gets and sets the index of the upside
+        /// </summary>
         public int SideIndex
         {
             get
             {
                 return activeSideIndex;
+            }
+
+            set
+            {
+                activeSideIndex = value;
             }
         }
 
@@ -170,18 +181,7 @@ namespace Descent.Model
         public void RollDice()
         {
             Random r = new Random();
-            activeSide = sides[r.Next(6)];
-        }
-
-        /// <summary>
-        /// Force the dice to a side
-        /// </summary>
-        /// <param name="side">
-        /// The side to be up
-        /// </param>
-        public void ChangeSide(int side)
-        {
-            activeSide = sides[side];
+            activeSideIndex = r.Next(6);
         }
 
         #endregion

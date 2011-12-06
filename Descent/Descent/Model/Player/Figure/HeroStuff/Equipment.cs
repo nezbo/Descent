@@ -4,9 +4,15 @@ namespace Descent.Model.Player.Figure.HeroStuff
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.Contracts;
+    using System.IO;
     using System.Linq;
     using System.Text;
 
+    using Descent.Model.Event;
+
+    using Microsoft.Xna.Framework;
+
+    #region Enums
     /// <summary>
     /// A set of all types of equipment
     /// </summary>
@@ -35,6 +41,9 @@ namespace Descent.Model.Player.Figure.HeroStuff
         Potion
     }
 
+    /// <summary>
+    /// A set of all 
+    /// </summary>
     public enum EquipmentRarity
     {
         Common,
@@ -42,6 +51,7 @@ namespace Descent.Model.Player.Figure.HeroStuff
         Silver,
         Gold
     }
+    #endregion
 
     /// <summary>
     /// Equipment can be worn by the hero
@@ -49,8 +59,68 @@ namespace Descent.Model.Player.Figure.HeroStuff
     /// <author>
     /// Jonas Breindahl (jobre@itu.dk)
     /// </author>
-    public abstract class Equipment
+    public class Equipment
     {
+        #region Static
+
+        private static List<Equipment> equipment; 
+
+        public static List<Equipment> LoadContent(Game game)
+        {
+            if (equipment != null) return equipment;
+            StreamReader reader = new StreamReader(TitleContainer.OpenStream("equipment.txt"));
+
+            int n = int.Parse(reader.ReadLine());
+            string line;
+
+            List<Equipment> equipments = new List<Equipment>();
+            for (int i = 0; i < n; i++)
+            {
+                line = reader.ReadLine();
+                string[] data = line.Split(',');
+
+                int id = int.Parse(data[0]);
+                string name = data[1];
+
+                EquipmentRarity rarity;
+                EquipmentRarity.TryParse(data[2], out rarity);
+
+                EquipmentType type; 
+                EquipmentType.TryParse(data[3], out type);
+
+                string other = data[4];
+
+                EAttackType attackType;
+                bool succed = EAttackType.TryParse(data[5].ToUpper(), out attackType);
+                attackType = succed ? EAttackType.NONE : attackType;
+
+                int price = int.Parse(data[6]);
+
+                int hands = int.Parse(data[7]);
+
+                int amount = int.Parse(data[8]);
+
+                string diceString = data[9];
+                string[] diceArray = diceString.Split(' ');
+                List<Dice> diceList = diceArray.Select(Dice.GetDice).ToList();
+
+                string abilitiesString = data[10];
+                string[] abilitiesArray = abilitiesString.Split('/');
+                List<Ability> abilityList = abilitiesArray.Select(Ability.GetAbility).ToList();
+
+                string surgeAbilitiesString = data[11];
+                string[] surgeAbilitiesArray = surgeAbilitiesString.Split('/');
+                List<SurgeAbility> surgeAbilityList =
+                    surgeAbilitiesArray.Select(SurgeAbility.GetSurgeAbility).ToList();
+
+                equipments.Add(new Equipment(name, type, rarity, price, surgeAbilityList, hands, abilityList));
+            }
+            
+            return equipment = equipments;
+        }
+
+        #endregion
+
         #region Fields
 
         private bool tapped = false;
@@ -58,11 +128,18 @@ namespace Descent.Model.Player.Figure.HeroStuff
         private EquipmentType type;
         private EquipmentRarity rarity;
         private int buyPrice;
+        private List<SurgeAbility> surgeAbilities;
+        private int hands;
+        private List<Ability> abilities;
+        private bool equipped = false;
 
         #endregion
 
         #region Properties
 
+        /// <summary>
+        /// Gets a value indicating whether the equipment is tapped / used
+        /// </summary>
         public bool Tapped
         {
             get
@@ -92,11 +169,36 @@ namespace Descent.Model.Player.Figure.HeroStuff
             }
         }
 
+        /// <summary>
+        /// Gets the rarity of an equipment
+        /// </summary>
         public EquipmentRarity Rarity
         {
             get
             {
                 return rarity;
+            }
+        }
+
+        /// <summary>
+        /// Gets the surge abilities that the weapon has
+        /// </summary>
+        public List<SurgeAbility> SurgeAbilities
+        {
+            get
+            {
+                return surgeAbilities;
+            }
+        }
+
+        /// <summary>
+        /// Gets the number of hands it takes to wield
+        /// </summary>
+        public int Hands
+        {
+            get
+            {
+                return hands;
             }
         }
 
@@ -108,6 +210,29 @@ namespace Descent.Model.Player.Figure.HeroStuff
             get
             {
                 return buyPrice;
+            }
+        }
+
+        /// <summary>
+        /// Gets the list of abilities on the equipment
+        /// </summary>
+        public List<Ability> Abilities
+        {
+            get
+            {
+                return abilities;
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the equipment
+        /// is equipped to a hero.
+        /// </summary>
+        public bool Equipped
+        {
+            get
+            {
+                return equipped;
             }
         }
 
@@ -131,12 +256,23 @@ namespace Descent.Model.Player.Figure.HeroStuff
         /// The buy price of the equipment
         /// This is 0 if the equipments rarity is not common
         /// </param>
-        public Equipment(string name, EquipmentType type, EquipmentRarity rarity, int buyPrice)
+        /// <param name="surgeAbilities">
+        /// The surge abilities, if the equipment is a weapon
+        /// </param>
+        /// <param name="hands">
+        /// The number of hands it takes to wield, if the equipment is a weapon
+        /// </param>
+        public Equipment(string name, EquipmentType type, EquipmentRarity rarity, int buyPrice, List<SurgeAbility> surgeAbilities, int hands, List<Ability> abilities)
         {
+            Contract.Requires(surgeAbilities != null);
+            Contract.Requires(abilities != null);
             this.name = name;
             this.type = type;
             this.rarity = rarity;
             this.buyPrice = rarity == EquipmentRarity.Common ? buyPrice : 0;
+            this.surgeAbilities = surgeAbilities;
+            this.hands = hands;
+            this.abilities = abilities;
             tapped = false;
         }
 
@@ -171,7 +307,20 @@ namespace Descent.Model.Player.Figure.HeroStuff
         /// </param>
         public void EquipToHero(Hero hero)
         {
+            Contract.Requires(!Equipped);
+            Contract.Ensures(Equipped);
+            Contract.Ensures(
+                this.type == EquipmentType.Weapon ? 
+                hero.Inventory.Weapon.Equals(this) :
+                    this.type == EquipmentType.Armor ?
+                    hero.Inventory.Armor.Equals(this) :
+                        this.type == EquipmentType.Other ?
+                        hero.Inventory.OtherItems.Contains(this) :
+                            this.type == EquipmentType.Potion ?
+                            hero.Inventory.Potions.Contains(this) : 
+                            false);
             //TODO: Code to pass abilities on?
+            equipped = true;
         }
 
         /// <summary>
@@ -182,7 +331,10 @@ namespace Descent.Model.Player.Figure.HeroStuff
         /// </param>
         public void UnequipFromHero(Hero hero)
         {
+            Contract.Requires(Equipped);
+            Contract.Ensures(!Equipped);
             //TODO: Code to take abilities back!
+            equipped = false;
         }
 
         #endregion
