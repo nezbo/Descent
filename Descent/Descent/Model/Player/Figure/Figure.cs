@@ -28,26 +28,6 @@
     /// </author>
     public abstract class Figure
     {
-        #region Figure.None
-
-        /// <summary>
-        /// A figure instance that represents a None figure
-        /// </summary>
-        private static Figure none;
-
-        /// <summary>
-        /// Gets an None instance of Figure
-        /// </summary>
-        public static Figure None
-        {
-            get
-            {
-                return none ?? (none = FullModel.GetMonster(0));
-            }
-        }
-
-        #endregion Figure.NONE
-
         #region Events
 
         /// <summary>

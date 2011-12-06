@@ -1,15 +1,20 @@
 using System.Collections.ObjectModel;
+
 using Descent.Model.Board;
 
 namespace Descent.State
 {
     using System.Diagnostics.Contracts;
-    using GUI;
-    using Messaging.Events;
-    using Model;
-    using Model.Player;
-    using Model.Player.Figure;
-    using Model.Player.Figure.HeroStuff;
+
+    using Descent.GUI;
+    using Descent.Messaging.Events;
+    using Descent.Model;
+    using Descent.Model.Player;
+    using Descent.Model.Player.Figure;
+    using Descent.Model.Player.Figure.HeroStuff;
+
+    using Microsoft.Xna.Framework;
+    using Microsoft.Xna.Framework.Graphics;
 
     /// <summary>
     /// The handler of all states. Knows about the current state and what to do next.
@@ -24,6 +29,10 @@ namespace Descent.State
         private EventManager eventManager = Player.Instance.EventManager;
 
         // fields for different game logic variables
+        // server only
+        private int ReadyCount = 0;
+
+        // other
         private Hero currentHero;
         private Collection<Hero> heroesYetToAct;
 
@@ -34,6 +43,8 @@ namespace Descent.State
 
             // subscribe for events
             eventManager.PlayerJoinedEvent += new PlayerJoinedHandler(PlayerJoined);
+            eventManager.PlayersInGameEvent += new PlayersInGameHandler(PlayersInGame);
+            eventManager.ReadyEvent += new ReadyHandler(ReadyEvent);
 
             // initiate start
             stateMachine = new StateMachine(new State[] { State.InLobby, State.NewRound });
@@ -46,8 +57,37 @@ namespace Descent.State
         // event handlers
         private void PlayerJoined(object sender, PlayerJoinedEventArgs eventArgs)
         {
-            //Player.Instance.OtherPlayers.Add(eventArgs.PlayerId, eventArgs.PlayerNick);
+            Player.Instance.SetPlayerNick(eventArgs.PlayerId, eventArgs.PlayerNick);
+            if (Player.Instance.IsServer) eventManager.FirePlayersInGameEvent();
             StateChanged();
+        }
+
+        private void PlayersInGame(object sender, PlayersInGameEventArgs eventArgs)
+        {
+            foreach (PlayerInGame p in eventArgs.Players)
+            {
+                Player.Instance.SetPlayerNick(p.Id, p.Nickname);
+            }
+        }
+
+        private void ReadyEvent(object sender, GameEventArgs eventArgs)
+        {
+            if (Player.Instance.IsServer)
+            {
+                ReadyCount++;
+                switch (stateMachine.CurrentState)
+                {
+                    case State.InLobby:
+                        {
+                            if (ReadyCount >= 3) // atleast three players in the game
+                            {
+                                stateMachine.ChangeToNextState();
+                            }
+                            ReadyCount = 0;
+                            break;
+                        }
+                }
+            }
         }
 
         // stuff?
@@ -99,10 +139,11 @@ namespace Descent.State
             {
                 case State.InLobby:
                     {
-                        /*foreach (string s in Player.Instance.OtherPlayerNames)
+                        for (int i = 1; i <= 5; i++)
                         {
-                            root.AddText("box", s, new Vector2(0, 0));
-                        }*/
+                            root.AddText("player" + i, Player.Instance.GetPlayerNick(i) ?? "", new Vector2(5, 50));
+                        }
+                        root.AddClickAction("ready", n => n.EventManager.QueueEvent(EventType.Ready,new GameEventArgs()));
 
                         break;
                     }

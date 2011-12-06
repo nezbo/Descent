@@ -8,6 +8,7 @@ using System.Diagnostics.Contracts;
 
 namespace Descent.Model.Player
 {
+    using System.Collections.Generic;
 
     using Descent.Messaging.Connection;
     using Descent.Messaging.Events;
@@ -52,15 +53,30 @@ namespace Descent.Model.Player
     /// </author>
     public class Player
     {
-        #region PlayerSingletonPattern
-        //************ Singleton Pattern *************//
         /// <summary>
         /// The static field, holding the player instance
         /// </summary>
-        private static Player player = null;
+        private static Player player;
+
+        private StateManager stateManager;
+
+        private EventManager eventManager;
+
+        private string[] playerNicks;
+        private Hero[] playerHeroes;
 
         /// <summary>
-        /// Will always return the same Player instance
+        /// Prevents a default instance of the <see cref="Player"/> class from being created.
+        /// </summary>
+        private Player()
+        {
+            eventManager = new EventManager();
+            playerNicks = new string[5];
+            playerHeroes = new Hero[5];
+        }
+
+        /// <summary>
+        /// Gets the Player singleton instance
         /// TODO: At the moment there is no instantiating of the Player object
         /// </summary>
         public static Player Instance
@@ -71,63 +87,7 @@ namespace Descent.Model.Player
             }
         }
 
-        //********************************************//
-
-        #endregion PlayerSingletonPattern
-
-        #region CONSTRUCTORS
-        /// <summary>
-        /// Prevents a default instance of the <see cref="Player"/> class from being created. 
-        /// 
-        /// </summary>
-        private Player()
-        {
-        }
-        #endregion CONSTRUCTORS
-
-        #region FIELDS
-
-        #region StateManagerSingletonPattern
-        //************ Singleton Pattern *************//
-        /// <summary>
-        /// The StateManager field, that makes out the Singleton Pattern
-        /// </summary>
-        private StateManager stateManager = null;
-
-        /// <summary>
-        /// Gets StateManager.
-        /// </summary>
-        public StateManager StateManager { get { return stateManager; } set { Contract.Requires(stateManager == null); stateManager = value; } }
-
-        //*********************************************//
-        #endregion StateManagerSingletonPattern
-
-        #region EventManagerSingletonPattern
-        //************ Singleton Pattern *************//
-        /// <summary>
-        /// The EventManager field, that makes out the Singleton Pattern
-        /// </summary>
-        private EventManager eventManager = null;
-
-        /// <summary>
-        /// Gets EventManager.
-        /// </summary>
-        public EventManager EventManager
-        {
-            get
-            {
-                return eventManager ?? (eventManager = new EventManager());
-            }
-        }
-
-        //*********************************************//
-        #endregion EventManagerSingletonPattern
-
-        private string name;
-
-        private Connection connection;
-
-        public Connection Connection { get { return connection; } }
+        public string Nickname { get; set; }
 
         /// <summary>
         /// What is your role?
@@ -135,12 +95,10 @@ namespace Descent.Model.Player
         /// </summary>
         public bool IsOverlord { get; set; }
 
-        public Hero Hero { get; set; } // stub created by Emil, if it needs to be different change it, then remove this comment
-
         /// <summary>
-        /// Are you client or server
+        /// Gets or sets the Hero of the Player - if the player is not overlord.
         /// </summary>
-        public bool IsServer { get; set; }
+        public Hero Hero { get; set; }
 
         /// <summary>
         /// Gets the unique ID.
@@ -155,13 +113,88 @@ namespace Descent.Model.Player
         }
 
         /// <summary>
+        /// Are you client or server?
+        /// </summary>
+        public bool IsServer { get; internal set; }
+
+        public void SetPlayerNick(int id, string nickname)
+        {
+            playerNicks[id - 1] = nickname;
+        }
+
+        public string GetPlayerNick(int id)
+        {
+            return playerNicks[id - 1];
+        }
+
+        public void SetPlayerHero(int id, Hero hero)
+        {
+            playerHeroes[id - 1] = hero;
+        }
+
+        public Hero GetPlayerHero(int id)
+        {
+            return playerHeroes[id - 1];
+        }
+
+        /// <summary>
+        /// Gets the number of other players in the game.
+        /// </summary>
+        public int NumberOfPlayers
+        {
+            get
+            {
+                int c = 0;
+                foreach (string playerNick in playerNicks)
+                {
+                    if (playerNick != "") c++;
+                }
+                return c;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the StateManager.
+        /// </summary>
+        public StateManager StateManager
+        {
+            get
+            {
+                return stateManager;
+            }
+
+            set
+            {
+                Contract.Requires(stateManager == null);
+                stateManager = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets EventManager.
+        /// </summary>
+        public EventManager EventManager
+        {
+            get
+            {
+                return eventManager;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the Connection.
+        /// </summary>
+        public Connection Connection { get; set; }
+
+        /// <summary>
         /// Start/host a game on the following port.
         /// </summary>
         /// <param name="port">Port to listen on.</param>
         public void StartGame(int port)
         {
-            this.connection = new ServerConnection(port);
-            this.connection.Start();
+            IsServer = true;
+            Connection = new ServerConnection(port);
+            Connection.Start();
         }
 
         /// <summary>
@@ -171,23 +204,9 @@ namespace Descent.Model.Player
         /// <param name="port">Port of host.</param>
         public void JoinGame(string ip, int port)
         {
-            this.connection = new ClientConnection(ip, port);
-            this.connection.Start();
+            IsServer = false;
+            Connection = new ClientConnection(ip, port);
+            Connection.Start();
         }
-
-        public string Name
-        {
-            get
-            {
-                return name;
-            }
-
-            set
-            {
-                name = value;
-            }
-        }
-
-        #endregion
     }
 }

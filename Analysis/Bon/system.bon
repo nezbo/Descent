@@ -590,8 +590,9 @@ class_chart BOARD
 	query
 		"What is your width?",
 		"What is your height?",
+        "What heroes are currently in town?",
 		"Is the coordinate (x/y) within the board?",
-		"Is this square pass-/moveable?",
+		"Is this square standable?",
 		"Can the overlord spawn here?",
 		"Is there line of sight from 'here' to 'there'?",
 		"Is there line of sight from 'here' to 'there', not included monsters?",
@@ -703,10 +704,10 @@ class_chart IMAGE
 		author: "Emil Juul Jacobsen";
 		created: "06-12-2011";
 		revised: "06-12-2011";
-	inherit
-		DRAWABLE
 	explanation
 		"A simple implementation of a DRAWABLE to display a source image"
+	inherit
+		DRAWABLE
 end
 
 class_chart GUI

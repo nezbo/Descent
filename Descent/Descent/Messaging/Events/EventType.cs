@@ -37,7 +37,6 @@ namespace Descent.Messaging.Events
         FinishedBuy = 21,
         GiveConquestToken = 22,
         GiveCoins = 23,
-        GiveTreasureCard = 24,
         GiveOverlordCards = 25,
         RemoveOverlordCard = 26,
         GiveThreatTokens = 27,
@@ -48,7 +47,7 @@ namespace Descent.Messaging.Events
         DenyPlacement = 32,
         RequestTurn = 33,
         TurnChanged = 34,
-        DenyTurnChanged = 35,
+        DenyTurnRequest = 35,
         FinishedTurn = 36,
         FinishedReequip = 37,
         ChooseAction = 38,
@@ -69,8 +68,9 @@ namespace Descent.Messaging.Events
         RolledDices = 53,
         SendDamage = 54,
         RerollDices = 55,
-        KilledFigures = 56,
+        KilledFigure = 56,
         DamageTaken = 57,
-        MissedAttack = 58
+        MissedAttack = 58,
+
     }
 }

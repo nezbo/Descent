@@ -18,17 +18,6 @@ namespace Descent.Model.Board
     /// </summary>
     public class Square
     {
-        #region Square.NONE
-
-        private static Square none;
-        public static Square NONE
-        {
-            get
-            {
-                return none ?? (none = new Square());
-            }
-        }
-        #endregion SQUARE.NONE
 
         #region FIELDS
 

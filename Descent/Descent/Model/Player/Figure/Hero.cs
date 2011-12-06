@@ -121,6 +121,7 @@ namespace Descent.Model.Player.Figure
         {
             this.numberOfSkills = numberOfSkills;
             this.hands = hands;
+            inventory = new Inventory(this);
         }
 
         #endregion

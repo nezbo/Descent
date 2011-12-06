@@ -167,7 +167,7 @@ component
 			health >= 0 and health <= maxHealth;
 			speed > 0;
 			armor >= 0;
-			speedLeft >= 0
+			speedLeft >= 0;
 			attacksLeft >= 0;
 			
 	end
@@ -186,7 +186,7 @@ component
 					type /= Void;
 			end
 			addFatique: Void -- Add 'this' amount of fatique!
-				-> INTEGER: fatiqueAmount
+				-> fatiqueAmount: INTEGER
 				require
 					fatiqueAmount > 0;
 				ensure
@@ -194,7 +194,7 @@ component
 					old fatique + fatiqueAmount <= maxFatique -> fatique = old fatique + fatiqueAmount;
 			end
 			removeFatique: Void -- Lose 'this' amount of fatique!
-				-> INTEGER: fatiqueAmount
+				-> fatiqueAmount: INTEGER
 				require
 					fatiqueAmount > 0;
 					fatigueAmount <= fatigue;
@@ -306,14 +306,14 @@ component
                 ensure
                     Result = old weaponEquipped;
                     freeHands = old freeHands + Result.hands();
-                    weaponEquipped == Void;
+                    weaponEquipped = Void;
             end
             unequipArmor: EQUIPMENT -- Unequip 'this' armor!
                 require
                     armorEquipped /= Void;
                 ensure
                     Result = old armorEquipped;
-                    armorEquipped == Void;
+                    armorEquipped = Void;
             end
             unequipShield: EQUIPMENT -- Unequip 'this' shield!
                 require
@@ -321,7 +321,7 @@ component
                 ensure
                     Result = old shieldEquipped;
                     freeHands = old freeHands + Result.hands();
-                    shieldEquipped == Void;
+                    shieldEquipped = Void;
             end
             unequipOther: EQUIPMENT -- Unequip 'this' other!
                 -> index: INTEGER
@@ -329,7 +329,7 @@ component
                     0 < index and index < maxOther;
                     otherItemsEquipped.get(index) /= Void;
                 ensure
-                    otherItemsEquipped.get(index) == Void;
+                    otherItemsEquipped.get(index) = Void;
                     Result = old otherItemsEquipped.get(index);
             end
             unequipPotion: EQUIPMENT -- Unequip 'this' potion!
@@ -338,7 +338,7 @@ component
                     0 < index and index < maxPotions;
                     potionsEquipped.get(index) /= Void;
                 ensure
-                    potionsEquipped.get(index) == Void;
+                    potionsEquipped.get(index) = Void;
                     Result = old potionsEquipped.get(index);
             end
             unequipFromBackpack: EQUIPMENT -- Remove 'this' from your backpack!
@@ -347,14 +347,11 @@ component
                     0 < index and index < maxInBackpack;
                     backpackEquipped.get(index) /= Void;
                 ensure
-                    backpackEquipped.get(index) == Void;
+                    backpackEquipped.get(index) = Void;
                     Result = old backpackEquipped.get(index);
             end
 		invariant
-			otherItemsEquipped.length <= 2;
-			potionsEquipped.length <= 3;
-			-- An Inventory can only have weapons or shields in max the number of hands he has
-			equipmentInBackpack.length <= 3;
+            0 < freeHands and freeHands < maxHands;
 	end
 	
 	class EQUIPMENT -- Equipment can be worn by the hero
@@ -416,9 +413,9 @@ component
 			created: "30-11-2011";
 			revised: "30-11-2011";
 		feature
-			name STRING -- What is your name? Your name is 'this'!
-			cardDescription STRING -- What is your description? Your description is 'this'!
-			type OVERLORD_CARD_TYPE -- What type of overlord card are you?"
+			name: STRING -- What is your name? Your name is 'this'!
+			cardDescription: STRING -- What is your description? Your description is 'this'!
+			type: OVERLORD_CARD_TYPE -- What type of overlord card are you?"
 			abilities: SEQUENCE[ABILITY] -- What abilities do you have?
 	end
 end
@@ -433,7 +430,6 @@ component
 		feature
 			canBeUsedNow: BOOLEAN -- Can this ability be used now?
 				-> GAME_STATE
-			end
 	end
 end
 
@@ -447,26 +443,24 @@ component
 		feature
 			width: INTEGER -- What is your width?
 			height: INTEGER -- What is your height?
-			heroesInTown; SEQUENCE[HERO] -- What heroes are currently in town?
+			heroesInTown: SEQUENCE[HERO] -- What heroes are currently in town?
 			withinBoard: BOOLEAN -- Is the coordinate (x/y) within the board?
 				-> coord: POINT
 				require 
-					coord =/ Void;
+					coord /= Void;
 				ensure
-					Result = coord.x >= 0 and coord.x < width \
-					\and coord.y >= 0 and coord.y < height;
+					Result = coord.x >= 0 and coord.x < width 
+					and coord.y >= 0 and coord.y < height;
+			end
+			standable: BOOLEAN -- Is this square standable?
+				-> coord: POINT
+				require
+					withinBoard(coord.x, coord.y);
+					coord /= Void;
 			end
 			canOverlordSpawn: BOOLEAN -- Can the overlord spawn here?
 				-> coord: POINT
 				require
-					withinBoard(coord.x, coord.y);
-					coord =/ Void;
-					
-			end
-			canMoveTo: BOOLEAN -- Is this square pass-/movable?
-				-> coord: POINT
-				require
-					withinBoard(coord.x, coord.y);
 					coord /= Void;
 			end
 			lineOfSight: BOOLEAN -- Is there line of sight from 'here' to 'there'?
@@ -474,10 +468,17 @@ component
 				-> there: POINT
 				-> monstersBlock: BOOLEAN -- not included monsters?
 				require
-					here =/ Void;
-					there =/ Void;
+					here /= Void;
+					there /= Void;
 			end
-			spaceVisiblyByPlayers: BOOLEAN -- Is this space visible by players?
+			squareVisiblyByPlayers: BOOLEAN -- Is this space visible by players?
+            distance: INTEGER -- What is the distance between these squares?
+                -> here: POINT
+                -> there: POINT
+            get: SQUARE -- Can I have the square object for this coordinate?
+                -> x: INTEGER
+                -> y: INTEGER
+            
 	end
 	
 	class SQUARE -- A single square of the board
