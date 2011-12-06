@@ -87,7 +87,7 @@ namespace Descent.Model.Player
             }
         }
 
-        public string Name { get; set; }
+        public string Nickname { get; set; }
 
         /// <summary>
         /// What is your role?
@@ -115,7 +115,7 @@ namespace Descent.Model.Player
         /// <summary>
         /// Are you client or server?
         /// </summary>
-        public bool IsServer { get; set; }
+        public bool IsServer { get; internal set; }
 
         public void SetPlayerNick(int id, string nickname)
         {
@@ -140,7 +140,7 @@ namespace Descent.Model.Player
         /// <summary>
         /// Gets the number of other players in the game.
         /// </summary>
-        public int NumberOfOtherPlayers
+        public int NumberOfPlayers
         {
             get
             {
@@ -192,6 +192,7 @@ namespace Descent.Model.Player
         /// <param name="port">Port to listen on.</param>
         public void StartGame(int port)
         {
+            IsServer = true;
             Connection = new ServerConnection(port);
             Connection.Start();
         }
@@ -203,6 +204,7 @@ namespace Descent.Model.Player
         /// <param name="port">Port of host.</param>
         public void JoinGame(string ip, int port)
         {
+            IsServer = false;
             Connection = new ClientConnection(ip, port);
             Connection.Start();
         }

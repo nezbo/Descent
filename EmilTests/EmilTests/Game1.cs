@@ -93,7 +93,7 @@ namespace EmilTests
                                                 {
                                                     if (InputElement.GetInputFrom("nameInput").Length > 0)
                                                     {
-                                                        n.Name = InputElement.GetInputFrom("nameInput");
+                                                        n.Nickname = InputElement.GetInputFrom("nameInput");
                                                     }
                                                     n.StateManager = new StateManager(gui, new FullModel());
                                                     n.StartGame(1337);
@@ -102,7 +102,7 @@ namespace EmilTests
                                                 {
                                                     if (InputElement.GetInputFrom("nameInput").Length > 0)
                                                     {
-                                                        n.Name = InputElement.GetInputFrom("nameInput");
+                                                        n.Nickname = InputElement.GetInputFrom("nameInput");
                                                     }
                                                     n.StateManager = new StateManager(gui, new FullModel());
                                                     n.JoinGame(InputElement.GetInputFrom("connectInput"), 1337);

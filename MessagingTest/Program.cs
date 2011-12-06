@@ -15,7 +15,7 @@ namespace MessagingTest
         static void Main(string[] args)
         {
 
-            Player.Instance.Name = "Simon";
+            Player.Instance.Nickname = "Simon";
             EventManager eventManager = Player.Instance.EventManager;
 
             eventManager.ChatMessageEvent += new ChatMessageHandler((sender, eventArgs) => Console.WriteLine("Received chat event from {0}: {1}", eventArgs.SenderId, eventArgs));
