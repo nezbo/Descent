@@ -703,6 +703,8 @@ class_chart GUI
 	command
 		"Update yourself!",
 		"Change your state GUI_ELEMENT to this one!",
+		"Initiate the board GUI_ELEMENT!",
+		"Initiate the menu GUI_ELEMENT!",
 		"Draw everything!"
 end
 
@@ -725,6 +727,8 @@ class_chart GUI_ELEMENT
 		"Add this GUI_ELEMENT to your collection of sub-elements!",
 		"Add this DRAWABLE to be displayed in you (or your children) at this position!",
 		"Add this text to be displayed in you (or your children) at this position!",
+		"From now on you should draw background!",
+		"Your background should be this!",
 		"Draw yourself!"
 	constraint
 		"The position must be within the window boundaries",
