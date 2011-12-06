@@ -16,18 +16,6 @@ namespace Descent.Model.Board.Marker
     /// </summary>
     public class Marker
     {
-        #region Marker.NONE
-
-        private static Marker none;
-        public static Marker NONE
-        {
-            get
-            {
-                return none ?? (none = new Marker());
-            }
-        }
-
-        #endregion Marker.NONE
 
         #region FIELDS
 

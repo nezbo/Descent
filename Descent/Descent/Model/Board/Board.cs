@@ -4,6 +4,9 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using System.Collections.ObjectModel;
+using Microsoft.Xna.Framework.Graphics;
+
 namespace Descent.Model.Board
 {
     using System;
@@ -34,7 +37,9 @@ namespace Descent.Model.Board
 
         private Rectangle bounds;
 
-        private List<Hero> town = new List<Hero>(); 
+        private List<Hero> town = new List<Hero>();
+
+        private Texture2D floorTexture;
 
         #endregion
 
@@ -67,13 +72,18 @@ namespace Descent.Model.Board
         /// <summary>
         /// Gets the list of heroes in Town
         /// </summary>
-        public List<Hero> Town
+        public List<Hero> HeroesInTown
         {
             get
             {
                 return town;
             }
         } 
+
+        public Texture2D FloorTexture
+        {
+            get { return floorTexture ?? (floorTexture = FullModel.Game.Content.Load<Texture2D>("Images/Board/floor.png")); }
+        }
 
         #endregion
 
@@ -116,14 +126,7 @@ namespace Descent.Model.Board
         public Board(int width, int height)
         {
             bounds = new Rectangle(0, 0, width, height);
-            board = new Square[width,height];
-            for (int x = 0; x < width; x++)
-            {
-                for (int y = 0; y < height; y++)
-                {
-                    board[x, y] = Square.NONE;
-                }
-            }
+            board = new Square[width, height];
         }
         #endregion
 
@@ -145,7 +148,7 @@ namespace Descent.Model.Board
         public bool IsSquareWithinBoard(int x, int y)
         {
             if (!bounds.Contains(x, y)) return false;
-            if(board[x, y] == Square.NONE) return false;
+            if(board[x, y] == null) return false;
             return true;
         }
 
@@ -159,10 +162,10 @@ namespace Descent.Model.Board
         /// <returns>
         /// True if the point is within the boundries of the board
         /// </returns>
-        public bool IsSquareWithinBoard(Vector2 point)
+        public bool IsSquareWithinBoard(Point point)
         {
             Contract.Requires(point != null);
-            return IsSquareWithinBoard((int)point.X,  (int)point.Y);
+            return IsSquareWithinBoard(point.X,  point.Y);
         }
 
         /// <summary>
@@ -174,12 +177,10 @@ namespace Descent.Model.Board
         /// <returns>
         /// True if the point is within the dungeon, and there is no figure on it
         /// </returns>
-        public bool IsSquareMovable(Vector2 point)
+        public bool IsStandable(Point point)
         {
             Contract.Requires(point != null);
-            Contract.Requires(IsSquareWithinBoard(point));
-            if (board[(int)point.X, (int)point.Y].Figure == Figure.None) return false;
-            return true;
+            return IsSquareWithinBoard(point) && SquareVisibleByPlayers(point) && board[point.X, point.Y].Figure == null;
         }
 
         /// <summary>
@@ -189,19 +190,88 @@ namespace Descent.Model.Board
         /// </param>
         /// <returns>
         /// </returns>
-        public bool CanOverlordSpawn(Vector2 point)
+        public bool CanOverlordSpawn(Point point)
         {
             Contract.Requires(point != null);
-            if (!IsSquareWithinBoard(point)) return false;
-            if (!IsSquareMovable(point)) return false;
             //TODO
             return false;
         }
 
         public bool IsThereLineOfSight(Point from, Point to, bool ignoreMonsters)
         {
-            //TODO
-            return false;
+            return SquaresBetweenPoints(from, to).Count(
+                point => !(IsStandable(point) || (ignoreMonsters && (board[point.X, point.Y].Figure is Monster)))) == 0;
+        }
+
+        /// <summary>
+        /// Get a (non-sorted) array of squares between two squares.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <returns></returns>
+        private Point[] SquaresBetweenPoints(Point from, Point to)
+        {
+            var points = new HashSet<Point>();
+
+            if (from.X == to.X)
+            {
+                for (int y = from.Y; y <= to.Y; y++)
+                {
+                    points.Add(new Point(from.X, y));
+                }
+            }
+            else if (from.Y == to.Y)
+            {
+                for (int x = from.X; x <= to.X; x++)
+                {
+                    points.Add(new Point(x, from.Y));
+                }
+            }
+            else
+            {
+                if(from.X > to.X)
+                {
+                    var temp = from;
+                    from = to;
+                    to = temp;
+                }
+
+                double a = (double) (to.Y - from.Y)/(to.X - from.X);
+
+                for (double xn = from.X + .5; xn < to.X; xn++)
+                {
+                    double yn = (xn - from.X)*a + from.Y;
+                    if (Math.Abs(yn - Math.Truncate(yn) - .5) < .0000001)
+                    {
+                        int plus = (a > 0) ? 1 : -1;
+                        points.Add(new Point((int)Math.Truncate(xn), (int)Math.Truncate(yn)));
+                        points.Add(new Point((int)Math.Truncate(xn) + 1, (int)Math.Truncate(yn) + plus));
+                    }
+                    else
+                    {
+                        points.Add(new Point((int) Math.Truncate(xn), (int) Math.Round(yn)));
+                        points.Add(new Point((int) Math.Truncate(xn) + 1, (int) Math.Round(yn)));
+                    }
+                }
+
+                for (double yn = from.Y + .5; yn < to.Y; yn++)
+                {
+                    double xn = (yn - from.Y) / a + from.X;
+                    if (Math.Abs(xn - Math.Truncate(xn) - .5) < .000001)
+                    {
+                        int plus = (a > 0) ? 1 : -1;
+                        points.Add(new Point((int)Math.Truncate(xn), (int)Math.Truncate(yn)));
+                        points.Add(new Point((int)Math.Truncate(xn) + 1, (int)Math.Truncate(yn) + plus));
+                    }
+                    else
+                    {
+                        points.Add(new Point((int)Math.Round(xn), (int)Math.Truncate(yn)));
+                        points.Add(new Point((int)Math.Round(xn), (int)Math.Truncate(yn) + 1));
+                    }
+                }
+            }
+
+            return points.ToArray();
         }
 
         public bool SquareVisibleByPlayers(Point point)
@@ -209,6 +279,36 @@ namespace Descent.Model.Board
             //TODO
             return false;
         }
+
+        /// <summary>
+        /// Get the distance between to squares.
+        /// </summary>
+        public int Distance(Point here, Point there)
+        {
+            Contract.Requires(here != null);
+            Contract.Requires(there != null);
+            return Math.Max(Math.Abs(here.X - there.X), Math.Abs(here.Y - there.Y));
+        }
+
         #endregion
+
+        public static void Main(string[] args)
+        {
+            var b = new Board(20, 20);
+            var a = new int[30, 30];
+            var points = b.SquaresBetweenPoints(new Point(26, 6), new Point(1, 26));
+            foreach (Point p in points)
+            {
+                a[p.X, p.Y] = 1;
+            }
+            for (int x = 0; x < 30; x++)
+            {
+                for (int y = 0; y < 30; y++)
+                {
+                    System.Diagnostics.Debug.Write(a[x, y]);
+                }
+                System.Diagnostics.Debug.WriteLine("");
+            }
+        }
     }
 }
