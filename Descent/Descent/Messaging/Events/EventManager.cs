@@ -375,9 +375,9 @@ namespace Descent.Messaging.Events
         #region Helpers for firing specific events
         public void FirePlayersInGameEvent()
         {
-            PlayerInGame[] playersInGame = new PlayerInGame[Player.Instance.NumberOfOtherPlayers];
+            PlayerInGame[] playersInGame = new PlayerInGame[Player.Instance.NumberOfPlayers];
 
-            for (int i = 0; i < Player.Instance.NumberOfOtherPlayers; i++)
+            for (int i = 1; i <= Player.Instance.NumberOfPlayers; i++)
             {
                 playersInGame[0] = new PlayerInGame(i, Player.Instance.GetPlayerNick(i));
             }
