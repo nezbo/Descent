@@ -87,17 +87,22 @@
         /// <param name="y">The y-coordinate of the click</param>
         public virtual bool HandleClick(int x, int y)
         {
-            // is it within me
+            // is it within me?
             if (this.HasPoint(x, y))
             {
-                // is it within any of my children
+                // is it within any of my children?
+                bool handled = false;
                 foreach (GUIElement e in children)
                 {
                     if (e.HandleClick(x, y))
                     {
-                        focus = false;
-                        return true;
+                        handled = true;
                     }
+                }
+                if (handled) // did someone take it?
+                {
+                    focus = false;
+                    return true;
                 }
 
                 // ok, its within me, ill handle it!
@@ -108,12 +113,12 @@
                 focus = true;
                 return true;
             }
-            else
-            {
-                // nope, wasnt me :(
-                focus = false;
-                return false;
-            }
+            // nope, wasnt me :(
+
+            // ill let all my children discover that
+            foreach (GUIElement e in children) e.HandleClick(x, y);
+            focus = false;
+            return false;
         }
 
         /// <summary>
@@ -198,22 +203,22 @@
             string[] words = text.Split();
             StringBuilder builder = new StringBuilder();
 
-            int totalSpace = Bound.Width - (int) position.X;
+            int totalSpace = Bound.Width - (int)position.X;
             string currentLine = "";
             string nextWord;
             while (wordsIndex < words.Length)
             {
                 nextWord = words[wordsIndex] + " ";
 
-                if (GUIHolder.Font.MeasureString(currentLine + nextWord).X < totalSpace) // word fits
+                if (GUI.Font.MeasureString(currentLine + nextWord).X < totalSpace) // word fits
                 {
                     currentLine += nextWord;
                     wordsIndex++;
                 }
-                else if (GUIHolder.Font.MeasureString(nextWord).X > totalSpace) // cut word
+                else if (GUI.Font.MeasureString(nextWord).X > totalSpace) // cut word
                 {
                     int end = nextWord.Length - 1;
-                    while (GUIHolder.Font.MeasureString(currentLine + nextWord.Substring(0, end) + "-").X > totalSpace) // see what we have space for
+                    while (GUI.Font.MeasureString(currentLine + nextWord.Substring(0, end) + "-").X > totalSpace) // see what we have space for
                     {
                         end--;
                     }
@@ -272,7 +277,7 @@
             // draw my own text
             foreach (Text t in texts)
             {
-                draw.DrawString(GUIHolder.Font, t.Line, t.Position, Color.Black);
+                draw.DrawString(GUI.Font, t.Line, t.Position, Color.Black);
             }
 
             // draw the children on top

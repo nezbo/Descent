@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -6,6 +7,25 @@ namespace Descent.GUI
 {
     public class InputElement : GUIElement
     {
+        // static
+
+        private static Dictionary<string, string> inputs = new Dictionary<string, string>();
+
+        public static string GetInputFrom(string key)
+        {
+            if (inputs.ContainsKey(key))
+            {
+                return inputs[key];
+            }
+            return "";
+        }
+
+        public static void SetInput(string key, string input)
+        {
+            inputs[key] = input;
+        }
+
+        // dynamic
         private Vector2 pos;
 
         public InputElement(Game game, string inputName, int x, int y, int width, int height)
@@ -16,10 +36,9 @@ namespace Descent.GUI
 
         public override void HandleKeyPress(Keys key)
         {
-            string name = Name;
             if (HasFocus())
             {
-                string soFar = GUIHolder.GetInputFrom(this.Name);
+                string soFar = GetInputFrom(this.Name);
 
                 bool isShift = Keyboard.GetState().IsKeyDown(Keys.LeftShift) || Keyboard.GetState().IsKeyDown(Keys.RightShift);
                 switch (key)
@@ -51,7 +70,7 @@ namespace Descent.GUI
                     default: { if (key.ToString().Length == 1) { soFar += ((isShift == true) ? key.ToString() : key.ToString().ToLower()); } break; }
                 }
 
-                GUIHolder.SetInput(this.Name, soFar);
+                SetInput(this.Name, soFar);
             }
         }
 
@@ -59,7 +78,7 @@ namespace Descent.GUI
         {
             base.Draw(draw);
 
-            draw.DrawString(GUIHolder.Font, GUIHolder.GetInputFrom(Name) + (HasFocus() ? "|" : ""), pos, Color.Black);
+            draw.DrawString(GUI.Font, GetInputFrom(Name) + (HasFocus() ? "|" : ""), pos, Color.Black);
         }
     }
 }

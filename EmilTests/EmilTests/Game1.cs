@@ -1,4 +1,3 @@
-using Descent;
 using Descent.GUI;
 using Descent.Model.Player;
 using Microsoft.Xna.Framework;
@@ -47,7 +46,7 @@ namespace EmilTests
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            Descent.GUIHolder.Font = Content.Load<SpriteFont>("font");
+            GUI.Font = Content.Load<SpriteFont>("font");
             // TODO: use this.Content to load your game content here
 
             // creation of elements
@@ -82,9 +81,9 @@ namespace EmilTests
             root.AddText("doneCreate", "Create!", new Vector2(0, 0));
             root.AddText("doneJoin", "Join!", new Vector2(0, 0));
             root.AddText("doneName", "Change Name!", new Vector2(0, 0));
-            root.AddClickAction("doneName", n => n.Name = GUIHolder.GetInputFrom("nameInput"));
+            root.AddClickAction("doneName", n => n.Name = InputElement.GetInputFrom("nameInput"));
             root.AddClickAction("doneCreate", n => n.StartGame(1337));
-            root.AddClickAction("doneJoin", n => n.JoinGame(GUIHolder.GetInputFrom("connectInput"), 1337));
+            root.AddClickAction("doneJoin", n => n.JoinGame(InputElement.GetInputFrom("connectInput"), 1337));
 
             // placing the root in the gui
             gui.ChangeStateGUI(root);

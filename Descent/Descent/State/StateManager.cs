@@ -78,21 +78,18 @@ namespace Descent.State
         {
             State newState = stateMachine.CurrentState;
 
-            GUIElement root;
-
-            //TODO: FIX GUIElement newGUIE = GUIElementFactory.CreateStateElement(gui.GraphicsDevice, newState, DetermineRole()); // get new GUIElement
+            GUIElement root = GUIElementFactory.CreateStateElement(gui.Game, State.DrawHeroCard, this.DetermineRole());
 
             switch (newState) // Fill in events and drawables
             {
                 case State.DrawHeroCard:
                     {
-                        root = GUIElementFactory.CreateStateElement(gui.Game, State.DrawHeroCard, this.DetermineRole());
                         root.AddClickAction("hero", n => n.EventManager.QueueEvent(EventType.AssignHero,/*WTF Simon??? WHAT DO I DO*/ null));
                         break;
                     }
             }
 
-            //gui.ChangeStateGUI(newGUIE); // change the GUI's state element.
+            gui.ChangeStateGUI(root); // change the GUI's state element.
         }
 
 
