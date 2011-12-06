@@ -600,7 +600,7 @@ namespace Descent.Messaging.Events
                 responses[eventId]++;
 
                 // If we have received responses from everyone but the player itself, we can fire the event and delete from the dictionary.
-                if (responses[eventId] >= Player.Instance.NumberOfOtherPlayers - 1)
+                if (responses[eventId] >= Player.Instance.NumberOfPlayers - 1)
                 {
                     AllRespondedNoActionEvent(this, new EventArgs());
                     responses.Remove(eventId);
@@ -618,7 +618,7 @@ namespace Descent.Messaging.Events
                 responsesReceivedCount++;
 
                 // If we have received responses from everyone but the player itself, we can fire the event and delete from the dictionary.
-                if (responsesReceivedCount >= Player.Instance.NumberOfOtherPlayers - 1)
+                if (responsesReceivedCount >= Player.Instance.NumberOfPlayers - 1)
                 {
                     AllRespondedNoActionEvent(this, new EventArgs());
                     awaitingResponses = false;

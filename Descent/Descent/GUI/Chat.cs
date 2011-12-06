@@ -33,7 +33,7 @@
 
         private void SendMessage(string text)
         {
-            string message = Player.Instance.Name + ": " + text;
+            string message = Player.Instance.Nickname + ": " + text;
             manager.QueueEvent(EventType.ChatMessage, new ChatMessageEventArgs(message));
         }
 

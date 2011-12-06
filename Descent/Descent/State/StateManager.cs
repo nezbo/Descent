@@ -29,6 +29,10 @@ namespace Descent.State
         private EventManager eventManager = Player.Instance.EventManager;
 
         // fields for different game logic variables
+        // server only
+        private int ReadyCount = 0;
+
+        // other
         private Hero currentHero;
         private Collection<Hero> heroesYetToAct;
 
@@ -40,6 +44,7 @@ namespace Descent.State
             // subscribe for events
             eventManager.PlayerJoinedEvent += new PlayerJoinedHandler(PlayerJoined);
             eventManager.PlayersInGameEvent += new PlayersInGameHandler(PlayersInGame);
+            eventManager.ReadyEvent += new ReadyHandler(ReadyEvent);
 
             // initiate start
             stateMachine = new StateMachine(new State[] { State.InLobby, State.NewRound });
@@ -62,6 +67,26 @@ namespace Descent.State
             foreach (PlayerInGame p in eventArgs.Players)
             {
                 Player.Instance.SetPlayerNick(p.Id, p.Nickname);
+            }
+        }
+
+        private void ReadyEvent(object sender, GameEventArgs eventArgs)
+        {
+            if (Player.Instance.IsServer)
+            {
+                ReadyCount++;
+                switch (stateMachine.CurrentState)
+                {
+                    case State.InLobby:
+                        {
+                            if (ReadyCount >= 3) // atleast three players in the game
+                            {
+                                stateMachine.ChangeToNextState();
+                            }
+                            ReadyCount = 0;
+                            break;
+                        }
+                }
             }
         }
 
