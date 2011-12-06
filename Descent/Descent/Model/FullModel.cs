@@ -227,6 +227,30 @@ namespace Descent.Model
 
         #endregion
 
+        #region Load Map
+
+        public void LoadMap(Game game)
+        {
+            StreamReader reader = new StreamReader(TitleContainer.OpenStream("quest1.map"));
+
+            int height = int.Parse(reader.ReadLine());
+            int width = int.Parse(reader.ReadLine());
+
+            Board.Board board = new Board.Board(width, height);
+
+            string line = null;
+            for (int y = 0; y < height; y++)
+            {
+
+                foreach (var VARIABLE in line.ToCharArray())
+                {
+                    
+                }
+            }
+        }
+
+        #endregion
+
         #endregion
 
         #region Getters

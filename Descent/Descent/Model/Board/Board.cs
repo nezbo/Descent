@@ -82,7 +82,10 @@ namespace Descent.Model.Board
 
         public Texture2D FloorTexture
         {
-            get { return floorTexture ?? (floorTexture = FullModel.Game.Content.Load<Texture2D>("Images/Board/floor.png")); }
+            get
+            {
+                return floorTexture;
+            }
         }
 
         #endregion
