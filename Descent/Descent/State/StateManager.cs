@@ -118,7 +118,7 @@ namespace Descent.State
                         {
                             root.AddText("player" + i, Player.Instance.GetPlayerNick(i) ?? "", new Vector2(5, 50));
                         }
-                        root.AddClickAction("ready", n => n.EventManager.QueueEvent(EventType.Ready,/* no clue Simon*/null));
+                        root.AddClickAction("ready", n => n.EventManager.QueueEvent(EventType.Ready,new GameEventArgs()));
 
                         break;
                     }
