@@ -72,6 +72,13 @@ namespace EmilTests
             joinGame.AddChild(buttonJoinGame);
 
             // adding visual to tree
+            changeName.SetBackground("boxbg");
+            joinGame.SetBackground("boxbg");
+            createGame.SetBackground("boxbg");
+            nameInput.SetBackground("boxbg");
+            connectInput.SetBackground("boxbg");
+            buttonCreateGame.SetBackground("boxbg");
+            buttonJoinGame.SetBackground("boxbg");
             Image logo = new Image(Content.Load<Texture2D>("logo-descent"));
             root.AddDrawable(root.Name, logo, new Vector2((root.Bound.Width - logo.Texture.Bounds.Width) / 2.0f, 50));
 

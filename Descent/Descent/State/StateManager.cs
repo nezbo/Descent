@@ -31,10 +31,11 @@ namespace Descent.State
         {
             this.gui = gui;
             this.model = model;
-            stateMachine = new StateMachine(new State[] { State.Initiation, State.NewRound });
+            stateMachine = new StateMachine(new State[] { State.InLobby, State.NewRound });
             stateMachine.StateChanged += StateChanged;
 
-            gui.ChangeStateGUI(GUIElementFactory.CreateMenuElement(gui.Game));
+            StateChanged();
+            gui.CreateMenuGUI(model);
         }
 
         public State CurrentState
@@ -74,14 +75,23 @@ namespace Descent.State
         /// <author>
         /// Emil Juul Jacobsen
         /// </author>
-        private void StateChanged() // should maybe be delegated to the statemachine?
+        private void StateChanged()
         {
             State newState = stateMachine.CurrentState;
 
-            GUIElement root = GUIElementFactory.CreateStateElement(gui.Game, State.DrawHeroCard, this.DetermineRole());
+            GUIElement root = GUIElementFactory.CreateStateElement(gui.Game, stateMachine.CurrentState, this.DetermineRole());
 
             switch (newState) // Fill in events and drawables
             {
+                case State.InLobby:
+                    {
+                        /*foreach (string s in Player.Instance.OtherPlayerNames)
+                        {
+                            root.AddText("box", s, new Vector2(0, 0));
+                        }*/
+
+                        break;
+                    }
                 case State.DrawHeroCard:
                     {
                         root.AddClickAction("hero", n => n.EventManager.QueueEvent(EventType.AssignHero,/*WTF Simon??? WHAT DO I DO*/ null));
@@ -95,7 +105,7 @@ namespace Descent.State
 
         private void NewRound()
         {
-            Contract.Requires(CurrentState == State.Initiation); // TODO: Find the right state(s)
+            Contract.Requires(CurrentState == State.InLobby); // TODO: Find the right state(s)
             Contract.Ensures(CurrentState == State.WaitForHeroTurn);
 
             heroesYetToAct = new Collection<Hero>(heroParty.AllHeroes);
