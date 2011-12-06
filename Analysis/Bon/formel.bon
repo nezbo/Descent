@@ -240,14 +240,17 @@ component
 			created: "30-11-2011";
 			revised: "30-11-2011";
 		feature
-			-maxHands: INTEGER -- How many hands do you have?
-			-freeHands: INTEGER -- How many hands do you have free?
-            -weaponEquipped: EQUIPMENT -- What weapons do you have in your hands?
-			-armorEquipped: EQUIPMENT -- What armor do you have equipped?
-			-shieldEquipped: EQUIPMENT -- What shield do you have equipped?
+			maxHands: INTEGER -- How many hands do you have?
+			freeHands: INTEGER -- How many hands do you have free?
+            weaponEquipped: EQUIPMENT -- What weapons do you have in your hands?
+			armorEquipped: EQUIPMENT -- What armor do you have equipped?
+			shieldEquipped: EQUIPMENT -- What shield do you have equipped?
 			otherItemsEquipped: SEQUENCE[EQUIPMENT] -- What other items do you have equipped?
 			potionsEquipped: SEQUENCE[EQUIPMENT] -- What potions do you have equipped?
 			equipmentInBackpack: SEQUENCE[EQUIPMENT] -- What equipment do you have in your backpack?
+            maxPotions: INTEGER -- How many potions can you hold?
+            maxInBackpack: INTEGER -- How many items can you hold in your backpack?
+            maxOtherItems: INTEGER -- How many other items can you hold?
 			equipWeapon: Void -- Equip 'this' weapon!
 				-> weapon: EQUIPMENT
 				require

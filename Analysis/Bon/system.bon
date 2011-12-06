@@ -338,6 +338,9 @@ class_chart INVENTORY
 		"The inventory of a hero"
 	query
 		"How many hands do you have?",
+        "How many potions can you hold?",
+        "How many items can you hold in your backpack?",
+        "How many other items can you hold?",
 		"What weapon do you have in your hands?",
 		"What armor do you have equipped?",
 		"What shield do you have equipped?",

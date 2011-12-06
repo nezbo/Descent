@@ -22,14 +22,20 @@ namespace Descent.Model.Player.Figure.HeroStuff
         public const int MaxOtherItems = 2;
         public const int MaxInBackpack = 3;
 
-        private Equipment armor;
-        private Equipment weapon;
-        private Equipment shield;
         private readonly Equipment[] otherItems = new Equipment[MaxOtherItems];
-        private readonly Equipment[] potions    = new Equipment[MaxPotions];
-        private readonly Equipment[] backpack   = new Equipment[MaxInBackpack];
-        private Hero hero;
+        private readonly Equipment[] potions = new Equipment[MaxPotions];
+        private readonly Equipment[] backpack = new Equipment[MaxInBackpack];
+        private readonly Hero hero;
+        private Equipment _armor;
+        private Equipment _weapon;
+        private Equipment _shield;
         
+        /// <param name="hero">The hero, that has this inventory.</param>
+        public Inventory(Hero hero)
+        {
+            this.hero = hero;
+        }
+
         public int MaxHands
         {
             get { return hero.Hands; }
@@ -48,17 +54,17 @@ namespace Descent.Model.Player.Figure.HeroStuff
 
         public Equipment Shield
         {
-            get { return shield; }
+            get { return _shield; }
         }
 
         public Equipment Armor
         {
-            get { return armor; }
+            get { return _armor; }
         }
 
         public Equipment Weapon
         {
-            get { return weapon; }
+            get { return _weapon; }
         }
 
         public Equipment[] OtherItems
@@ -86,6 +92,152 @@ namespace Descent.Model.Player.Figure.HeroStuff
                 Contract.Ensures(Contract.Result<Equipment[]>().Length == MaxInBackpack);
                 return backpack.ToArray();
             }
+        }
+
+        /// <summary>
+        /// Equip a weapon.
+        /// </summary>
+        public void EquipWeapon(Equipment weapon)
+        {
+            Contract.Requires(weapon != null);
+            Contract.Requires(weapon.Type == EquipmentType.Weapon);
+            Contract.Requires(weapon.Hands <= FreeHands);
+            Contract.Ensures(Weapon == weapon);
+            Contract.Ensures(FreeHands == Contract.OldValue(FreeHands) - weapon.Hands);
+
+            _weapon = weapon;
+            weapon.EquipToHero(hero);
+        }
+
+        /// <summary>
+        /// Equip armor.
+        /// </summary>
+        public void EquipArmor(Equipment armor)
+        {
+            Contract.Requires(armor != null);
+            Contract.Requires(armor.Type == EquipmentType.Armor);
+            Contract.Ensures(Armor == armor);
+
+            _armor = armor;
+            armor.EquipToHero(hero);
+        }
+
+        /// <summary>
+        /// Equip a shield.
+        /// </summary>
+        public void EquipShield(Equipment shield)
+        {
+            Contract.Requires(shield != null);
+            Contract.Requires(shield.Type == EquipmentType.Shield);
+            Contract.Requires(shield.Hands <= FreeHands);
+            Contract.Ensures(Shield == shield);
+            Contract.Ensures(FreeHands == Contract.OldValue(FreeHands) - shield.Hands);
+
+            _shield = shield;
+            shield.EquipToHero(hero);
+        }
+
+        /// <summary>
+        /// Equip an item to 'other'.
+        /// </summary>
+        /// <param name="index">The index where the item should be placed.</param>
+        /// <param name="item">The item to place.</param>
+        public void EquipToOther(int index, Equipment item)
+        {
+            Contract.Requires(0 < index && index < MaxOtherItems);
+            Contract.Requires(item != null);
+            Contract.Requires(item.Type == EquipmentType.Other);
+            Contract.Requires(OtherItems[index] == null);
+            Contract.Ensures(OtherItems[index] == item);
+
+            otherItems[index] = item;
+            item.EquipToHero(hero);
+        }
+
+        /// <summary>
+        /// Equip an item to backpack.
+        /// </summary>
+        /// <param name="index">The index where the item should be placed.</param>
+        /// <param name="item">The item to place.</param>
+        public void EquipToBackpack(int index, Equipment item)
+        {
+            Contract.Requires(0 < index && index < MaxInBackpack);
+            Contract.Requires(item != null);
+            Contract.Requires(Backpack[index] == null);
+            Contract.Ensures(Backpack[index] == item);
+
+            backpack[index] = item;
+            item.EquipToHero(hero);
+        }
+
+        /// <summary>
+        /// Equip an item to potions.
+        /// </summary>
+        /// <param name="index">The indexwhere the item should be placed.</param>
+        /// <param name="item">The item to place.</param>
+        public void EquipToPotions(int index, Equipment item)
+        {
+            Contract.Requires(0 < index && index < MaxPotions);
+            Contract.Requires(item != null);
+            Contract.Requires(item.Type == EquipmentType.Potion);
+            Contract.Requires(Potions[index] == null);
+            Contract.Ensures(Potions[index] == item);
+
+            potions[index] = item;
+            item.EquipToHero(hero);
+        }
+
+        /// <summary>
+        /// Unequip the weapon.
+        /// </summary>
+        /// <returns>The weapon that was equipped.</returns>
+        public Equipment UnequipWeapon()
+        {
+            Contract.Requires(Weapon != null);
+            Contract.Ensures(Weapon == null);
+            Contract.Ensures(FreeHands == Contract.OldValue(FreeHands) + Contract.Result<Equipment>().Hands);
+            Contract.Ensures(Contract.Result<Equipment>() == Contract.OldValue(Weapon));
+            Contract.Ensures(Contract.Result<Equipment>().Type == EquipmentType.Weapon);
+
+            Equipment result = Weapon;
+            _weapon = null;
+            result.UnequipFromHero(hero);
+            return result;
+        }
+
+        /// <summary>
+        /// Unequip the armor.
+        /// </summary>
+        /// <returns>The armor that was equipped.</returns>
+        public Equipment UnequipArmor()
+        {
+            Contract.Requires(Armor != null);
+            Contract.Ensures(Armor == null);
+            Contract.Ensures(Contract.Result<Equipment>() == Contract.OldValue(Armor));
+            Contract.Ensures(Contract.Result<Equipment>().Type == EquipmentType.Armor);
+
+            Equipment result = Armor;
+            _armor = null;
+            result.UnequipFromHero(hero);
+            return result;
+        }
+
+        /// <summary>
+        /// Unequip the shield.
+        /// </summary>
+        /// <returns>The weapon that was shield.</returns>
+        public Equipment UnequipShield()
+        {
+            Contract.Requires(Shield != null);
+            Contract.Ensures(Shield == null);
+            Contract.Ensures(FreeHands == Contract.OldValue(FreeHands) + Contract.Result<Equipment>().Hands);
+            Contract.Ensures(Contract.Result<Equipment>() == Contract.OldValue(Shield));
+            Contract.Ensures(Contract.Result<Equipment>().Type == EquipmentType.Shield);
+
+            Equipment result = Shield;
+            _shield = null;
+            result.UnequipFromHero(hero);
+            return result;
         }
 
         /// <summary>
@@ -141,56 +293,10 @@ namespace Descent.Model.Player.Figure.HeroStuff
             return result;
         }
 
-        /// <summary>
-        /// Equip an item to 'other'.
-        /// </summary>
-        /// <param name="index">The index where the item should be placed.</param>
-        /// <param name="item">The item to place.</param>
-        public void EquipToOther(int index, Equipment item)
+        [ContractInvariantMethod]
+        private void Invariant()
         {
-            Contract.Requires(0 < index && index < MaxOtherItems);
-            Contract.Requires(item != null);
-            Contract.Requires(item.Type == EquipmentType.Other);
-            Contract.Requires(OtherItems[index] == null);
-            Contract.Ensures(OtherItems[index] == item);
-
-            otherItems[index] = item;
-            item.EquipToHero(hero);
+            Contract.Invariant(0 < FreeHands && FreeHands < MaxHands);
         }
-
-        /// <summary>
-        /// Equip an item to backpack.
-        /// </summary>
-        /// <param name="index">The index where the item should be placed.</param>
-        /// <param name="item">The item to place.</param>
-        public void EquipToBackpacke(int index, Equipment item)
-        {
-            Contract.Requires(0 < index && index < MaxInBackpack);
-            Contract.Requires(item != null);
-            Contract.Requires(Backpack[index] == null);
-            Contract.Ensures(Backpack[index] == item);
-
-            backpack[index] = item;
-            item.EquipToHero(hero);
-        }
-
-        /// <summary>
-        /// Equip an item to potions.
-        /// </summary>
-        /// <param name="index">The indexwhere the item should be placed.</param>
-        /// <param name="item">The item to place.</param>
-        public void EquipToPotions(int index, Equipment item)
-        {
-            Contract.Requires(0 < index && index < MaxPotions);
-            Contract.Requires(item != null);
-            Contract.Requires(item.Type == EquipmentType.Potion);
-            Contract.Requires(Potions[index] == null);
-            Contract.Ensures(Potions[index] == item);
-
-            potions[index] = item;
-            item.EquipToHero(hero);
-        }
-
-
     }
 }
