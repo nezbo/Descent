@@ -63,7 +63,7 @@ namespace Descent.Messaging.Events
             string[] playerStrings = stringArgs.Skip(1).ToArray();
 
             int currPlayer = 0;
-            for (int i = 0; i <= playerStrings.Length / 2; i += 2)
+            for (int i = 0; i <= playerStrings.Length; i += 2)
             {
                 int id = int.Parse(playerStrings[i]);
                 string nick = playerStrings[i + 1];

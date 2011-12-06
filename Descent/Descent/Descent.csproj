@@ -61,6 +61,9 @@
     <PlatformTarget>x86</PlatformTarget>
     <XnaCompressContent>true</XnaCompressContent>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>XNATutorials.Program</StartupObject>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
     <Reference Include="Microsoft.Xna.Framework.Game, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
@@ -87,6 +90,29 @@
     <Compile Include="Messaging\Connection\Connection.cs" />
     <Compile Include="Messaging\Connection\ServerConnection.cs" />
     <Compile Include="Messaging\Events\EventArgs\ChatMessageEventArgs.cs" />
+    <Compile Include="Messaging\Events\EventArgs\AssignHeroEventArgs.cs" />
+    <Compile Include="Messaging\Events\EventArgs\CoordinatesEventArgs.cs" />
+    <Compile Include="Messaging\Events\EventArgs\ChooseActionEventArgs.cs" />
+    <Compile Include="Messaging\Events\EventArgs\ChestEventArgs.cs" />
+    <Compile Include="Messaging\Events\EventArgs\DamageEventArgs.cs" />
+    <Compile Include="Messaging\Events\EventArgs\RerollDicesEventArgs.cs" />
+    <Compile Include="Messaging\Events\EventArgs\RolledDicesEventArgs.cs" />
+    <Compile Include="Messaging\Events\EventArgs\SpawnMonsterEventArgs.cs" />
+    <Compile Include="Messaging\Events\EventArgs\InventoryFieldEventArgs.cs" />
+    <Compile Include="Messaging\Events\EventArgs\PointsEventArgs.cs" />
+    <Compile Include="Messaging\Events\EventArgs\PlayerEventArgs.cs" />
+    <Compile Include="Messaging\Events\EventArgs\PlaceHeroEventArgs.cs" />
+    <Compile Include="Messaging\Events\EventArgs\OverlordCardEventArgs.cs" />
+    <Compile Include="Messaging\Events\EventArgs\GiveOverlordCardsEventArgs.cs" />
+    <Compile Include="Messaging\Events\EventArgs\GiveCoinsEventArgs.cs" />
+    <Compile Include="Messaging\Events\EventArgs\TokenEventArgs.cs" />
+    <Compile Include="Messaging\Events\EventArgs\GivePotionEventArgs.cs" />
+    <Compile Include="Messaging\Events\EventArgs\GiveEquipmentEventArgs.cs" />
+    <Compile Include="Messaging\Events\EventArgs\RequestBuyEquipmentEventArgs.cs" />
+    <Compile Include="Messaging\Events\EventArgs\RequestBuyPotionEventArgs.cs" />
+    <Compile Include="Messaging\Events\EventArgs\TradeHeroCardEventArgs.cs" />
+    <Compile Include="Messaging\Events\EventArgs\GiveHeroCardsEventArgs.cs" />
+    <Compile Include="Messaging\Events\EventArgs\OverlordIsEventArgs.cs" />
     <Compile Include="Messaging\Events\EventArgs\PlayersInGameEventArgs.cs" />
     <Compile Include="Messaging\Events\EventArgs\GameEventArgs.cs" />
     <Compile Include="Messaging\Events\EventArgs\PlayerJoinedEventArgs.cs" />
