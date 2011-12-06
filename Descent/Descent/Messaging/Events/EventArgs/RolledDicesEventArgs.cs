@@ -47,10 +47,12 @@ namespace Descent.Messaging.Events
             DiceIds = new int[stringArgs.Length / 2];
             RolledSides = new int[stringArgs.Length / 2];
 
-            for (int i = 0; i <= stringArgs.Length; i += 2)
+            int currDice = 0;
+            for (int i = 0; i < stringArgs.Length; i += 2)
             {
-                DiceIds[0] = int.Parse(stringArgs[i]);
-                RolledSides[0] = int.Parse(stringArgs[i + 1]);
+                DiceIds[currDice] = int.Parse(stringArgs[i]);
+                RolledSides[currDice] = int.Parse(stringArgs[i + 1]);
+                currDice++;
             }
         }
 

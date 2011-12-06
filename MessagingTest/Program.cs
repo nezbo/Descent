@@ -15,6 +15,9 @@ namespace MessagingTest
         static void Main(string[] args)
         {
 
+            RolledDicesEventArgs rEventArgs = new RolledDicesEventArgs(new string[] {"0", "2", "1", "6"});
+            Console.WriteLine(rEventArgs);
+
             Player.Instance.Nickname = "Simon";
             EventManager eventManager = Player.Instance.EventManager;
 
