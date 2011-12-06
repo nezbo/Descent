@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="ChatMessageEventArgs.cs" company="">
+// <copyright file="PlayerJoinedEventArgs.cs" company="">
 // TODO: Update copyright text.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -13,33 +13,32 @@ namespace Descent.Messaging.Events
     using System.Text;
 
     /// <summary>
-    /// The event arguments for the ChatMessage event.
+    /// The event arguments for events needing to send some kind of points. Like AddFatigue.
     /// </summary>
-    public sealed class ChatMessageEventArgs : GameEventArgs
+    public sealed class PointsEventArgs : GameEventArgs
     {
-        public ChatMessageEventArgs(string message)
+        public PointsEventArgs(int points)
         {
-            Contract.Requires(message != null);
-            Message = message;
+            Points = points;
         }
 
-        public ChatMessageEventArgs(string[] stringArgs)
+        public PointsEventArgs(string[] stringArgs)
         {
-            Contract.Requires(stringArgs.Length >= 1);
+            Contract.Requires(stringArgs.Length == 1);
             PopulateWithArgs(stringArgs);
         }
 
-        public string Message { get; set; }
+        public int Points { get; set; }
 
         public override void PopulateWithArgs(string[] stringArgs)
         {
-            Contract.Requires(stringArgs.Length >= 1);
-            Message = string.Concat(stringArgs);
+            Contract.Requires(stringArgs.Length == 1);
+            Points = int.Parse(stringArgs[0]);
         }
 
         public override string ToString()
         {
-            return Message;
+            return Points.ToString();
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="ChatMessageEventArgs.cs" company="">
+// <copyright file="PlayerJoinedEventArgs.cs" company="">
 // TODO: Update copyright text.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -13,33 +13,35 @@ namespace Descent.Messaging.Events
     using System.Text;
 
     /// <summary>
-    /// The event arguments for the ChatMessage event.
+    /// The event arguments for events sending a number of tokens.
     /// </summary>
-    public sealed class ChatMessageEventArgs : GameEventArgs
+    public sealed class ChestEventArgs : GameEventArgs
     {
-        public ChatMessageEventArgs(string message)
+        public ChestEventArgs(int chestId)
         {
-            Contract.Requires(message != null);
-            Message = message;
+            Contract.Requires(chestId >= 0);
+
+            ChestId = chestId;
         }
 
-        public ChatMessageEventArgs(string[] stringArgs)
+        public ChestEventArgs(string[] stringArgs)
         {
-            Contract.Requires(stringArgs.Length >= 1);
+            Contract.Requires(stringArgs.Length == 1);
             PopulateWithArgs(stringArgs);
         }
 
-        public string Message { get; set; }
+        public int ChestId { get; set; }
 
         public override void PopulateWithArgs(string[] stringArgs)
         {
-            Contract.Requires(stringArgs.Length >= 1);
-            Message = string.Concat(stringArgs);
+            Contract.Requires(stringArgs.Length == 1);
+
+            ChestId = int.Parse(stringArgs[0]);
         }
 
         public override string ToString()
         {
-            return Message;
+            return ChestId.ToString();
         }
     }
 }

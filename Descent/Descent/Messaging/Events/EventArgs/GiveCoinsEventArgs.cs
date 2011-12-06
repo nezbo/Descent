@@ -13,19 +13,19 @@ namespace Descent.Messaging.Events
     using System.Text;
 
     /// <summary>
-    /// The event arguments for the PlayerJoined event.
+    /// The event arguments for the RequestBuyEquipment event.
     /// </summary>
-    public sealed class PlayerJoinedEventArgs : GameEventArgs
+    public sealed class GiveCoinsEventArgs : GameEventArgs
     {
-        public PlayerJoinedEventArgs(int playerId, string playerNick)
+        public GiveCoinsEventArgs(int playerId, int numberOfCoins)
         {
             Contract.Requires(playerId > 0);
-            Contract.Requires(playerNick != null);
+
             PlayerId = playerId;
-            PlayerNick = playerNick;
+            NumberOfCoins = numberOfCoins;
         }
 
-        public PlayerJoinedEventArgs(string[] stringArgs)
+        public GiveCoinsEventArgs(string[] stringArgs)
         {
             Contract.Requires(stringArgs.Length >= 2);
             PopulateWithArgs(stringArgs);
@@ -33,18 +33,19 @@ namespace Descent.Messaging.Events
 
         public int PlayerId { get; set; }
 
-        public string PlayerNick { get; set; }
+        public int NumberOfCoins { get; set; }
 
         public override void PopulateWithArgs(string[] stringArgs)
         {
-            Contract.Requires(stringArgs.Length >= 2);
-            this.PlayerId = int.Parse(stringArgs[0]);
-            PlayerNick = stringArgs[1];
+            Contract.Requires(stringArgs.Length >= 1);
+
+            PlayerId = int.Parse(stringArgs[0]);
+            NumberOfCoins = int.Parse(stringArgs[1]);
         }
 
         public override string ToString()
         {
-            return string.Join(",", this.PlayerId.ToString(), PlayerNick);
+            return string.Join(",", PlayerId, NumberOfCoins);
         }
     }
 }
