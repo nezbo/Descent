@@ -81,6 +81,7 @@ cluster_chart GUI_CLUSTER
 		created: "27-11-2011";
 		revised: "30-11-2011"
 	class DRAWABLE description "Something that should be able to get drawn"
+	class IMAGE description "A simple holder for a source image"
 	class GUI description "The overall visual representation of the game"
 	class GUI_ELEMENT description "A visual element on the user interface"
 	class BOARD_GUI_ELEMENT description "The visualization of the squares of the board"
@@ -88,6 +89,7 @@ cluster_chart GUI_CLUSTER
 	class GUI_ELEMENT_FACTORY description "Responsible for creating hierarchies of GUIElements"
 	class BOARD_GUI_ELEMENT description "The element on the screen that visualizes the game board."
     class CHAT description "Lists chat messages and useful game events on the screen"
+	class INPUT_ELEMENT description "A box on the screen where you can input text"
 end
 
 cluster_chart MESSAGING
@@ -709,6 +711,19 @@ class_chart DRAWABLE
 		"Something that should be able to be drawn on the screen"
 	query
 		"What do you look like?"
+	constraint
+		"It must have a visual representation"
+end
+
+class_chart IMAGE
+	indexing
+		author: "Emil Juul Jacobsen";
+		created: "06-12-2011";
+		revised: "06-12-2011";
+	inherit
+		DRAWABLE
+	explanation
+		"A simple implementation of a DRAWABLE to display a source image"
 end
 
 class_chart GUI
@@ -779,7 +794,7 @@ class_chart TEXT
 		"What text do you contain?",
 		"At what position should you be drawn?"
 	constraint
-		"The text should not exceed the boundaries of it's enclosing GUI_ELEMENT"
+		"The text should not exceed the width of it's enclosing GUI_ELEMENT"
 end
 
 class_chart GUI_ELEMENT_FACTORY
@@ -811,6 +826,21 @@ class_chart CHAT
 		"Here is a new message!"
 	constraint
 		"The message should not be empty"
+end
+
+class_chart INPUT_ELEMENT
+	indexing
+		author: "Emil Juul Jacobsen";
+		created: "06-12-2011";
+		revised: "06-12-2011";
+	explanation
+		"A box where you can enter text and use it elsewhere in the program"
+	inherit
+		GUI_ELEMENT
+	query
+		"What text do you have at the moment?",
+	command
+		"I just typed this!"
 end
 
 class_chart ASYNC_SOCKETS_CLIENT
