@@ -33,6 +33,7 @@ cluster_chart HERO_STUFF
 	class INVENTORY description "The inventory of a hero"
 	class EQUIPMENT description "Equipment can be worn by the hero"
 	class POTION description "A potion, that can either be on a square, or equipped on a Hero"
+	class SURGE_ABILITY description "A surge power on a piece of equipment"
 	class TRAINING_TOKEN description "A token that give extra dice in a specific kind of attack"
 end
 
@@ -243,8 +244,13 @@ class_chart FIGURE
 		"Add 'this' amount of health!",
 		"Lose 'this' amount of health!",
 	constraint
+		"A Figures name must be longer than 0 characters",
 		"A Figure must always have more than 0 max health",
-		"A Figure may never have more life than max life"
+		"A Figure may never have less than 0 life or more life than max life",
+		"A Figures speed must be more than 0",
+		"A Figures armor must be more than or equals to 0",
+		"A Figure must always have more than or equal to 0 speed left",
+		"A Figure must always have more than or equal to 0 attacks left"
 end
 
 class_chart HERO -- A hero, made from a hero-sheet
@@ -358,6 +364,25 @@ class_chart EQUIPMENT
 		"Tap/untap!"
 	constraint
 		"An equipment may only be tapped one time per round"
+end
+
+class_chart WEAPON
+	indexing
+		author: "Jonas Breindahl";
+		created: "21-11-2011";
+		revised: "21-11-2011"
+	
+
+class_chart SURGE_ABILITY
+	indexing
+		author: "Jonas Breindahl";
+		created: "21-11-2011";
+		revised: "21-11-2011"
+	explanation
+		"A surge power on a piece of equipment"
+	query
+		"How many surges do you cost?",
+		"What ability do you grant?",
 end
 
 class_chart TRAINING_TOKEN

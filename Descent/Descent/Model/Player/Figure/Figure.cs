@@ -408,13 +408,14 @@
         }
 
         /// <summary>
-        /// Checks that alot of numbers are zero or 
+        /// Checks that a lot of numbers are zero or 
         /// </summary>
         [ContractInvariantMethod]
         public void ObjectInvariant()
         {
             Contract.Invariant(Name.Length > 0);
             Contract.Invariant(MaxHealth > 0);
+            Contract.Invariant(Health >= 0 && Health <= MaxHealth);
             Contract.Invariant(Speed > 0);
             Contract.Invariant(Armor >= 0);
             Contract.Invariant(SpeedLeft >= 0);

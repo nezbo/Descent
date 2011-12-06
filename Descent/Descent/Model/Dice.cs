@@ -14,35 +14,35 @@ namespace Descent.Model
 
     using Microsoft.Xna.Framework;
 
+    #region EDice Enum
+    /// <summary>
+    /// The 6 kinds of dice in the game
+    /// R = Red (Melee)
+    /// W = White (Magic)
+    /// U = blUe (Ranged)
+    /// G = Green
+    /// </summary>
+    public enum EDice
+    {
+        R,
+
+        W,
+
+        U,
+
+        G,
+
+        Y,
+
+        B
+    }
+    #endregion
+
     /// <summary>
     /// TODO: Update summary.
     /// </summary>
     public class Dice
     {
-        #region EDice Enum
-        /// <summary>
-        /// The 6 kinds of dice in the game
-        /// R = Red (Melee)
-        /// W = White (Magic)
-        /// U = blUe (Ranged)
-        /// G = Green
-        /// </summary>
-        public enum EDice
-        {
-            R,
-
-            W,
-
-            U,
-
-            G,
-
-            Y,
-
-            B
-        }
-        #endregion
-
         #region Static Dice Loading
 
         private static Dictionary<EDice, Dice> diceDictionary = LoadDice();
@@ -121,16 +121,39 @@ namespace Descent.Model
 
         private EDice color;
 
+        private int activeSideIndex;
+
         private int[] activeSide;
         #endregion
 
         #region Properties
 
-        
+        /// <summary>
+        /// Returns the up side of the dice
+        /// The 4 long array are these values:
+        /// Range, Damage, Surges, X´s
+        /// </summary>
+        public int[] ActiveSide
+        {
+            get
+            {
+                activeSide = sides[activeSideIndex];
+                return activeSide;
+            }
+        }
+
+        public int SideIndex
+        {
+            get
+            {
+                return activeSideIndex;
+            }
+        }
 
         #endregion
 
         #region Initialization
+
         private Dice(EDice color, int[][] sides)
         {
             this.color = color;
@@ -141,9 +164,24 @@ namespace Descent.Model
 
         #region Method
 
+        /// <summary>
+        /// Rolls the dice to a random side
+        /// </summary>
         public void RollDice()
         {
-            
+            Random r = new Random();
+            activeSide = sides[r.Next(6)];
+        }
+
+        /// <summary>
+        /// Force the dice to a side
+        /// </summary>
+        /// <param name="side">
+        /// The side to be up
+        /// </param>
+        public void ChangeSide(int side)
+        {
+            activeSide = sides[side];
         }
 
         #endregion
