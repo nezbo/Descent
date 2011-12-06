@@ -112,6 +112,8 @@
     <Compile Include="Model\Player\Figure\HeroStuff\Inventory.cs" />
     <Compile Include="Model\Player\Figure\HeroStuff\Potion.cs" />
     <Compile Include="Model\Player\Figure\HeroStuff\Skill.cs" />
+    <Compile Include="Model\Player\Figure\HeroStuff\SurgeAbility.cs" />
+    <Compile Include="Model\Player\Figure\HeroStuff\Weapon.cs" />
     <Compile Include="Model\Player\Figure\Monster.cs" />
     <Compile Include="Model\Player\HeroParty.cs" />
     <Compile Include="Model\Player\Player.cs" />

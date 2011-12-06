@@ -17,7 +17,7 @@ namespace Descent.Model.Player.Figure
     using Microsoft.Xna.Framework;
 
     /// <summary>
-    /// TODO: Update summary.
+    /// A hero, made from a hero-sheet
     /// </summary>
     /// <author>
     /// Jonas Breindahl (jobre@itu.dk)
@@ -63,10 +63,33 @@ namespace Descent.Model.Player.Figure
             }
         }
 
+        /// <summary>
+        /// Gets the fatigue of the figure
+        /// </summary>
+        public int Fatigue
+        {
+            get
+            {
+                return fatigue;
+            }
+        }
+
         #endregion
 
         #region Initialization
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Hero"/> class.
+        /// </summary>
+        /// <param name="id">
+        /// The id of the hero
+        /// </param>
+        /// <param name="name">
+        /// The name of the hero
+        /// </param>
+        /// <param name="numberOfSkills">
+        /// The number of skills
+        /// </param>
         public Hero(int id, string name, Dictionary<EAttackType, int> numberOfSkills)
             : base(id, name)
         {
@@ -129,11 +152,20 @@ namespace Descent.Model.Player.Figure
         /// <param name="skill">
         /// The Skill card to be removed
         /// </param>
-        public void  RemoveSkill(Skill skill)
+        public void RemoveSkill(Skill skill)
         {
             skills[skill.Type].Remove(skill);
         }
-        
+
+        /// <summary>
+        /// The invariant of the Hero class
+        /// </summary>
+        [ContractInvariantMethod]
+        public void ObjectInvariant()
+        {
+            Contract.Invariant(fatigue >= 0 && fatigue <= MaxFatigue);
+            base.ObjectInvariant();
+        }
         #endregion
     }
 }

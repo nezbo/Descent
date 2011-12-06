@@ -117,7 +117,7 @@ component
 		indexing
 			author: "Jonas Breindahl";
 			created: "28-11-2011";
-			revised: "30-11-2011";
+			revised: "05-12-2011";
 		feature
 			uniqueID: INTEGER -- What is your unique figure ID?
 			name: STRING -- What is your name?
@@ -164,6 +164,7 @@ component
 		invariant
 			name.length > 0;
 			maxHealth > 0;
+			health >= 0 and health <= maxHealth;
 			speed > 0;
 			armor >= 0;
 			speedLeft >= 0
@@ -297,18 +298,30 @@ component
 		indexing
 			author: "Jonas Breindahl";
 			created: "30-11-2011";
-			revised: "30-11-2011";
+			revised: "05-12-2011";
 		feature
 			tapped BOOLEAN -- Are you tapped right now?
-			
 			name: STRING -- What is your name?
-			equipmentType: WEAPON_TYPE -- What type of equipment are you?
+			equipmentType: EQUIPMENT_TYPE -- What type of equipment are you?
 			buyPrice: INTEGER -- What is your price?
-			abilities: SEQUENCE[ABILITY] -- What are your abilities?
+			abilities: SEQUENCE[SURGE_ABILITY] -- What are your abilities?
 			handsToWield: INTEGER -- How many hands do you use?
 		invariant
 			-- "An equipment may only be tapped one time per round"
 			true;
+	end
+	
+	class SURGE_ABILITY -- A surge power on a piece of equipment
+		indexing
+			author: "Jonas Breindahl";
+			created: "30-11-2011";
+			revised: "30-11-2011";
+		feature
+			cost: INTEGER -- How many surges do you cost?
+			ability: Ability -- What ability do you grant?
+		invariant
+			cost >= 0;
+			ability /= Void;
 	end
 		
 	class TRAINING_TOKEN -- A token that give extra dice in a specific kind of attack
