@@ -169,7 +169,6 @@ namespace Descent.Model
         {
             this.color = color;
             this.sides = sides;
-            this.activeSide = sides[0];
         }
         #endregion
 

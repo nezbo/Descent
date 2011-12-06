@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="ChatMessageEventArgs.cs" company="">
+// <copyright file="PlayerJoinedEventArgs.cs" company="">
 // TODO: Update copyright text.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -13,33 +13,41 @@ namespace Descent.Messaging.Events
     using System.Text;
 
     /// <summary>
-    /// The event arguments for the ChatMessage event.
+    /// Helper enum to make the type of a potion typesafe in the event scheme.
     /// </summary>
-    public sealed class ChatMessageEventArgs : GameEventArgs
+    public enum PotionType
     {
-        public ChatMessageEventArgs(string message)
+        Health = 1,
+        Fatigue = 2
+    }
+
+    /// <summary>
+    /// The event arguments for the RequestBuyPotion event.
+    /// </summary>
+    public sealed class RequestBuyPotionEventArgs : GameEventArgs
+    {
+        public RequestBuyPotionEventArgs(PotionType potionType)
         {
-            Contract.Requires(message != null);
-            Message = message;
+            PotionType = potionType;
         }
 
-        public ChatMessageEventArgs(string[] stringArgs)
+        public RequestBuyPotionEventArgs(string[] stringArgs)
         {
             Contract.Requires(stringArgs.Length >= 1);
             PopulateWithArgs(stringArgs);
         }
 
-        public string Message { get; set; }
+        public PotionType PotionType { get; set; }
 
         public override void PopulateWithArgs(string[] stringArgs)
         {
             Contract.Requires(stringArgs.Length >= 1);
-            Message = string.Concat(stringArgs);
+            PotionType = (PotionType)Enum.ToObject(typeof(PotionType), int.Parse(stringArgs[0]));
         }
 
         public override string ToString()
         {
-            return Message;
+            return ((int)PotionType).ToString();
         }
     }
 }

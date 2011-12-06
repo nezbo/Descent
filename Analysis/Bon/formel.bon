@@ -240,32 +240,41 @@ component
 			created: "30-11-2011";
 			revised: "30-11-2011";
 		feature
-			maxHands: INTEGER -- How many hands do you have?
-			weaponsEquipped: SEQUENCE[EQUIPMENT] -- What weapons do you have in your hands?
-			armorEquipped: EQUIPMENT -- What armor do you have equipped?
+			-maxHands: INTEGER -- How many hands do you have?
+			-freeHands: INTEGER -- How many hands do you have free?
+            -weaponEquipped: EQUIPMENT -- What weapons do you have in your hands?
+			-armorEquipped: EQUIPMENT -- What armor do you have equipped?
+			-shieldEquipped: EQUIPMENT -- What shield do you have equipped?
 			otherItemsEquipped: SEQUENCE[EQUIPMENT] -- What other items do you have equipped?
 			potionsEquipped: SEQUENCE[EQUIPMENT] -- What potions do you have equipped?
 			equipmentInBackpack: SEQUENCE[EQUIPMENT] -- What equipment do you have in your backpack?
-			spaceInBackPack: INTEGER -- Is there more space in your backpack?
-				ensure
-					Result = 3 - equipmentInBackpack.length;
-			end
-			equipWeapon: Void -- Equip 'this' Equipment!
+			equipWeapon: Void -- Equip 'this' weapon!
 				-> weapon: EQUIPMENT
 				require
-					weaponsEquipped.length < maxHands;
+                    weapon /= Void;
+					freeHands <= weapon.hands();
 				ensure
-					weaponsEquipped.length = old weaponsEquipped.length + 1;
+					weaponEquipped = weapon;
+                    freeHands = old freeHands - weapon.hands();
 			end
 			equipArmor: Void -- Equip 'this' armor!
 				-> armor: EQUIPMENT
 				require
-					armor = Void;
+					armor /= Void;
 				ensure
-					armor =/ Void;
 					armorEquipped = armor;
 			end
+			equipShield: Void -- Equip 'this' armor!
+				-> shield: EQUIPMENT
+				require
+					shield /= Void;
+					freeHands <= shield.hands();
+				ensure
+					shieldEquipped = shield;
+                    freeHands = old freeHands - shield.hands();
+			end
 			equipOtherItem: Void -- Equip 'this' other item!
+                -> index: INTEGER
 				-> item: EQUIPMENT
 				require
 					otherItemsEquipped.length < 3;
@@ -273,6 +282,7 @@ component
 					otherItemsEquipped.length = old otherItemsEquipped.length + 1;
 			end
 			equipPotion: Void -- Equip 'this' potion!
+                -> index: INTEGER
 				-> potion: EQUIPMENT
 				require
 					potionsEquipped.length < 3;
@@ -280,18 +290,68 @@ component
 					potionsEquipped.length = old potionsEquipped.length + 1;
 			end
 			addEquipmentToBackpack: Void -- Put 'this' Equipment in your backpack!
+                -> index: INTEGER
 				-> equipment: EQUIPMENT
 				require
 					spaceInBackpack > 0;
 				ensure
-					spaceInBackpack = old spaceInBackpack + 1;
-			end 
+					spaceInBackpack = old spaceInBackpack - 1;
+			end
+            unequipWeapon: EQUIPMENT -- Unequip 'this' weapon!
+                require
+                    weaponEquipped /= Void;
+                ensure
+                    Result = old weaponEquipped;
+                    freeHands = old freeHands + Result.hands();
+                    weaponEquipped == Void;
+            end
+            unequipArmor: EQUIPMENT -- Unequip 'this' armor!
+                require
+                    armorEquipped /= Void;
+                ensure
+                    Result = old armorEquipped;
+                    armorEquipped == Void;
+            end
+            unequipShield: EQUIPMENT -- Unequip 'this' shield!
+                require
+                    shieldEquipped /= Void;
+                ensure
+                    Result = old shieldEquipped;
+                    freeHands = old freeHands + Result.hands();
+                    shieldEquipped == Void;
+            end
+            unequipOther: EQUIPMENT -- Unequip 'this' other!
+                -> index: INTEGER
+                require
+                    0 < index and index < maxOther;
+                    otherItemsEquipped.get(index) /= Void;
+                ensure
+                    otherItemsEquipped.get(index) == Void;
+                    Result = old otherItemsEquipped.get(index);
+            end
+            unequipPotion: EQUIPMENT -- Unequip 'this' potion!
+                -> index: INTEGER
+                require
+                    0 < index and index < maxPotions;
+                    potionsEquipped.get(index) /= Void;
+                ensure
+                    potionsEquipped.get(index) == Void;
+                    Result = old potionsEquipped.get(index);
+            end
+            unequipFromBackpack: EQUIPMENT -- Remove 'this' from your backpack!
+                -> index: INTEGER
+                require
+                    0 < index and index < maxInBackpack;
+                    backpackEquipped.get(index) /= Void;
+                ensure
+                    backpackEquipped.get(index) == Void;
+                    Result = old backpackEquipped.get(index);
+            end
 		invariant
 			otherItemsEquipped.length <= 2;
 			potionsEquipped.length <= 3;
 			-- An Inventory can only have weapons or shields in max the number of hands he has
-			spaceInBackpack >= 0 and spaceInBackpack <= 3;
-			spaceInBackpack = 3 - equipmentInBackpack.length;
+			equipmentInBackpack.length <= 3;
 	end
 	
 	class EQUIPMENT -- Equipment can be worn by the hero

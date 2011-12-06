@@ -41,6 +41,8 @@ namespace Descent.Model.Player.Figure
         private Dictionary<EAttackType, int> numberOfSkills = new Dictionary<EAttackType, int>(); 
         private Dictionary<EAttackType, List<Skill>>  skills = new Dictionary<EAttackType, List<Skill>>();
 
+        private int hands;
+
         private readonly Inventory inventory;
 
         #endregion
@@ -76,6 +78,20 @@ namespace Descent.Model.Player.Figure
             }
         }
 
+        /// <summary>
+        /// Gets the number of hands the hero have to equip weapons in
+        /// </summary>
+        public int Hands
+        {
+            get
+            {
+                return hands;
+            }
+        }
+
+        /// <summary>
+        /// Gets the inventory of the hero
+        /// </summary>
         public Inventory Inventory
         {
             get
@@ -100,10 +116,11 @@ namespace Descent.Model.Player.Figure
         /// <param name="numberOfSkills">
         /// The number of skills
         /// </param>
-        public Hero(int id, string name, Dictionary<EAttackType, int> numberOfSkills)
+        public Hero(int id, string name, Dictionary<EAttackType, int> numberOfSkills, int hands)
             : base(id, name)
         {
             this.numberOfSkills = numberOfSkills;
+            this.hands = hands;
         }
 
         #endregion

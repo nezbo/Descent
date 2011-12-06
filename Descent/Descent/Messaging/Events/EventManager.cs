@@ -15,11 +15,150 @@ namespace Descent.Messaging.Events
     using Descent.Model.Player;
 
     #region Delegate declarations
-    public delegate void Action();
 
-    public delegate void AllRespondedNoActionHandler(object sender, EventArgs eventArgs); // Special delegate, contains no eventArgs info.
+    #region Initialization of game
+
+    public delegate void PlayerJoinedHandler(object sender, PlayerJoinedEventArgs eventArgs);
+
+    public delegate void PlayersInGameHandler(object sender, PlayersInGameEventArgs eventArgs);
+
+    public delegate void RequestOverlordHandler(object sender, GameEventArgs eventArgs);
+
+    public delegate void OverlordIsHandler(object sender, OverlordIsEventArgs eventArgs);
+
+    public delegate void ReadyHandler(object sender, GameEventArgs eventArgs);
+
+    public delegate void AssignHeroHandler(object sender, AssignHeroEventArgs eventArgs);
+
+    public delegate void GiveHeroCardsHandler(object sender, GiveHeroCardsEventArgs eventArgs);
+
+    public delegate void TradeHeroCardHandler(object sender, TradeHeroCardEventArgs eventArgs);
+
+    public delegate void AcceptHeroCardsHandler(object sender, GameEventArgs eventArgs);
+
+    public delegate void BeginGameHandler(object sender, GameEventArgs eventArgs);
+
+    #endregion
+
+    #region Generic events
+
+    public delegate void NewRoundHandler(object sender, GameEventArgs eventArgs);
+
+    public delegate void NoActionHandler(object sender, GameEventArgs eventArgs);
+
+    public delegate void WaitHandler(object sender, GameEventArgs eventArgs);
 
     public delegate void ChatMessageHandler(object sender, ChatMessageEventArgs eventArgs);
+
+    #endregion
+
+    #region Trading and item handouts
+
+    public delegate void RequestBuyEquipmentHandler(object sender, RequestBuyEquipmentEventArgs eventArgs);
+
+    public delegate void GiveEquipmentHandler(object sender, GiveEquipmentEventArgs eventArgs);
+
+    public delegate void RequestBuyPotionHandler(object sender, RequestBuyPotionEventArgs eventArgs);
+
+    public delegate void GivePotionHandler(object sender, GivePotionEventArgs eventArgs);
+
+    public delegate void FinishedBuyHandler(object sender, GameEventArgs eventArgs);
+
+    public delegate void GiveConquestTokensHandler(object sender, TokenEventArgs eventArgs);
+
+    public delegate void GiveCoinsHandler(object sender, GiveCoinsEventArgs eventArgs);
+
+    public delegate void GiveOverlordCardsHandler(object sender, GiveOverlordCardsEventArgs eventArgs);
+
+    public delegate void RemoveOverlordCardHandler(object sender, OverlordCardEventArgs eventArgs);
+
+    public delegate void GiveThreatTokensHandler(object sender, TokenEventArgs eventArgs);
+
+    public delegate void RemoveThreatTokensHandler(object sender, TokenEventArgs eventArgs);
+
+    #endregion
+
+    #region Initiation
+
+    public delegate void StartPlacementHandler(object sender, GameEventArgs eventArgs);
+
+    public delegate void RequestPlacementHandler(object sender, CoordinatesEventArgs eventArgs);
+
+    public delegate void PlaceHeroHandler(object sender, PlaceHeroEventArgs eventArgs);
+
+    public delegate void DenyPlacementHandler(object sender, PlayerEventArgs eventArgs);
+
+    #endregion
+
+    #region Hero turn
+
+    public delegate void RequestTurnHandler(object sender, GameEventArgs eventArgs);
+
+    public delegate void TurnChangedHandler(object sender, PlayerEventArgs eventArgs);
+
+    public delegate void DenyTurnRequestHandler(object sender, PlayerEventArgs eventArgs);
+
+    public delegate void FinishedTurnHandler(object sender, GameEventArgs eventArgs);
+
+    public delegate void FinishedReequipHandler(object sender, GameEventArgs eventArgs);
+
+    public delegate void ChooseActionHandler(object sender, ChooseActionEventArgs eventArgs);
+
+    public delegate void AddFatigueHandler(object sender, PointsEventArgs eventArgs);
+
+    public delegate void RemoveFatigueHandler(object sender, PointsEventArgs eventArgs);
+
+    public delegate void AddMovementHandler(object sender, PointsEventArgs eventArgs);
+
+    public delegate void RemoveFromInventoryHandler(object sender, InventoryFieldEventArgs eventArgs);
+
+    #endregion
+
+    #region Overlord turn
+
+    public delegate void UseOvelordCardHandler(object sender, OverlordCardEventArgs eventArgs);
+
+    public delegate void AddPowerOverlordCardHandler(object sender, OverlordCardEventArgs eventArgs);
+
+    public delegate void SpawnMonsterHandler(object sender, SpawnMonsterEventArgs eventArgs);
+
+    public delegate void SpawnFinishedHandler(object sender, GameEventArgs eventArgs);
+
+    public delegate void StartMonsterTurnHandler(object sender, CoordinatesEventArgs eventArgs);
+    
+    public delegate void EndMonsterTurnHandler(object sender, GameEventArgs eventArgs);
+
+    #endregion
+
+    #region Movement types
+
+    public delegate void MoveToHandler(object sender, GameEventArgs eventArgs);
+
+    public delegate void OpenChestHandler(object sender, ChestEventArgs eventArgs);
+
+    public delegate void OpenDoorHandler(object sender, CoordinatesEventArgs eventArgs);
+
+    #endregion
+
+    #region Attacking
+
+    public delegate void AttackSquareHandler(object sender, CoordinatesEventArgs eventArgs);
+
+    public delegate void RolledDicesHandler(object sender, RolledDicesEventArgs eventArgs);
+
+    public delegate void SendDamageHandler(object sender, DamageEventArgs eventArgs);
+
+    public delegate void RerollDicesHandler(object sender, RerollDicesEventArgs eventArgs);
+
+    public delegate void KilledFigureHandler(object sender, CoordinatesEventArgs eventArgs);
+
+    public delegate void DamageTakenHandler(object sender, DamageEventArgs eventArgs);
+
+    public delegate void MissedAttackHandler(object sender, PlayerEventArgs eventArgs);
+
+    #endregion
+
+    public delegate void AllRespondedNoActionHandler(object sender, EventArgs eventArgs); // Special delegate, contains no eventArgs info.
     #endregion
 
     /// <summary>
@@ -37,15 +176,111 @@ namespace Descent.Messaging.Events
 
         #region Event declarations
 
-        #region GameEvents
+        public event PlayerJoinedHandler PlayerJoinedEvent;
 
-        public event Action NewRound;
-        
-        #endregion
+        public event PlayersInGameHandler PlayersInGameEvent;
 
-        public event AllRespondedNoActionHandler AllRespondedNoActionEvent;
+        public event RequestOverlordHandler RequestOverlordEvent;
+
+        public event OverlordIsHandler OverlordIsEvent;
+
+        public event ReadyHandler ReadyEvent;
+
+        public event AssignHeroHandler AssignHeroEvent;
+
+        public event GiveHeroCardsHandler GiveHeroCardsEvent;
+
+        public event TradeHeroCardHandler TradeHeroCardEvent;
+
+        public event AcceptHeroCardsHandler AcceptHeroCardsEvent;
+
+        public event BeginGameHandler BeginGameEvent;
+
+        public event NewRoundHandler NewRoundEvent;
+
+        public event NoActionHandler NoActionEvent;
+
+        public event WaitHandler WaitEvent;
 
         public event ChatMessageHandler ChatMessageEvent;
+
+        public event RequestBuyEquipmentHandler RequestBuyEquipmentEvent;
+
+        public event GiveEquipmentHandler GiveEquipmentEvent;
+
+        public event RequestBuyPotionHandler RequestBuyPotionEvent;
+
+        public event GivePotionHandler GivePotionEvent;
+
+        public event FinishedBuyHandler FinishedBuyEvent;
+
+        public event GiveConquestTokensHandler GiveConquestTokenEvent;
+
+        public event GiveCoinsHandler GiveCoinsEvent;
+
+        public event GiveOverlordCardsHandler GiveOverlordCardsEvent;
+
+        public event RemoveOverlordCardHandler RemoveOverlordCardEvent;
+
+        public event GiveThreatTokensHandler GiveThreatTokensEvent;
+
+        public event RemoveThreatTokensHandler RemoveThreatTokensEvent;
+
+        public event RequestPlacementHandler RequestPlacementEvent;
+
+        public event DenyPlacementHandler DenyPlacementEvent;
+
+        public event RequestTurnHandler RequestTurnEvent;
+
+        public event TurnChangedHandler TurnChangedEvent;
+
+        public event DenyTurnRequestHandler DenyTurnRequestEvent;
+
+        public event FinishedTurnHandler FinishedTurnEvent;
+
+        public event FinishedReequipHandler FinishedReequipEvent;
+
+        public event ChooseActionHandler ChooseActionEvent;
+
+        public event AddFatigueHandler AddFatigueEvent;
+
+        public event RemoveFatigueHandler RemoveFatigueEvent;
+
+        public event AddMovementHandler AddMovementEvent;
+
+        public event RemoveFromInventoryHandler RemoveFromInventoryEvent;
+
+        public event UseOvelordCardHandler UseOverlordCardEvent;
+
+        public event AddPowerOverlordCardHandler AddPowerOverlordCardEvent;
+
+        public event SpawnMonsterHandler SpawnMonsterEvent;
+
+        public event SpawnFinishedHandler SpawnFinishedEvent;
+
+        public event StartMonsterTurnHandler StartMonsterTurnEvent;
+
+        public event EndMonsterTurnHandler EndMonsterTurnEvent;
+
+        public event MoveToHandler MoveToEvent;
+
+        public event OpenChestHandler OpenChestEvent;
+
+        public event AttackSquareHandler AttackSquareEvent;
+
+        public event RolledDicesHandler RolledDicesEvent;
+
+        public event SendDamageHandler SendDamageEvent;
+
+        public event RerollDicesHandler RerollDicesEvent;
+
+        public event KilledFigureHandler KilledFigureEvent;
+
+        public event DamageTakenHandler DamageTakenEvent;
+
+        public event MissedAttackHandler MissedAttackEvent;
+
+        public event AllRespondedNoActionHandler AllRespondedNoActionEvent;
 
         #endregion
 
@@ -135,9 +370,6 @@ namespace Descent.Messaging.Events
                     break;
                 case EventType.ChatMessage:
                     ChatMessageEvent(this, (ChatMessageEventArgs)eventArgs);
-                    break;
-                case EventType.NewRound:
-                    NewRound();
                     break;
             }
 
