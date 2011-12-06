@@ -8,12 +8,12 @@
 <script type="text/javascript">
 <!--
 
-var items = ['system_chart:DESCENT','class_chart:SPAWN_CARD','class_chart:STATE','class_chart:STUN_EFFECT','class_chart:FIGURE','class_chart:RUNE_KEY_MARKER','class_chart:WEB_EFFECT','class_chart:STATE_MACHINE','class_chart:MARKER','class_chart:PET','class_chart:SERVER_CONNECTION','class_chart:EQUIPMENT','class_chart:OVERLORD_CARD','class_chart:GUI_ELEMENT','class_chart:INVENTORY','class_chart:PLAYER','class_chart:HERO_PARTY','class_chart:TRAINING_TOKEN','class_chart:MONEY_MARKER','class_chart:SKILL','class_chart:EVENT','class_chart:TRIGGERED_EVENT','class_chart:POTION','class_chart:ABILITY','class_chart:STATE_GROUP','class_chart:EVENT_MANAGER','class_chart:POWER_CARD','class_chart:EVENT_CARD','class_chart:POISON_EFFECT','class_chart:BURN_EFFECT','class_chart:TREASURE_CHEST_MARKER','class_chart:CLIENT_CONNECTION','class_chart:CONNECTION','class_chart:OBSTACLE_MARKER','class_chart:TOWN','class_chart:BOARD','class_chart:EFFECT','class_chart:GUI_ELEMENT_FACTORY','class_chart:GUI','class_chart:PASSIVE_EVENT','class_chart:HERO','class_chart:HERO_PLAYER','class_chart:SQUARE','class_chart:OVERLORD','class_chart:TRAP_CARD','cluster_chart:MARKER_CLUSTER','cluster_chart:HERO_STUFF','cluster_chart:FIGURE_CLUSTER','cluster_chart:MESSAGING','cluster_chart:PLAYER_CLUSTER','cluster_chart:OVERLORD_STUFF','cluster_chart:BOARD_CLUSTER','cluster_chart:GUI_CLUSTER','cluster_chart:EVENT_CLUSTER','cluster_chart:DESCENT','cluster_chart:STATE_STUFF'];
+var items = ['system_chart:DESCENT','class_chart:SPAWN_CARD','class_chart:STUN_EFFECT','class_chart:SERVER_CONNECTION','class_chart:OVERLORD_CARD','class_chart:INVENTORY','class_chart:PLAYER','class_chart:TRAINING_TOKEN','class_chart:SKILL','class_chart:MONEY_MARKER','class_chart:ASYNC_SOCKETS_SERVER','class_chart:TRIGGERED_EVENT','class_chart:POTION','class_chart:EVENT_CARD','class_chart:ASYNC_SOCKETS_CLIENT','class_chart:BURN_EFFECT','class_chart:CHAT','class_chart:CONNECTION','class_chart:STATE_MANAGER','class_chart:BOARD','class_chart:TOWN','class_chart:OBSTACLE_MARKER','class_chart:DRAWABLE','class_chart:HERO','class_chart:GAME_EVENT_ARGS','class_chart:MODEL','class_chart:TRAP_CARD','class_chart:STATE','class_chart:ROLE','class_chart:FIGURE','class_chart:RUNE_KEY_MARKER','class_chart:WEB_EFFECT','class_chart:STATE_MACHINE','class_chart:PET','class_chart:MARKER','class_chart:EQUIPMENT','class_chart:GUI_ELEMENT','class_chart:HERO_PARTY','class_chart:EVENT','class_chart:ABILITY','class_chart:POWER_CARD','class_chart:EVENT_MANAGER','class_chart:POISON_EFFECT','class_chart:TREASURE_CHEST_MARKER','class_chart:BOARD_GUI_ELEMENT','class_chart:CLIENT_CONNECTION','class_chart:EFFECT','class_chart:GUI_ELEMENT_FACTORY','class_chart:GUI','class_chart:PASSIVE_EVENT','class_chart:CLIENT_INFO','class_chart:OVERLORD','class_chart:SQUARE','cluster_chart:HERO_STUFF','cluster_chart:FIGURE_CLUSTER','cluster_chart:MESSAGING','cluster_chart:EVENT_ARGS','cluster_chart:MODEL_CLUSTER','cluster_chart:OVERLORD_STUFF','cluster_chart:EVENT_CLUSTER','cluster_chart:DESCENT','cluster_chart:MARKER_CLUSTER','cluster_chart:ASYNC_SOCKETS_CLUSTER','cluster_chart:PLAYER_CLUSTER','cluster_chart:BOARD_CLUSTER','cluster_chart:GUI_CLUSTER','cluster_chart:CONNECTION_CLUSTER','cluster_chart:STATE_STUFF','cluster_chart:EVENT_MODEL_CLUSTER'];
 var topOptions = [ 'System Chart', 'system_chart', 'Cluster Charts', 'cluster_chart', 'Class Charts', 'class_chart' ];
 var subOptions = [];
 subOptions['system_chart'] = [ 'DESCENT', 'system_chart:DESCENT' ];
-subOptions['cluster_chart'] = [ 'BOARD_CLUSTER','cluster_chart:BOARD_CLUSTER','DESCENT','cluster_chart:DESCENT','EVENT_CLUSTER','cluster_chart:EVENT_CLUSTER','FIGURE_CLUSTER','cluster_chart:FIGURE_CLUSTER','GUI_CLUSTER','cluster_chart:GUI_CLUSTER','HERO_STUFF','cluster_chart:HERO_STUFF','MARKER_CLUSTER','cluster_chart:MARKER_CLUSTER','MESSAGING','cluster_chart:MESSAGING','OVERLORD_STUFF','cluster_chart:OVERLORD_STUFF','PLAYER_CLUSTER','cluster_chart:PLAYER_CLUSTER','STATE_STUFF','cluster_chart:STATE_STUFF' ];
-subOptions['class_chart'] = [ 'ABILITY','class_chart:ABILITY','BOARD','class_chart:BOARD','BURN_EFFECT','class_chart:BURN_EFFECT','CLIENT_CONNECTION','class_chart:CLIENT_CONNECTION','CONNECTION','class_chart:CONNECTION','EFFECT','class_chart:EFFECT','EQUIPMENT','class_chart:EQUIPMENT','EVENT','class_chart:EVENT','EVENT_CARD','class_chart:EVENT_CARD','EVENT_MANAGER','class_chart:EVENT_MANAGER','FIGURE','class_chart:FIGURE','GUI','class_chart:GUI','GUI_ELEMENT','class_chart:GUI_ELEMENT','GUI_ELEMENT_FACTORY','class_chart:GUI_ELEMENT_FACTORY','HERO','class_chart:HERO','HERO_PARTY','class_chart:HERO_PARTY','HERO_PLAYER','class_chart:HERO_PLAYER','INVENTORY','class_chart:INVENTORY','MARKER','class_chart:MARKER','MONEY_MARKER','class_chart:MONEY_MARKER','OBSTACLE_MARKER','class_chart:OBSTACLE_MARKER','OVERLORD','class_chart:OVERLORD','OVERLORD_CARD','class_chart:OVERLORD_CARD','PASSIVE_EVENT','class_chart:PASSIVE_EVENT','PET','class_chart:PET','PLAYER','class_chart:PLAYER','POISON_EFFECT','class_chart:POISON_EFFECT','POTION','class_chart:POTION','POWER_CARD','class_chart:POWER_CARD','RUNE_KEY_MARKER','class_chart:RUNE_KEY_MARKER','SERVER_CONNECTION','class_chart:SERVER_CONNECTION','SKILL','class_chart:SKILL','SPAWN_CARD','class_chart:SPAWN_CARD','SQUARE','class_chart:SQUARE','STATE','class_chart:STATE','STATE_GROUP','class_chart:STATE_GROUP','STATE_MACHINE','class_chart:STATE_MACHINE','STUN_EFFECT','class_chart:STUN_EFFECT','TOWN','class_chart:TOWN','TRAINING_TOKEN','class_chart:TRAINING_TOKEN','TRAP_CARD','class_chart:TRAP_CARD','TREASURE_CHEST_MARKER','class_chart:TREASURE_CHEST_MARKER','TRIGGERED_EVENT','class_chart:TRIGGERED_EVENT','WEB_EFFECT','class_chart:WEB_EFFECT' ];
+subOptions['cluster_chart'] = [ 'ASYNC_SOCKETS_CLUSTER','cluster_chart:ASYNC_SOCKETS_CLUSTER','BOARD_CLUSTER','cluster_chart:BOARD_CLUSTER','CONNECTION_CLUSTER','cluster_chart:CONNECTION_CLUSTER','DESCENT','cluster_chart:DESCENT','EVENT_ARGS','cluster_chart:EVENT_ARGS','EVENT_CLUSTER','cluster_chart:EVENT_CLUSTER','EVENT_MODEL_CLUSTER','cluster_chart:EVENT_MODEL_CLUSTER','FIGURE_CLUSTER','cluster_chart:FIGURE_CLUSTER','GUI_CLUSTER','cluster_chart:GUI_CLUSTER','HERO_STUFF','cluster_chart:HERO_STUFF','MARKER_CLUSTER','cluster_chart:MARKER_CLUSTER','MESSAGING','cluster_chart:MESSAGING','MODEL_CLUSTER','cluster_chart:MODEL_CLUSTER','OVERLORD_STUFF','cluster_chart:OVERLORD_STUFF','PLAYER_CLUSTER','cluster_chart:PLAYER_CLUSTER','STATE_STUFF','cluster_chart:STATE_STUFF' ];
+subOptions['class_chart'] = [ 'ABILITY','class_chart:ABILITY','ASYNC_SOCKETS_CLIENT','class_chart:ASYNC_SOCKETS_CLIENT','ASYNC_SOCKETS_SERVER','class_chart:ASYNC_SOCKETS_SERVER','BOARD','class_chart:BOARD','BOARD_GUI_ELEMENT','class_chart:BOARD_GUI_ELEMENT','BURN_EFFECT','class_chart:BURN_EFFECT','CHAT','class_chart:CHAT','CLIENT_CONNECTION','class_chart:CLIENT_CONNECTION','CLIENT_INFO','class_chart:CLIENT_INFO','CONNECTION','class_chart:CONNECTION','DRAWABLE','class_chart:DRAWABLE','EFFECT','class_chart:EFFECT','EQUIPMENT','class_chart:EQUIPMENT','EVENT','class_chart:EVENT','EVENT_CARD','class_chart:EVENT_CARD','EVENT_MANAGER','class_chart:EVENT_MANAGER','FIGURE','class_chart:FIGURE','GAME_EVENT_ARGS','class_chart:GAME_EVENT_ARGS','GUI','class_chart:GUI','GUI_ELEMENT','class_chart:GUI_ELEMENT','GUI_ELEMENT_FACTORY','class_chart:GUI_ELEMENT_FACTORY','HERO','class_chart:HERO','HERO_PARTY','class_chart:HERO_PARTY','INVENTORY','class_chart:INVENTORY','MARKER','class_chart:MARKER','MODEL','class_chart:MODEL','MONEY_MARKER','class_chart:MONEY_MARKER','OBSTACLE_MARKER','class_chart:OBSTACLE_MARKER','OVERLORD','class_chart:OVERLORD','OVERLORD_CARD','class_chart:OVERLORD_CARD','PASSIVE_EVENT','class_chart:PASSIVE_EVENT','PET','class_chart:PET','PLAYER','class_chart:PLAYER','POISON_EFFECT','class_chart:POISON_EFFECT','POTION','class_chart:POTION','POWER_CARD','class_chart:POWER_CARD','ROLE','class_chart:ROLE','RUNE_KEY_MARKER','class_chart:RUNE_KEY_MARKER','SERVER_CONNECTION','class_chart:SERVER_CONNECTION','SKILL','class_chart:SKILL','SPAWN_CARD','class_chart:SPAWN_CARD','SQUARE','class_chart:SQUARE','STATE','class_chart:STATE','STATE_MACHINE','class_chart:STATE_MACHINE','STATE_MANAGER','class_chart:STATE_MANAGER','STUN_EFFECT','class_chart:STUN_EFFECT','TOWN','class_chart:TOWN','TRAINING_TOKEN','class_chart:TRAINING_TOKEN','TRAP_CARD','class_chart:TRAP_CARD','TREASURE_CHEST_MARKER','class_chart:TREASURE_CHEST_MARKER','TRIGGERED_EVENT','class_chart:TRIGGERED_EVENT','WEB_EFFECT','class_chart:WEB_EFFECT' ];
 
 
 var showAll = false;
@@ -431,14 +431,8 @@ dd {
             <th class="grey">Description</th>
           </tr>
           <tr>
-            <td class="light-grey"><a href="#cluster_chart:PLAYER_CLUSTER" onclick="return linkSelect('cluster_chart','cluster_chart:PLAYER_CLUSTER');">PLAYER_CLUSTER</a></td>
-            <td class="white">&quot;The actual player, and his/her role&quot;</td>
-          </tr>          <tr>
-            <td class="light-grey"><a href="#cluster_chart:EVENT_CLUSTER" onclick="return linkSelect('cluster_chart','cluster_chart:EVENT_CLUSTER');">EVENT_CLUSTER</a></td>
-            <td class="white">&quot;Events, effects and abilities&quot;</td>
-          </tr>          <tr>
-            <td class="light-grey"><a href="#cluster_chart:BOARD_CLUSTER" onclick="return linkSelect('cluster_chart','cluster_chart:BOARD_CLUSTER');">BOARD_CLUSTER</a></td>
-            <td class="white">&quot;The game board&quot;</td>
+            <td class="light-grey"><a href="#cluster_chart:MODEL_CLUSTER" onclick="return linkSelect('cluster_chart','cluster_chart:MODEL_CLUSTER');">MODEL_CLUSTER</a></td>
+            <td class="white">&quot;The model of the game parts&quot;</td>
           </tr>          <tr>
             <td class="light-grey"><a href="#cluster_chart:GUI_CLUSTER" onclick="return linkSelect('cluster_chart','cluster_chart:GUI_CLUSTER');">GUI_CLUSTER</a></td>
             <td class="white">&quot;The visual representation of the game&quot;</td>
@@ -448,6 +442,59 @@ dd {
           </tr>          <tr>
             <td class="light-grey"><a href="#cluster_chart:STATE_STUFF" onclick="return linkSelect('cluster_chart','cluster_chart:STATE_STUFF');">STATE_STUFF</a></td>
             <td class="white">&quot;States, state machine and related stuff&quot;</td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</div>
+
+<div class="top-level" id="cluster_chart:MODEL_CLUSTER">
+  <table class="outer">
+    <tr class="top">
+      <th class="type">CLUSTER</th>
+      <td class="name" colspan="2">MODEL_CLUSTER</td>
+      <td class="part"><strong>Part:</strong> 1/1</td>
+    </tr>
+    <tr class="middle">
+      <td class="explanation" colspan="2">
+        <dl>
+          <dt>Purpose</dt>
+          <dd></dd>
+        </dl>
+      </td>
+      <td class="indexing" colspan="2">
+        <dl>
+          <dt>Indexing</dt>
+        </dl>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="4" class="bottom">
+        <table>
+          <tr>
+            <th class="grey">Class</th>
+            <th class="grey">Description</th>
+          </tr>
+          <tr>
+            <td class="light-grey"><a href="#class_chart:MODEL" onclick="return linkSelect('class_chart','class_chart:MODEL');">MODEL</a></td>
+            <td class="white">&quot;Holds references to all model related classes&quot;</td>
+          </tr>
+        </table>
+        <table>
+          <tr>
+            <th>Cluster</th>
+            <th>Description</th>
+          </tr>
+          <tr>
+            <td class="light-grey"><a href="#cluster_chart:PLAYER_CLUSTER" onclick="return linkSelect('cluster_chart','cluster_chart:PLAYER_CLUSTER');">PLAYER_CLUSTER</a></td>
+            <td class="white">&quot;The actual player, and his/her role&quot;</td>
+          </tr>          <tr>
+            <td class="light-grey"><a href="#cluster_chart:EVENT_MODEL_CLUSTER" onclick="return linkSelect('cluster_chart','cluster_chart:EVENT_MODEL_CLUSTER');">EVENT_MODEL_CLUSTER</a></td>
+            <td class="white">&quot;Events, effects and abilities&quot;</td>
+          </tr>          <tr>
+            <td class="light-grey"><a href="#cluster_chart:BOARD_CLUSTER" onclick="return linkSelect('cluster_chart','cluster_chart:BOARD_CLUSTER');">BOARD_CLUSTER</a></td>
+            <td class="white">&quot;The game board&quot;</td>
           </tr>
         </table>
       </td>
@@ -483,14 +530,14 @@ dd {
             <th class="grey">Description</th>
           </tr>
           <tr>
+            <td class="light-grey"><a href="#class_chart:ROLE" onclick="return linkSelect('class_chart','class_chart:ROLE');">ROLE</a></td>
+            <td class="white">&quot;The role of a player in the game&quot;</td>
+          </tr>          <tr>
             <td class="light-grey"><a href="#class_chart:PLAYER" onclick="return linkSelect('class_chart','class_chart:PLAYER');">PLAYER</a></td>
             <td class="white">&quot;The actual player, playing the game&quot;</td>
           </tr>          <tr>
             <td class="light-grey"><a href="#class_chart:HERO_PARTY" onclick="return linkSelect('class_chart','class_chart:HERO_PARTY');">HERO_PARTY</a></td>
             <td class="white">&quot;A party of heroes&quot;</td>
-          </tr>          <tr>
-            <td class="light-grey"><a href="#class_chart:HERO_PLAYER" onclick="return linkSelect('class_chart','class_chart:HERO_PLAYER');">HERO_PLAYER</a></td>
-            <td class="white">&quot;The role of a hero that a player can take&quot;</td>
           </tr>          <tr>
             <td class="light-grey"><a href="#class_chart:OVERLORD" onclick="return linkSelect('class_chart','class_chart:OVERLORD');">OVERLORD</a></td>
             <td class="white">&quot;The role of an overlord that a player can take&quot;</td>
@@ -668,11 +715,11 @@ dd {
   </table>
 </div>
 
-<div class="top-level" id="cluster_chart:EVENT_CLUSTER">
+<div class="top-level" id="cluster_chart:EVENT_MODEL_CLUSTER">
   <table class="outer">
     <tr class="top">
       <th class="type">CLUSTER</th>
-      <td class="name" colspan="2">EVENT_CLUSTER</td>
+      <td class="name" colspan="2">EVENT_MODEL_CLUSTER</td>
       <td class="part"><strong>Part:</strong> 1/1</td>
     </tr>
     <tr class="middle">
@@ -853,7 +900,7 @@ dd {
           <dt>Indexing</dt>
           <dd>author : "Emil Juul Jacobsen";</dd>
           <dd>created : "27-11-2011";</dd>
-          <dd>revised : "27-11-2011";</dd>
+          <dd>revised : "30-11-2011";</dd>
         </dl>
       </td>
     </tr>
@@ -865,6 +912,9 @@ dd {
             <th class="grey">Description</th>
           </tr>
           <tr>
+            <td class="light-grey"><a href="#class_chart:DRAWABLE" onclick="return linkSelect('class_chart','class_chart:DRAWABLE');">DRAWABLE</a></td>
+            <td class="white">&quot;Something that should be able to get drawn&quot;</td>
+          </tr>          <tr>
             <td class="light-grey"><a href="#class_chart:GUI" onclick="return linkSelect('class_chart','class_chart:GUI');">GUI</a></td>
             <td class="white">&quot;The overall visual representation of the game board&quot;</td>
           </tr>          <tr>
@@ -873,6 +923,12 @@ dd {
           </tr>          <tr>
             <td class="light-grey"><a href="#class_chart:GUI_ELEMENT_FACTORY" onclick="return linkSelect('class_chart','class_chart:GUI_ELEMENT_FACTORY');">GUI_ELEMENT_FACTORY</a></td>
             <td class="white">&quot;Responsible for creating hierarchies of GUIElements&quot;</td>
+          </tr>          <tr>
+            <td class="light-grey"><a href="#class_chart:BOARD_GUI_ELEMENT" onclick="return linkSelect('class_chart','class_chart:BOARD_GUI_ELEMENT');">BOARD_GUI_ELEMENT</a></td>
+            <td class="white">&quot;The element on the screen that visualizes the game board.&quot;</td>
+          </tr>          <tr>
+            <td class="light-grey"><a href="#class_chart:CHAT" onclick="return linkSelect('class_chart','class_chart:CHAT');">CHAT</a></td>
+            <td class="white">&quot;Lists chat messages and useful game events on the screen&quot;</td>
           </tr>
         </table>
               </td>
@@ -897,6 +953,101 @@ dd {
       <td class="indexing" colspan="2">
         <dl>
           <dt>Indexing</dt>
+          <dd>author : "Simon Westh Henriksen";</dd>
+          <dd>created : "27-11-2011";</dd>
+          <dd>revised : "01-12-2011";</dd>
+        </dl>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="4" class="bottom">
+        <table>
+          <tr>
+            <th>Cluster</th>
+            <th>Description</th>
+          </tr>
+          <tr>
+            <td class="light-grey"><a href="#cluster_chart:ASYNC_SOCKETS_CLUSTER" onclick="return linkSelect('cluster_chart','cluster_chart:ASYNC_SOCKETS_CLUSTER');">ASYNC_SOCKETS_CLUSTER</a></td>
+            <td class="white">&quot;Implementation of asynchronous TCP sockets server and client.&quot;</td>
+          </tr>          <tr>
+            <td class="light-grey"><a href="#cluster_chart:CONNECTION_CLUSTER" onclick="return linkSelect('cluster_chart','cluster_chart:CONNECTION_CLUSTER');">CONNECTION_CLUSTER</a></td>
+            <td class="white">&quot;Abstraction of the client/server socket connections&quot;</td>
+          </tr>          <tr>
+            <td class="light-grey"><a href="#cluster_chart:EVENT_CLUSTER" onclick="return linkSelect('cluster_chart','cluster_chart:EVENT_CLUSTER');">EVENT_CLUSTER</a></td>
+            <td class="white">&quot;Classes related to event parsing and execution&quot;</td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</div>
+
+<div class="top-level" id="cluster_chart:ASYNC_SOCKETS_CLUSTER">
+  <table class="outer">
+    <tr class="top">
+      <th class="type">CLUSTER</th>
+      <td class="name" colspan="2">ASYNC_SOCKETS_CLUSTER</td>
+      <td class="part"><strong>Part:</strong> 1/1</td>
+    </tr>
+    <tr class="middle">
+      <td class="explanation" colspan="2">
+        <dl>
+          <dt>Purpose</dt>
+          <dd></dd>
+        </dl>
+      </td>
+      <td class="indexing" colspan="2">
+        <dl>
+          <dt>Indexing</dt>
+          <dd>author : "Simon Westh Henriksen";</dd>
+          <dd>created : "01-12-2011";</dd>
+          <dd>revised : "01-12-2011";</dd>
+        </dl>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="4" class="bottom">
+        <table>
+          <tr>
+            <th class="grey">Class</th>
+            <th class="grey">Description</th>
+          </tr>
+          <tr>
+            <td class="light-grey"><a href="#class_chart:ASYNC_SOCKETS_CLIENT" onclick="return linkSelect('class_chart','class_chart:ASYNC_SOCKETS_CLIENT');">ASYNC_SOCKETS_CLIENT</a></td>
+            <td class="white">&quot;Implementation of the asynchronous sockets client.&quot;</td>
+          </tr>          <tr>
+            <td class="light-grey"><a href="#class_chart:ASYNC_SOCKETS_SERVER" onclick="return linkSelect('class_chart','class_chart:ASYNC_SOCKETS_SERVER');">ASYNC_SOCKETS_SERVER</a></td>
+            <td class="white">&quot;Implementation of the asynchronous sockets server.&quot;</td>
+          </tr>          <tr>
+            <td class="light-grey"><a href="#class_chart:CLIENT_INFO" onclick="return linkSelect('class_chart','class_chart:CLIENT_INFO');">CLIENT_INFO</a></td>
+            <td class="white">&quot;Stores information about a client connection.&quot;</td>
+          </tr>
+        </table>
+              </td>
+    </tr>
+  </table>
+</div>
+
+<div class="top-level" id="cluster_chart:CONNECTION_CLUSTER">
+  <table class="outer">
+    <tr class="top">
+      <th class="type">CLUSTER</th>
+      <td class="name" colspan="2">CONNECTION_CLUSTER</td>
+      <td class="part"><strong>Part:</strong> 1/1</td>
+    </tr>
+    <tr class="middle">
+      <td class="explanation" colspan="2">
+        <dl>
+          <dt>Purpose</dt>
+          <dd></dd>
+        </dl>
+      </td>
+      <td class="indexing" colspan="2">
+        <dl>
+          <dt>Indexing</dt>
+          <dd>author : "Simon Westh Henriksen";</dd>
+          <dd>created : "01-12-2011";</dd>
+          <dd>revised : "01-12-2011";</dd>
         </dl>
       </td>
     </tr>
@@ -909,16 +1060,103 @@ dd {
           </tr>
           <tr>
             <td class="light-grey"><a href="#class_chart:CONNECTION" onclick="return linkSelect('class_chart','class_chart:CONNECTION');">CONNECTION</a></td>
-            <td class="white">&quot;Keeps track of the players connection and provides low-level message sending over the network.&quot;</td>
+            <td class="white">&quot;Abstraction of a connection. Can send text messages.&quot;</td>
           </tr>          <tr>
             <td class="light-grey"><a href="#class_chart:CLIENT_CONNECTION" onclick="return linkSelect('class_chart','class_chart:CLIENT_CONNECTION');">CLIENT_CONNECTION</a></td>
             <td class="white">&quot;A client connection&quot;</td>
           </tr>          <tr>
             <td class="light-grey"><a href="#class_chart:SERVER_CONNECTION" onclick="return linkSelect('class_chart','class_chart:SERVER_CONNECTION');">SERVER_CONNECTION</a></td>
             <td class="white">&quot;A server connection&quot;</td>
-          </tr>          <tr>
+          </tr>
+        </table>
+              </td>
+    </tr>
+  </table>
+</div>
+
+<div class="top-level" id="cluster_chart:EVENT_CLUSTER">
+  <table class="outer">
+    <tr class="top">
+      <th class="type">CLUSTER</th>
+      <td class="name" colspan="2">EVENT_CLUSTER</td>
+      <td class="part"><strong>Part:</strong> 1/1</td>
+    </tr>
+    <tr class="middle">
+      <td class="explanation" colspan="2">
+        <dl>
+          <dt>Purpose</dt>
+          <dd></dd>
+        </dl>
+      </td>
+      <td class="indexing" colspan="2">
+        <dl>
+          <dt>Indexing</dt>
+          <dd>author : "Simon Westh Henriksen";</dd>
+          <dd>created : "01-12-2011";</dd>
+          <dd>revised : "01-12-2011";</dd>
+        </dl>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="4" class="bottom">
+        <table>
+          <tr>
+            <th class="grey">Class</th>
+            <th class="grey">Description</th>
+          </tr>
+          <tr>
             <td class="light-grey"><a href="#class_chart:EVENT_MANAGER" onclick="return linkSelect('class_chart','class_chart:EVENT_MANAGER');">EVENT_MANAGER</a></td>
             <td class="white">&quot;Responsible for parsing requests from the network and sending out events to the listeners.&quot;</td>
+          </tr>
+        </table>
+        <table>
+          <tr>
+            <th>Cluster</th>
+            <th>Description</th>
+          </tr>
+          <tr>
+            <td class="light-grey"><a href="#cluster_chart:EVENT_ARGS" onclick="return linkSelect('cluster_chart','cluster_chart:EVENT_ARGS');">EVENT_ARGS</a></td>
+            <td class="white">&quot;Arguments for events&quot;</td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</div>
+
+<div class="top-level" id="cluster_chart:EVENT_ARGS">
+  <table class="outer">
+    <tr class="top">
+      <th class="type">CLUSTER</th>
+      <td class="name" colspan="2">EVENT_ARGS</td>
+      <td class="part"><strong>Part:</strong> 1/1</td>
+    </tr>
+    <tr class="middle">
+      <td class="explanation" colspan="2">
+        <dl>
+          <dt>Purpose</dt>
+          <dd></dd>
+        </dl>
+      </td>
+      <td class="indexing" colspan="2">
+        <dl>
+          <dt>Indexing</dt>
+          <dd>author : "Simon Westh Henriksen";</dd>
+          <dd>created : "01-12-2011";</dd>
+          <dd>revised : "01-12-2011";</dd>
+        </dl>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="4" class="bottom">
+        <table>
+          <tr>
+            <th class="grey">Class</th>
+            <th class="grey">Description</th>
+          </tr>
+          <tr>
+            <td class="light-grey"><a href="#class_chart:GAME_EVENT_ARGS" onclick="return linkSelect('class_chart','class_chart:GAME_EVENT_ARGS');">GAME_EVENT_ARGS</a></td>
+            <td class="white">&quot;Implementation of event arguments to use with events.&quot;</td>
           </tr>
         </table>
               </td>
@@ -955,17 +1193,106 @@ dd {
             <th class="grey">Description</th>
           </tr>
           <tr>
+            <td class="light-grey"><a href="#class_chart:STATE_MANAGER" onclick="return linkSelect('class_chart','class_chart:STATE_MANAGER');">STATE_MANAGER</a></td>
+            <td class="white">&quot;The external API for state changes.&quot;</td>
+          </tr>          <tr>
             <td class="light-grey"><a href="#class_chart:STATE_MACHINE" onclick="return linkSelect('class_chart','class_chart:STATE_MACHINE');">STATE_MACHINE</a></td>
             <td class="white">&quot;The handler of all states.&quot;</td>
           </tr>          <tr>
             <td class="light-grey"><a href="#class_chart:STATE" onclick="return linkSelect('class_chart','class_chart:STATE');">STATE</a></td>
-            <td class="white">&quot;Overall state abstraction&quot;</td>
-          </tr>          <tr>
-            <td class="light-grey"><a href="#class_chart:STATE_GROUP" onclick="return linkSelect('class_chart','class_chart:STATE_GROUP');">STATE_GROUP</a></td>
-            <td class="white">&quot;A group of states.&quot;</td>
+            <td class="white">&quot;A collection of all different states.&quot;</td>
           </tr>
         </table>
               </td>
+    </tr>
+  </table>
+</div>
+
+<div class="top-level" id="class_chart:MODEL">
+  <table class="outer">
+    <tr class="top">
+      <th class="type">CLASS</th>
+      <td class="name" colspan="2">MODEL</td>
+      <td class="part"><strong>Part:</strong> 1/1</td>
+    </tr>
+    <tr class="middle">
+      <td class="explanation" colspan="2">
+        <dl>
+          <dt>Type Of Object</dt>
+          <dd></dd>
+        </dl>
+      </td>
+      <td class="indexing" colspan="2">
+        <dl>
+          <dt>Indexing</dt>
+          <dd>author : "Martin Marcher";</dd>
+        </dl>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="4" class="bottom">
+        <table>
+          
+          <tr>
+            <th class="light-grey">Queries</th>
+            <td class="white spaced-lines">&quot;Can I have the board?&quot;,<br/>&quot;Can I have the player with this id?&quot;,<br/>&quot;Can I have the hero party?&quot;</td>
+          </tr>
+          <tr>
+            <th class="light-grey">Commands</th>
+            <td class="white spaced-lines"></td>
+          </tr>
+          <tr>
+            <th class="light-grey">Constraints</th>
+            <td class="white spaced-lines"></td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</div>
+
+<div class="top-level" id="class_chart:ROLE">
+  <table class="outer">
+    <tr class="top">
+      <th class="type">CLASS</th>
+      <td class="name" colspan="2">ROLE</td>
+      <td class="part"><strong>Part:</strong> 1/1</td>
+    </tr>
+    <tr class="middle">
+      <td class="explanation" colspan="2">
+        <dl>
+          <dt>Type Of Object</dt>
+          <dd>&quot;Describes what Role a given player has at the moment.&quot;</dd>
+        </dl>
+      </td>
+      <td class="indexing" colspan="2">
+        <dl>
+          <dt>Indexing</dt>
+          <dd>author : "Emil Juul Jacobsen";</dd>
+          <dd>in_cluster : "PLAYER_CLUSTER";</dd>
+          <dd>created : "03-12-2011";</dd>
+          <dd>revised : "03-12-2011";</dd>
+        </dl>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="4" class="bottom">
+        <table>
+          
+          <tr>
+            <th class="light-grey">Queries</th>
+            <td class="white spaced-lines">&quot;Can i get this role?&quot;</td>
+          </tr>
+          <tr>
+            <th class="light-grey">Commands</th>
+            <td class="white spaced-lines"></td>
+          </tr>
+          <tr>
+            <th class="light-grey">Constraints</th>
+            <td class="white spaced-lines"></td>
+          </tr>
+        </table>
+      </td>
     </tr>
   </table>
 </div>
@@ -988,6 +1315,7 @@ dd {
         <dl>
           <dt>Indexing</dt>
           <dd>author : "Jonas Breindahl";</dd>
+          <dd>in_cluster : "PLAYER_CLUSTER";</dd>
           <dd>created : "21-11-2011";</dd>
           <dd>revised : "21-11-2011";</dd>
         </dl>
@@ -999,11 +1327,11 @@ dd {
           
           <tr>
             <th class="light-grey">Queries</th>
-            <td class="white spaced-lines">&quot;What is your connection?&quot;,<br/>&quot;What is your role?&quot;,<br/>&quot;Are you client or server?&quot;</td>
+            <td class="white spaced-lines">&quot;What is your connection?&quot;,<br/>&quot;What is your role?&quot;,<br/>&quot;Are you client or server?&quot;,<br/>&quot;What is your unique player ID?&quot;</td>
           </tr>
           <tr>
             <th class="light-grey">Commands</th>
-            <td class="white spaced-lines"></td>
+            <td class="white spaced-lines">&quot;Your unique player ID is this!&quot;</td>
           </tr>
           <tr>
             <th class="light-grey">Constraints</th>
@@ -1033,8 +1361,9 @@ dd {
         <dl>
           <dt>Indexing</dt>
           <dd>author : "Jonas Breindahl";</dd>
+          <dd>in_cluster : "PLAYER_CLUSTER";</dd>
           <dd>created : "21-11-2011";</dd>
-          <dd>revised : "21-11-2011";</dd>
+          <dd>revised : "01-12-2011";</dd>
         </dl>
       </td>
     </tr>
@@ -1044,60 +1373,15 @@ dd {
           
           <tr>
             <th class="light-grey">Queries</th>
-            <td class="white spaced-lines">&quot;How many players are in the HeroParty?&quot;,<br/>&quot;How many players have yet to take their turn?&quot;,<br/>&quot;Has 'this' player yet to take their turn?&quot;,<br/>&quot;How many conquest tokens do the players have?&quot;,<br/>&quot;Is the pool of conquest tokens empty?&quot;</td>
+            <td class="white spaced-lines">&quot;How many heroes are in the HeroParty?&quot;,<br/>&quot;How many heroes have yet to take their turn?&quot;,<br/>&quot;Has 'this' heroes yet to take their turn?&quot;,<br/>&quot;How many conquest tokens do the heroes have?&quot;,<br/>&quot;Is the pool of conquest tokens empty?&quot;</td>
           </tr>
           <tr>
             <th class="light-grey">Commands</th>
-            <td class="white spaced-lines">&quot;Remove 'this' player from the list of players yet to act!&quot;,<br/>&quot;Reset list of players yet to act!&quot;,<br/>&quot;Remove 'this' number of conquest tokens from the pool of tokens!&quot;,<br/>&quot;Add 'this' number of conquest tokens to the pool of tokens!&quot;</td>
+            <td class="white spaced-lines">&quot;Add 'this' hero to the list of heroes in the HeroParty!&quot;,<br/>&quot;Remove 'this' hero from the list of heroes yet to act!&quot;,<br/>&quot;Reset list of heroes yet to act!&quot;,<br/>&quot;Remove 'this' number of conquest tokens from the pool of tokens!&quot;,<br/>&quot;Add 'this' number of conquest tokens to the pool of tokens!&quot;</td>
           </tr>
           <tr>
             <th class="light-grey">Constraints</th>
-            <td class="white spaced-lines">&quot;A HeroParty must always have 2 to 4 players.&quot;</td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-  </table>
-</div>
-
-<div class="top-level" id="class_chart:HERO_PLAYER">
-  <table class="outer">
-    <tr class="top">
-      <th class="type">CLASS</th>
-      <td class="name" colspan="2">HERO_PLAYER</td>
-      <td class="part"><strong>Part:</strong> 1/1</td>
-    </tr>
-    <tr class="middle">
-      <td class="explanation" colspan="2">
-        <dl>
-          <dt>Type Of Object</dt>
-          <dd>&quot;The role of a hero, that a player can have&quot;</dd>
-        </dl>
-      </td>
-      <td class="indexing" colspan="2">
-        <dl>
-          <dt>Indexing</dt>
-          <dd>author : "Jonas Breindahl";</dd>
-          <dd>created : "21-11-2011";</dd>
-          <dd>revised : "21-11-2011";</dd>
-        </dl>
-      </td>
-    </tr>
-    <tr>
-      <td colspan="4" class="bottom">
-        <table>
-          
-          <tr>
-            <th class="light-grey">Queries</th>
-            <td class="white spaced-lines">&quot;What hero are you playing?&quot;</td>
-          </tr>
-          <tr>
-            <th class="light-grey">Commands</th>
-            <td class="white spaced-lines"></td>
-          </tr>
-          <tr>
-            <th class="light-grey">Constraints</th>
-            <td class="white spaced-lines"></td>
+            <td class="white spaced-lines">&quot;A HeroParty must always have 2 to 4 heroes.&quot;</td>
           </tr>
         </table>
       </td>
@@ -1123,8 +1407,9 @@ dd {
         <dl>
           <dt>Indexing</dt>
           <dd>author : "Jonas Breindahl";</dd>
+          <dd>in_cluster : "PLAYER_CLUSTER";</dd>
           <dd>created : "21-11-2011";</dd>
-          <dd>revised : "21-11-2011";</dd>
+          <dd>revised : "30-11-2011";</dd>
         </dl>
       </td>
     </tr>
@@ -1134,11 +1419,11 @@ dd {
           
           <tr>
             <th class="light-grey">Queries</th>
-            <td class="white spaced-lines">&quot;How many cards do you have?&quot;,<br/>&quot;How many threat tokens do you have?&quot;,<br/>&quot;What cards do you have?&quot;</td>
+            <td class="white spaced-lines">&quot;How many cards do you have?&quot;,<br/>&quot;How many threat tokens do you have?&quot;,<br/>&quot;What cards do you have?&quot;,<br/>&quot;How many cards are in your overlord deck?&quot;,<br/>&quot;How many cards are in your overlord discard?&quot;</td>
           </tr>
           <tr>
             <th class="light-grey">Commands</th>
-            <td class="white spaced-lines">&quot;Draw 'this' many cards!&quot;</td>
+            <td class="white spaced-lines">&quot;Draw 'this' many cards!&quot;,<br/>&quot;Shuffle the overlord discard into the deck!&quot;</td>
           </tr>
           <tr>
             <th class="light-grey">Constraints</th>
@@ -1169,7 +1454,7 @@ dd {
           <dt>Indexing</dt>
           <dd>author : "Jonas Breindahl";</dd>
           <dd>created : "21-11-2011";</dd>
-          <dd>revised : "27-11-2011";</dd>
+          <dd>revised : "30-11-2011";</dd>
         </dl>
       </td>
     </tr>
@@ -1179,11 +1464,11 @@ dd {
           
           <tr>
             <th class="light-grey">Queries</th>
-            <td class="white spaced-lines">&quot;What is your name?&quot;,<br/>&quot;What is your max health?&quot;,<br/>&quot;What is your health right now?&quot;,<br/>&quot;What is your max fatique?&quot;,<br/>&quot;What is your fatique right now?&quot;,<br/>&quot;What is your armor?&quot;,<br/>&quot;What is your speed?&quot;,<br/>&quot;How much speed do you have left?&quot;,<br/>&quot;How many attacks do you have left?&quot;,<br/>&quot;What dice do you use to attack?&quot;,<br/>&quot;What abilities do you have?&quot;,<br/>&quot;What effects are on you?&quot;</td>
+            <td class="white spaced-lines">&quot;What is your unique figure ID?&quot;,<br/>&quot;What is your name?&quot;,<br/>&quot;What is your max health?&quot;,<br/>&quot;What is your health right now?&quot;,<br/>&quot;What is your armor?&quot;,<br/>&quot;What is your speed?&quot;,<br/>&quot;How much speed do you have left?&quot;,<br/>&quot;How many attacks do you have left?&quot;,<br/>&quot;What dice do you use to attack?&quot;,<br/>&quot;What abilities do you have?&quot;,<br/>&quot;What effects are on you?&quot;</td>
           </tr>
           <tr>
             <th class="light-grey">Commands</th>
-            <td class="white spaced-lines">&quot;Set your health to 'this'!&quot;,<br/>&quot;Set your fatique to 'this'!&quot;</td>
+            <td class="white spaced-lines">&quot;Add 'this' amount of health!&quot;,<br/>&quot;Lose 'this' amount of health!&quot;</td>
           </tr>
           <tr>
             <th class="light-grey">Constraints</th>
@@ -1214,7 +1499,7 @@ dd {
           <dt>Indexing</dt>
           <dd>author : "Jonas Breindahl";</dd>
           <dd>created : "21-11-2011";</dd>
-          <dd>revised : "27-11-2011";</dd>
+          <dd>revised : "30-11-2011";</dd>
         </dl>
       </td>
     </tr>
@@ -1224,15 +1509,15 @@ dd {
           
           <tr>
             <th class="light-grey">Queries</th>
-            <td class="white spaced-lines">&quot;How many skills do you have in MELEE/RANGED/MAGIC?&quot;</td>
+            <td class="white spaced-lines">&quot;How many skills do you have in MELEE/RANGED/MAGIC?&quot;,<br/>&quot;What is your max fatique?&quot;,<br/>&quot;What is your fatique right now?&quot;</td>
           </tr>
           <tr>
             <th class="light-grey">Commands</th>
-            <td class="white spaced-lines"></td>
+            <td class="white spaced-lines">&quot;Add 'this' amount of fatique!&quot;,<br/>&quot;Lose 'this' amount of fatique!&quot;</td>
           </tr>
           <tr>
             <th class="light-grey">Constraints</th>
-            <td class="white spaced-lines">&quot;A Hero may only have 0 life when it is your turn&quot;</td>
+            <td class="white spaced-lines">&quot;A Hero may never have more fatique than max fatique&quot;</td>
           </tr>
         </table>
       </td>
@@ -1314,7 +1599,7 @@ dd {
           
           <tr>
             <th class="light-grey">Queries</th>
-            <td class="white spaced-lines">&quot;What type of skill are you?&quot;,<br/>&quot;What is your name?&quot;,<br/>&quot;Who owns you?&quot;,<br/>&quot;What are your abilities?&quot;</td>
+            <td class="white spaced-lines">&quot;What type of skill are you?&quot;,<br/>&quot;What is your name?&quot;,<br/>&quot;What are your abilities?&quot;</td>
           </tr>
           <tr>
             <th class="light-grey">Commands</th>
@@ -1348,6 +1633,7 @@ dd {
         <dl>
           <dt>Indexing</dt>
           <dd>author : "Jonas Breindahl";</dd>
+          <dd>in_cluster : "HERO_STUFF";</dd>
           <dd>created : "27-11-2011";</dd>
           <dd>revised : "27-11-2011";</dd>
         </dl>
@@ -1359,11 +1645,11 @@ dd {
           
           <tr>
             <th class="light-grey">Queries</th>
-            <td class="white spaced-lines">&quot;How many hands do you have?&quot;,<br/>&quot;What weapons do you have in your hands?&quot;,<br/>&quot;What equipment do you have equipped?&quot;,<br/>&quot;What potions do you have equipped?&quot;,<br/>&quot;What equipment do you have in your backpack?&quot;,<br/>&quot;Is there more space in your backpack?&quot;</td>
+            <td class="white spaced-lines">&quot;How many hands do you have?&quot;,<br/>&quot;What weapons do you have in your hands?&quot;,<br/>&quot;What armor do you have equipped?&quot;,<br/>&quot;What other-items do you have equipped?&quot;,<br/>&quot;What potions do you have equipped?&quot;,<br/>&quot;What equipment do you have in your backpack?&quot;,<br/>&quot;Is there more space in your backpack?&quot;</td>
           </tr>
           <tr>
             <th class="light-grey">Commands</th>
-            <td class="white spaced-lines">&quot;Equip 'this' Equipment!&quot;,<br/>&quot;Remove 'this' Equipment!&quot;,<br/>&quot;Put this Equipment in your backpack!&quot;,<br/>&quot;Remove this Equipment from your backpack!&quot;</td>
+            <td class="white spaced-lines">&quot;Equip 'this' weapon!&quot;,<br/>&quot;Equip 'this' armor!&quot;,<br/>&quot;Equip 'this' other item!&quot;,<br/>&quot;Equip 'this' potion!&quot;,<br/>&quot;Put this Equipment in your backpack!&quot;,<br/>&quot;Remove this Equipment from your backpack!&quot;</td>
           </tr>
           <tr>
             <th class="light-grey">Constraints</th>
@@ -1404,15 +1690,15 @@ dd {
           
           <tr>
             <th class="light-grey">Queries</th>
-            <td class="white spaced-lines">&quot;What is your name?&quot;,<br/>&quot;What type of equipment are you?&quot;,<br/>&quot;Can you be bought right now?&quot;,<br/>&quot;What is your price?&quot;,<br/>&quot;What are your abilities?&quot;</td>
+            <td class="white spaced-lines">&quot;What is your name?&quot;,<br/>&quot;What type of equipment are you?&quot;,<br/>&quot;What is your price?&quot;,<br/>&quot;How many hands do you use?&quot;,<br/>&quot;Are you tapped right now?&quot;,<br/>&quot;What are your abilities?&quot;</td>
           </tr>
           <tr>
             <th class="light-grey">Commands</th>
-            <td class="white spaced-lines"></td>
+            <td class="white spaced-lines">&quot;Tap/untap!&quot;</td>
           </tr>
           <tr>
             <th class="light-grey">Constraints</th>
-            <td class="white spaced-lines"></td>
+            <td class="white spaced-lines">&quot;An equipment may only be tapped one time per round&quot;</td>
           </tr>
         </table>
       </td>
@@ -1453,7 +1739,7 @@ dd {
           </tr>
           <tr>
             <th class="light-grey">Commands</th>
-            <td class="white spaced-lines">&quot;Give a dice bonus to 'this' player!&quot;</td>
+            <td class="white spaced-lines"></td>
           </tr>
           <tr>
             <th class="light-grey">Constraints</th>
@@ -1497,7 +1783,7 @@ dd {
           </tr>
           <tr>
             <th class="light-grey">Queries</th>
-            <td class="white spaced-lines">&quot;What kind of potion are you?&quot;,<br/>&quot;What power do you grant?&quot;</td>
+            <td class="white spaced-lines">&quot;What kind of potion are you?&quot;</td>
           </tr>
           <tr>
             <th class="light-grey">Commands</th>
@@ -1531,6 +1817,7 @@ dd {
         <dl>
           <dt>Indexing</dt>
           <dd>author : "Jonas Breindahl";</dd>
+          <dd>in_cluster : "OVERLORD_STUFF";</dd>
           <dd>created : "21-11-2011";</dd>
           <dd>revised : "21-11-2011";</dd>
         </dl>
@@ -1542,11 +1829,11 @@ dd {
           
           <tr>
             <th class="light-grey">Queries</th>
-            <td class="white spaced-lines">&quot;What ability do you have?&quot;,<br/>&quot;Is this card legal to play now?&quot;</td>
+            <td class="white spaced-lines">&quot;What is your name?&quot;,<br/>&quot;What is your description?&quot;,<br/>&quot;What type of overlord card are you?&quot;,<br/>&quot;What abilities do you have?&quot;</td>
           </tr>
           <tr>
             <th class="light-grey">Commands</th>
-            <td class="white spaced-lines"></td>
+            <td class="white spaced-lines">&quot;Your name is 'this'!&quot;,<br/>&quot;Your description is 'this'!&quot;,<br/>&quot;Add 'this' ability to the list of abilities!&quot;</td>
           </tr>
           <tr>
             <th class="light-grey">Constraints</th>
@@ -1998,15 +2285,16 @@ dd {
       <td class="explanation" colspan="2">
         <dl>
           <dt>Type Of Object</dt>
-          <dd>&quot;The abilities that a figure can have&quot;</dd>
+          <dd>&quot;An ability&quot;</dd>
         </dl>
       </td>
       <td class="indexing" colspan="2">
         <dl>
           <dt>Indexing</dt>
           <dd>author : "Jonas Breindahl";</dd>
+          <dd>in_cluster : "EVENT_CLUSTER";</dd>
           <dd>created : "23-11-2011";</dd>
-          <dd>revised : "23-11-2011";</dd>
+          <dd>revised : "30-11-2011";</dd>
         </dl>
       </td>
     </tr>
@@ -2016,7 +2304,7 @@ dd {
           
           <tr>
             <th class="light-grey">Queries</th>
-            <td class="white spaced-lines"></td>
+            <td class="white spaced-lines">&quot;Can this ability be used now?&quot;</td>
           </tr>
           <tr>
             <th class="light-grey">Commands</th>
@@ -2184,15 +2472,16 @@ dd {
       <td class="explanation" colspan="2">
         <dl>
           <dt>Type Of Object</dt>
-          <dd>&quot;The entire gameboard, made up of pieces&quot;</dd>
+          <dd>&quot;The entire gameboard, made up of squares&quot;</dd>
         </dl>
       </td>
       <td class="indexing" colspan="2">
         <dl>
           <dt>Indexing</dt>
           <dd>author : "Jonas Breindahl";</dd>
+          <dd>in_cluster : "BOARD";</dd>
           <dd>created : "23-11-2011";</dd>
-          <dd>revised : "23-11-2011";</dd>
+          <dd>revised : "30-11-2011";</dd>
         </dl>
       </td>
     </tr>
@@ -2202,7 +2491,7 @@ dd {
           
           <tr>
             <th class="light-grey">Queries</th>
-            <td class="white spaced-lines">&quot;Is this square pass-/moveable?&quot;,<br/>&quot;Can the overlord spawn here?&quot;,<br/>&quot;Is there line of sight from 'here' to 'there'?&quot;,<br/>&quot;Is there line of sight from 'here' to 'there', not included monsters?&quot;,<br/>&quot;Is this space visible by the players?&quot;</td>
+            <td class="white spaced-lines">&quot;What is your width?&quot;,<br/>&quot;What is your height?&quot;,<br/>&quot;Is the coordinate (x/y) within the board?&quot;,<br/>&quot;Is this square pass-/moveable?&quot;,<br/>&quot;Can the overlord spawn here?&quot;,<br/>&quot;Is there line of sight from 'here' to 'there'?&quot;,<br/>&quot;Is there line of sight from 'here' to 'there', not included monsters?&quot;,<br/>&quot;Is this space visible by the players?&quot;</td>
           </tr>
           <tr>
             <th class="light-grey">Commands</th>
@@ -2236,6 +2525,7 @@ dd {
         <dl>
           <dt>Indexing</dt>
           <dd>author : "Jonas Breindahl";</dd>
+          <dd>in_cluster : "BOARD";</dd>
           <dd>created : "23-11-2011";</dd>
           <dd>revised : "23-11-2011";</dd>
         </dl>
@@ -2281,6 +2571,7 @@ dd {
         <dl>
           <dt>Indexing</dt>
           <dd>author : "Jonas Breindahl";</dd>
+          <dd>in_cluster : "BOARD";</dd>
           <dd>created : "23-11-2011";</dd>
           <dd>revised : "23-11-2011";</dd>
         </dl>
@@ -2292,7 +2583,7 @@ dd {
           
           <tr>
             <th class="light-grey">Queries</th>
-            <td class="white spaced-lines">&quot;What players are in town right now?&quot;</td>
+            <td class="white spaced-lines">&quot;What heroes are in town right now?&quot;</td>
           </tr>
           <tr>
             <th class="light-grey">Commands</th>
@@ -2545,6 +2836,51 @@ dd {
   </table>
 </div>
 
+<div class="top-level" id="class_chart:DRAWABLE">
+  <table class="outer">
+    <tr class="top">
+      <th class="type">CLASS</th>
+      <td class="name" colspan="2">DRAWABLE</td>
+      <td class="part"><strong>Part:</strong> 1/1</td>
+    </tr>
+    <tr class="middle">
+      <td class="explanation" colspan="2">
+        <dl>
+          <dt>Type Of Object</dt>
+          <dd>&quot;Something that should be able to be drawn on the screen&quot;</dd>
+        </dl>
+      </td>
+      <td class="indexing" colspan="2">
+        <dl>
+          <dt>Indexing</dt>
+          <dd>author : "Emil Juul Jacobsen";</dd>
+          <dd>created : "30-11-2011";</dd>
+          <dd>revised : "30-11-2011";</dd>
+        </dl>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="4" class="bottom">
+        <table>
+          
+          <tr>
+            <th class="light-grey">Queries</th>
+            <td class="white spaced-lines">&quot;What do you look like?&quot;</td>
+          </tr>
+          <tr>
+            <th class="light-grey">Commands</th>
+            <td class="white spaced-lines"></td>
+          </tr>
+          <tr>
+            <th class="light-grey">Constraints</th>
+            <td class="white spaced-lines"></td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</div>
+
 <div class="top-level" id="class_chart:GUI">
   <table class="outer">
     <tr class="top">
@@ -2564,7 +2900,7 @@ dd {
           <dt>Indexing</dt>
           <dd>author : "Emil Juul Jacobsen";</dd>
           <dd>created : "27-11-2011";</dd>
-          <dd>revised : "27-11-2011";</dd>
+          <dd>revised : "01-12-2011";</dd>
         </dl>
       </td>
     </tr>
@@ -2578,7 +2914,7 @@ dd {
           </tr>
           <tr>
             <th class="light-grey">Commands</th>
-            <td class="white spaced-lines">&quot;Handle this mouse click!&quot;</td>
+            <td class="white spaced-lines">&quot;Update yourself!&quot;,<br/>&quot;Change your state GUI_ELEMENT to this one!&quot;,<br/>&quot;Draw everything!&quot;</td>
           </tr>
           <tr>
             <th class="light-grey">Constraints</th>
@@ -2609,7 +2945,7 @@ dd {
           <dt>Indexing</dt>
           <dd>author : "Emil Juul Jacobsen";</dd>
           <dd>created : "27-11-2011";</dd>
-          <dd>revised : "27-11-2011";</dd>
+          <dd>revised : "01-12-2011";</dd>
         </dl>
       </td>
     </tr>
@@ -2619,15 +2955,63 @@ dd {
           
           <tr>
             <th class="light-grey">Queries</th>
-            <td class="white spaced-lines">&quot;What is your position?&quot;,<br/>&quot;What is your dimensions?&quot;,<br/>&quot;Is this point within your bondaries?&quot;</td>
+            <td class="white spaced-lines">&quot;What is your position?&quot;,<br/>&quot;What is your dimensions?&quot;,<br/>&quot;Is this point within your bondaries?&quot;,<br/>&quot;Are you focused?&quot;</td>
           </tr>
           <tr>
             <th class="light-grey">Commands</th>
-            <td class="white spaced-lines">&quot;Handle this mouse click!&quot;,<br/>&quot;Add this GUI_ELEMENT to your collection of sub-elements!&quot;</td>
+            <td class="white spaced-lines">&quot;Handle this mouse click!&quot;,<br/>&quot;Handle this key press!&quot;,<br/>&quot;Do this when clicked&quot;,<br/>&quot;Add this GUI_ELEMENT to your collection of sub-elements!&quot;,<br/>&quot;Add this DRAWABLE to be displayed in you at this position!&quot;,<br/>&quot;Draw yourself!&quot;</td>
           </tr>
           <tr>
             <th class="light-grey">Constraints</th>
             <td class="white spaced-lines">&quot;The position must be within the window boundaries&quot;</td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</div>
+
+<div class="top-level" id="class_chart:BOARD_GUI_ELEMENT">
+  <table class="outer">
+    <tr class="top">
+      <th class="type">CLASS</th>
+      <td class="name" colspan="2">BOARD_GUI_ELEMENT</td>
+      <td class="part"><strong>Part:</strong> 1/1</td>
+    </tr>
+    <tr class="middle">
+      <td class="explanation" colspan="2">
+        <dl>
+          <dt>Type Of Object</dt>
+          <dd>&quot;The element on the screen that visualizes the game board.&quot;</dd>
+        </dl>
+      </td>
+      <td class="indexing" colspan="2">
+        <dl>
+          <dt>Indexing</dt>
+          <dd>author : "Emil Juul Jacobsen";</dd>
+          <dd>created : "01-12-2011";</dd>
+          <dd>revised : "01-12-2011";</dd>
+        </dl>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="4" class="bottom">
+        <table>
+          <tr>
+            <th class="light-grey">Inherits from</th>
+            <td class="white spaced-lines">GUI_ELEMENT</td>
+          </tr>
+          <tr>
+            <th class="light-grey">Queries</th>
+            <td class="white spaced-lines"></td>
+          </tr>
+          <tr>
+            <th class="light-grey">Commands</th>
+            <td class="white spaced-lines">&quot;Mark this field as positive or negative!&quot;,<br/>&quot;Clear all marks!&quot;</td>
+          </tr>
+          <tr>
+            <th class="light-grey">Constraints</th>
+            <td class="white spaced-lines"></td>
           </tr>
         </table>
       </td>
@@ -2646,7 +3030,7 @@ dd {
       <td class="explanation" colspan="2">
         <dl>
           <dt>Type Of Object</dt>
-          <dd>&quot;Responsible of making hierarchies of GUIElements mainly for the different states of the game&quot;</dd>
+          <dd>&quot;Responsible of making hierarchies of GUIElements for two of the layers&quot;</dd>
         </dl>
       </td>
       <td class="indexing" colspan="2">
@@ -2654,7 +3038,7 @@ dd {
           <dt>Indexing</dt>
           <dd>author : "Emil Juul Jacobsen";</dd>
           <dd>created : "27-11-2011";</dd>
-          <dd>revised : "27-11-2011";</dd>
+          <dd>revised : "30-11-2011";</dd>
         </dl>
       </td>
     </tr>
@@ -2668,11 +3052,194 @@ dd {
           </tr>
           <tr>
             <th class="light-grey">Commands</th>
-            <td class="white spaced-lines">&quot;Create the GUI_ELEMENT for the visualization of the board!&quot;,<br/>&quot;Create the GUI_ELEMENT for this state and this perspective!&quot;,<br/>&quot;Create the GUI_ELEMENT of the menus, chat and player board for this perspective!&quot;</td>
+            <td class="white spaced-lines">&quot;Create the GUI_ELEMENT for the visualization of the board!&quot;,<br/>&quot;Create the GUI_ELEMENT for this State from this perspective!&quot;,<br/>&quot;Create the GUI_ELEMENT of the menus, chat and player board for this perspective!&quot;</td>
+          </tr>
+          <tr>
+            <th class="light-grey">Constraints</th>
+            <td class="white spaced-lines">&quot;The position of the root GUI_ELEMENTS must be 0,0&quot;</td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</div>
+
+<div class="top-level" id="class_chart:CHAT">
+  <table class="outer">
+    <tr class="top">
+      <th class="type">CLASS</th>
+      <td class="name" colspan="2">CHAT</td>
+      <td class="part"><strong>Part:</strong> 1/1</td>
+    </tr>
+    <tr class="middle">
+      <td class="explanation" colspan="2">
+        <dl>
+          <dt>Type Of Object</dt>
+          <dd>&quot;Handles messages and important game events for presentation on the screen&quot;</dd>
+        </dl>
+      </td>
+      <td class="indexing" colspan="2">
+        <dl>
+          <dt>Indexing</dt>
+          <dd>author : "Emil Juul Jacobsen";</dd>
+          <dd>created : "29-11-2011";</dd>
+          <dd>revised : "29-11-2011";</dd>
+        </dl>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="4" class="bottom">
+        <table>
+          <tr>
+            <th class="light-grey">Inherits from</th>
+            <td class="white spaced-lines">GUI_ELEMENT</td>
+          </tr>
+          <tr>
+            <th class="light-grey">Queries</th>
+            <td class="white spaced-lines"></td>
+          </tr>
+          <tr>
+            <th class="light-grey">Commands</th>
+            <td class="white spaced-lines">&quot;Here is a new message!&quot;</td>
+          </tr>
+          <tr>
+            <th class="light-grey">Constraints</th>
+            <td class="white spaced-lines">&quot;The message should not be empty&quot;</td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</div>
+
+<div class="top-level" id="class_chart:ASYNC_SOCKETS_CLIENT">
+  <table class="outer">
+    <tr class="top">
+      <th class="type">CLASS</th>
+      <td class="name" colspan="2">ASYNC_SOCKETS_CLIENT</td>
+      <td class="part"><strong>Part:</strong> 1/1</td>
+    </tr>
+    <tr class="middle">
+      <td class="explanation" colspan="2">
+        <dl>
+          <dt>Type Of Object</dt>
+          <dd>&quot;Implementation of the asynchronous sockets client.&quot;</dd>
+        </dl>
+      </td>
+      <td class="indexing" colspan="2">
+        <dl>
+          <dt>Indexing</dt>
+          <dd>author : "Simon Westh Henriksen";</dd>
+          <dd>created : "01-12-2011";</dd>
+          <dd>revised : "01-12-2011";</dd>
+        </dl>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="4" class="bottom">
+        <table>
+          
+          <tr>
+            <th class="light-grey">Queries</th>
+            <td class="white spaced-lines">&quot;What is your socket?&quot;</td>
+          </tr>
+          <tr>
+            <th class="light-grey">Commands</th>
+            <td class="white spaced-lines">&quot;Give me an instance of you using 'this' address and 'this' port!&quot;</td>
+          </tr>
+          <tr>
+            <th class="light-grey">Constraints</th>
+            <td class="white spaced-lines">&quot;If the object is returned, the connection has been established successfully.&quot;</td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</div>
+
+<div class="top-level" id="class_chart:ASYNC_SOCKETS_SERVER">
+  <table class="outer">
+    <tr class="top">
+      <th class="type">CLASS</th>
+      <td class="name" colspan="2">ASYNC_SOCKETS_SERVER</td>
+      <td class="part"><strong>Part:</strong> 1/1</td>
+    </tr>
+    <tr class="middle">
+      <td class="explanation" colspan="2">
+        <dl>
+          <dt>Type Of Object</dt>
+          <dd>&quot;Implementation of the asynchronous sockets server.&quot;</dd>
+        </dl>
+      </td>
+      <td class="indexing" colspan="2">
+        <dl>
+          <dt>Indexing</dt>
+          <dd>author : "Simon Westh Henriksen";</dd>
+          <dd>created : "01-12-2011";</dd>
+          <dd>revised : "01-12-2011";</dd>
+        </dl>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="4" class="bottom">
+        <table>
+          
+          <tr>
+            <th class="light-grey">Queries</th>
+            <td class="white spaced-lines">&quot;What is your local IP?&quot;</td>
+          </tr>
+          <tr>
+            <th class="light-grey">Commands</th>
+            <td class="white spaced-lines">&quot;Give me an instance of you using 'this' port!&quot;,<br/>&quot;Start listening for client connections!&quot;,<br/>&quot;Broadcast 'this' message to all connected clients!&quot;,<br/>&quot;Broadcast 'this' message to all connected clients except the on with 'this' id!&quot;,<br/>&quot;Call 'this' delegate when a client has connected&quot;</td>
           </tr>
           <tr>
             <th class="light-grey">Constraints</th>
             <td class="white spaced-lines"></td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</div>
+
+<div class="top-level" id="class_chart:CLIENT_INFO">
+  <table class="outer">
+    <tr class="top">
+      <th class="type">CLASS</th>
+      <td class="name" colspan="2">CLIENT_INFO</td>
+      <td class="part"><strong>Part:</strong> 1/1</td>
+    </tr>
+    <tr class="middle">
+      <td class="explanation" colspan="2">
+        <dl>
+          <dt>Type Of Object</dt>
+          <dd>&quot;Stores information about a client connection.&quot;</dd>
+        </dl>
+      </td>
+      <td class="indexing" colspan="2">
+        <dl>
+          <dt>Indexing</dt>
+          <dd>author : "Simon Westh Henriksen";</dd>
+          <dd>created : "01-12-2011";</dd>
+          <dd>revised : "01-12-2011";</dd>
+        </dl>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="4" class="bottom">
+        <table>
+          
+          <tr>
+            <th class="light-grey">Queries</th>
+            <td class="white spaced-lines">&quot;What is your ID?&quot;,<br/>&quot;What is your local IP?&quot;</td>
+          </tr>
+          <tr>
+            <th class="light-grey">Commands</th>
+            <td class="white spaced-lines">&quot;Give me an instance of you using 'this' socket!&quot;,<br/>&quot;Send 'this' string!&quot;,<br/>&quot;Begin receiving content!&quot;,<br/>&quot;Call 'this' delegate when a message was received!&quot;,<br/>&quot;Call 'this' delegate when the connection was closed!&quot;</td>
+          </tr>
+          <tr>
+            <th class="light-grey">Constraints</th>
+            <td class="white spaced-lines">&quot;The ID will always be unique in the context of the current game and can be used to identify the player.&quot;</td>
           </tr>
         </table>
       </td>
@@ -2691,7 +3258,7 @@ dd {
       <td class="explanation" colspan="2">
         <dl>
           <dt>Type Of Object</dt>
-          <dd>&quot;Contains the connection to the network. The connection can be either a TCP server or a TCP client. Can send and recieve text strings.&quot;</dd>
+          <dd>&quot;Abstraction of a connection. Can send text messages.&quot;</dd>
         </dl>
       </td>
       <td class="indexing" colspan="2">
@@ -2699,7 +3266,7 @@ dd {
           <dt>Indexing</dt>
           <dd>author : "Simon Westh Henriksen";</dd>
           <dd>created : "28-11-2011";</dd>
-          <dd>revised : "28-11-2011";</dd>
+          <dd>revised : "01-12-2011";</dd>
         </dl>
       </td>
     </tr>
@@ -2709,11 +3276,11 @@ dd {
           
           <tr>
             <th class="light-grey">Queries</th>
-            <td class="white spaced-lines">&quot;Are you a server or a client?&quot;,<br/>&quot;Are you connected?&quot;</td>
+            <td class="white spaced-lines">&quot;What is your connection id?&quot;,<br/>&quot;What is your local ip?&quot;</td>
           </tr>
           <tr>
             <th class="light-grey">Commands</th>
-            <td class="white spaced-lines">&quot;Send 'this' text string!&quot;</td>
+            <td class="white spaced-lines">&quot;Initiate connection and start receiving data!&quot;,<br/>&quot;Send 'this' string!&quot;</td>
           </tr>
           <tr>
             <th class="light-grey">Constraints</th>
@@ -2744,7 +3311,7 @@ dd {
           <dt>Indexing</dt>
           <dd>author : "Simon Westh Henriksen";</dd>
           <dd>created : "28-11-2011";</dd>
-          <dd>revised : "28-11-2011";</dd>
+          <dd>revised : "01-12-2011";</dd>
         </dl>
       </td>
     </tr>
@@ -2761,7 +3328,7 @@ dd {
           </tr>
           <tr>
             <th class="light-grey">Commands</th>
-            <td class="white spaced-lines"></td>
+            <td class="white spaced-lines">&quot;Give me an instance of you using 'this' ip and 'this' port!&quot;</td>
           </tr>
           <tr>
             <th class="light-grey">Constraints</th>
@@ -2792,7 +3359,7 @@ dd {
           <dt>Indexing</dt>
           <dd>author : "Simon Westh Henriksen";</dd>
           <dd>created : "28-11-2011";</dd>
-          <dd>revised : "28-11-2011";</dd>
+          <dd>revised : "01-12-2011";</dd>
         </dl>
       </td>
     </tr>
@@ -2809,7 +3376,7 @@ dd {
           </tr>
           <tr>
             <th class="light-grey">Commands</th>
-            <td class="white spaced-lines"></td>
+            <td class="white spaced-lines">&quot;Give me an instance of you using 'this' port!&quot;</td>
           </tr>
           <tr>
             <th class="light-grey">Constraints</th>
@@ -2840,7 +3407,7 @@ dd {
           <dt>Indexing</dt>
           <dd>author : "Simon Westh Henriksen";</dd>
           <dd>created : "28-11-2011";</dd>
-          <dd>revised : "29-11-2011";</dd>
+          <dd>revised : "01-12-2011";</dd>
         </dl>
       </td>
     </tr>
@@ -2854,11 +3421,99 @@ dd {
           </tr>
           <tr>
             <th class="light-grey">Commands</th>
-            <td class="white spaced-lines">&quot;Call 'this' method when 'this' event is fired!&quot;,<br/>&quot;Parse 'this' text string and fire the appropriate event!&quot;,<br/>&quot;Queue 'this' event!&quot;,<br/>&quot;Process your event queue!&quot;</td>
+            <td class="white spaced-lines">&quot;Call 'this' method when 'this' event is fired!&quot;,<br/>&quot;Parse 'this' text string and fire the appropriate event!&quot;,<br/>&quot;Queue 'this' event!&quot;,<br/>&quot;Queue 'this' event-string!&quot;,<br/>&quot;Process your event queue!&quot;</td>
+          </tr>
+          <tr>
+            <th class="light-grey">Constraints</th>
+            <td class="white spaced-lines">&quot;After game initialization, there must always be one event manager.&quot;</td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</div>
+
+<div class="top-level" id="class_chart:GAME_EVENT_ARGS">
+  <table class="outer">
+    <tr class="top">
+      <th class="type">CLASS</th>
+      <td class="name" colspan="2">GAME_EVENT_ARGS</td>
+      <td class="part"><strong>Part:</strong> 1/1</td>
+    </tr>
+    <tr class="middle">
+      <td class="explanation" colspan="2">
+        <dl>
+          <dt>Type Of Object</dt>
+          <dd>&quot;A base class containing arguments for events. This base class implements the required event arguments fields.&quot;</dd>
+        </dl>
+      </td>
+      <td class="indexing" colspan="2">
+        <dl>
+          <dt>Indexing</dt>
+          <dd>author : "Simon Westh Henriksen";</dd>
+          <dd>created : "01-12-2011";</dd>
+          <dd>revised : "01-12-2011";</dd>
+        </dl>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="4" class="bottom">
+        <table>
+          
+          <tr>
+            <th class="light-grey">Queries</th>
+            <td class="white spaced-lines">&quot;Who (player_id) sent you?&quot;,<br/>&quot;What is your event id?&quot;,<br/>&quot;What type of event are you?&quot;,<br/>&quot;Do you need a response?&quot;</td>
+          </tr>
+          <tr>
+            <th class="light-grey">Commands</th>
+            <td class="white spaced-lines">&quot;Populate yourself with arguments using this argument array.&quot;</td>
           </tr>
           <tr>
             <th class="light-grey">Constraints</th>
             <td class="white spaced-lines"></td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</div>
+
+<div class="top-level" id="class_chart:STATE_MANAGER">
+  <table class="outer">
+    <tr class="top">
+      <th class="type">CLASS</th>
+      <td class="name" colspan="2">STATE_MANAGER</td>
+      <td class="part"><strong>Part:</strong> 1/1</td>
+    </tr>
+    <tr class="middle">
+      <td class="explanation" colspan="2">
+        <dl>
+          <dt>Type Of Object</dt>
+          <dd>&quot;The handler of all states. Knows about the current state and what to do next.&quot;</dd>
+        </dl>
+      </td>
+      <td class="indexing" colspan="2">
+        <dl>
+          <dt>Indexing</dt>
+          <dd>author : "Martin Marcher";</dd>
+        </dl>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="4" class="bottom">
+        <table>
+          
+          <tr>
+            <th class="light-grey">Queries</th>
+            <td class="white spaced-lines">&quot;Can I have the unique object of this class?&quot;,<br/>&quot;What is the current state?&quot;,<br/>&quot;What was the previous 'n' states?&quot;,<br/>&quot;What are the next possible state(s)?&quot;</td>
+          </tr>
+          <tr>
+            <th class="light-grey">Commands</th>
+            <td class="white spaced-lines">&quot;&quot;</td>
+          </tr>
+          <tr>
+            <th class="light-grey">Constraints</th>
+            <td class="white spaced-lines">&quot;After game initiation, there must always be a current state&quot;</td>
           </tr>
         </table>
       </td>
@@ -2893,15 +3548,15 @@ dd {
           
           <tr>
             <th class="light-grey">Queries</th>
-            <td class="white spaced-lines">&quot;What is the current state?&quot;,<br/>&quot;What was the previous 'n' states?&quot;,<br/>&quot;What are the next possible	 state(s)?&quot;</td>
+            <td class="white spaced-lines">&quot;What is the current state?&quot;,<br/>&quot;What is the next state?&quot;,<br/>&quot;What was the previous 'n' states?&quot;,<br/>&quot;Going back, do I find this one before that?&quot;</td>
           </tr>
           <tr>
             <th class="light-grey">Commands</th>
-            <td class="white spaced-lines">&quot;Change to this state!&quot;,<br/>&quot;Notify me when you get to this state!&quot;,<br/>&quot;Place this state before the current state!&quot;</td>
+            <td class="white spaced-lines">&quot;Change to next state!&quot;,<br/>&quot;Place these states after the current state!&quot;</td>
           </tr>
           <tr>
             <th class="light-grey">Constraints</th>
-            <td class="white spaced-lines">&quot;After game initiation, there must always be a current state&quot;</td>
+            <td class="white spaced-lines">&quot;The StateMachine is only visible to the StateManager.&quot;</td>
           </tr>
         </table>
       </td>
@@ -2920,7 +3575,7 @@ dd {
       <td class="explanation" colspan="2">
         <dl>
           <dt>Type Of Object</dt>
-          <dd>&quot;&quot;</dd>
+          <dd>&quot;A collection of all different states.&quot;</dd>
         </dl>
       </td>
       <td class="indexing" colspan="2">
@@ -2936,53 +3591,7 @@ dd {
           
           <tr>
             <th class="light-grey">Queries</th>
-            <td class="white spaced-lines">&quot;Is this state done?&quot;,<br/>&quot;What was the previous state?&quot;,<br/>&quot;What are the next possible state(s)?&quot;</td>
-          </tr>
-          <tr>
-            <th class="light-grey">Commands</th>
-            <td class="white spaced-lines">&quot;This is the state machine! (you'll need it!)&quot;,<br/>&quot;This state is done!&quot;,<br/>&quot;The previous state was 'this'!&quot;,<br/>&quot;The next state must be 'this'!&quot;</td>
-          </tr>
-          <tr>
-            <th class="light-grey">Constraints</th>
-            <td class="white spaced-lines">&quot;A state must have a least one next possible state.&quot;</td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-  </table>
-</div>
-
-<div class="top-level" id="class_chart:STATE_GROUP">
-  <table class="outer">
-    <tr class="top">
-      <th class="type">CLASS</th>
-      <td class="name" colspan="2">STATE_GROUP</td>
-      <td class="part"><strong>Part:</strong> 1/1</td>
-    </tr>
-    <tr class="middle">
-      <td class="explanation" colspan="2">
-        <dl>
-          <dt>Type Of Object</dt>
-          <dd>&quot;&quot;</dd>
-        </dl>
-      </td>
-      <td class="indexing" colspan="2">
-        <dl>
-          <dt>Indexing</dt>
-          <dd>author : "Martin Marcher";</dd>
-        </dl>
-      </td>
-    </tr>
-    <tr>
-      <td colspan="4" class="bottom">
-        <table>
-          <tr>
-            <th class="light-grey">Inherits from</th>
-            <td class="white spaced-lines">STATE</td>
-          </tr>
-          <tr>
-            <th class="light-grey">Queries</th>
-            <td class="white spaced-lines">&quot;Which states do you hold?&quot;</td>
+            <td class="white spaced-lines">&quot;Can I have this state?&quot;</td>
           </tr>
           <tr>
             <th class="light-grey">Commands</th>
@@ -3007,7 +3616,7 @@ dd {
     <select id="sub-menu" onchange="showSelected();"><option>processing...</option></select>
   </p>
   <p id="right-footer">
-    Generated by <a href="http://kind.ucd.ie/products/opensource/BONc">BONc</a> (version: bonc-0.2.6) <a href="http://validator.w3.org/check?uri=referer">XHTML</a> output, 29-11-2011 14:54:15.
+    Generated by <a href="http://kind.ucd.ie/products/opensource/BONc">BONc</a> (version: bonc-0.2.6) <a href="http://validator.w3.org/check?uri=referer">XHTML</a> output, 04-12-2011 13:26:18.
   </p>
 </div>
 

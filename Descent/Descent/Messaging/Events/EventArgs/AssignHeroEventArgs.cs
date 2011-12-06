@@ -15,17 +15,17 @@ namespace Descent.Messaging.Events
     /// <summary>
     /// The event arguments for the PlayerJoined event.
     /// </summary>
-    public sealed class PlayerJoinedEventArgs : GameEventArgs
+    public sealed class AssignHeroEventArgs : GameEventArgs
     {
-        public PlayerJoinedEventArgs(int playerId, string playerNick)
+        public AssignHeroEventArgs(int playerId, int heroId)
         {
             Contract.Requires(playerId > 0);
-            Contract.Requires(playerNick != null);
+            Contract.Requires(heroId > 0);
             PlayerId = playerId;
-            PlayerNick = playerNick;
+            HeroId = heroId;
         }
 
-        public PlayerJoinedEventArgs(string[] stringArgs)
+        public AssignHeroEventArgs(string[] stringArgs)
         {
             Contract.Requires(stringArgs.Length >= 2);
             PopulateWithArgs(stringArgs);
@@ -33,18 +33,18 @@ namespace Descent.Messaging.Events
 
         public int PlayerId { get; set; }
 
-        public string PlayerNick { get; set; }
+        public int HeroId { get; set; }
 
         public override void PopulateWithArgs(string[] stringArgs)
         {
             Contract.Requires(stringArgs.Length >= 2);
-            this.PlayerId = int.Parse(stringArgs[0]);
-            PlayerNick = stringArgs[1];
+            PlayerId = int.Parse(stringArgs[0]);
+            HeroId = int.Parse(stringArgs[1]);
         }
 
         public override string ToString()
         {
-            return string.Join(",", this.PlayerId.ToString(), PlayerNick);
+            return string.Join(",", PlayerId.ToString(), HeroId.ToString());
         }
     }
 }

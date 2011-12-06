@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="ChatMessageEventArgs.cs" company="">
+// <copyright file="PlayerJoinedEventArgs.cs" company="">
 // TODO: Update copyright text.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -13,33 +13,35 @@ namespace Descent.Messaging.Events
     using System.Text;
 
     /// <summary>
-    /// The event arguments for the ChatMessage event.
+    /// The event arguments for the RemoveOverlordCard event.
     /// </summary>
-    public sealed class ChatMessageEventArgs : GameEventArgs
+    public sealed class OverlordCardEventArgs : GameEventArgs
     {
-        public ChatMessageEventArgs(string message)
+        public OverlordCardEventArgs(int overlordCardId)
         {
-            Contract.Requires(message != null);
-            Message = message;
+            Contract.Requires(overlordCardId > 0);
+
+            OverlordCardId = overlordCardId;
         }
 
-        public ChatMessageEventArgs(string[] stringArgs)
+        public OverlordCardEventArgs(string[] stringArgs)
         {
             Contract.Requires(stringArgs.Length >= 1);
             PopulateWithArgs(stringArgs);
         }
 
-        public string Message { get; set; }
+        public int OverlordCardId { get; set; }
 
         public override void PopulateWithArgs(string[] stringArgs)
         {
             Contract.Requires(stringArgs.Length >= 1);
-            Message = string.Concat(stringArgs);
+
+            OverlordCardId = int.Parse(stringArgs[0]);
         }
 
         public override string ToString()
         {
-            return Message;
+            return OverlordCardId.ToString();
         }
     }
 }
