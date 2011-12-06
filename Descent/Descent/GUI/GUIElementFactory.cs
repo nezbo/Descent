@@ -20,7 +20,7 @@
     {
         private static GUIElement CreateEmptyRoot(Game game)
         {
-            GUIElement result = new GUIElement(game, "state", 0, 0, game.Window.ClientBounds.Width, game.Window.ClientBounds.Height);
+            GUIElement result = new GUIElement(game, "state", 0, 0, game.GraphicsDevice.Viewport.Width, game.GraphicsDevice.Viewport.Height);
             result.SetDrawBackground(false);
 
             return result;
