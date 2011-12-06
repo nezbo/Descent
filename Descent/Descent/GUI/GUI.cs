@@ -4,8 +4,8 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Descent.GUI
 {
-    using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework;
+    using Microsoft.Xna.Framework.Graphics;
 
     /// <summary>
     /// Handles the visual aspects of the game and input
@@ -16,6 +16,11 @@ namespace Descent.GUI
     /// </author>
     public class GUI : DrawableGameComponent
     {
+        // static
+
+        public static SpriteFont Font { get; set; }
+
+        // dynamic
 
         //input
         private bool mouseDownBefore = false;
@@ -33,7 +38,8 @@ namespace Descent.GUI
         /// Creates a Graphical User Interface.
         /// </summary>
         /// <param name="draw">The surface to draw on.</param>
-        public GUI(Game game) : base(game)
+        public GUI(Game game)
+            : base(game)
         {
             this.lastKeyboardState = Keyboard.GetState();
 
@@ -48,7 +54,7 @@ namespace Descent.GUI
             draw.Begin();
             foreach (GUIElement element in layers)
             {
-                if(element != null) element.Draw(draw);
+                if (element != null) element.Draw(draw);
             }
             draw.End();
         }

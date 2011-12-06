@@ -1,6 +1,7 @@
-using Descent;
 using Descent.GUI;
+using Descent.Model;
 using Descent.Model.Player;
+using Descent.State;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -47,16 +48,15 @@ namespace EmilTests
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            Descent.GUIHolder.Font = Content.Load<SpriteFont>("font");
+            GUI.Font = Content.Load<SpriteFont>("font");
             // TODO: use this.Content to load your game content here
 
             // creation of elements
             this.gui = new GUI(this);
             GUIElement root = GUIElementFactory.CreateStateElement(this, Descent.State.State.ActivateMonsters, Descent.Model.Player.Role.Overlord);
-            GUIElement chat = new Chat(this);
-            GUIElement createGame = new GUIElement(this, "create", 100, 50, 300, 100);
-            GUIElement joinGame = new GUIElement(this, "join", 100, 350, 300, 100);
-            GUIElement changeName = new GUIElement(this, "changeName", 500, 50, 400, 100);
+            GUIElement createGame = new GUIElement(this, "create", 100, 250, 300, 100);
+            GUIElement joinGame = new GUIElement(this, "join", 100, 550, 300, 100);
+            GUIElement changeName = new GUIElement(this, "changeName", 500, 250, 400, 100);
             InputElement nameInput = new InputElement(this, "nameInput", changeName.Bound.X + 10, changeName.Bound.Y + (changeName.Bound.Height - 30) / 2, 150, 30);
             InputElement connectInput = new InputElement(this, "connectInput", joinGame.Bound.X + 10, joinGame.Bound.Y + (joinGame.Bound.Height - 30) / 2, 150, 30);
             GUIElement buttonCreateGame = new GUIElement(this, "doneCreate", createGame.Bound.X + 200, createGame.Bound.Y + (createGame.Bound.Height - 30) / 2, 80, 30);
@@ -66,7 +66,6 @@ namespace EmilTests
             // assembling tree
             root.AddChild(createGame);
             root.AddChild(joinGame);
-            root.AddChild(chat);
             root.AddChild(changeName);
             changeName.AddChild(nameInput);
             changeName.AddChild(buttonChangeName);
@@ -74,17 +73,24 @@ namespace EmilTests
             joinGame.AddChild(connectInput);
             joinGame.AddChild(buttonJoinGame);
 
+            // adding visual to tree
+            Image logo = new Image(Content.Load<Texture2D>("logo-descent"));
+            root.AddDrawable(root.Name, logo, new Vector2((root.Bound.Width - logo.Texture.Bounds.Width) / 2.0f, 50));
+
             // adding logic to tree
-            chat.SetBackground("chatbg");
             root.SetDrawBackground(false);
 
             root.AddClickAction(root.Name, n => System.Diagnostics.Debug.WriteLine("Root clicked"));
             root.AddText("doneCreate", "Create!", new Vector2(0, 0));
             root.AddText("doneJoin", "Join!", new Vector2(0, 0));
             root.AddText("doneName", "Change Name!", new Vector2(0, 0));
-            root.AddClickAction("doneName", n => n.Name = GUIHolder.GetInputFrom("nameInput"));
-            root.AddClickAction("doneCreate", n => n.StartGame(1337));
-            root.AddClickAction("doneJoin", n => n.JoinGame(GUIHolder.GetInputFrom("connectInput"), 1337));
+            root.AddClickAction("doneName", n => n.Name = InputElement.GetInputFrom("nameInput"));
+            root.AddClickAction("doneCreate", n => { n.StateManager = new StateManager(gui, new FullModel()); n.StartGame(1337); });
+            root.AddClickAction("doneJoin", n =>
+                                                {
+                                                    n.StateManager = new StateManager(gui, new FullModel());
+                                                    n.JoinGame(InputElement.GetInputFrom("connectInput"), 1337);
+                                                });
 
             // placing the root in the gui
             gui.ChangeStateGUI(root);

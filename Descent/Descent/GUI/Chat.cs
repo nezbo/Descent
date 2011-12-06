@@ -23,6 +23,7 @@
             manager.ChatMessageEvent += new ChatMessageHandler(GetMessage);
 
             this.SetDrawBackground(true);
+            this.SetBackground("chatbg");
         }
 
         private void GetMessage(object sender, ChatMessageEventArgs eventArgs)
@@ -50,8 +51,8 @@
             {
                 if (e.Name == "chatInput" && e.HasFocus() && key == Keys.Enter)
                 {
-                    SendMessage(GUIHolder.GetInputFrom("chatInput"));
-                    GUIHolder.SetInput("chatInput", "");
+                    SendMessage(InputElement.GetInputFrom("chatInput"));
+                    InputElement.SetInput("chatInput", "");
                 }
             }
         }
@@ -60,13 +61,13 @@
         {
             base.Draw(draw);
 
-            int textHeight = (int)GUIHolder.Font.MeasureString("A").Y;
+            int textHeight = (int)GUI.Font.MeasureString("A").Y;
             int yPos = Bound.Height * 2 - 80;
 
             LinkedListNode<string> currentNode = messages.First;
             while (yPos > Bound.Y && currentNode != null)
             {
-                draw.DrawString(GUIHolder.Font, currentNode.Value, new Vector2(10 + Bound.X, yPos), Color.Black);
+                draw.DrawString(GUI.Font, currentNode.Value, new Vector2(10 + Bound.X, yPos), Color.Black);
                 currentNode = currentNode.Next;
                 yPos -= textHeight;
             }

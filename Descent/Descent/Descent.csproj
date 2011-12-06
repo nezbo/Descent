@@ -77,7 +77,6 @@
     <Reference Include="System.Net" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GUIHolder.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="GUI\BoardGUIElement.cs" />
     <Compile Include="GUI\Chat.cs" />
@@ -85,6 +84,7 @@
     <Compile Include="GUI\GUI.cs" />
     <Compile Include="GUI\GUIElement.cs" />
     <Compile Include="GUI\GUIElementFactory.cs" />
+    <Compile Include="GUI\Image.cs" />
     <Compile Include="GUI\InputElement.cs" />
     <Compile Include="GUI\Text.cs" />
     <Compile Include="Messaging\AsyncSockets\AsyncSocketsClient.cs" />
@@ -120,7 +120,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sprite.cs" />
     <Compile Include="SpriteFactory.cs" />
-    <Compile Include="State\Model.cs" />
     <Compile Include="State\State.cs" />
     <Compile Include="State\StateMachine.cs" />
     <Compile Include="State\StateManager.cs" />

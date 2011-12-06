@@ -1,14 +1,10 @@
 ﻿namespace Descent.GUI
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using Microsoft.Xna.Framework.Graphics;
-    using Microsoft.Xna.Framework;
     using Descent.Model.Board;
     using Descent.Model.Player;
     using Descent.State;
+    using Microsoft.Xna.Framework;
+    using Microsoft.Xna.Framework.Graphics;
 
 
     /// <summary>
@@ -22,19 +18,22 @@
     /// </author>
     public class GUIElementFactory
     {
-        private static GUIElement CreateRoot(Game game)
+        private static GUIElement CreateEmptyRoot(Game game)
         {
-            return new GUIElement(game, "state", 0, 0, game.Window.ClientBounds.Width, game.Window.ClientBounds.Height);
+            GUIElement result = new GUIElement(game, "state", 0, 0, game.Window.ClientBounds.Width, game.Window.ClientBounds.Height);
+            result.SetDrawBackground(false);
+
+            return result;
         }
 
-        private static int RelW(GraphicsDevice graphics, int percentage)
+        private static int RelW(Viewport viewport, int percentage)
         {
-            return (int) (graphics.DisplayMode.Width*(3.0/4.0) * (percentage/100.0));
+            return (int)(viewport.Width * (3.0 / 4.0) * (percentage / 100.0));
         }
 
-        private static int RelH(GraphicsDevice graphics, int percentage)
+        private static int RelH(Viewport viewport, int percentage)
         {
-            return (int)(graphics.DisplayMode.Height * (percentage / 100.0));
+            return (int)(viewport.Height * (percentage / 100.0));
         }
 
         // public
@@ -46,20 +45,19 @@
 
         public static GUIElement CreateStateElement(Game game, State state, Role role)
         {
-            GraphicsDevice g = game.GraphicsDevice;
+            Viewport g = game.GraphicsDevice.Viewport;
 
-            GUIElement root = CreateRoot(game);
+            GUIElement root = CreateEmptyRoot(game);
 
-            switch(state)
+            switch (state)
             {
                 // TODO: fill the root here for all states that is drawn
                 case State.DrawHeroCard:
                     {
-                        GUIElement cardE = new GUIElement(game,"hero", RelW(g,25), RelH(g,40), RelW(g,50), RelH(g,20)); //TODO: proper values
+                        GUIElement cardE = new GUIElement(game, "hero", RelW(g, 25), RelH(g, 40), RelW(g, 50), RelH(g, 20)); //TODO: proper values
                         root.AddChild(cardE);
                         break;
                     }
-                default: { break; }
             }
 
             return root;
@@ -67,9 +65,9 @@
 
         public static GUIElement CreateMenuElement(Game game)
         {
-            GUIElement root = CreateRoot(game);
+            GUIElement root = CreateEmptyRoot(game);
 
-            //TODO: Fill with stuff to draw.
+            root.AddChild(new Chat(game));
 
             return root;
         }

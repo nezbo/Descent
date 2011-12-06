@@ -19,7 +19,7 @@ namespace Descent.State
     {
         private readonly StateMachine stateMachine;
         private readonly GUI gui;
-        private readonly Model model;
+        private readonly FullModel model;
         private HeroParty heroParty;
         private EventManager eventManager = Player.Instance.EventManager;
 
@@ -27,14 +27,14 @@ namespace Descent.State
         private Hero currentHero;
         private Collection<Hero> heroesYetToAct;
 
-        public StateManager(GUI gui, Model model)
+        public StateManager(GUI gui, FullModel model)
         {
             this.gui = gui;
             this.model = model;
             stateMachine = new StateMachine(new State[] { State.Initiation, State.NewRound });
             stateMachine.StateChanged += StateChanged;
 
-
+            gui.ChangeStateGUI(GUIElementFactory.CreateMenuElement(gui.Game));
         }
 
         public State CurrentState
@@ -78,21 +78,18 @@ namespace Descent.State
         {
             State newState = stateMachine.CurrentState;
 
-            GUIElement root;
-
-            //TODO: FIX GUIElement newGUIE = GUIElementFactory.CreateStateElement(gui.GraphicsDevice, newState, DetermineRole()); // get new GUIElement
+            GUIElement root = GUIElementFactory.CreateStateElement(gui.Game, State.DrawHeroCard, this.DetermineRole());
 
             switch (newState) // Fill in events and drawables
             {
                 case State.DrawHeroCard:
                     {
-                        root = GUIElementFactory.CreateStateElement(gui.Game, State.DrawHeroCard, this.DetermineRole());
                         root.AddClickAction("hero", n => n.EventManager.QueueEvent(EventType.AssignHero,/*WTF Simon??? WHAT DO I DO*/ null));
                         break;
                     }
             }
 
-            //gui.ChangeStateGUI(newGUIE); // change the GUI's state element.
+            gui.ChangeStateGUI(root); // change the GUI's state element.
         }
 
 
