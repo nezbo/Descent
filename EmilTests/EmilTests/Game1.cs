@@ -75,6 +75,9 @@ namespace EmilTests
             joinGame.AddChild(buttonJoinGame);
 
             // adding logic to tree
+            chat.SetBackground("chatbg");
+            root.SetDrawBackground(false);
+
             root.AddClickAction(root.Name, n => System.Diagnostics.Debug.WriteLine("Root clicked"));
             root.AddText("doneCreate", "Create!", new Vector2(0, 0));
             root.AddText("doneJoin", "Join!", new Vector2(0, 0));
@@ -121,7 +124,7 @@ namespace EmilTests
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.Yellow);
+            GraphicsDevice.Clear(Color.Black);
 
             // TODO: Add your drawing code here
             gui.Draw(spriteBatch);

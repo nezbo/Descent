@@ -9,16 +9,14 @@
 
     public class Chat : GUIElement
     {
-        private Text input;
         private LinkedList<string> messages;
 
         public Chat(Game game)
-            : base(game, "chat", (int)(game.Window.ClientBounds.Width * (3 / 4.0)), game.Window.ClientBounds.Height / 2, game.Window.ClientBounds.Width / 4 - 10, game.Window.ClientBounds.Height / 2)
+            : base(game, "chat", (int)(game.Window.ClientBounds.Width * (3 / 4.0)), game.Window.ClientBounds.Height / 2, game.Window.ClientBounds.Width / 4, game.Window.ClientBounds.Height / 2)
         {
-            //AddText("chat", "", new Vector2(10, Bound.Height - 50));
-            //input = texts[0];
-
-            AddChild(new InputElement(game, "chatInput", Bound.X + 10, Bound.Y + Bound.Height - 50, Bound.Width - 10, 50));
+            InputElement input = new InputElement(game, "chatInput", Bound.X + 10, Bound.Y + Bound.Height - 40, Bound.Width - 10, 40);
+            input.SetDrawBackground(false);
+            AddChild(input);
 
             messages = new LinkedList<string>();
 
