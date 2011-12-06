@@ -60,8 +60,10 @@
                         GUIElement p3 = new GUIElement(game, "player3", RelW(g, 56), RelH(g, 40), RelW(g, 20), RelH(g, 20));
                         GUIElement p4 = new GUIElement(game, "player4", RelW(g, 23), RelH(g, 65), RelW(g, 20), RelH(g, 20));
                         GUIElement p5 = new GUIElement(game, "player5", RelW(g, 56), RelH(g, 65), RelW(g, 20), RelH(g, 20));
+                        GUIElement ready = new GUIElement(game, "ready", RelW(g, 82), RelH(g, 85), RelW(g, 16), RelH(g,10));
 
                         root.AddChild(box);
+                        root.AddChild(ready);
                         box.AddChild(p1);
                         box.AddChild(p2);
                         box.AddChild(p3);
@@ -74,6 +76,7 @@
                         root.AddText("player3", "Hero:", pos);
                         root.AddText("player4", "Hero:", pos);
                         root.AddText("player5", "Hero:", pos);
+                        root.AddText("ready", "Ready", new Vector2(0, 0));
 
                         break;
                     }
