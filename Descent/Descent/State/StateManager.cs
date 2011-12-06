@@ -1,15 +1,20 @@
 using System.Collections.ObjectModel;
+
 using Descent.Model.Board;
 
 namespace Descent.State
 {
     using System.Diagnostics.Contracts;
-    using GUI;
-    using Messaging.Events;
-    using Model;
-    using Model.Player;
-    using Model.Player.Figure;
-    using Model.Player.Figure.HeroStuff;
+
+    using Descent.GUI;
+    using Descent.Messaging.Events;
+    using Descent.Model;
+    using Descent.Model.Player;
+    using Descent.Model.Player.Figure;
+    using Descent.Model.Player.Figure.HeroStuff;
+
+    using Microsoft.Xna.Framework;
+    using Microsoft.Xna.Framework.Graphics;
 
     /// <summary>
     /// The handler of all states. Knows about the current state and what to do next.
@@ -24,6 +29,10 @@ namespace Descent.State
         private EventManager eventManager = Player.Instance.EventManager;
 
         // fields for different game logic variables
+        // server only
+        private int ReadyCount = 0;
+
+        // other
         private Hero currentHero;
         private Collection<Hero> heroesYetToAct;
 
@@ -31,11 +40,57 @@ namespace Descent.State
         {
             this.gui = gui;
             this.model = model;
-            stateMachine = new StateMachine(new State[] { State.Initiation, State.NewRound });
+
+            // subscribe for events
+            eventManager.PlayerJoinedEvent += new PlayerJoinedHandler(PlayerJoined);
+            eventManager.PlayersInGameEvent += new PlayersInGameHandler(PlayersInGame);
+            eventManager.ReadyEvent += new ReadyHandler(ReadyEvent);
+
+            // initiate start
+            stateMachine = new StateMachine(new State[] { State.InLobby, State.NewRound });
             stateMachine.StateChanged += StateChanged;
 
-            gui.ChangeStateGUI(GUIElementFactory.CreateMenuElement(gui.Game));
+            StateChanged();
+            gui.CreateMenuGUI(model);
         }
+
+        // event handlers
+        private void PlayerJoined(object sender, PlayerJoinedEventArgs eventArgs)
+        {
+            Player.Instance.SetPlayerNick(eventArgs.PlayerId, eventArgs.PlayerNick);
+            if (Player.Instance.IsServer) eventManager.FirePlayersInGameEvent();
+            StateChanged();
+        }
+
+        private void PlayersInGame(object sender, PlayersInGameEventArgs eventArgs)
+        {
+            foreach (PlayerInGame p in eventArgs.Players)
+            {
+                Player.Instance.SetPlayerNick(p.Id, p.Nickname);
+            }
+        }
+
+        private void ReadyEvent(object sender, GameEventArgs eventArgs)
+        {
+            if (Player.Instance.IsServer)
+            {
+                ReadyCount++;
+                switch (stateMachine.CurrentState)
+                {
+                    case State.InLobby:
+                        {
+                            if (ReadyCount >= 3) // atleast three players in the game
+                            {
+                                stateMachine.ChangeToNextState();
+                            }
+                            ReadyCount = 0;
+                            break;
+                        }
+                }
+            }
+        }
+
+        // stuff?
 
         public State CurrentState
         {
@@ -74,14 +129,24 @@ namespace Descent.State
         /// <author>
         /// Emil Juul Jacobsen
         /// </author>
-        private void StateChanged() // should maybe be delegated to the statemachine?
+        private void StateChanged()
         {
             State newState = stateMachine.CurrentState;
 
-            GUIElement root = GUIElementFactory.CreateStateElement(gui.Game, State.DrawHeroCard, this.DetermineRole());
+            GUIElement root = GUIElementFactory.CreateStateElement(gui.Game, stateMachine.CurrentState, this.DetermineRole());
 
             switch (newState) // Fill in events and drawables
             {
+                case State.InLobby:
+                    {
+                        for (int i = 1; i <= 5; i++)
+                        {
+                            root.AddText("player" + i, Player.Instance.GetPlayerNick(i) ?? "", new Vector2(5, 50));
+                        }
+                        root.AddClickAction("ready", n => n.EventManager.QueueEvent(EventType.Ready,new GameEventArgs()));
+
+                        break;
+                    }
                 case State.DrawHeroCard:
                     {
                         root.AddClickAction("hero", n => n.EventManager.QueueEvent(EventType.AssignHero,/*WTF Simon??? WHAT DO I DO*/ null));
@@ -95,7 +160,7 @@ namespace Descent.State
 
         private void NewRound()
         {
-            Contract.Requires(CurrentState == State.Initiation); // TODO: Find the right state(s)
+            Contract.Requires(CurrentState == State.InLobby); // TODO: Find the right state(s)
             Contract.Ensures(CurrentState == State.WaitForHeroTurn);
 
             heroesYetToAct = new Collection<Hero>(heroParty.AllHeroes);

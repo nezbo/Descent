@@ -724,7 +724,7 @@ class_chart GUI
 	indexing
 		author: "Emil Juul Jacobsen";
 		created: "27-11-2011";
-		revised: "01-12-2011"
+		revised: "06-12-2011"
 	explanation
 		"Handles the visual aspects of the game and input from the user"
 	command
@@ -739,7 +739,7 @@ class_chart GUI_ELEMENT
 	indexing
 		author: "Emil Juul Jacobsen";
 		created: "27-11-2011";
-		revised: "01-12-2011";
+		revised: "06-12-2011";
 	explanation
 		"A single element of the user interface that, itself, can contain sub-elements"
 	query

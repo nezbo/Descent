@@ -72,6 +72,13 @@ namespace EmilTests
             joinGame.AddChild(buttonJoinGame);
 
             // adding visual to tree
+            changeName.SetBackground("boxbg");
+            joinGame.SetBackground("boxbg");
+            createGame.SetBackground("boxbg");
+            nameInput.SetBackground("boxbg");
+            connectInput.SetBackground("boxbg");
+            buttonCreateGame.SetBackground("boxbg");
+            buttonJoinGame.SetBackground("boxbg");
             Image logo = new Image(Content.Load<Texture2D>("logo-descent"));
             root.AddDrawable(root.Name, logo, new Vector2((root.Bound.Width - logo.Texture.Bounds.Width) / 2.0f, 50));
 
@@ -86,7 +93,7 @@ namespace EmilTests
                                                 {
                                                     if (InputElement.GetInputFrom("nameInput").Length > 0)
                                                     {
-                                                        n.Name = InputElement.GetInputFrom("nameInput");
+                                                        n.Nickname = InputElement.GetInputFrom("nameInput");
                                                     }
                                                     n.StateManager = new StateManager(gui, new FullModel());
                                                     n.StartGame(1337);
@@ -95,7 +102,7 @@ namespace EmilTests
                                                 {
                                                     if (InputElement.GetInputFrom("nameInput").Length > 0)
                                                     {
-                                                        n.Name = InputElement.GetInputFrom("nameInput");
+                                                        n.Nickname = InputElement.GetInputFrom("nameInput");
                                                     }
                                                     n.StateManager = new StateManager(gui, new FullModel());
                                                     n.JoinGame(InputElement.GetInputFrom("connectInput"), 1337);

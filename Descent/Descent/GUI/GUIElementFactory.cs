@@ -52,6 +52,34 @@
             switch (state)
             {
                 // TODO: fill the root here for all states that is drawn
+                case State.InLobby:
+                    {
+                        GUIElement box = new GUIElement(game, "players", RelW(g, 10), RelH(g, 10), RelW(g, 80), RelH(g, 80));
+                        GUIElement p1 = new GUIElement(game, "player1", RelW(g, 40), RelH(g, 15), RelW(g, 20), RelH(g, 20));
+                        GUIElement p2 = new GUIElement(game, "player2", RelW(g, 23), RelH(g, 40), RelW(g, 20), RelH(g, 20));
+                        GUIElement p3 = new GUIElement(game, "player3", RelW(g, 56), RelH(g, 40), RelW(g, 20), RelH(g, 20));
+                        GUIElement p4 = new GUIElement(game, "player4", RelW(g, 23), RelH(g, 65), RelW(g, 20), RelH(g, 20));
+                        GUIElement p5 = new GUIElement(game, "player5", RelW(g, 56), RelH(g, 65), RelW(g, 20), RelH(g, 20));
+                        GUIElement ready = new GUIElement(game, "ready", RelW(g, 82), RelH(g, 85), RelW(g, 16), RelH(g,10));
+
+                        root.AddChild(box);
+                        root.AddChild(ready);
+                        box.AddChild(p1);
+                        box.AddChild(p2);
+                        box.AddChild(p3);
+                        box.AddChild(p4);
+                        box.AddChild(p5);
+
+                        Vector2 pos = new Vector2(10, 15);
+                        root.AddText("player1", "Overlord:", pos);
+                        root.AddText("player2", "Hero:", pos);
+                        root.AddText("player3", "Hero:", pos);
+                        root.AddText("player4", "Hero:", pos);
+                        root.AddText("player5", "Hero:", pos);
+                        root.AddText("ready", "Ready", new Vector2(0, 0));
+
+                        break;
+                    }
                 case State.DrawHeroCard:
                     {
                         GUIElement cardE = new GUIElement(game, "hero", RelW(g, 25), RelH(g, 40), RelW(g, 50), RelH(g, 20)); //TODO: proper values
