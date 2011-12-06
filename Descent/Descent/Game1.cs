@@ -51,9 +51,7 @@ namespace XNATutorials
 
             //Make the mouse pointer visible in the game window
             this.IsMouseVisible = true;
-
-            FullModel.Game = this;
-
+            
             base.Initialize();
         }
 
@@ -157,6 +155,8 @@ namespace XNATutorials
                         break;
                 }
             }
+
+            FullModel.LoadContent(this);
         }
         /// <summary>
         /// UnloadContent will be called once per game and is the place to unload

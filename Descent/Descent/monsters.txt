@@ -3,23 +3,23 @@
 2,'Bane Spider',true,5,3/3/4/5,2,MAGIC,W G B,Poison/Web,2,2
 3,'Beastman',false,5,3/3/4/5,2,MELEE,R G,Damage 1,1,1
 4,'Beastman',true,5,3/3/4/5,3,MELEE,R G B,Damage 2/Command,1,1
-5,'Demon',false,3,9/10/11/11,4,MAGIC,W G Y Y,Aura Sorcery 2/Fear 1,2,2
-6,'Demon',true,3,10/10/11/12,5,MAGIC,W G G Y B,Aura Sorcery 3/Fear 2,2,2
-7,'Dragon',false,4,9/9/10/11,3,RANGED,U G Y Y,Burn/Breath/Pierce 5,2,3
-8,'Dragon',true,5,10/10/11/11,4,RANGED,U G Y Y B,Burn/Breath/Pierce 5/Fear 1,2,3
+//5,'Demon',false,3,9/10/11/11,4,MAGIC,W G Y Y,Aura Sorcery 2/Fear 1,2,2
+//6,'Demon',true,3,10/10/11/12,5,MAGIC,W G G Y B,Aura Sorcery 3/Fear 2,2,2
+//7,'Dragon',false,4,9/9/10/11,3,RANGED,U G Y Y,Burn/Breath/Pierce 5,2,3
+//8,'Dragon',true,5,10/10/11/11,4,RANGED,U G Y Y B,Burn/Breath/Pierce 5/Fear 1,2,3
 9,'Giant',false,4,9/9/10/11,5,MELEE,R G G Y,Reach/Stun,2,2
 10,'Giant',true,4,10/10/11/12,6,MELEE,R G G Y B,Reach/Stun/Sweep,2,2
 11,'Hell Hound',false,4,3/3/4/5,1,RANGED,B Y,Breath/Pierce 3,1,2
 12,'Hell Hound',true,4,4/4/5/6,2,RANGED,B Y B,Breath/Pierce 4/Aura,1,2
 13,'Manticore',false,4,5/5/6/7,2,RANGED,U G Y,Quick Shot/Pierce 2,2,2
 14,'Manticore',true,4,6/6/7/8,3,RANGED,U G Y B,Quick Shot/Pierce 3/Poison,2,2
-15,'Naga',false,3,5/5/6/7,3,MAGIC,W G Y,Grapple/Sorcery 1,2,2
-16,'Naga',true,3,6/6/7/8,4,MAGIC,W G Y B,Grapple/Sorcery 2/Command,2,2
+//15,'Naga',false,3,5/5/6/7,3,MAGIC,W G Y,Grapple/Sorcery 1,2,2
+//16,'Naga',true,3,6/6/7/8,4,MAGIC,W G Y B,Grapple/Sorcery 2/Command,2,2
 17,'Ogre',false,3,5/5/6/7,4,MELEE,R G G,Knockback,2,2
 18,'Ogre',true,3,6/6/7/8,5,MELEE,R G G B,Knockback/Undying,2,2
-19,'Razorwing',false,6,3/3/4/5,MELEE,R Y,Fly,1,1
-20,'Razorwing',true,8,4/4/5/6,MELEE,R Y B,Fly/Stun,1,1
-21,'Skeleton',false,5,2/2/3/4,RANGED,U G,Pierce 1/Range 1,1,1
-22,'Skeleton',true,5,3/3/4/5,RANGED,U G B,Pierce 1/Range 1,1,1
-23,'Sorcerer',false,4,3/3/4/5,MAGIC,W Y,Sorcery 3,1,1
-24,'Sorcerer',false,4,4/4/5/6,MAGIC,W Y B,Sorcery 4/Undying,1,1
+19,'Razorwing',false,6,3/3/4/5,3,MELEE,R Y,Fly,1,1
+20,'Razorwing',true,8,4/4/5/6,4,MELEE,R Y B,Fly/Stun,1,1
+21,'Skeleton',false,5,2/2/3/4,0,RANGED,U G,Pierce 1/Range 1,1,1
+22,'Skeleton',true,5,3/3/4/5,1,RANGED,U G B,Pierce 1/Range 1,1,1
+23,'Sorcerer',false,4,3/3/4/5,2,MAGIC,W Y,Sorcery 3,1,1
+24,'Sorcerer',false,4,4/4/5/6,3,MAGIC,W Y B,Sorcery 4/Undying,1,1

@@ -107,7 +107,7 @@ namespace Descent.Model.Player.Figure.HeroStuff
 
                 string diceString = data[9];
                 string[] diceArray = diceString.Split(' ');
-                List<Dice> diceList = diceArray.Select(Dice.GetDice).ToList();
+                List<Dice> diceList = diceArray.Select(FullModel.GetDice).ToList();
 
                 string abilitiesString = data[10];
                 string[] abilitiesArray = abilitiesString.Split('/');

@@ -18,7 +18,7 @@ namespace Descent.Model.Player.Figure.HeroStuff
     {
         public static SurgeAbility GetSurgeAbility(string surgeAbility)
         {
-            throw new NotImplementedException();
+            return new SurgeAbility();
         }
     }
 }
