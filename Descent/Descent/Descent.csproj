@@ -113,7 +113,6 @@
     <Compile Include="Model\Player\Figure\HeroStuff\Potion.cs" />
     <Compile Include="Model\Player\Figure\HeroStuff\Skill.cs" />
     <Compile Include="Model\Player\Figure\HeroStuff\SurgeAbility.cs" />
-    <Compile Include="Model\Player\Figure\HeroStuff\Weapon.cs" />
     <Compile Include="Model\Player\Figure\Monster.cs" />
     <Compile Include="Model\Player\HeroParty.cs" />
     <Compile Include="Model\Player\Player.cs" />
@@ -160,11 +159,15 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="equipment.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="quest1.map">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="dice.txt" />
     <Content Include="Game.ico" />
     <Content Include="monsters.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

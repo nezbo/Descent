@@ -359,9 +359,12 @@ class_chart EQUIPMENT
 		"What is your price?",
 		"How many hands do you use?",
 		"Are you tapped right now?",
-		"What are your abilities?"
+		"What are your abilities?",
+		"Are you equipped?"
 	command
-		"Tap/untap!"
+		"Tap/untap!",
+		"Equip to this hero!",
+		"Unequip from this hero!"
 	constraint
 		"An equipment may only be tapped one time per round"
 end
@@ -371,6 +374,9 @@ class_chart WEAPON
 		author: "Jonas Breindahl";
 		created: "21-11-2011";
 		revised: "21-11-2011"
+	query
+		"What surge abilities do you have?",
+		"What dice do you 
 	
 
 class_chart SURGE_ABILITY

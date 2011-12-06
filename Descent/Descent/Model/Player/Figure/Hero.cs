@@ -41,6 +41,8 @@ namespace Descent.Model.Player.Figure
         private Dictionary<EAttackType, int> numberOfSkills = new Dictionary<EAttackType, int>(); 
         private Dictionary<EAttackType, List<Skill>>  skills = new Dictionary<EAttackType, List<Skill>>();
 
+        private readonly Inventory inventory;
+
         #endregion
 
         #region Properties
@@ -71,6 +73,14 @@ namespace Descent.Model.Player.Figure
             get
             {
                 return fatigue;
+            }
+        }
+
+        public Inventory Inventory
+        {
+            get
+            {
+                return inventory;
             }
         }
 
