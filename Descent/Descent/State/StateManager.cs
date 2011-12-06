@@ -31,12 +31,26 @@ namespace Descent.State
         {
             this.gui = gui;
             this.model = model;
+
+            // subscribe for events
+            eventManager.PlayerJoinedEvent += new PlayerJoinedHandler(PlayerJoined);
+
+            // initiate start
             stateMachine = new StateMachine(new State[] { State.InLobby, State.NewRound });
             stateMachine.StateChanged += StateChanged;
 
             StateChanged();
             gui.CreateMenuGUI(model);
         }
+
+        // event handlers
+        private void PlayerJoined(object sender, PlayerJoinedEventArgs eventArgs)
+        {
+            //Player.Instance.OtherPlayers.Add(eventArgs.PlayerId, eventArgs.PlayerNick);
+            StateChanged();
+        }
+
+        // stuff?
 
         public State CurrentState
         {
