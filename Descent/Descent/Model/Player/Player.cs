@@ -127,6 +127,17 @@ namespace Descent.Model.Player
         } 
 
         /// <summary>
+        /// Gets the number of other players in the game.
+        /// </summary>
+        public int NumberOfOtherPlayers
+        {
+            get
+            {
+                return OtherPlayers.Count;
+            }
+        }
+
+        /// <summary>
         /// Gets or sets the StateManager.
         /// </summary>
         public StateManager StateManager

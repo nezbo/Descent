@@ -17,8 +17,7 @@ namespace Descent.Messaging.Events
     public class GameEventArgs : EventArgs
     {
         public GameEventArgs()
-        {
-            
+        {  
         }
 
         /// <summary>

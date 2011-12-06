@@ -176,7 +176,9 @@ namespace Descent.Messaging.Events
 
         private LinkedList<string> queue = new LinkedList<string>();
         private Dictionary<string, int> responses = new Dictionary<string, int>(); // Key is eventid and int is number of players who responded.
-        private int playerCount = 4; // TODO: Get from elsewhere
+
+        private bool awaitingResponses = false;
+        private int responsesReceivedCount = 0;
 
         private Random random = new Random();
 
@@ -381,173 +383,184 @@ namespace Descent.Messaging.Events
         {
             Console.WriteLine("[{0}]: {1}", eventArgs.SenderId, eventType.ToString());
 
+            // If I am the player who sent this message (aka it did not come through the network)
+            // and the event needs responses, then prepare for collecting responses.
+            if (eventArgs.SenderId == Player.Instance.Id && eventArgs.NeedResponse)
+            {
+                Console.WriteLine("Awaiting responses from other players");
+                responses[eventArgs.EventId] = 0;
+                awaitingResponses = true;
+            }
+
+            // Fire the actual event.
             switch (eventType)
             {
                 case EventType.PlayerJoined:
-                    PlayerJoinedEvent(this, (PlayerJoinedEventArgs)eventArgs);
+                    if (PlayerJoinedEvent != null) PlayerJoinedEvent(this, (PlayerJoinedEventArgs)eventArgs);
                     break;
                 case EventType.PlayersInGame:
-                    PlayersInGameEvent(this, (PlayersInGameEventArgs)eventArgs);
+                    if (PlayersInGameEvent != null) PlayersInGameEvent(this, (PlayersInGameEventArgs)eventArgs);
                     break;
                 case EventType.RequestOverlord:
-                    RequestOverlordEvent(this, eventArgs);
+                    if (RequestOverlordEvent != null) RequestOverlordEvent(this, eventArgs);
                     break;
                 case EventType.OverlordIs:
-                    OverlordIsEvent(this, (OverlordIsEventArgs)eventArgs);
+                    if (OverlordIsEvent != null) OverlordIsEvent(this, (OverlordIsEventArgs)eventArgs);
                     break;
                 case EventType.Ready:
-                    ReadyEvent(this, eventArgs);
+                    if (ReadyEvent != null) ReadyEvent(this, eventArgs);
                     break;
                 case EventType.AssignHero:
-                    AssignHeroEvent(this, (AssignHeroEventArgs)eventArgs);
+                    if (AssignHeroEvent != null) AssignHeroEvent(this, (AssignHeroEventArgs)eventArgs);
                     break;
                 case EventType.GiveHeroCards:
-                    GiveHeroCardsEvent(this, (GiveHeroCardsEventArgs)eventArgs);
+                    if (GiveHeroCardsEvent != null) GiveHeroCardsEvent(this, (GiveHeroCardsEventArgs)eventArgs);
                     break;
                 case EventType.TradeHeroCard:
-                    TradeHeroCardEvent(this, (TradeHeroCardEventArgs)eventArgs);
+                    if (TradeHeroCardEvent != null) TradeHeroCardEvent(this, (TradeHeroCardEventArgs)eventArgs);
                     break;
                 case EventType.AcceptHeroCard:
-                    AcceptHeroCardsEvent(this, eventArgs);
+                    if (AcceptHeroCardsEvent != null) AcceptHeroCardsEvent(this, eventArgs);
                     break;
                 case EventType.BeginGame:
-                    BeginGameEvent(this, eventArgs);
+                    if (BeginGameEvent != null) BeginGameEvent(this, eventArgs);
                     break;
                 case EventType.NewRound:
-                    NewRoundEvent(this, eventArgs);
+                    if (NewRoundEvent != null) NewRoundEvent(this, eventArgs);
                     break;
                 case EventType.NoAction:
-                    NoActionEvent(this, eventArgs);
-                    // TODO: LOG NO RESPONSE AddResponse
+                    if (NoActionEvent != null) NoActionEvent(this, eventArgs);
+                    AddResponse();
                     break;
                 case EventType.Wait:
-                    WaitEvent(this, eventArgs);
+                    if (WaitEvent != null) WaitEvent(this, eventArgs);
+                    awaitingResponses = false;
                     break;
                 case EventType.ChatMessage:
-                    ChatMessageEvent(this, (ChatMessageEventArgs)eventArgs);
+                    if (ChatMessageEvent != null) ChatMessageEvent(this, (ChatMessageEventArgs)eventArgs);
                     break;
                 case EventType.RequestBuyEquipment:
-                    RequestBuyEquipmentEvent(this, (RequestBuyEquipmentEventArgs)eventArgs);
+                    if (RequestBuyEquipmentEvent != null) RequestBuyEquipmentEvent(this, (RequestBuyEquipmentEventArgs)eventArgs);
                     break;
                 case EventType.GiveEquipment:
-                    GiveEquipmentEvent(this, (GiveEquipmentEventArgs)eventArgs);
+                    if (GiveEquipmentEvent != null) GiveEquipmentEvent(this, (GiveEquipmentEventArgs)eventArgs);
                     break;
                 case EventType.RequestBuyPotion:
-                    RequestBuyEquipmentEvent(this, (RequestBuyEquipmentEventArgs)eventArgs);
+                    if (RequestBuyPotionEvent != null) RequestBuyPotionEvent(this, (RequestBuyPotionEventArgs)eventArgs);
                     break;
                 case EventType.GivePotion:
-                    GivePotionEvent(this, (GivePotionEventArgs)eventArgs);
+                    if (GivePotionEvent != null) GivePotionEvent(this, (GivePotionEventArgs)eventArgs);
                     break;
                 case EventType.FinishedBuy:
-                    FinishedBuyEvent(this, eventArgs);
+                    if (FinishedBuyEvent != null) FinishedBuyEvent(this, eventArgs);
                     break;
                 case EventType.GiveConquestToken:
-                    GiveConquestTokenEvent(this, (TokenEventArgs)eventArgs);
+                    if (GiveConquestTokenEvent != null) GiveConquestTokenEvent(this, (TokenEventArgs)eventArgs);
                     break;
                 case EventType.GiveCoins:
-                    GiveCoinsEvent(this, (GiveCoinsEventArgs)eventArgs);
+                    if (GiveCoinsEvent != null) GiveCoinsEvent(this, (GiveCoinsEventArgs)eventArgs);
                     break;
                 case EventType.GiveOverlordCards:
-                    GiveOverlordCardsEvent(this, (GiveOverlordCardsEventArgs)eventArgs);
+                    if (GiveOverlordCardsEvent != null) GiveOverlordCardsEvent(this, (GiveOverlordCardsEventArgs)eventArgs);
                     break;
                 case EventType.RemoveOverlordCard:
-                    RemoveOverlordCardEvent(this, (OverlordCardEventArgs)eventArgs);
+                    if (RemoveOverlordCardEvent != null) RemoveOverlordCardEvent(this, (OverlordCardEventArgs)eventArgs);
                     break;
                 case EventType.GiveThreatTokens:
-                    GiveThreatTokensEvent(this, (TokenEventArgs)eventArgs);
+                    if (GiveThreatTokensEvent != null) GiveThreatTokensEvent(this, (TokenEventArgs)eventArgs);
                     break;
                 case EventType.RemoveThreatTokens:
-                    RemoveThreatTokensEvent(this, (TokenEventArgs)eventArgs);
+                    if (RemoveThreatTokensEvent != null) RemoveThreatTokensEvent(this, (TokenEventArgs)eventArgs);
                     break;
                 case EventType.StartPlacement:
-                    StartPlacementEvent(this, eventArgs);
+                    if (StartPlacementEvent != null) StartPlacementEvent(this, eventArgs);
                     break;
                 case EventType.RequestPlacement:
-                    RequestPlacementEvent(this, (CoordinatesEventArgs)eventArgs);
+                    if (RequestPlacementEvent != null) RequestPlacementEvent(this, (CoordinatesEventArgs)eventArgs);
                     break;
                 case EventType.PlaceHero:
-                    PlaceHeroEvent(this, (PlaceHeroEventArgs)eventArgs);
+                    if (PlaceHeroEvent != null) PlaceHeroEvent(this, (PlaceHeroEventArgs)eventArgs);
                     break;
                 case EventType.DenyPlacement:
-                    DenyPlacementEvent(this, (PlayerEventArgs)eventArgs);
+                   if (DenyPlacementEvent != null) DenyPlacementEvent(this, (PlayerEventArgs)eventArgs);
                     break;
                 case EventType.RequestTurn:
-                    RequestTurnEvent(this, eventArgs);
+                    if (RequestTurnEvent != null) RequestTurnEvent(this, eventArgs);
                     break;
                 case EventType.TurnChanged:
-                    TurnChangedEvent(this, (PlayerEventArgs)eventArgs);
+                    if (TurnChangedEvent != null) TurnChangedEvent(this, (PlayerEventArgs)eventArgs);
                     break;
                 case EventType.DenyTurnRequest:
-                    DenyTurnRequestEvent(this, (PlayerEventArgs)eventArgs);
+                    if (DenyTurnRequestEvent != null) DenyTurnRequestEvent(this, (PlayerEventArgs)eventArgs);
                     break;
                 case EventType.FinishedTurn:
-                    FinishedTurnEvent(this, eventArgs);
+                    if (FinishedTurnEvent != null) FinishedTurnEvent(this, eventArgs);
                     break;
                 case EventType.FinishedReequip:
-                    FinishedReequipEvent(this, eventArgs);
+                    if (FinishedReequipEvent != null) FinishedReequipEvent(this, eventArgs);
                     break;
                 case EventType.ChooseAction:
-                    ChooseActionEvent(this, (ChooseActionEventArgs)eventArgs);
+                    if (ChooseActionEvent != null) ChooseActionEvent(this, (ChooseActionEventArgs)eventArgs);
                     break;
                 case EventType.AddFatigue:
-                    AddFatigueEvent(this, (PointsEventArgs)eventArgs);
+                    if (AddFatigueEvent != null) AddFatigueEvent(this, (PointsEventArgs)eventArgs);
                     break;
                 case EventType.RemoveFatigue:
-                    RemoveFatigueEvent(this, (PointsEventArgs)eventArgs);
+                    if (RemoveFatigueEvent != null) RemoveFatigueEvent(this, (PointsEventArgs)eventArgs);
                     break;
                 case EventType.AddMovement:
-                    AddMovementEvent(this, (PointsEventArgs)eventArgs);
+                    if (AddMovementEvent != null) AddMovementEvent(this, (PointsEventArgs)eventArgs);
                     break;
                 case EventType.RemoveFromInventory:
-                    RemoveFromInventoryEvent(this, (InventoryFieldEventArgs)eventArgs);
+                    if (RemoveFromInventoryEvent != null) RemoveFromInventoryEvent(this, (InventoryFieldEventArgs)eventArgs);
                     break;
                 case EventType.UseOverlordCard:
-                    UseOverlordCardEvent(this, (OverlordCardEventArgs)eventArgs);
+                    if (UseOverlordCardEvent != null) UseOverlordCardEvent(this, (OverlordCardEventArgs)eventArgs);
                     break;
                 case EventType.AddPowerOverlordCard:
-                    AddPowerOverlordCardEvent(this, (OverlordCardEventArgs)eventArgs);
+                    if (AddPowerOverlordCardEvent != null) AddPowerOverlordCardEvent(this, (OverlordCardEventArgs)eventArgs);
                     break;
                 case EventType.SpawnMonster:
-                    SpawnMonsterEvent(this, (SpawnMonsterEventArgs)eventArgs);
+                    if (SpawnMonsterEvent != null) SpawnMonsterEvent(this, (SpawnMonsterEventArgs)eventArgs);
                     break;
                 case EventType.SpawnFinished:
-                    SpawnFinishedEvent(this, eventArgs);
+                    if (SpawnFinishedEvent != null) SpawnFinishedEvent(this, eventArgs);
                     break;
                 case EventType.StartMonsterTurn:
-                    StartMonsterTurnEvent(this, (CoordinatesEventArgs)eventArgs);
+                    if (StartMonsterTurnEvent != null) StartMonsterTurnEvent(this, (CoordinatesEventArgs)eventArgs);
                     break;
                 case EventType.EndMonsterTurn:
-                    EndMonsterTurnEvent(this, eventArgs);
+                    if (EndMonsterTurnEvent != null) EndMonsterTurnEvent(this, eventArgs);
                     break;
                 case EventType.MoveTo:
-                    MoveToEvent(this, (CoordinatesEventArgs)eventArgs);
+                    if (MoveToEvent != null) MoveToEvent(this, (CoordinatesEventArgs)eventArgs);
                     break;
                 case EventType.OpenChest:
-                    OpenChestEvent(this, (ChestEventArgs)eventArgs);
+                    if (OpenChestEvent != null) OpenChestEvent(this, (ChestEventArgs)eventArgs);
                     break;
                 case EventType.OpenDoor:
-                    OpenDoorEvent(this, (CoordinatesEventArgs)eventArgs);
+                    if (OpenDoorEvent != null) OpenDoorEvent(this, (CoordinatesEventArgs)eventArgs);
                     break;
                 case EventType.AttackSquare:
-                    AttackSquareEvent(this, (CoordinatesEventArgs)eventArgs);
+                    if (AttackSquareEvent != null) AttackSquareEvent(this, (CoordinatesEventArgs)eventArgs);
                     break;
                 case EventType.RolledDices:
-                    RolledDicesEvent(this, (RolledDicesEventArgs)eventArgs);
+                    if (RolledDicesEvent != null) RolledDicesEvent(this, (RolledDicesEventArgs)eventArgs);
                     break;
                 case EventType.SendDamage:
-                    SendDamageEvent(this, (DamageEventArgs)eventArgs);
+                    if (SendDamageEvent != null) SendDamageEvent(this, (DamageEventArgs)eventArgs);
                     break;
                 case EventType.RerollDices:
-                    RerollDicesEvent(this, (RerollDicesEventArgs)eventArgs);
+                    if (RerollDicesEvent != null) RerollDicesEvent(this, (RerollDicesEventArgs)eventArgs);
                     break;
                 case EventType.KilledFigure:
-                    KilledFigureEvent(this, (CoordinatesEventArgs)eventArgs);
+                    if (KilledFigureEvent != null) KilledFigureEvent(this, (CoordinatesEventArgs)eventArgs);
                     break;
                 case EventType.DamageTaken:
-                    DamageTakenEvent(this, (DamageEventArgs)eventArgs);
+                    if (DamageTakenEvent != null) DamageTakenEvent(this, (DamageEventArgs)eventArgs);
                     break;
                 case EventType.MissedAttack:
-                    MissedAttackEvent(this, (PlayerEventArgs)eventArgs);
+                    if (MissedAttackEvent != null) MissedAttackEvent(this, (PlayerEventArgs)eventArgs);
                     break;
             }
 
@@ -565,17 +578,37 @@ namespace Descent.Messaging.Events
         /// <param name="eventId">The event id of response.</param>
         private void AddResponse(string eventId)
         {
-            if (!responses.ContainsKey(eventId))
-            {
-                responses.Add(eventId, 0);
-            }
-            responses[eventId]++;
 
-            // If we have received responses from everyone but the player itself, we can fire the event and delete from the dictionary.
-            if (responses[eventId] >= playerCount - 1)
+            // We should only take action if we have prepared to receive the responses by putting the key into the dictionary.
+            // If we see the key in there, we know we're supposed to collect responses.
+            if (responses.ContainsKey(eventId))
             {
-                this.AllRespondedNoActionEvent(this, new EventArgs());
-                responses.Remove(eventId);
+                responses[eventId]++;
+
+                // If we have received responses from everyone but the player itself, we can fire the event and delete from the dictionary.
+                if (responses[eventId] >= Player.Instance.NumberOfOtherPlayers - 1)
+                {
+                    AllRespondedNoActionEvent(this, new EventArgs());
+                    responses.Remove(eventId);
+                }
+            } 
+        }
+
+        private void AddResponse()
+        {
+
+            // We should only take action if we have prepared to receive the responses by putting the key into the dictionary.
+            // If we see the key in there, we know we're supposed to collect responses.
+            if (awaitingResponses)
+            {
+                responsesReceivedCount++;
+
+                // If we have received responses from everyone but the player itself, we can fire the event and delete from the dictionary.
+                if (responsesReceivedCount >= Player.Instance.NumberOfOtherPlayers - 1)
+                {
+                    AllRespondedNoActionEvent(this, new EventArgs());
+                    awaitingResponses = false;
+                }
             }
         }
 
@@ -602,8 +635,129 @@ namespace Descent.Messaging.Events
         {
             switch (eventType)
             {
+                case EventType.PlayerJoined:
+                    return new PlayerJoinedEventArgs(args);
+                    break;
+                case EventType.PlayersInGame:
+                    return new PlayersInGameEventArgs(args);
+                    break;
+                case EventType.OverlordIs:
+                    return new OverlordIsEventArgs(args);
+                    break;
+                case EventType.AssignHero:
+                    return new AssignHeroEventArgs(args);
+                    break;
+                case EventType.GiveHeroCards:
+                    return new GiveHeroCardsEventArgs(args);
+                    break;
+                case EventType.TradeHeroCard:
+                    return new TradeHeroCardEventArgs(args);
+                    break;
                 case EventType.ChatMessage:
                     return new ChatMessageEventArgs(args);
+                    break;
+                case EventType.RequestBuyEquipment:
+                    return new RequestBuyEquipmentEventArgs(args);
+                    break;
+                case EventType.GiveEquipment:
+                    return new GiveEquipmentEventArgs(args);
+                    break;
+                case EventType.RequestBuyPotion:
+                    return new GiveEquipmentEventArgs(args);
+                    break;
+                case EventType.GivePotion:
+                    return new GivePotionEventArgs(args);
+                    break;
+                case EventType.GiveConquestToken:
+                    return new TokenEventArgs(args);
+                    break;
+                case EventType.GiveCoins:
+                    return new GiveCoinsEventArgs(args);
+                    break;
+                case EventType.GiveOverlordCards:
+                    return new GiveOverlordCardsEventArgs(args);
+                    break;
+                case EventType.RemoveOverlordCard:
+                    return new OverlordCardEventArgs(args);
+                    break;
+                case EventType.GiveThreatTokens:
+                    return new TokenEventArgs(args);
+                    break;
+                case EventType.RemoveThreatTokens:
+                    return new TokenEventArgs(args);
+                    break;
+                case EventType.RequestPlacement:
+                    return new CoordinatesEventArgs(args);
+                    break;
+                case EventType.PlaceHero:
+                    return new PlaceHeroEventArgs(args);
+                    break;
+                case EventType.DenyPlacement:
+                    return new PlayerEventArgs(args);
+                    break;
+                case EventType.TurnChanged:
+                    return new PlayerEventArgs(args);
+                    break;
+                case EventType.DenyTurnRequest:
+                    return new PlayerEventArgs(args);
+                    break;
+                case EventType.ChooseAction:
+                    return new ChooseActionEventArgs(args);
+                    break;
+                case EventType.AddFatigue:
+                    return new PointsEventArgs(args);
+                    break;
+                case EventType.RemoveFatigue:
+                    return new PointsEventArgs(args);
+                    break;
+                case EventType.AddMovement:
+                    return new PointsEventArgs(args);
+                    break;
+                case EventType.RemoveFromInventory:
+                    return new InventoryFieldEventArgs(args);
+                    break;
+                case EventType.UseOverlordCard:
+                    return new OverlordCardEventArgs(args);
+                    break;
+                case EventType.AddPowerOverlordCard:
+                    return new OverlordCardEventArgs(args);
+                    break;
+                case EventType.SpawnMonster:
+                    return new SpawnMonsterEventArgs(args);
+                    break;
+                case EventType.StartMonsterTurn:
+                    return new CoordinatesEventArgs(args);
+                    break;
+                case EventType.MoveTo:
+                    return new CoordinatesEventArgs(args);
+                    break;
+                case EventType.OpenChest:
+                    return new ChestEventArgs(args);
+                    break;
+                case EventType.OpenDoor:
+                    return new CoordinatesEventArgs(args); 
+                    break;
+                case EventType.AttackSquare:
+                    return new CoordinatesEventArgs(args);
+                    break;
+                case EventType.RolledDices:
+                    return new RolledDicesEventArgs(args);
+                    break;
+                case EventType.SendDamage:
+                    return new DamageEventArgs(args);
+                    break;
+                case EventType.RerollDices:
+                    return new RerollDicesEventArgs(args);
+                    break;
+                case EventType.KilledFigure:
+                    return new CoordinatesEventArgs(args);
+                    break;
+                case EventType.DamageTaken:
+                    return new DamageEventArgs(args);
+                    break;
+                case EventType.MissedAttack:
+                    return new PlayerEventArgs(args);
+                    break;
                 default:
                     return new GameEventArgs();
             }

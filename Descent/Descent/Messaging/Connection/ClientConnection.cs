@@ -66,7 +66,7 @@ namespace Descent.Messaging.Connection
                 Console.WriteLine("RECEIVED ID: " + client.Id);
                 
                 // PlayerJoined event
-                Player.Instance.EventManager.QueueEvent(EventType.PlayerJoined, new PlayerJoinedEventArgs(client.Id, Player.Instance.Name)); // TODO: Insert player nickname
+                Player.Instance.EventManager.QueueEvent(EventType.PlayerJoined, new PlayerJoinedEventArgs(client.Id, Player.Instance.Name));
             }
             else
             {
