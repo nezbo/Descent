@@ -16,7 +16,10 @@ namespace Descent.Messaging.Events
     /// </summary>
     public class GameEventArgs : EventArgs
     {
-        public GameEventArgs() { }
+        public GameEventArgs()
+        {
+            
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GameEventArgs"/> class. 
@@ -48,7 +51,7 @@ namespace Descent.Messaging.Events
         /// <summary>
         /// This should return the special message arguments, seperated by a "," in the right order.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Event arguments as the formated comma-seperated string.</returns>
         public override string ToString()
         {
             return string.Empty;

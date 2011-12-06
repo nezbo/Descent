@@ -132,7 +132,7 @@ namespace Descent.Messaging.Events
 
     #region Movement types
 
-    public delegate void MoveToHandler(object sender, GameEventArgs eventArgs);
+    public delegate void MoveToHandler(object sender, CoordinatesEventArgs eventArgs);
 
     public delegate void OpenChestHandler(object sender, ChestEventArgs eventArgs);
 
@@ -158,6 +158,12 @@ namespace Descent.Messaging.Events
 
     #endregion
 
+    #region Internal only
+
+    public delegate void SquareMarkedHandler(object sender, CoordinatesEventArgs eventArgs);
+
+    #endregion
+    
     public delegate void AllRespondedNoActionHandler(object sender, EventArgs eventArgs); // Special delegate, contains no eventArgs info.
     #endregion
 
@@ -226,7 +232,11 @@ namespace Descent.Messaging.Events
 
         public event RemoveThreatTokensHandler RemoveThreatTokensEvent;
 
+        public event StartPlacementHandler StartPlacementEvent;
+        
         public event RequestPlacementHandler RequestPlacementEvent;
+
+        public event PlaceHeroHandler PlaceHeroEvent;
 
         public event DenyPlacementHandler DenyPlacementEvent;
 
@@ -266,6 +276,8 @@ namespace Descent.Messaging.Events
 
         public event OpenChestHandler OpenChestEvent;
 
+        public event OpenDoorHandler OpenDoorEvent;
+
         public event AttackSquareHandler AttackSquareEvent;
 
         public event RolledDicesHandler RolledDicesEvent;
@@ -281,6 +293,12 @@ namespace Descent.Messaging.Events
         public event MissedAttackHandler MissedAttackEvent;
 
         public event AllRespondedNoActionHandler AllRespondedNoActionEvent;
+
+        #region Internal only
+
+        public event SquareMarkedHandler SquareMarkedEvent;
+
+        #endregion
 
         #endregion
 
@@ -365,11 +383,171 @@ namespace Descent.Messaging.Events
 
             switch (eventType)
             {
+                case EventType.PlayerJoined:
+                    PlayerJoinedEvent(this, (PlayerJoinedEventArgs)eventArgs);
+                    break;
+                case EventType.PlayersInGame:
+                    PlayersInGameEvent(this, (PlayersInGameEventArgs)eventArgs);
+                    break;
+                case EventType.RequestOverlord:
+                    RequestOverlordEvent(this, eventArgs);
+                    break;
+                case EventType.OverlordIs:
+                    OverlordIsEvent(this, (OverlordIsEventArgs)eventArgs);
+                    break;
+                case EventType.Ready:
+                    ReadyEvent(this, eventArgs);
+                    break;
+                case EventType.AssignHero:
+                    AssignHeroEvent(this, (AssignHeroEventArgs)eventArgs);
+                    break;
+                case EventType.GiveHeroCards:
+                    GiveHeroCardsEvent(this, (GiveHeroCardsEventArgs)eventArgs);
+                    break;
+                case EventType.TradeHeroCard:
+                    TradeHeroCardEvent(this, (TradeHeroCardEventArgs)eventArgs);
+                    break;
+                case EventType.AcceptHeroCard:
+                    AcceptHeroCardsEvent(this, eventArgs);
+                    break;
+                case EventType.BeginGame:
+                    BeginGameEvent(this, eventArgs);
+                    break;
+                case EventType.NewRound:
+                    NewRoundEvent(this, eventArgs);
+                    break;
                 case EventType.NoAction:
-                    AddResponse(eventArgs.EventId);
+                    NoActionEvent(this, eventArgs);
+                    // TODO: LOG NO RESPONSE AddResponse
+                    break;
+                case EventType.Wait:
+                    WaitEvent(this, eventArgs);
                     break;
                 case EventType.ChatMessage:
                     ChatMessageEvent(this, (ChatMessageEventArgs)eventArgs);
+                    break;
+                case EventType.RequestBuyEquipment:
+                    RequestBuyEquipmentEvent(this, (RequestBuyEquipmentEventArgs)eventArgs);
+                    break;
+                case EventType.GiveEquipment:
+                    GiveEquipmentEvent(this, (GiveEquipmentEventArgs)eventArgs);
+                    break;
+                case EventType.RequestBuyPotion:
+                    RequestBuyEquipmentEvent(this, (RequestBuyEquipmentEventArgs)eventArgs);
+                    break;
+                case EventType.GivePotion:
+                    GivePotionEvent(this, (GivePotionEventArgs)eventArgs);
+                    break;
+                case EventType.FinishedBuy:
+                    FinishedBuyEvent(this, eventArgs);
+                    break;
+                case EventType.GiveConquestToken:
+                    GiveConquestTokenEvent(this, (TokenEventArgs)eventArgs);
+                    break;
+                case EventType.GiveCoins:
+                    GiveCoinsEvent(this, (GiveCoinsEventArgs)eventArgs);
+                    break;
+                case EventType.GiveOverlordCards:
+                    GiveOverlordCardsEvent(this, (GiveOverlordCardsEventArgs)eventArgs);
+                    break;
+                case EventType.RemoveOverlordCard:
+                    RemoveOverlordCardEvent(this, (OverlordCardEventArgs)eventArgs);
+                    break;
+                case EventType.GiveThreatTokens:
+                    GiveThreatTokensEvent(this, (TokenEventArgs)eventArgs);
+                    break;
+                case EventType.RemoveThreatTokens:
+                    RemoveThreatTokensEvent(this, (TokenEventArgs)eventArgs);
+                    break;
+                case EventType.StartPlacement:
+                    StartPlacementEvent(this, eventArgs);
+                    break;
+                case EventType.RequestPlacement:
+                    RequestPlacementEvent(this, (CoordinatesEventArgs)eventArgs);
+                    break;
+                case EventType.PlaceHero:
+                    PlaceHeroEvent(this, (PlaceHeroEventArgs)eventArgs);
+                    break;
+                case EventType.DenyPlacement:
+                    DenyPlacementEvent(this, (PlayerEventArgs)eventArgs);
+                    break;
+                case EventType.RequestTurn:
+                    RequestTurnEvent(this, eventArgs);
+                    break;
+                case EventType.TurnChanged:
+                    TurnChangedEvent(this, (PlayerEventArgs)eventArgs);
+                    break;
+                case EventType.DenyTurnRequest:
+                    DenyTurnRequestEvent(this, (PlayerEventArgs)eventArgs);
+                    break;
+                case EventType.FinishedTurn:
+                    FinishedTurnEvent(this, eventArgs);
+                    break;
+                case EventType.FinishedReequip:
+                    FinishedReequipEvent(this, eventArgs);
+                    break;
+                case EventType.ChooseAction:
+                    ChooseActionEvent(this, (ChooseActionEventArgs)eventArgs);
+                    break;
+                case EventType.AddFatigue:
+                    AddFatigueEvent(this, (PointsEventArgs)eventArgs);
+                    break;
+                case EventType.RemoveFatigue:
+                    RemoveFatigueEvent(this, (PointsEventArgs)eventArgs);
+                    break;
+                case EventType.AddMovement:
+                    AddMovementEvent(this, (PointsEventArgs)eventArgs);
+                    break;
+                case EventType.RemoveFromInventory:
+                    RemoveFromInventoryEvent(this, (InventoryFieldEventArgs)eventArgs);
+                    break;
+                case EventType.UseOverlordCard:
+                    UseOverlordCardEvent(this, (OverlordCardEventArgs)eventArgs);
+                    break;
+                case EventType.AddPowerOverlordCard:
+                    AddPowerOverlordCardEvent(this, (OverlordCardEventArgs)eventArgs);
+                    break;
+                case EventType.SpawnMonster:
+                    SpawnMonsterEvent(this, (SpawnMonsterEventArgs)eventArgs);
+                    break;
+                case EventType.SpawnFinished:
+                    SpawnFinishedEvent(this, eventArgs);
+                    break;
+                case EventType.StartMonsterTurn:
+                    StartMonsterTurnEvent(this, (CoordinatesEventArgs)eventArgs);
+                    break;
+                case EventType.EndMonsterTurn:
+                    EndMonsterTurnEvent(this, eventArgs);
+                    break;
+                case EventType.MoveTo:
+                    MoveToEvent(this, (CoordinatesEventArgs)eventArgs);
+                    break;
+                case EventType.OpenChest:
+                    OpenChestEvent(this, (ChestEventArgs)eventArgs);
+                    break;
+                case EventType.OpenDoor:
+                    OpenDoorEvent(this, (CoordinatesEventArgs)eventArgs);
+                    break;
+                case EventType.AttackSquare:
+                    AttackSquareEvent(this, (CoordinatesEventArgs)eventArgs);
+                    break;
+                case EventType.RolledDices:
+                    RolledDicesEvent(this, (RolledDicesEventArgs)eventArgs);
+                    break;
+                case EventType.SendDamage:
+                    SendDamageEvent(this, (DamageEventArgs)eventArgs);
+                    break;
+                case EventType.RerollDices:
+                    RerollDicesEvent(this, (RerollDicesEventArgs)eventArgs);
+                    break;
+                case EventType.KilledFigure:
+                    KilledFigureEvent(this, (CoordinatesEventArgs)eventArgs);
+                    break;
+                case EventType.DamageTaken:
+                    DamageTakenEvent(this, (DamageEventArgs)eventArgs);
+                    break;
+                case EventType.MissedAttack:
+                    MissedAttackEvent(this, (PlayerEventArgs)eventArgs);
                     break;
             }
 
@@ -485,11 +663,5 @@ namespace Descent.Messaging.Events
             return sb.ToString();
         }
         #endregion
-
-        //TODO: present from Emil ... i needs this
-        internal object SquareMarked(int xClick, int yClick)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
