@@ -327,17 +327,24 @@ class_chart INVENTORY
 		"The inventory of a hero"
 	query
 		"How many hands do you have?",
-		"What weapons do you have in your hands?",
+		"What weapon do you have in your hands?",
 		"What armor do you have equipped?",
+		"What shield do you have equipped?",
 		"What other-items do you have equipped?",
 		"What potions do you have equipped?",
 		"What equipment do you have in your backpack?",
 		"Is there more space in your backpack?"		
 	command
 		"Equip 'this' weapon!",
+		"Unequip 'this' weapon!",
 		"Equip 'this' armor!",
+		"Unequip 'this' armor!",
+		"Equip 'this' shield!",
+		"Unequip 'this' shield!",
 		"Equip 'this' other item!",
+		"Unequip 'this' other item!",
 		"Equip 'this' potion!",
+		"Unequip 'this' potion!",
 		"Put this Equipment in your backpack!",
 		"Remove this Equipment from your backpack!"		
 	constraint
