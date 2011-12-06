@@ -6,6 +6,8 @@ EmilTests/EmilTests/bin
 EmilTests/EmilTests/obj
 EmilTests/EmilTestsContent/obj
 EmilTests/EmilTestsContent/bin
+MessagingTest/bin
+MessagingTest/obj
 *.dotCover
 *.ReSharper.user
 *.suo

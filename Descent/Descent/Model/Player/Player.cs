@@ -62,7 +62,8 @@ namespace Descent.Model.Player
 
         private EventManager eventManager;
 
-        private Dictionary<int, string> otherPlayers;
+        private string[] playerNicks;
+        private Hero[] playerHeroes;
 
         /// <summary>
         /// Prevents a default instance of the <see cref="Player"/> class from being created.
@@ -70,7 +71,8 @@ namespace Descent.Model.Player
         private Player()
         {
             eventManager = new EventManager();
-            otherPlayers = new Dictionary<int, string>();
+            playerNicks = new string[5];
+            playerHeroes = new Hero[5];
         }
 
         /// <summary>
@@ -115,16 +117,25 @@ namespace Descent.Model.Player
         /// </summary>
         public bool IsServer { get; set; }
 
-        /// <summary>
-        /// Gets the other players. Key is id of the player, value is name.
-        /// </summary>
-        public Dictionary<int, string> OtherPlayers
+        public void SetPlayerNick(int id, string nickname)
         {
-            get
-            {
-                return otherPlayers;
-            }
-        } 
+            playerNicks[id - 1] = nickname;
+        }
+
+        public string GetPlayerNick(int id)
+        {
+            return playerNicks[id - 1];
+        }
+
+        public void SetPlayerHero(int id, Hero hero)
+        {
+            playerHeroes[id - 1] = hero;
+        }
+
+        public Hero GetPlayerHero(int id)
+        {
+            return playerHeroes[id - 1];
+        }
 
         /// <summary>
         /// Gets the number of other players in the game.

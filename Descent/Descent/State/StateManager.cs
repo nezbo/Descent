@@ -10,6 +10,8 @@ namespace Descent.State
     using Model.Player;
     using Model.Player.Figure;
     using Model.Player.Figure.HeroStuff;
+    using Microsoft.Xna.Framework.Graphics;
+    using Microsoft.Xna.Framework;
 
     /// <summary>
     /// The handler of all states. Knows about the current state and what to do next.
@@ -34,6 +36,7 @@ namespace Descent.State
 
             // subscribe for events
             eventManager.PlayerJoinedEvent += new PlayerJoinedHandler(PlayerJoined);
+            eventManager.PlayersInGameEvent += new PlayersInGameHandler(PlayersInGame);
 
             // initiate start
             stateMachine = new StateMachine(new State[] { State.InLobby, State.NewRound });
@@ -46,8 +49,16 @@ namespace Descent.State
         // event handlers
         private void PlayerJoined(object sender, PlayerJoinedEventArgs eventArgs)
         {
-            //Player.Instance.OtherPlayers.Add(eventArgs.PlayerId, eventArgs.PlayerNick);
+            Player.Instance.SetPlayerNick(eventArgs.PlayerId, eventArgs.PlayerNick);
             StateChanged();
+        }
+
+        private void PlayersInGame(object sender, PlayersInGameEventArgs eventArgs)
+        {
+            foreach (PlayerInGame p in eventArgs.Players)
+            {
+                Player.Instance.SetPlayerNick(p.Id, p.Nickname);
+            }
         }
 
         // stuff?
@@ -99,10 +110,11 @@ namespace Descent.State
             {
                 case State.InLobby:
                     {
-                        /*foreach (string s in Player.Instance.OtherPlayerNames)
+                        for (int i = 1; i <= 5; i++)
                         {
-                            root.AddText("box", s, new Vector2(0, 0));
-                        }*/
+                            root.AddText("player" + i, Player.Instance.GetPlayerNick(i) ?? "", new Vector2(5, 50));
+                        }
+                        root.AddClickAction("ready", n => n.EventManager.QueueEvent(EventType.Ready,/* no clue Simon*/null));
 
                         break;
                     }
