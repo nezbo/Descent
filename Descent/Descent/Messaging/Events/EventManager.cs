@@ -372,6 +372,20 @@ namespace Descent.Messaging.Events
             Fire(eventType, eventArgs, sendOnNetwork);
         }
 
+        #region Helpers for firing specific events
+        public void FirePlayersInGameEvent()
+        {
+            PlayerInGame[] playersInGame = new PlayerInGame[Player.Instance.NumberOfOtherPlayers];
+
+            for (int i = 0; i < Player.Instance.NumberOfOtherPlayers; i++)
+            {
+                playersInGame[0] = new PlayerInGame(i, Player.Instance.GetPlayerNick(i));
+            }
+
+            QueueEvent(EventType.PlayersInGame, new PlayersInGameEventArgs(playersInGame));
+        }
+        #endregion
+
         #region Private methods
         /// <summary>
         /// Fires an event.

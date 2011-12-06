@@ -53,6 +53,7 @@ namespace Descent.State
         private void PlayerJoined(object sender, PlayerJoinedEventArgs eventArgs)
         {
             Player.Instance.SetPlayerNick(eventArgs.PlayerId, eventArgs.PlayerNick);
+            if (Player.Instance.IsServer) eventManager.FirePlayersInGameEvent();
             StateChanged();
         }
 

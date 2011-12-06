@@ -22,6 +22,11 @@ namespace MessagingTest
 
             eventManager.AllRespondedNoActionEvent += new AllRespondedNoActionHandler((sender, eventArgs) => Console.WriteLine("Received responses from all other players"));
 
+            eventManager.PlayerJoinedEvent += new PlayerJoinedHandler(
+                (sender, eventArgs) => 
+                    Player.Instance.SetPlayerNick(eventArgs.PlayerId, eventArgs.PlayerNick)
+             );
+
             Console.WriteLine("Enter 'server' for server mode or 'client' for client mode.");
             string type = Console.ReadLine();
 
