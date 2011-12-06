@@ -379,7 +379,7 @@ namespace Descent.Messaging.Events
 
             for (int i = 1; i <= Player.Instance.NumberOfPlayers; i++)
             {
-                playersInGame[i] = new PlayerInGame(i, Player.Instance.GetPlayerNick(i));
+                playersInGame[i-1] = new PlayerInGame(i, Player.Instance.GetPlayerNick(i));
             }
 
             QueueEvent(EventType.PlayersInGame, new PlayersInGameEventArgs(playersInGame));
