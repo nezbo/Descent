@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using Descent.Model;
+using Descent.Model.Board;
 using Microsoft.Xna.Framework.Input;
 
 namespace Descent.GUI
@@ -124,6 +126,26 @@ namespace Descent.GUI
         public void ChangeStateGUI(GUIElement state)
         {
             layers[1] = state;
+        }
+
+        /// <summary>
+        /// Creates (and initiates) the layer of the GUI
+        /// that displays the game board.
+        /// </summary>
+        /// <param name="board">The board to be displayed.</param>
+        public void CreateBoardGUI(Board board)
+        {
+            layers[0] = GUIElementFactory.CreateBoardElement(Game, board);
+        }
+
+        /// <summary>
+        /// Creates (and initiates) the layer of the GUI
+        /// that displays the chat and player stats
+        /// </summary>
+        /// <param name="model"></param>
+        public void CreateMenuGUI(FullModel model)
+        {
+            layers[2] = GUIElementFactory.CreateMenuElement(Game);
         }
     }
 }

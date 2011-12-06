@@ -6,8 +6,9 @@ system_chart DESCENT
 end
 
 cluster_chart MODEL_CLUSTER
+    class MODEL description "Holds references to all model related classes"
 	cluster PLAYER_CLUSTER description "The actual player, and his/her role"
-	cluster EVENT_CLUSTER description "Events, effects and abilities"
+	cluster EVENT_MODEL_CLUSTER description "Events, effects and abilities"
 	cluster BOARD_CLUSTER description "The game board"
 end
 
@@ -46,7 +47,7 @@ cluster_chart OVERLORD_STUFF
 end
 
 -- HOW TO DO/DESCRIBE EVENTS AND ABILITIES??!
-cluster_chart EVENT_CLUSTER
+cluster_chart EVENT_MODEL_CLUSTER
 	class EFFECT description "An Effect that can be on an figure"
 	class POISON_EFFECT description "A poison Effect, that has to be healed through"
 	class BURN_EFFECT description "A burn Effect that damages a figure"
@@ -80,12 +81,15 @@ cluster_chart GUI_CLUSTER
 		created: "27-11-2011";
 		revised: "30-11-2011"
 	class DRAWABLE description "Something that should be able to get drawn"
+	class IMAGE description "A simple holder for a source image"
 	class GUI description "The overall visual representation of the game"
 	class GUI_ELEMENT description "A visual element on the user interface"
 	class BOARD_GUI_ELEMENT description "The visualization of the squares of the board"
 	class TEXT description "A single line of text"
 	class GUI_ELEMENT_FACTORY description "Responsible for creating hierarchies of GUIElements"
-	class CHAT description "Lists chat messages and useful game events on the screen"
+	class BOARD_GUI_ELEMENT description "The element on the screen that visualizes the game board."
+    class CHAT description "Lists chat messages and useful game events on the screen"
+	class INPUT_ELEMENT description "A box on the screen where you can input text"
 end
 
 cluster_chart MESSAGING
@@ -147,10 +151,19 @@ cluster_chart STATE_STUFF
 	class STATE description "A collection of all different states."
 end
 
+class_chart MODEL
+    indexing
+        author: "Martin Marcher";
+    query
+        "Can I have the board?",
+        "Can I have the player with this id?",
+        "Can I have the hero party?"
+end
+
 class_chart ROLE
 	indexing
 		author: "Emil Juul Jacobsen";
-		in_cluster: "PLAYER_CLUSTER"
+		in_cluster: "PLAYER_CLUSTER";
 		created: "03-12-2011";
 		revised: "03-12-2011";
 	explanation
@@ -162,7 +175,7 @@ end
 class_chart PLAYER
 	indexing
 		author: "Jonas Breindahl";
-		in_cluster: "PLAYER_CLUSTER"
+		in_cluster: "PLAYER_CLUSTER";
 		created: "21-11-2011";
 		revised: "21-11-2011"
 	explanation
@@ -179,7 +192,7 @@ end
 class_chart HERO_PARTY
 	indexing
 		author: "Jonas Breindahl";
-		in_cluster: "PLAYER_CLUSTER"
+		in_cluster: "PLAYER_CLUSTER";
 		created: "21-11-2011";
 		revised: "01-12-2011"
 	explanation
@@ -203,7 +216,7 @@ end
 class_chart OVERLORD
 	indexing
 		author: "Jonas Breindahl";
-		in_cluster: "PLAYER_CLUSTER"
+		in_cluster: "PLAYER_CLUSTER";
 		created: "21-11-2011";
 		revised: "30-11-2011"
 	explanation
@@ -320,24 +333,34 @@ end
 class_chart INVENTORY
 	indexing
 		author: "Jonas Breindahl";
-		cluster: "HERO_STUFF"
+		in_cluster: "HERO_STUFF";
 		created: "27-11-2011";
 		revised: "27-11-2011";
 	explanation
 		"The inventory of a hero"
 	query
 		"How many hands do you have?",
-		"What weapons do you have in your hands?",
+        "How many potions can you hold?",
+        "How many items can you hold in your backpack?",
+        "How many other items can you hold?",
+		"What weapon do you have in your hands?",
 		"What armor do you have equipped?",
+		"What shield do you have equipped?",
 		"What other-items do you have equipped?",
 		"What potions do you have equipped?",
 		"What equipment do you have in your backpack?",
 		"Is there more space in your backpack?"		
 	command
 		"Equip 'this' weapon!",
+		"Unequip 'this' weapon!",
 		"Equip 'this' armor!",
+		"Unequip 'this' armor!",
+		"Equip 'this' shield!",
+		"Unequip 'this' shield!",
 		"Equip 'this' other item!",
+		"Unequip 'this' other item!",
 		"Equip 'this' potion!",
+		"Unequip 'this' potion!",
 		"Put this Equipment in your backpack!",
 		"Remove this Equipment from your backpack!"		
 	constraint
@@ -671,18 +694,33 @@ class_chart DRAWABLE
 		"Something that should be able to be drawn on the screen"
 	query
 		"What do you look like?"
+	constraint
+		"It must have a visual representation"
+end
+
+class_chart IMAGE
+	indexing
+		author: "Emil Juul Jacobsen";
+		created: "06-12-2011";
+		revised: "06-12-2011";
+	inherit
+		DRAWABLE
+	explanation
+		"A simple implementation of a DRAWABLE to display a source image"
 end
 
 class_chart GUI
 	indexing
 		author: "Emil Juul Jacobsen";
 		created: "27-11-2011";
-		revised: "01-12-2011"
+		revised: "06-12-2011"
 	explanation
 		"Handles the visual aspects of the game and input from the user"
 	command
 		"Update yourself!",
 		"Change your state GUI_ELEMENT to this one!",
+		"Initiate the board GUI_ELEMENT!",
+		"Initiate the menu GUI_ELEMENT!",
 		"Draw everything!"
 end
 
@@ -690,7 +728,7 @@ class_chart GUI_ELEMENT
 	indexing
 		author: "Emil Juul Jacobsen";
 		created: "27-11-2011";
-		revised: "01-12-2011";
+		revised: "06-12-2011";
 	explanation
 		"A single element of the user interface that, itself, can contain sub-elements"
 	query
@@ -705,6 +743,8 @@ class_chart GUI_ELEMENT
 		"Add this GUI_ELEMENT to your collection of sub-elements!",
 		"Add this DRAWABLE to be displayed in you (or your children) at this position!",
 		"Add this text to be displayed in you (or your children) at this position!",
+		"From now on you should draw background!",
+		"Your background should be this!",
 		"Draw yourself!"
 	constraint
 		"The position must be within the window boundaries",
@@ -717,10 +757,10 @@ class_chart BOARD_GUI_ELEMENT
 		author: "Emil Juul Jacobsen";
 		created: "01-12-2011";
 		revised: "01-12-2011";
-	inherit
-		GUI_ELEMENT
 	explanation
 		"The element on the screen that visualizes the game board."
+	inherit
+		GUI_ELEMENT
 	command
 		"Mark this field as positive or negative!",
 		"Clear all marks!"
@@ -737,7 +777,7 @@ class_chart TEXT
 		"What text do you contain?",
 		"At what position should you be drawn?"
 	constraint
-		"The text should not exceed the boundaries of it's enclosing GUI_ELEMENT"
+		"The text should not exceed the width of it's enclosing GUI_ELEMENT"
 end
 
 class_chart GUI_ELEMENT_FACTORY
@@ -769,6 +809,21 @@ class_chart CHAT
 		"Here is a new message!"
 	constraint
 		"The message should not be empty"
+end
+
+class_chart INPUT_ELEMENT
+	indexing
+		author: "Emil Juul Jacobsen";
+		created: "06-12-2011";
+		revised: "06-12-2011";
+	explanation
+		"A box where you can enter text and use it elsewhere in the program"
+	inherit
+		GUI_ELEMENT
+	query
+		"What text do you have at the moment?",
+	command
+		"I just typed this!"
 end
 
 class_chart ASYNC_SOCKETS_CLIENT
@@ -883,7 +938,7 @@ class_chart EVENT_MANAGER
 		"After game initialization, there must always be one event manager."
 end
 
-class_chart EVENT_ARGS
+class_chart GAME_EVENT_ARGS
 	indexing
 		author: "Simon Westh Henriksen";
 		created: "01-12-2011";
@@ -892,7 +947,7 @@ class_chart EVENT_ARGS
 		"A base class containing arguments for events. This base class implements the required event arguments fields."
 	query
 		"Who (player_id) sent you?",
-		"What is your event id"?,
+		"What is your event id?",
 		"What type of event are you?",
 		"Do you need a response?"
 	command

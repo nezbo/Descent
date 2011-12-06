@@ -49,7 +49,7 @@
 
             foreach (GUIElement e in children)
             {
-                if (e.Name == "chatInput" && e.HasFocus() && key == Keys.Enter)
+                if (e.Name == "chatInput" && e.HasFocus() && key == Keys.Enter && InputElement.GetInputFrom("chatInput").Length > 0)
                 {
                     SendMessage(InputElement.GetInputFrom("chatInput"));
                     InputElement.SetInput("chatInput", "");
