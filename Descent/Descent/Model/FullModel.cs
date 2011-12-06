@@ -1,23 +1,262 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="Model.cs" company="">
-// TODO: Update copyright text.
-// </copyright>
-// -----------------------------------------------------------------------
-
+﻿
 namespace Descent.Model
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Diagnostics.Contracts;
+    using System.IO;
     using System.Linq;
-    using System.Text;
+
+    using Descent.Model.Event;
+    using Descent.Model.Player;
+    using Descent.Model.Player.Figure;
+    using Descent.Model.Player.Figure.HeroStuff;
 
     using Microsoft.Xna.Framework;
+    using Microsoft.Xna.Framework.Graphics;
 
     /// <summary>
     /// TODO: Update summary.
     /// </summary>
     public class FullModel
     {
-        public static Game Game { get; set; }
+        #region Fields
+
+        private static Game game;
+
+        private static List<Monster> monsters;
+
+        private static int monstersInPlay;
+
+        private static List<Hero> heroes;
+
+        private static Dictionary<EDice, Dice> diceDictionary;
+
+        private static Dictionary<EquipmentType, List<Equipment>> equipment;
+
+        #endregion
+
+        #region Load Content
+
+        /// <summary>
+        /// Loads all content.
+        /// This includes monsters, heroes, cards, equipment, dice and the map.
+        /// </summary>
+        /// <param name="game">
+        /// The game object
+        /// </param>
+        public static void LoadContent(Game game)
+        {
+            Contract.Requires(game != null);
+            if (FullModel.game != null)
+            {
+                Debug.Assert(false, "Content was loaded more than one time");
+            }
+
+            FullModel.game = game;
+
+            LoadDice(game);
+            LoadMonsters(game);
+            LoadEquipment(game);
+        }
+
+        #region Load Monsters
+        /// <summary>
+        /// Loads the monsters from the file monsters.txt
+        /// </summary>
+        /// <param name="game">
+        /// The game object
+        /// </param>
+        private static void LoadMonsters(Game game)
+        {
+            if (FullModel.monsters != null) return;
+            StreamReader reader = new StreamReader(TitleContainer.OpenStream("monsters.txt"));
+
+            int n = int.Parse(reader.ReadLine());
+            string line;
+
+            List<Monster> monsters = new List<Monster>();
+            for (int i = 0; i < n; i++)
+            {
+                line = reader.ReadLine();
+
+                if (line.StartsWith("//")) continue;
+                System.Diagnostics.Debug.WriteLine(line);
+
+                string[] data = line.Split(',');
+                System.Diagnostics.Debug.Assert(data.Length == 11, "Error when parsing monsters, at line " + (i + 2));
+
+                int id = int.Parse(data[0]);
+                string name = data[1].Substring(1, data[1].Length - 2);
+                bool master = bool.Parse(data[2]);
+                int speed = int.Parse(data[3]);
+                int health = int.Parse(data[4].Split('/')[2]); // TODO: How many players are playing?
+                int armor = int.Parse(data[5]);
+                EAttackType type = data[6].Equals("MELEE")
+                                       ? EAttackType.MELEE
+                                       : (data[5].Equals("MAGIC") ? EAttackType.MAGIC : EAttackType.RANGED);
+
+                List<Dice> attackDice = (
+                    from string dice
+                        in data[7].Split(' ')
+                    select GetDice(dice)).ToList<Dice>();
+
+                Texture2D texture = game.Content.Load<Texture2D>("Images/Monsters/" + id);
+
+                monsters.Add(new Monster(id, name, master, speed, health, armor, type, attackDice, texture));
+            }
+
+            FullModel.monsters = monsters;
+        }
+        #endregion
+
+        #region Load Dice
+        /// <summary>
+        /// Loads all dice from 
+        /// </summary>
+        /// <param name="game">
+        /// The game.
+        /// </param>
+        private static void LoadDice(Game game)
+        {
+            if (diceDictionary != null) return;
+
+            StreamReader reader = new StreamReader(TitleContainer.OpenStream("dice.txt"));
+
+            int n = int.Parse(reader.ReadLine());
+            string line;
+
+            Dictionary<EDice, Dice> dice = new Dictionary<EDice, Dice>();
+            for (int i = 0; i < n; i++)
+            {
+                line = reader.ReadLine();
+                string[] data = line.Split(',');
+                System.Diagnostics.Debug.Assert(data.Length == 7, "Error in dice file, at line " + (i + 1));
+
+                EDice eDice;
+                Enum.TryParse(data[0], false, out eDice);
+
+                int[][] sides = AddSides(data);
+
+                dice[eDice] = new Dice(eDice, sides, null);
+            }
+
+            diceDictionary = dice;
+        }
+
+        /// <summary>
+        /// Reads the sides of a dice
+        /// </summary>
+        /// <param name="data">
+        /// The array of sides
+        /// </param>
+        /// <returns>
+        /// A 6 by 4 array with 6 sides, each with 4 parts, range, damage, surges and 
+        /// </returns>
+        private static int[][] AddSides(string[] data)
+        {
+            int[][] sides = new int[6][];
+            for (int side = 0; side < 6; side++)
+            {
+                sides[side] = new int[4];
+
+                char[] sideArray = data[side + 1].ToCharArray();
+                for (int value = 0; value < 4; value++)
+                {
+                    sides[side][value] = int.Parse(sideArray[value] + string.Empty);
+                }
+            }
+
+            return sides;
+        }
+        #endregion
+
+        #region Load Equipement
+
+        private static void LoadEquipment (Game game)
+        {
+            StreamReader reader = new StreamReader(TitleContainer.OpenStream("equipmentWithTreasure.txt"));
+
+            int n = int.Parse(reader.ReadLine());
+            string line;
+
+            Dictionary<EquipmentType, List<Equipment>> equipmentlists = new Dictionary<EquipmentType, List<Equipment>>();
+            equipmentlists[EquipmentType.Weapon] = new List<Equipment>();
+            equipmentlists[EquipmentType.Armor] = new List<Equipment>();
+            equipmentlists[EquipmentType.Shield] = new List<Equipment>();
+            equipmentlists[EquipmentType.Weapon] = new List<Equipment>();
+            equipmentlists[EquipmentType.Other] = new List<Equipment>();
+            equipmentlists[EquipmentType.Potion] = new List<Equipment>();
+
+            for (int i = 0; i < n; i++)
+            {
+                line = reader.ReadLine();
+                if (line.StartsWith("//")) continue;
+
+                string[] data = line.Split(',');
+                System.Diagnostics.Debug.Assert(data.Length == 12, "Error when loading equipment, at line " + (i + 2));                
+
+                int id = int.Parse(data[0]);
+                string name = data[1];
+
+                EquipmentRarity rarity;
+                EquipmentRarity.TryParse(data[2], out rarity);
+
+                EquipmentType type;
+                EquipmentType.TryParse(data[3], out type);
+
+                string other = data[4];
+
+                EAttackType attackType;
+                EAttackType.TryParse(data[5], out attackType);
+
+                int buyPrice = data[6].Equals(string.Empty) ? 0 : int.Parse(data[6]);
+                int hands = data[7].Equals(string.Empty) ? 0 : int.Parse(data[7]);
+                int amount = data[8].Equals(string.Empty) ? 0 : int.Parse(data[8]);
+                List<Dice> dice = data[9].Split(' ').Select(GetDice).ToList();
+                List<Ability> abilities = data[10].Split('/').Select(s => Ability.GetAbility(s)).ToList();
+                List<SurgeAbility> surgeAbilities =
+                    data[11].Split('/').Select(s => SurgeAbility.GetSurgeAbility(s)).ToList();
+
+                equipmentlists[type].Add(new Equipment(name, type, rarity, buyPrice, surgeAbilities, hands, abilities));
+            }
+
+            equipment = equipmentlists;
+        }
+
+        #endregion
+
+        #endregion
+
+        #region Getters
+
+        /// <summary>
+        /// Gets the standard instance of 
+        /// </summary>
+        /// <param name="id">
+        /// The id.
+        /// </param>
+        /// The standard id of the mosnter
+        /// <returns>
+        /// The monster, as a new monster
+        /// </returns>
+        public static Monster GetMonster(int id)
+        {
+            return monsters.Single(monster => monster.Id == id).Clone(monstersInPlay++);
+        }
+
+        public static Dice GetDice(EDice dice)
+        {
+            return diceDictionary[dice];
+        }
+
+        public static Dice GetDice(string dice)
+        {
+            EDice d;
+            Enum.TryParse(dice, false, out d);
+            return GetDice(d);
+        }
+        #endregion
     }
 }

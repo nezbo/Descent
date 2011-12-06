@@ -42,7 +42,7 @@
         {
             get
             {
-                return none ?? (none = Monster.GetMonster(0));
+                return none ?? (none = FullModel.GetMonster(0));
             }
         }
 

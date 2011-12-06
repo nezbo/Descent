@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DescentContent", "Descent\D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmilTests", "EmilTests\EmilTests\EmilTests.csproj", "{52E90FD7-5A3C-4550-854E-0633FF460E62}"
 EndProject
-Project("{96E2B04D-8817-42C6-938A-82C39BA4D311}") = "EmilTestsContent", "EmilTests\EmilTestsContent\EmilTestsContent.contentproj", "{F5915353-5900-4B3C-8717-AF67062A5276}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmilTestsContent", "EmilTests\EmilTestsContent\EmilTestsContent.contentproj", "{F5915353-5900-4B3C-8717-AF67062A5276}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
