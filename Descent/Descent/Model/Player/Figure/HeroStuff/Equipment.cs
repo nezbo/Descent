@@ -38,7 +38,12 @@ namespace Descent.Model.Player.Figure.HeroStuff
         /// <summary>
         /// Potions can be used to heal damage or gain fatigue
         /// </summary>
-        Potion
+        Potion,
+
+        /// <summary>
+        /// Shield can be used to protect in attacks.
+        /// </summary>
+        Shield
     }
 
     /// <summary>

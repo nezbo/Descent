@@ -2,7 +2,7 @@
 {
     public enum State
     {
-        Initiation,
+        InLobby,
         DrawHeroCard,
         DrawSkillCards,
         WaitForTradeCard,

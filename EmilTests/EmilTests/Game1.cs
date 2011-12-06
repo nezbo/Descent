@@ -36,7 +36,7 @@ namespace EmilTests
         {
             // TODO: Add your initialization logic here
             this.IsMouseVisible = true;
-            Player.Instance.Name = "Nezbo";
+            InputElement.SetInput("nameInput", "Player");
             base.Initialize();
         }
 
@@ -56,38 +56,54 @@ namespace EmilTests
             GUIElement root = GUIElementFactory.CreateStateElement(this, Descent.State.State.ActivateMonsters, Descent.Model.Player.Role.Overlord);
             GUIElement createGame = new GUIElement(this, "create", 100, 250, 300, 100);
             GUIElement joinGame = new GUIElement(this, "join", 100, 550, 300, 100);
-            GUIElement changeName = new GUIElement(this, "changeName", 500, 250, 400, 100);
+            GUIElement changeName = new GUIElement(this, "changeName", 500, 250, 200, 100);
             InputElement nameInput = new InputElement(this, "nameInput", changeName.Bound.X + 10, changeName.Bound.Y + (changeName.Bound.Height - 30) / 2, 150, 30);
             InputElement connectInput = new InputElement(this, "connectInput", joinGame.Bound.X + 10, joinGame.Bound.Y + (joinGame.Bound.Height - 30) / 2, 150, 30);
             GUIElement buttonCreateGame = new GUIElement(this, "doneCreate", createGame.Bound.X + 200, createGame.Bound.Y + (createGame.Bound.Height - 30) / 2, 80, 30);
             GUIElement buttonJoinGame = new GUIElement(this, "doneJoin", joinGame.Bound.X + 200, joinGame.Bound.Y + (joinGame.Bound.Height - 30) / 2, 80, 30);
-            GUIElement buttonChangeName = new GUIElement(this, "doneName", changeName.Bound.X + 200, changeName.Bound.Y + (changeName.Bound.Height - 30) / 2, 150, 30);
 
             // assembling tree
             root.AddChild(createGame);
             root.AddChild(joinGame);
             root.AddChild(changeName);
             changeName.AddChild(nameInput);
-            changeName.AddChild(buttonChangeName);
             createGame.AddChild(buttonCreateGame);
             joinGame.AddChild(connectInput);
             joinGame.AddChild(buttonJoinGame);
 
             // adding visual to tree
+            changeName.SetBackground("boxbg");
+            joinGame.SetBackground("boxbg");
+            createGame.SetBackground("boxbg");
+            nameInput.SetBackground("boxbg");
+            connectInput.SetBackground("boxbg");
+            buttonCreateGame.SetBackground("boxbg");
+            buttonJoinGame.SetBackground("boxbg");
             Image logo = new Image(Content.Load<Texture2D>("logo-descent"));
             root.AddDrawable(root.Name, logo, new Vector2((root.Bound.Width - logo.Texture.Bounds.Width) / 2.0f, 50));
 
             // adding logic to tree
             root.SetDrawBackground(false);
 
+            root.AddText("changeName", "Name:", new Vector2(0, 0));
             root.AddClickAction(root.Name, n => System.Diagnostics.Debug.WriteLine("Root clicked"));
             root.AddText("doneCreate", "Create!", new Vector2(0, 0));
             root.AddText("doneJoin", "Join!", new Vector2(0, 0));
-            root.AddText("doneName", "Change Name!", new Vector2(0, 0));
-            root.AddClickAction("doneName", n => n.Name = InputElement.GetInputFrom("nameInput"));
-            root.AddClickAction("doneCreate", n => { n.StateManager = new StateManager(gui, new FullModel()); n.StartGame(1337); });
+            root.AddClickAction("doneCreate", n =>
+                                                {
+                                                    if (InputElement.GetInputFrom("nameInput").Length > 0)
+                                                    {
+                                                        n.Name = InputElement.GetInputFrom("nameInput");
+                                                    }
+                                                    n.StateManager = new StateManager(gui, new FullModel());
+                                                    n.StartGame(1337);
+                                                });
             root.AddClickAction("doneJoin", n =>
                                                 {
+                                                    if (InputElement.GetInputFrom("nameInput").Length > 0)
+                                                    {
+                                                        n.Name = InputElement.GetInputFrom("nameInput");
+                                                    }
                                                     n.StateManager = new StateManager(gui, new FullModel());
                                                     n.JoinGame(InputElement.GetInputFrom("connectInput"), 1337);
                                                 });

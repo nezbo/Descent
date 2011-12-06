@@ -56,7 +56,7 @@
             visuals = new Dictionary<Drawable, Rectangle>();
             texts = new Collection<Text>();
 
-            if (defaultBG == null) defaultBG = game.Content.Load<Texture2D>("boxbg");
+            if (defaultBG == null) defaultBG = game.Content.Load<Texture2D>("darkboxbg");
         }
 
         /// <summary>
