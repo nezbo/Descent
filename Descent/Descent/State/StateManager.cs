@@ -1,17 +1,20 @@
 using System.Collections.ObjectModel;
+
 using Descent.Model.Board;
 
 namespace Descent.State
 {
     using System.Diagnostics.Contracts;
-    using GUI;
-    using Messaging.Events;
-    using Model;
-    using Model.Player;
-    using Model.Player.Figure;
-    using Model.Player.Figure.HeroStuff;
-    using Microsoft.Xna.Framework.Graphics;
+
+    using Descent.GUI;
+    using Descent.Messaging.Events;
+    using Descent.Model;
+    using Descent.Model.Player;
+    using Descent.Model.Player.Figure;
+    using Descent.Model.Player.Figure.HeroStuff;
+
     using Microsoft.Xna.Framework;
+    using Microsoft.Xna.Framework.Graphics;
 
     /// <summary>
     /// The handler of all states. Knows about the current state and what to do next.

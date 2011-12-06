@@ -144,7 +144,12 @@ namespace Descent.Model.Player
         {
             get
             {
-                return OtherPlayers.Count;
+                int c = 0;
+                foreach (string playerNick in playerNicks)
+                {
+                    if (playerNick != "") c++;
+                }
+                return c;
             }
         }
 
