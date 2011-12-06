@@ -359,6 +359,7 @@ class_chart EQUIPMENT
 		"What is your price?",
 		"How many hands do you use?",
 		"Are you tapped right now?",
+		"What are your surge abilities?",
 		"What are your abilities?",
 		"Are you equipped?"
 	command
@@ -368,16 +369,6 @@ class_chart EQUIPMENT
 	constraint
 		"An equipment may only be tapped one time per round"
 end
-
-class_chart WEAPON
-	indexing
-		author: "Jonas Breindahl";
-		created: "21-11-2011";
-		revised: "21-11-2011"
-	query
-		"What surge abilities do you have?",
-		"What dice do you 
-	
 
 class_chart SURGE_ABILITY
 	indexing
@@ -389,17 +380,6 @@ class_chart SURGE_ABILITY
 	query
 		"How many surges do you cost?",
 		"What ability do you grant?",
-end
-
-class_chart TRAINING_TOKEN
-	indexing
-		author: "Jonas Breindahl";
-		created: "21-11-2011";
-		revised: "21-11-2011"
-	explanation
-		"A token that give extra dice in a specific kind of attack"
-	query
-		"What attack do you grant bonus to?"
 end
 
 class_chart POTION
