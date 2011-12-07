@@ -11,22 +11,55 @@ namespace Descent.Model.Board.Marker
     using System.Linq;
     using System.Text;
 
+    using Descent.GUI;
+
+    using Microsoft.Xna.Framework.Graphics;
+
     /// <summary>
     /// TODO: Update summary.
     /// </summary>
-    public class Marker
+    public class Marker : Drawable
     {
 
-        #region FIELDS
+        #region Fields
 
-        #endregion FIELDS
+        private string name;
+        private Texture2D texture;
 
-        #region CONSTRUCTORS
+        #endregion
 
-        #endregion CONSTRUCTORS
+        #region Properties
 
-        #region METHODS
+        public string Name
+        {
+            get
+            {
+                return name;
+            }
+        }
 
-        #endregion METHODS
+        public Texture2D Texture
+        {
+            get
+            {
+                return texture;
+            }
+        }
+
+        #endregion
+
+        #region Initialization
+
+        public Marker(string name, Texture2D texture)
+        {
+            this.name = name;
+            this.texture = texture;
+        }
+
+        #endregion 
+
+        #region Methods
+
+        #endregion  
     }
 }

@@ -3,6 +3,8 @@ using Descent.Model.Board;
 
 namespace Descent.GUI
 {
+    using Descent.Model.Player.Figure;
+
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Input;
@@ -24,7 +26,7 @@ namespace Descent.GUI
         private Texture2D markTexture;
 
         private Board board;
-        private int xDisp, yDisp;
+        public int xDisp, yDisp;
         private Dictionary<Vector2, bool> markedSquares;
 
         // for clicks
@@ -37,13 +39,17 @@ namespace Descent.GUI
             this.xDisp = 0;
             this.yDisp = 0;
 
-            // marked
-            this.markedSquares = new Dictionary<Vector2, bool>();
-            this.markTexture = new Texture2D(GraphicsDevice, TileSize, TileSize);
-            this.markTexture.SetData(new Color[] { Color.White });
-
             // event on click
             this.AddClickAction("board", n => System.Diagnostics.Debug.WriteLine("TODO: board clicks")); //TODO
+        }
+
+        public void LoadContent()
+        {
+            // marked
+            this.markedSquares = new Dictionary<Vector2, bool>();
+            // TODO: GraphicsDevice cant be used here?
+            //this.markTexture = new Texture2D(GraphicsDevice, TileSize, TileSize);
+            //this.markTexture.SetData(new Color[] { Color.White });
         }
 
         public override bool HandleClick(int x, int y)
@@ -56,6 +62,8 @@ namespace Descent.GUI
 
         public override void HandleKeyPress(Keys key)
         {
+            if (true) return;
+
             switch (key)
             {
                 case Keys.Left:
@@ -101,6 +109,7 @@ namespace Descent.GUI
 
         public override void Draw(SpriteBatch draw)
         {
+            draw.Begin();
             //TODO: Guessed interface from BON
             Vector2 v;
             // Draw floor
@@ -111,7 +120,7 @@ namespace Descent.GUI
                     if (true)//TODO: FIX board.IsWithin(x, y))
                     {
                         v = CalcVector(x, y);
-                        //TODO: FIX draw.Draw(board.FloorTexture, v, Color.White);
+                        if (board[x, y] != null) draw.Draw(board.FloorTexture, new Vector2(x * 95 - xDisp, y * 95 - yDisp), Color.White);
                     }
                 }
             }
@@ -123,27 +132,52 @@ namespace Descent.GUI
             {
                 for (int y = 0; y < board.Height; y++)
                 {
-                    /* TODO FIX
                     s = board[x, y];
+                    if (s == null) continue;
                     v = CalcVector(x,y);
                     if(s.Marker != null) draw.Draw(s.Marker.Texture, v, Color.White);
-                    if(s.Figure != null) draw.Draw(s.Figure.Texture, v, Color.White);
-                     */
+                     
                 }
             }
 
-            // Marks (if any)
-            foreach (Vector2 pos in markedSquares.Keys)
+            for (int x = 0; x < board.Width; x++)
             {
-                if (markedSquares[pos])
+                for (int y = 0; y < board.Height; y++)
                 {
-                    draw.Draw(markTexture, pos, PositiveHighlight);
-                }
-                else
-                {
-                    draw.Draw(markTexture, pos, NegativeHighlight);
+                    s = board[x, y];
+                    if (s == null) continue;
+                    v = CalcVector(x, y);
+                    if(s.Figure != null && s.Figure is Monster && ((Monster)s.Figure).Orientation == Orientation.V)
+                        draw.Draw(
+                            s.Figure.Texture, 
+                            v, 
+                            null, 
+                            Color.White, 
+                            (float)(MathHelper.Pi * 0.5), 
+                            new Vector2(0,s.Figure.Texture.Height), 
+                            1.0f, 
+                            SpriteEffects.None, 
+                            0f);
+                    else if (s.Figure != null) draw.Draw(s.Figure.Texture, v, Color.White);
+
                 }
             }
+                /*
+                // Marks (if any)
+                foreach (Vector2 pos in markedSquares.Keys)
+                {
+                    if (markedSquares[pos])
+                    {
+                        draw.Draw(markTexture, pos, PositiveHighlight);
+                    }
+                    else
+                    {
+                        draw.Draw(markTexture, pos, NegativeHighlight);
+                    }
+                }
+                 * */
+
+                draw.End();
         }
 
         /// <summary>

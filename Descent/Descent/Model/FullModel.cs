@@ -8,6 +8,8 @@ namespace Descent.Model
     using System.IO;
     using System.Linq;
 
+    using Descent.Model.Board;
+    using Descent.Model.Board.Marker;
     using Descent.Model.Event;
     using Descent.Model.Player;
     using Descent.Model.Player.Figure;
@@ -35,7 +37,19 @@ namespace Descent.Model
 
         private static Dictionary<EquipmentType, List<Equipment>> equipment;
 
+        private static List<Marker> markers;
+
+        private static Board.Board board;
+
         #endregion
+
+        public static Board.Board Board
+        {
+            get
+            {
+                return board;
+            }
+        }
 
         #region Load Content
 
@@ -49,6 +63,7 @@ namespace Descent.Model
         public static void LoadContent(Game game)
         {
             Contract.Requires(game != null);
+
             if (FullModel.game != null)
             {
                 Debug.Assert(false, "Content was loaded more than one time");
@@ -59,6 +74,7 @@ namespace Descent.Model
             LoadDice(game);
             LoadMonsters(game);
             LoadEquipment(game);
+            LoadMap(game);
         }
 
         #region Load Monsters
@@ -102,9 +118,14 @@ namespace Descent.Model
                         in data[7].Split(' ')
                     select GetDice(dice)).ToList<Dice>();
 
+                List<Ability> abilities = data[8].Split('/').Select(Ability.GetAbility).ToList();
+
+
+                Rectangle size = new Rectangle(0,0,int.Parse(data[9]), int.Parse(data[10]));
+
                 Texture2D texture = game.Content.Load<Texture2D>("Images/Monsters/" + id);
 
-                monsters.Add(new Monster(id, name, master, speed, health, armor, type, attackDice, texture));
+                monsters.Add(new Monster(id, name, master, speed, health, armor, type, attackDice, size, texture));
             }
 
             FullModel.monsters = monsters;
@@ -227,26 +248,78 @@ namespace Descent.Model
 
         #endregion
 
+        #region Load Markers
+
+        private void LoadMarkers(Game game)
+        {
+            
+        }
+
+        #endregion
+
         #region Load Map
 
-        public void LoadMap(Game game)
+        public static void LoadMap(Game game)
         {
             StreamReader reader = new StreamReader(TitleContainer.OpenStream("quest1.map"));
 
             int height = int.Parse(reader.ReadLine());
             int width = int.Parse(reader.ReadLine());
 
-            Board.Board board = new Board.Board(width, height);
+            Board.Board board = new Board.Board(width, height, game.Content.Load<Texture2D>("Images/Board/floor"));
 
-            string line = null;
             for (int y = 0; y < height; y++)
             {
-
-                foreach (var VARIABLE in line.ToCharArray())
+                char[] c = reader.ReadLine().ToCharArray();
+                for(int x = 0; x < c.Length; x++)
                 {
-                    
+                    switch(c[x])
+                    {
+                        case ' ':
+                            board[x, y] = null;
+                            break;
+                        default:
+                            board[x, y] = new Square();
+                            break;
+                    }
                 }
             }
+
+            LoadOther(game, reader, board);
+        }
+
+        private static void LoadOther(Game game, StreamReader reader, Board.Board board)
+        {
+            int n = int.Parse(reader.ReadLine());
+            for (int i = 0; i < n; i++)
+            {
+                string line = reader.ReadLine();
+                System.Diagnostics.Debug.WriteLine(line);
+                string[] data = line.Split(',');
+
+                switch (data[0])
+                {
+                    case "monster":
+                        int x = int.Parse(data[1]);
+                        int y = int.Parse(data[2]);
+                        Orientation o = Orientation.H;
+                        Orientation.TryParse(data[4], true, out o);
+                        Monster monster = GetMonster(int.Parse(data[3]));
+                        monster.Orientation = o;
+                        board[x, y].Figure = monster;
+                        break;
+                    case "door":
+                        Door.RuneColor color;
+                        Door.RuneColor.TryParse(data[3], out color);
+                        board.AddDoor(new Door(int.Parse(data[1]), int.Parse(data[2]), color));
+                        break;
+                    default:
+                        board[int.Parse(data[1]), int.Parse(data[2])].Marker = GetMarker(data[0], data[3]);
+                        break;
+                }
+            }
+
+            FullModel.board = board;
         }
 
         #endregion
@@ -281,6 +354,38 @@ namespace Descent.Model
             Enum.TryParse(dice, false, out d);
             return GetDice(d);
         }
+
+        /// <summary>
+        /// TODO: Should be changed.. 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public static Marker GetMarker(string name, string other)
+        {
+            switch (name)
+            {
+                case "glyph":
+                    return new Marker(name + "-" + other, game.Content.Load<Texture2D>("Images/Board/portal-" + other));
+                case "treasure":
+                    return new Marker(name + "-" + other, game.Content.Load<Texture2D>("Images/Board/" + name + "-" + other));
+                case "gold":
+                    return new Marker(name, game.Content.Load<Texture2D>("Images/Board/" + name));
+                case "rock":
+                    return new Marker(name, game.Content.Load<Texture2D>("Images/Board/rock1"));
+                case "pit":
+                    return new Marker(name, game.Content.Load<Texture2D>("Images/Board/pit1"));
+                case "potion":
+                    return new Marker(name + "-" + other, game.Content.Load<Texture2D>("Images/Board/" + name + "-" + other));
+                case "rune":
+                    return new Marker(name + "-" + other, game.Content.Load<Texture2D>("Images/Board/" + name + "-" + other));
+                default:
+                    break;                    
+            }
+            System.Diagnostics.Debug.Assert(false);
+            return null;
+        }
+
         #endregion
     }
 }

@@ -15,15 +15,16 @@ namespace Descent.Model.Player.Figure
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
 
+    public enum Orientation { H, V }
+
     /// <summary>
     /// TODO: Update summary.
     /// </summary>
     /// <author>
     /// Jonas Breindahl (jobre@itu.dk)
     /// </author>
-    public class Monster : Figure, Drawable
+    public class Monster : Figure
     {
-        
 
         #region Fields
 
@@ -31,7 +32,7 @@ namespace Descent.Model.Player.Figure
 
         private EAttackType attackType;
 
-        private Texture2D texture;
+        private Rectangle size;
 
         #endregion
 
@@ -48,18 +49,15 @@ namespace Descent.Model.Player.Figure
             }
         }
 
-        public Texture2D Texture
+        public Rectangle Size
         {
             get
             {
-                return texture;
-            }
-
-            private set
-            {
-                texture = value;
+                return size;
             }
         }
+
+        public Orientation Orientation { get; set; }
 
         #endregion
 
@@ -93,7 +91,7 @@ namespace Descent.Model.Player.Figure
         /// <param name="dice">
         /// The dice.
         /// </param>
-        public Monster(int id, string name, bool master, int speed, int health, int armor, EAttackType type, List<Dice> dice, Texture2D texture)
+        public Monster(int id, string name, bool master, int speed, int health, int armor, EAttackType type, List<Dice> dice, Rectangle size, Texture2D texture)
             : base(id, name)
         {
             isMaster = master;
@@ -102,7 +100,7 @@ namespace Descent.Model.Player.Figure
             Armor = armor;
             attackType = type;
             DiceForAttack = dice;
-            this.texture = texture;
+            this.Texture = texture;
         }
         #endregion
 
@@ -110,7 +108,7 @@ namespace Descent.Model.Player.Figure
 
         public Monster Clone(int newID)
         {
-            return new Monster(newID, Name, isMaster, Speed, Health, Armor, attackType, new List<Dice>(DiceForAttack), Texture);
+            return new Monster(newID, Name, isMaster, Speed, Health, Armor, attackType, new List<Dice>(DiceForAttack), size, Texture);
         }
 
         #endregion

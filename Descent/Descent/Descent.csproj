@@ -123,6 +123,7 @@
     <Compile Include="Messaging\Events\EventManager.cs" />
     <Compile Include="Messaging\Events\EventType.cs" />
     <Compile Include="Model\Board\Board.cs" />
+    <Compile Include="Model\Board\Door.cs" />
     <Compile Include="Model\Board\Marker\Marker.cs" />
     <Compile Include="Model\Board\Square.cs" />
     <Compile Include="Model\Board\Town.cs" />
