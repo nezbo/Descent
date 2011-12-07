@@ -4,16 +4,14 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using System.Diagnostics.Contracts;
-
 namespace Descent.Model.Player
 {
-    using System.Collections.Generic;
+    using System.Diagnostics.Contracts;
 
     using Descent.Messaging.Connection;
     using Descent.Messaging.Events;
+    using Descent.Model.Player.Figure;
     using Descent.State;
-    using Figure;
 
     /// <summary>
     /// Describes the current role of a Player in the game. The Overlord's
@@ -63,16 +61,17 @@ namespace Descent.Model.Player
         private EventManager eventManager;
 
         private string[] playerNicks;
-        private Hero[] playerHeroes;
 
         /// <summary>
         /// Prevents a default instance of the <see cref="Player"/> class from being created.
         /// </summary>
         private Player()
         {
+            IsOverlord = false;
             eventManager = new EventManager();
             playerNicks = new string[5];
-            playerHeroes = new Hero[5];
+            Overlord = new Overlord.Overlord();
+            HeroParty = new HeroParty();
         }
 
         /// <summary>
@@ -87,29 +86,46 @@ namespace Descent.Model.Player
             }
         }
 
+        /// <summary>
+        /// Gets or sets the Players nickname.
+        /// </summary>
         public string Nickname
         {
             get
             {
                 return GetPlayerNick(Player.Instance.Id);
             }
-            
+
             set
             {
                 SetPlayerNick(Player.Instance.Id, value);
             }
         }
 
-        /// <summary>
-        /// What is your role?
-        /// If the player is overlord, return true, else false
-        /// </summary>
         public bool IsOverlord { get; set; }
+
+        public Overlord.Overlord Overlord { get; private set; }
+
+        /// <summary>
+        /// Gets the Hero Party.
+        /// </summary>
+        public HeroParty HeroParty { get; private set; }
 
         /// <summary>
         /// Gets or sets the Hero of the Player - if the player is not overlord.
         /// </summary>
-        public Hero Hero { get; set; }
+        public Hero Hero
+        {
+            get
+            {
+                return HeroParty.Heroes[Player.Instance.Id];
+            }
+            
+            set
+            {
+                HeroParty.Heroes[Player.Instance.Id] = value;
+            }
+        }
 
         /// <summary>
         /// Gets the unique ID.
@@ -136,16 +152,6 @@ namespace Descent.Model.Player
         public string GetPlayerNick(int id)
         {
             return playerNicks[id - 1];
-        }
-
-        public void SetPlayerHero(int id, Hero hero)
-        {
-            playerHeroes[id - 1] = hero;
-        }
-
-        public Hero GetPlayerHero(int id)
-        {
-            return playerHeroes[id - 1];
         }
 
         /// <summary>

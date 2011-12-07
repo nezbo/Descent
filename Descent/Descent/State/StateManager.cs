@@ -18,7 +18,7 @@ namespace Descent.State
     /// <summary>
     /// The handler of all states. Knows about the current state and what to do next.
     /// </summary>
-    /// <author>Martin Marcher</author>
+    /// <author>Martin Marcher & Emil Juul Jacobsen</author>
     public class StateManager
     {
         private readonly StateMachine stateMachine;
@@ -45,17 +45,29 @@ namespace Descent.State
             eventManager.PlayersInGameEvent += new PlayersInGameHandler(PlayersInGame);
             eventManager.ReadyEvent += new ReadyHandler(BeginGame);
             eventManager.BeginGameEvent += new BeginGameHandler(BeginGame);
+            eventManager.OverlordIsEvent += new OverlordIsHandler(OverLordIs);
 
             // initiate start
-            stateMachine = new StateMachine(new State[] { State.InLobby, State.DrawHeroCard, State.DrawSkillCards, State.BuyEquipment, State.NewRound, State.NewRound });
+            stateMachine = new StateMachine(new State[] { State.InLobby, State.DrawOverlordCards, 
+                State.DrawHeroCard, State.DrawSkillCards, 
+                State.BuyEquipment, State.NewRound, State.NewRound });
             stateMachine.StateChanged += StateChanged;
 
             StateChanged();
-            gui.CreateMenuGUI(model);
-            gui.CreateBoardGUI(FullModel.Board, DetermineRole());
         }
 
         // event handlers
+        private void OverLordIs(object sender, OverlordIsEventArgs eventArgs)
+        {
+            if (Player.Instance.Id == eventArgs.PlayerId)
+            {
+                Player.Instance.IsOverlord = true;
+            }
+
+            gui.CreateBoardGUI(FullModel.Board, DetermineRole());
+            gui.CreateMenuGUI(model, DetermineRole());
+        }
+
         private void PlayerJoined(object sender, PlayerJoinedEventArgs eventArgs)
         {
             Player.Instance.SetPlayerNick(eventArgs.PlayerId, eventArgs.PlayerNick);
@@ -142,10 +154,15 @@ namespace Descent.State
                             root.AddText("players", "IP: " + Player.Instance.Connection.Ip, new Vector2(50, 50));
                             root.AddClickAction("start", n =>
                                                              {
-                                                                 if (Player.Instance.NumberOfPlayers >= 3)
+#if DEBUG
+                                                                 if (Player.Instance.NumberOfPlayers >= 1) //TODO 3
+#else 
+                                                                     if (Player.Instance.NumberOfPlayers >= 3) //TODO 3
+#endif
                                                                  {
                                                                      Player.Instance.EventManager.QueueEvent(
                                                                          EventType.BeginGame, new GameEventArgs());
+                                                                     Player.Instance.EventManager.QueueEvent(EventType.OverlordIs, new OverlordIsEventArgs(Player.Instance.Id));
                                                                  }
                                                                  System.Diagnostics.Debug.WriteLine("Start clicked!");
                                                              });

@@ -4,6 +4,8 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using Descent.Model.Board;
+
 namespace Descent.Model.Player.Figure
 {
     using System;
@@ -14,8 +16,6 @@ namespace Descent.Model.Player.Figure
 
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
-
-    public enum Orientation { H, V }
 
     /// <summary>
     /// TODO: Update summary.

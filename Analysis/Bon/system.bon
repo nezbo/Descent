@@ -222,14 +222,18 @@ class_chart OVERLORD
 	explanation
 		"The role of a overlord, that a hero can be"
 	query
-		"How many cards do you have?",
+		"What cards do you have in your deck?",
+		"What cards do you have in play?",
+		"What cards have you discarded?",
 		"How many threat tokens do you have?",
-		"What cards do you have?",
-		"How many cards are in your overlord deck?",
-		"How many cards are in your overlord discard?"
+		"What cards do you have?"
 	command
-		"Draw 'this' many cards!",
-		"Shuffle the overlord discard into the deck!"
+		"Add 'this' card to your deck!",
+		"Remove 'this' card from your deck!",
+		"Add 'this' card to your cards in play!",
+		"Remove 'this' card from your cards in play!",
+		"Add 'this' card to your discarded cards!",
+		"Remove all your discarded cards!"
 	constraint
 		"When it is not the overlords turn, the overlord cannot have more than 7 cards in hand."
 end
@@ -593,12 +597,15 @@ class_chart BOARD
 		"What is your width?",
 		"What is your height?",
         "What heroes are currently in town?",
+        "Where are the heroes on the board?",
 		"Is the coordinate (x/y) within the board?",
 		"Is this square standable?",
 		"Can the overlord spawn here?",
 		"Is there line of sight from 'here' to 'there'?",
 		"Is there line of sight from 'here' to 'there', not included monsters?",
 		"Is this space visible by the players?"
+    command
+        "Open the door adjecent to this square!"
 end
 
 class_chart SQUARE

@@ -38,6 +38,11 @@ namespace Descent.Model.Board
 
         #region CONSTRUCTORS
 
+        public Square(int area)
+        {
+            this.area = area;
+        }
+
         #endregion
 
         #region METHODS

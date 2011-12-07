@@ -41,6 +41,8 @@ namespace Descent.Model
 
         private static Board.Board board;
 
+        private static HeroParty heroParty;
+
         #endregion
 
         public static Board.Board Board
@@ -51,6 +53,11 @@ namespace Descent.Model
             }
         }
 
+        public static HeroParty HeroParty
+        {
+            get { return heroParty; }
+        }
+ 
         #region Load Content
 
         /// <summary>
@@ -70,11 +77,13 @@ namespace Descent.Model
             }
 
             FullModel.game = game;
+            heroParty = new HeroParty();
 
             LoadDice(game);
             LoadMonsters(game);
             LoadEquipment(game);
             LoadMap(game);
+            LoadHeroes(game);
         }
 
         #region Load Monsters
@@ -279,7 +288,7 @@ namespace Descent.Model
                             board[x, y] = null;
                             break;
                         default:
-                            board[x, y] = new Square();
+                            board[x, y] = new Square(int.Parse(c[x].ToString()));
                             break;
                     }
                 }
@@ -309,9 +318,11 @@ namespace Descent.Model
                         board[x, y].Figure = monster;
                         break;
                     case "door":
-                        Door.RuneColor color;
-                        Door.RuneColor.TryParse(data[3], out color);
-                        board.AddDoor(new Door(int.Parse(data[1]), int.Parse(data[2]), color));
+                        RuneKey color;
+                        RuneKey.TryParse(data[12], out color);
+                        Orientation orientation;
+                        Orientation.TryParse(data[11], out orientation);
+                        board.AddDoor(new Door(int.Parse(data[1]), new Point(int.Parse(data[2]), int.Parse(data[3])), new Point(int.Parse(data[4]), int.Parse(data[5])), int.Parse(data[6]), new Point(int.Parse(data[7]), int.Parse(data[8])), new Point(int.Parse(data[9]), int.Parse(data[10])), orientation, color, game.Content.Load<Texture2D>("Images/Board/door-"+color.ToString())));
                         break;
                     default:
                         board[int.Parse(data[1]), int.Parse(data[2])].Marker = GetMarker(data[0], data[3]);
@@ -326,7 +337,7 @@ namespace Descent.Model
 
         #region Load Heroes
 
-        private void LoadHeroes(Game game)
+        private static void LoadHeroes(Game game)
         {
             StreamReader reader = new StreamReader(TitleContainer.OpenStream("heroes.txt"));
 
@@ -433,8 +444,11 @@ namespace Descent.Model
 
         public static Hero GetHero(int id)
         {
-            return heroes[id];
+            return heroes[id - 1];
         }
+
+
+
         #endregion
     }
 }
