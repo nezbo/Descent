@@ -83,6 +83,7 @@ namespace Descent.Model
             LoadMonsters(game);
             LoadEquipment(game);
             LoadMap(game);
+            LoadHeroes(game);
         }
 
         #region Load Monsters
@@ -334,7 +335,7 @@ namespace Descent.Model
 
         #region Load Heroes
 
-        private void LoadHeroes(Game game)
+        private static void LoadHeroes(Game game)
         {
             StreamReader reader = new StreamReader(TitleContainer.OpenStream("heroes.txt"));
 
@@ -441,8 +442,11 @@ namespace Descent.Model
 
         public static Hero GetHero(int id)
         {
-            return heroes[id];
+            return heroes[id - 1];
         }
+
+
+
         #endregion
     }
 }

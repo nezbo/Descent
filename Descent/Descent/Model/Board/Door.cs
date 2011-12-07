@@ -73,6 +73,22 @@ namespace Descent.Model.Board
             get { return areas; }
         }
 
+        public Point TopLeftCorner
+        {
+            get
+            {
+                Point topLeft = points[0, 0];
+                foreach (var point in points)
+                {
+                    if (point.X <= topLeft.X && point.Y <= topLeft.Y)
+                    {
+                        topLeft = point;
+                    }
+                }
+                return topLeft;
+            }
+        }
+
         public Door(int area1, Point point1InArea1, Point point2InArea1, int area2, Point point1InArea2, Point point2InArea2, Orientation orientation, RuneKey color)
         {
             Contract.Requires(area1 != area2);

@@ -35,7 +35,7 @@ namespace Descent.Model.Board
         /// <summary>
         /// The board, made up of squares
         /// </summary>
-        private Square[,] board;
+        private readonly Square[,] board;
 
         private Rectangle bounds;
 
@@ -99,6 +99,11 @@ namespace Descent.Model.Board
             {
                 return floorTexture;
             }
+        }
+
+        public Door[] RelevantDoors
+        {
+            get { return doors.Where(door => door.Areas.Any(area => revealedAreas.Contains(area))).ToArray(); }
         }
 
         #endregion
