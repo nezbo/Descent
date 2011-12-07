@@ -87,6 +87,7 @@
         /// <param name="y">The y-coordinate of the click</param>
         public virtual bool HandleClick(int x, int y)
         {
+            string name = Name;
             // is it within me?
             if (this.HasPoint(x, y))
             {

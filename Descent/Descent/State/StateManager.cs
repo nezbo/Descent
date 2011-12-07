@@ -44,9 +44,10 @@ namespace Descent.State
             eventManager.PlayerJoinedEvent += new PlayerJoinedHandler(PlayerJoined);
             eventManager.PlayersInGameEvent += new PlayersInGameHandler(PlayersInGame);
             eventManager.ReadyEvent += new ReadyHandler(ReadyEvent);
+            eventManager.BeginGameEvent += new BeginGameHandler(ReadyEvent);
 
             // initiate start
-            stateMachine = new StateMachine(new State[] { State.InLobby, State.NewRound });
+            stateMachine = new StateMachine(new State[] { State.InLobby, State.DrawHeroCard, State.DrawSkillCards, State.BuyEquipment, State.NewRound, State.NewRound });
             stateMachine.StateChanged += StateChanged;
 
             StateChanged();
@@ -73,21 +74,13 @@ namespace Descent.State
 
         private void ReadyEvent(object sender, GameEventArgs eventArgs)
         {
-            if (Player.Instance.IsServer)
+            switch (stateMachine.CurrentState)
             {
-                ReadyCount++;
-                switch (stateMachine.CurrentState)
-                {
-                    case State.InLobby:
-                        {
-                            if (ReadyCount >= 3) // atleast three players in the game
-                            {
-                                stateMachine.ChangeToNextState();
-                            }
-                            ReadyCount = 0;
-                            break;
-                        }
-                }
+                case State.InLobby:
+                    {
+                        stateMachine.ChangeToNextState();
+                        break;
+                    }
             }
         }
 
@@ -134,7 +127,7 @@ namespace Descent.State
         {
             State newState = stateMachine.CurrentState;
 
-            GUIElement root = GUIElementFactory.CreateStateElement(gui.Game, stateMachine.CurrentState, this.DetermineRole());
+            GUIElement root = GUIElementFactory.CreateStateElement(gui.Game, stateMachine.CurrentState, Player.Instance.IsServer ? Role.Overlord : Role.InactiveHero);
 
             switch (newState) // Fill in events and drawables
             {
@@ -146,10 +139,9 @@ namespace Descent.State
                         }
                         if (Player.Instance.IsServer)
                         {
-                            root.AddText("box", "IP: " + Player.Instance.Connection.Ip, new Vector2(0, 0));
+                            root.AddText("players", "IP: " + Player.Instance.Connection.Ip, new Vector2(50, 50));
+                            root.AddClickAction("start", n => Player.Instance.EventManager.QueueEvent(EventType.BeginGame, new GameEventArgs()));
                         }
-
-                        root.AddClickAction("ready", n => n.EventManager.QueueEvent(EventType.Ready, new GameEventArgs()));
 
                         break;
                     }
