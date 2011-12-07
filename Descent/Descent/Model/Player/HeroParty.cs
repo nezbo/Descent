@@ -1,4 +1,6 @@
 ﻿
+using Descent.Model.Board;
+
 namespace Descent.Model.Player
 {
 	using System;
@@ -18,6 +20,10 @@ namespace Descent.Model.Player
 	public class HeroParty
 	{
 		#region Fields
+
+        private List<Hero> heroesInHeroParty = new List<Hero>();
+        private int conquestTokens = 0;
+        private HashSet<RuneKey> runeKeys = new HashSet<RuneKey>();
 
 		/// <summary>
 		/// Gets numberOfHeroes.
@@ -65,9 +71,6 @@ namespace Descent.Model.Player
 			}
 		}
 
-		private List<Hero> heroesInHeroParty = new List<Hero>(); 
-		private int conquestTokens = 0;
-
 		#endregion FIELDS
 
 		#region Initialization
@@ -100,8 +103,26 @@ namespace Descent.Model.Player
 	    public void RemoveConquestTokens(int tokens)
         {
             Contract.Requires(tokens > 0);
-            Contract.Ensures(ConquestTokens == Contract.OldValue(ConquestTokens) - tokens);
+            Contract.Ensures(ConquestTokens == Contract.OldValue(ConquestTokens) - tokens || ConquestTokens == 0);
             ConquestTokens -= tokens;
+        }
+
+        public void AddHero(Hero hero)
+        {
+            Contract.Requires(hero != null);
+            Contract.Ensures(AllHeroes.Contains(hero));
+            heroesInHeroParty.Add(hero);
+        } 
+
+        public void AddRuneKey(RuneKey runeKey)
+        {
+            Contract.Ensures(HasRuneKey(runeKey));
+            runeKeys.Add(runeKey);
+        }
+
+        public bool HasRuneKey(RuneKey runeKey)
+        {
+            return runeKeys.Contains(runeKey);
         }
 
 	    /// <summary>
@@ -113,6 +134,7 @@ namespace Descent.Model.Player
             Contract.Invariant(ConquestTokens >= 0);
             Contract.Invariant(NumberOfHeroes >= 2 && NumberOfHeroes <= 4);
         }
+
 		#endregion METHODS 
 	}
 }

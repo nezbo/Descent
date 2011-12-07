@@ -41,6 +41,8 @@ namespace Descent.Model
 
         private static Board.Board board;
 
+        private static HeroParty heroParty;
+
         #endregion
 
         public static Board.Board Board
@@ -51,6 +53,11 @@ namespace Descent.Model
             }
         }
 
+        public static HeroParty HeroParty
+        {
+            get { return heroParty; }
+        }
+ 
         #region Load Content
 
         /// <summary>
@@ -70,6 +77,7 @@ namespace Descent.Model
             }
 
             FullModel.game = game;
+            heroParty = new HeroParty();
 
             LoadDice(game);
             LoadMonsters(game);
@@ -279,7 +287,7 @@ namespace Descent.Model
                             board[x, y] = null;
                             break;
                         default:
-                            board[x, y] = new Square();
+                            board[x, y] = new Square(int.Parse(c[x].ToString()));
                             break;
                     }
                 }
@@ -309,9 +317,9 @@ namespace Descent.Model
                         board[x, y].Figure = monster;
                         break;
                     case "door":
-                        Door.RuneColor color;
-                        Door.RuneColor.TryParse(data[3], out color);
-                        board.AddDoor(new Door(int.Parse(data[1]), int.Parse(data[2]), color));
+                        RuneKey color;
+                        RuneKey.TryParse(data[3], out color);
+                        // TODO board.AddDoor(new Door(int.Parse(data[1]), int.Parse(data[2]), color));
                         break;
                     default:
                         board[int.Parse(data[1]), int.Parse(data[2])].Marker = GetMarker(data[0], data[3]);
