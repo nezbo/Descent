@@ -43,8 +43,8 @@ namespace Descent.State
             // subscribe for events
             eventManager.PlayerJoinedEvent += new PlayerJoinedHandler(PlayerJoined);
             eventManager.PlayersInGameEvent += new PlayersInGameHandler(PlayersInGame);
-            eventManager.ReadyEvent += new ReadyHandler(ReadyEvent);
-            eventManager.BeginGameEvent += new BeginGameHandler(ReadyEvent);
+            eventManager.ReadyEvent += new ReadyHandler(BeginGame);
+            eventManager.BeginGameEvent += new BeginGameHandler(BeginGame);
 
             // initiate start
             stateMachine = new StateMachine(new State[] { State.InLobby, State.DrawHeroCard, State.DrawSkillCards, State.BuyEquipment, State.NewRound, State.NewRound });
@@ -72,7 +72,7 @@ namespace Descent.State
             StateChanged();
         }
 
-        private void ReadyEvent(object sender, GameEventArgs eventArgs)
+        private void BeginGame(object sender, GameEventArgs eventArgs)
         {
             switch (stateMachine.CurrentState)
             {
@@ -140,7 +140,15 @@ namespace Descent.State
                         if (Player.Instance.IsServer)
                         {
                             root.AddText("players", "IP: " + Player.Instance.Connection.Ip, new Vector2(50, 50));
-                            root.AddClickAction("start", n => Player.Instance.EventManager.QueueEvent(EventType.BeginGame, new GameEventArgs()));
+                            root.AddClickAction("start", n =>
+                                                             {
+                                                                 if (Player.Instance.NumberOfPlayers >= 3)
+                                                                 {
+                                                                     Player.Instance.EventManager.QueueEvent(
+                                                                         EventType.BeginGame, new GameEventArgs());
+                                                                 }
+                                                                 System.Diagnostics.Debug.WriteLine("Start clicked!");
+                                                             });
                         }
 
                         break;

@@ -15,7 +15,7 @@
             : base(game, "chat", (int)(game.Window.ClientBounds.Width * (3 / 4.0)), game.Window.ClientBounds.Height / 2, game.Window.ClientBounds.Width / 4, game.Window.ClientBounds.Height / 2)
         {
             InputElement input = new InputElement(game, "chatInput", Bound.X + 10, Bound.Y + Bound.Height - 40, Bound.Width - 10, 40);
-            input.SetDrawBackground(false);
+            //input.SetDrawBackground(false);
             AddChild(input);
 
             messages = new LinkedList<string>();
