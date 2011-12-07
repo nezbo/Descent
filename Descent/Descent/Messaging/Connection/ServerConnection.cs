@@ -77,10 +77,16 @@ namespace Descent.Messaging.Connection
         /// <returns>True to accept the client (leave him connected), false to disconnect him again.</returns>
         private bool AcceptProcedure(ClientInfo newClient)
         {
-            // TODO: Check that the game state is open for joining
-            newClient.Send("ASSIGNID," + newClient.Id); // Send back the ID to the player.
-
-            return true;
+            if (Player.Instance.NumberOfPlayers < 5)
+            {
+                // TODO: Check that the game state is open for joining
+                newClient.Send("ASSIGNID," + newClient.Id); // Send back the ID to the player.
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }
