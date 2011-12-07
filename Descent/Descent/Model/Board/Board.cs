@@ -23,7 +23,7 @@ namespace Descent.Model.Board
     /// TODO: Update summary.
     /// </summary>
     /// <author>
-    /// Jonas Breindahl (jobre@itu.dk)
+    /// Jonas Breindahl (jobre@itu.dk) & Martin Marcher
     /// </author>
     public class Board
     {

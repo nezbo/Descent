@@ -417,12 +417,23 @@ component
 			cardDescription: STRING -- What is your description? Your description is 'this'!
 			type: OVERLORD_CARD_TYPE -- What type of overlord card are you?"
 			abilities: SEQUENCE[ABILITY] -- What abilities do you have?
+            playPrice: INT -- How many threat tokens does it take to play you?
+            sellPrice: INT -- How many threat tokens do I get selling you?
 	end
+    
+    class SPAWN_CARD
+        indexing
+            author: "Martin Marcher";
+        inherit
+            OVERLORD_CARD
+        feature
+            monstersToSpawn: SEQUENCE[MONSTER] -- Can I have a list of all monsters that can be spawned with this card?
+    end
 end
 
 static_diagram FORMAL_EVENT_CLUSTER
 component
-	class ABILITY -- Can this ability be used now?
+	class ABILITY
 		indexing
 			author: "Jonas Breindahl";
 			created: "30-11-2011";

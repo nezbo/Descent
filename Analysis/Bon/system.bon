@@ -430,7 +430,9 @@ class_chart OVERLORD_CARD
 		"What is your name?",
 		"What is your description?",
 		"What type of overlord card are you?",
-		"What abilities do you have?"
+		"What abilities do you have?",
+        "How many threat tokens does it take to play you?",
+        "How many threat tokens do I get selling you?"
 	command
 		"Your name is 'this'!",
 		"Your description is 'this'!",
