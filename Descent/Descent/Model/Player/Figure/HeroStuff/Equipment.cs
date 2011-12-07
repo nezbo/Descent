@@ -128,6 +128,7 @@ namespace Descent.Model.Player.Figure.HeroStuff
 
         #region Fields
 
+        private int id;
         private bool tapped = false;
         private string name;
         private EquipmentType type;
@@ -141,6 +142,17 @@ namespace Descent.Model.Player.Figure.HeroStuff
         #endregion
 
         #region Properties
+
+        /// <summary>
+        /// Gets the unique ID of the equipment
+        /// </summary>
+        public int ID
+        {
+            get
+            {
+                return id;
+            }
+        }
 
         /// <summary>
         /// Gets a value indicating whether the equipment is tapped / used
@@ -267,10 +279,11 @@ namespace Descent.Model.Player.Figure.HeroStuff
         /// <param name="hands">
         /// The number of hands it takes to wield, if the equipment is a weapon
         /// </param>
-        public Equipment(string name, EquipmentType type, EquipmentRarity rarity, int buyPrice, List<SurgeAbility> surgeAbilities, int hands, List<Ability> abilities)
+        public Equipment(int id, string name, EquipmentType type, EquipmentRarity rarity, int buyPrice, List<SurgeAbility> surgeAbilities, int hands, List<Ability> abilities)
         {
             Contract.Requires(surgeAbilities != null);
             Contract.Requires(abilities != null);
+            this.id = id;
             this.name = name;
             this.type = type;
             this.rarity = rarity;
