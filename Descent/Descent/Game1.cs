@@ -5,11 +5,9 @@ using Microsoft.Xna.Framework.Input;
 
 namespace XNATutorials
 {
-    using System.IO;
 
     using Descent.GUI;
     using Descent.Model;
-    using Descent.Model.Board;
 
     /// <summary>
     /// This is the main type for your game
@@ -58,7 +56,7 @@ namespace XNATutorials
 
             //Make the mouse pointer visible in the game window
             this.IsMouseVisible = true;
-            
+
             base.Initialize();
 
             initialized = true;
@@ -80,7 +78,6 @@ namespace XNATutorials
             FullModel.LoadContent(this);
             contentLoaded = true;
             boardGui = new BoardGUIElement(this, FullModel.Board);
-            boardGui.LoadContent();
         }
 
         /// <summary>
@@ -112,17 +109,17 @@ namespace XNATutorials
             }
 
             // Controls
-            
-            KeyboardState keyState = Keyboard.GetState();
 
+            KeyboardState keyState = Keyboard.GetState();
+            /*
             //TODO: Har lavet haxor af controls som føres videre til boardgui klassen
             System.Diagnostics.Debug.WriteLine(keyState.IsKeyDown(Keys.Left) + " - " + boardGui.xDisp);
             if (keyState.IsKeyDown(Keys.Left) && boardGui.xDisp > -2 * 95) boardGui.xDisp -= 10;
             if (keyState.IsKeyDown(Keys.Right) && boardGui.xDisp < (FullModel.Board.Width + 1) * 95 - graphics.PreferredBackBufferWidth) boardGui.xDisp += 10;
             if (keyState.IsKeyDown(Keys.Up) && boardGui.yDisp > -2 * 95) boardGui.yDisp -= 10;
             if (keyState.IsKeyDown(Keys.Down) && boardGui.yDisp < (FullModel.Board.Height + 2) * 95 - graphics.PreferredBackBufferHeight) boardGui.yDisp += 10;
+            */
 
-             
             if (keyState.IsKeyDown(Keys.Escape)) this.Exit();
 
             base.Update(gameTime);

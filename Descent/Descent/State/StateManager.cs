@@ -14,7 +14,6 @@ namespace Descent.State
     using Descent.Model.Player.Figure.HeroStuff;
 
     using Microsoft.Xna.Framework;
-    using Microsoft.Xna.Framework.Graphics;
 
     /// <summary>
     /// The handler of all states. Knows about the current state and what to do next.
@@ -52,6 +51,7 @@ namespace Descent.State
 
             StateChanged();
             gui.CreateMenuGUI(model);
+            gui.CreateBoardGUI(FullModel.Board);
         }
 
         // event handlers
@@ -144,7 +144,7 @@ namespace Descent.State
                         {
                             root.AddText("player" + i, Player.Instance.GetPlayerNick(i) ?? "", new Vector2(5, 50));
                         }
-                        root.AddClickAction("ready", n => n.EventManager.QueueEvent(EventType.Ready,new GameEventArgs()));
+                        root.AddClickAction("ready", n => n.EventManager.QueueEvent(EventType.Ready, new GameEventArgs()));
 
                         break;
                     }

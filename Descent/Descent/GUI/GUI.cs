@@ -104,7 +104,7 @@ namespace Descent.GUI
             }
             mouseDownBefore = (ms.LeftButton == ButtonState.Pressed);
 
-            // keys
+            // key tuped
             KeyboardState keyState = Keyboard.GetState();
             List<Keys> pressed = new List<Keys>(keyState.GetPressedKeys());
             foreach (Keys key in Enum.GetValues(typeof(Keys)))
@@ -117,6 +117,12 @@ namespace Descent.GUI
             }
 
             lastKeyboardState = keyState;
+
+            // general update
+            foreach (GUIElement l in layers)
+            {
+                if (l != null) l.Update(gameTime);
+            }
         }
 
         /// <summary>

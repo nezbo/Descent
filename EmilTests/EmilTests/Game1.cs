@@ -19,6 +19,9 @@ namespace EmilTests
         SpriteBatch spriteBatch;
         GUI gui;
 
+        private int numOfFrames = 0;
+        private double FPS = 0;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -51,6 +54,7 @@ namespace EmilTests
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             GUI.Font = Content.Load<SpriteFont>("font");
+            FullModel.LoadContent(this);
             // TODO: use this.Content to load your game content here
 
             // creation of elements
@@ -108,7 +112,7 @@ namespace EmilTests
 
             root.AddClickAction("doneJoin", n =>
                                                 {
-                                                    
+
                                                     n.JoinGame(InputElement.GetInputFrom("connectInput"), 1337);
 
                                                     System.Threading.Thread.Sleep(200);
@@ -125,7 +129,7 @@ namespace EmilTests
             Player.Instance.EventManager.PlayerJoinedEvent += new PlayerJoinedHandler((sender, eventArgs) =>
                 {
                     // If the PlayerJoined event is about our local player(the id will be set just before this, so 
-                   
+
                 });
 
             // placing the root in the gui
@@ -149,6 +153,13 @@ namespace EmilTests
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            // FPS
+            if (gameTime.TotalGameTime.Milliseconds == 0)
+            {
+                FPS = numOfFrames;
+                numOfFrames = 0;
+            }
+
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
@@ -170,6 +181,9 @@ namespace EmilTests
 
             // TODO: Add your drawing code here
             gui.Draw(spriteBatch);
+
+            numOfFrames++;
+            Window.Title = "Descent - " + FPS + " FPS";
 
             base.Draw(gameTime);
         }
