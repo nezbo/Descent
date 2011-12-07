@@ -37,6 +37,10 @@ namespace Descent.Model.Board
 
         private Rectangle bounds;
 
+        private HashSet<int> revealedAreas = new HashSet<int>();  
+
+        private List<Door> doors = new List<Door>(); 
+
         private List<Hero> town = new List<Hero>();
 
         private Texture2D floorTexture;
@@ -88,6 +92,14 @@ namespace Descent.Model.Board
             }
         }
 
+        public HashSet<int>  RevealedAreas
+        {
+            get
+            {
+                return revealedAreas;
+            }
+        }
+
         #endregion
 
         #region Indexers
@@ -115,7 +127,7 @@ namespace Descent.Model.Board
 
         #endregion
 
-        #region Constructors
+        #region Initialization
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Board"/> class.
@@ -126,11 +138,19 @@ namespace Descent.Model.Board
         /// <param name="height">
         /// The height of the board
         /// </param>
-        public Board(int width, int height)
+        public Board(int width, int height, Texture2D floorTexture)
         {
             bounds = new Rectangle(0, 0, width, height);
             board = new Square[width, height];
+            this.floorTexture = floorTexture;
+            revealedAreas.Add(0);
         }
+
+        public void CalculateDoors()
+        {
+            //TODO: Flood/Breadth-first algorithm
+        }
+
         #endregion
 
         #region Methods
@@ -293,11 +313,16 @@ namespace Descent.Model.Board
             return Math.Max(Math.Abs(here.X - there.X), Math.Abs(here.Y - there.Y));
         }
 
+        public void AddDoor(Door door)
+        {
+            doors.Add(door);
+        }
+
         #endregion
 
         public static void Main(string[] args)
         {
-            var b = new Board(20, 20);
+            var b = new Board(20, 20, null);
             var a = new int[30, 30];
             var points = b.SquaresBetweenPoints(new Point(26, 6), new Point(1, 26));
             foreach (Point p in points)

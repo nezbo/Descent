@@ -5,9 +5,13 @@
     using System.Diagnostics.Contracts;
     using System.Linq;
 
+    using Descent.GUI;
     using Descent.Model.Event;
 
     using Microsoft.Xna.Framework;
+    using Microsoft.Xna.Framework.Graphics;
+
+    using Effect = Descent.Model.Event.Effect;
 
     /// <summary>
     /// Any bonus to a hero
@@ -26,7 +30,7 @@
     /// <author>
     /// Jonas Breindahl (jobre@itu.dk)
     /// </author>
-    public abstract class Figure
+    public abstract class Figure : Drawable
     {
         #region Events
 
@@ -91,6 +95,8 @@
 
         private List<Effect> effects = new List<Effect>();
 
+        private Texture2D texture;
+
         #endregion
 
         #region Properties
@@ -125,7 +131,7 @@
         {
             get
             {
-                int total = this.MaxHealthContribution.GetInvocationList().Cast<Bonus<int>>().Sum(bonus => bonus.Invoke());
+                int total = MaxHealthContribution == null ? 0 : MaxHealthContribution.GetInvocationList().Cast<Bonus<int>>().Sum(bonus => bonus.Invoke());
                 return maxHealth + total;
             }
 
@@ -154,7 +160,7 @@
         {
             get
             {
-                int total = ArmorContribution.GetInvocationList().Cast<Bonus<int>>().Sum(bonus => bonus.Invoke());
+                int total = ArmorContribution == null ? 0 : ArmorContribution.GetInvocationList().Cast<Bonus<int>>().Sum(bonus => bonus.Invoke());
                 return armor + total;
             }
 
@@ -172,7 +178,7 @@
         {
             get
             {
-                int total = SpeedContribution.GetInvocationList().Cast<Bonus<int>>().Sum(bonus => bonus.Invoke());
+                int total = SpeedContribution == null ? 0 : SpeedContribution.GetInvocationList().Cast<Bonus<int>>().Sum(bonus => bonus.Invoke());
                 return speed + total;
             }
 
@@ -205,7 +211,7 @@
         {
             get
             {
-                int total = AttacksLeftContribution.GetInvocationList().Cast<Bonus<int>>().Sum(bonus => bonus.Invoke());
+                int total = AttacksLeftContribution == null ? 0 : AttacksLeftContribution.GetInvocationList().Cast<Bonus<int>>().Sum(bonus => bonus.Invoke());
                 return attacksLeft + total;
             }
         }
@@ -219,9 +225,12 @@
             get
             {
                 List<Dice> total = new List<Dice>();
-                foreach (Bonus<List<Dice>> bonus in DiceContribution.GetInvocationList())
+                if (DiceContribution != null)
                 {
-                    total.AddRange(bonus.Invoke());
+                    foreach (Bonus<List<Dice>> bonus in DiceContribution.GetInvocationList())
+                    {
+                        total.AddRange(bonus.Invoke());
+                    }
                 }
 
                 total.AddRange(this.diceForAttacks);
@@ -243,9 +252,12 @@
             get
             {
                 List<Ability> total = new List<Ability>();
-                foreach (Bonus<List<Ability>> bonus in AbilityContribution.GetInvocationList())
+                if (AbilityContribution != null)
                 {
-                    total.AddRange(bonus.Invoke());
+                    foreach (Bonus<List<Ability>> bonus in AbilityContribution.GetInvocationList())
+                    {
+                        total.AddRange(bonus.Invoke());
+                    }
                 }
 
                 total.AddRange(abilities);
@@ -267,9 +279,12 @@
             get
             {
                 List<Effect> total = new List<Effect>();
-                foreach (Bonus<List<Effect>> bonus in EffectContribution.GetInvocationList())
+                if (EffectContribution != null)
                 {
-                    total.AddRange(bonus.Invoke());
+                    foreach (Bonus<List<Effect>> bonus in EffectContribution.GetInvocationList())
+                    {
+                        total.AddRange(bonus.Invoke());
+                    }
                 }
 
                 return effects;
@@ -278,6 +293,20 @@
             protected set
             {
                 effects = value;
+            }
+        }
+
+
+        public Texture2D Texture
+        {
+            get
+            {
+                return texture;
+            }
+
+            protected set
+            {
+                texture = value;
             }
         }
         
@@ -402,5 +431,6 @@
             Contract.Invariant(AttacksLeft >= 0);
         }
         #endregion
+
     }
 }
