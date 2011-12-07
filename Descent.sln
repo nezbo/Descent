@@ -5,10 +5,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Descent", "Descent\Descent\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DescentContent", "Descent\DescentContent\DescentContent.contentproj", "{5FD4631E-EB28-4020-8D1B-7D68CB1B674C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmilTests", "EmilTests\EmilTests\EmilTests.csproj", "{52E90FD7-5A3C-4550-854E-0633FF460E62}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmilTestsContent", "EmilTests\EmilTestsContent\EmilTestsContent.contentproj", "{F5915353-5900-4B3C-8717-AF67062A5276}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MessagingTest", "MessagingTest\MessagingTest.csproj", "{879AA8E3-AEB5-4AEC-907E-6637532B87B7}"
 EndProject
 Global
@@ -23,13 +19,6 @@ Global
 		{E49125D5-7A25-4372-B9B8-700CC7A3006D}.Release|x86.Build.0 = Release|x86
 		{5FD4631E-EB28-4020-8D1B-7D68CB1B674C}.Debug|x86.ActiveCfg = Debug|x86
 		{5FD4631E-EB28-4020-8D1B-7D68CB1B674C}.Release|x86.ActiveCfg = Release|x86
-		{52E90FD7-5A3C-4550-854E-0633FF460E62}.Debug|x86.ActiveCfg = Debug|x86
-		{52E90FD7-5A3C-4550-854E-0633FF460E62}.Debug|x86.Build.0 = Debug|x86
-		{52E90FD7-5A3C-4550-854E-0633FF460E62}.Release|x86.ActiveCfg = Release|x86
-		{52E90FD7-5A3C-4550-854E-0633FF460E62}.Release|x86.Build.0 = Release|x86
-		{F5915353-5900-4B3C-8717-AF67062A5276}.Debug|x86.ActiveCfg = Debug|x86
-		{F5915353-5900-4B3C-8717-AF67062A5276}.Debug|x86.Build.0 = Debug|x86
-		{F5915353-5900-4B3C-8717-AF67062A5276}.Release|x86.ActiveCfg = Release|x86
 		{879AA8E3-AEB5-4AEC-907E-6637532B87B7}.Debug|x86.ActiveCfg = Debug|x86
 		{879AA8E3-AEB5-4AEC-907E-6637532B87B7}.Debug|x86.Build.0 = Debug|x86
 		{879AA8E3-AEB5-4AEC-907E-6637532B87B7}.Release|x86.ActiveCfg = Release|x86

@@ -19,7 +19,7 @@ namespace Descent.GUI
     class BoardGUIElement : GUIElement
     {
         private static readonly int TileSize = 95;
-        private static readonly int BorderTiles = 3;
+        private static readonly int BorderTiles = 2;
         private static readonly Color NegativeHighlight = new Color(0, 0, 0, 155);
         private static readonly Color PositiveHighlight = new Color(110, 111, 72, 128);
 
