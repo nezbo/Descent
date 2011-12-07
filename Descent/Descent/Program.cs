@@ -1,6 +1,6 @@
-using System;
 
-namespace XNATutorials
+
+namespace Descent
 {
 #if WINDOWS || XBOX
     static class Program
