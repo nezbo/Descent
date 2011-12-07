@@ -1,4 +1,6 @@
 ﻿
+using Descent.Model.Player.Overlord;
+
 namespace Descent.Model
 {
     using System;
@@ -32,6 +34,8 @@ namespace Descent.Model
         private static int monstersInPlay;
 
         private static List<Hero> heroes;
+
+        private static List<OverlordCard> overlordCards; 
 
         private static Dictionary<EDice, Dice> diceDictionary;
 
@@ -399,6 +403,11 @@ namespace Descent.Model
             return monsters.Single(monster => monster.Id == id).Clone(monstersInPlay++);
         }
 
+        public static Equipment GetEquipment(int id)
+        {
+            return AllEquipment.Single(equipment => equipment.Id == id);
+        }
+
         public static Dice GetDice(EDice dice)
         {
             return diceDictionary[dice];
@@ -447,7 +456,34 @@ namespace Descent.Model
             return heroes[id - 1];
         }
 
+        public static Hero[] AllHeroes
+        {
+            get { return heroes.ToArray(); }
+        }
 
+        public static Equipment[] AllEquipment
+        {
+            get
+            {
+                List<Equipment> allEquipment = new List<Equipment>();
+                foreach (var equipmentList in equipment.Values)
+                {
+                    allEquipment.AddRange(equipmentList);
+                }
+                return allEquipment.ToArray();
+            } 
+        }
+
+        public static OverlordCard[] AllOverlordCards
+        {
+            get { return overlordCards.ToArray(); }
+        }
+
+        /* TODO
+        public static Treasure[] AllTreasures
+        {
+            return treasures.ToArray();
+        }*/
 
         #endregion
     }

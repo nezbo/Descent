@@ -128,6 +128,7 @@ namespace Descent.Model.Player.Figure.HeroStuff
 
         #region Fields
 
+        private int id;
         private bool tapped = false;
         private string name;
         private EquipmentType type;
@@ -141,6 +142,11 @@ namespace Descent.Model.Player.Figure.HeroStuff
         #endregion
 
         #region Properties
+
+        public int Id
+        {
+            get { return id; }
+        }
 
         /// <summary>
         /// Gets a value indicating whether the equipment is tapped / used

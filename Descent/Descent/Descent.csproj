@@ -138,6 +138,7 @@
     <Compile Include="Model\Player\Figure\HeroStuff\Potion.cs" />
     <Compile Include="Model\Player\Figure\HeroStuff\Skill.cs" />
     <Compile Include="Model\Player\Figure\HeroStuff\SurgeAbility.cs" />
+    <Compile Include="Model\Player\Figure\HeroStuff\Treasure.cs" />
     <Compile Include="Model\Player\Figure\Monster.cs" />
     <Compile Include="Model\Player\HeroParty.cs" />
     <Compile Include="Model\Player\Overlord\Overlord.cs" />
@@ -148,6 +149,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sprite.cs" />
     <Compile Include="SpriteFactory.cs" />
+    <Compile Include="State\GameState.cs" />
     <Compile Include="State\State.cs" />
     <Compile Include="State\StateMachine.cs" />
     <Compile Include="State\StateManager.cs" />

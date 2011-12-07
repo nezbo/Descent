@@ -26,6 +26,7 @@ namespace Descent.State
         private readonly FullModel model;
         private HeroParty heroParty;
         private EventManager eventManager = Player.Instance.EventManager;
+        private GameState gameState = new GameState();
 
         // fields for different game logic variables
         // server only
