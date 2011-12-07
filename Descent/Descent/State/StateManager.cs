@@ -48,9 +48,7 @@ namespace Descent.State
             eventManager.OverlordIsEvent += new OverlordIsHandler(OverLordIs);
 
             // initiate start
-            stateMachine = new StateMachine(new State[] { State.InLobby, State.DrawOverlordCards, 
-                State.DrawHeroCard, State.DrawSkillCards, 
-                State.BuyEquipment, State.NewRound, State.NewRound });
+            stateMachine = new StateMachine(new State[] { State.InLobby, State.BuyEquipment, State.NewRound, State.NewRound });
             stateMachine.StateChanged += StateChanged;
 
             StateChanged();
@@ -170,9 +168,8 @@ namespace Descent.State
 
                         break;
                     }
-                case State.DrawHeroCard:
+                case State.BuyEquipment:
                     {
-                        root.AddClickAction("hero", n => n.EventManager.QueueEvent(EventType.AssignHero,/*WTF Simon??? WHAT DO I DO*/ null));
                         break;
                     }
             }

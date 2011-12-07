@@ -1,4 +1,6 @@
-﻿namespace Descent.GUI
+﻿using Descent.Model.Player.Figure.HeroStuff;
+
+namespace Descent.GUI
 {
     using Descent.Model.Board;
     using Descent.Model.Player;
@@ -83,6 +85,23 @@
                         }
 
                         break;
+                    }
+                case State.BuyEquipment:
+                    {
+                        GUIElement money = new GUIElement(game, "money", 0, 0, RelW(g, 10), RelH(g, 10));
+                        GUIElement box = new GUIElement(game, "shop", RelW(g, 10), RelH(g, 10), RelW(g, 80), RelH(g, 70));
+
+                        int startY = RelH(g, 15);
+                        int startX = RelH(g, 15);
+
+
+                        for (int y = 0; y < 4; y++)
+                        {
+                            for (int x = 0; x < 6; x++)
+                            {
+                                box.AddChild(new EquipmentElement(game, Equipment));
+                            }
+                        }
                     }
             }
 
