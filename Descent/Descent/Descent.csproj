@@ -140,6 +140,7 @@
     <Compile Include="Model\Player\Figure\HeroStuff\SurgeAbility.cs" />
     <Compile Include="Model\Player\Figure\Monster.cs" />
     <Compile Include="Model\Player\HeroParty.cs" />
+    <Compile Include="Model\Player\Overlord\Overlord.cs" />
     <Compile Include="Model\Player\Overlord\OverlordCard.cs" />
     <Compile Include="Model\Player\Overlord\SpawnCard.cs" />
     <Compile Include="Model\Player\Player.cs" />
@@ -188,6 +189,7 @@
     <Content Include="equipment.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="overlordcards.txt" />
     <None Include="quest1.map">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -200,6 +202,8 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Game.ico" />
+    <Content Include="GameThumbnail.png" />
+    <Content Include="heroes.txt" />
     <Content Include="monsters.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

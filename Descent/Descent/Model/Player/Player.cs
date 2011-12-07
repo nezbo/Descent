@@ -4,16 +4,14 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-
-using System.Diagnostics.Contracts;
-using Descent.Messaging.Connection;
-
 namespace Descent.Model.Player
 {
+    using System.Diagnostics.Contracts;
 
+    using Descent.Messaging.Connection;
     using Descent.Messaging.Events;
+    using Descent.Model.Player.Figure;
     using Descent.State;
-    using Figure;
 
     /// <summary>
     /// Describes the current role of a Player in the game. The Overlord's
@@ -64,8 +62,6 @@ namespace Descent.Model.Player
 
         private string[] playerNicks;
 
-        private HeroParty heroParty;
-
         /// <summary>
         /// Prevents a default instance of the <see cref="Player"/> class from being created.
         /// </summary>
@@ -74,7 +70,8 @@ namespace Descent.Model.Player
             IsOverlord = false;
             eventManager = new EventManager();
             playerNicks = new string[5];
-            heroParty = new HeroParty();
+            Overlord = new Overlord.Overlord();
+            HeroParty = new HeroParty();
         }
 
         /// <summary>
@@ -107,16 +104,12 @@ namespace Descent.Model.Player
 
         public bool IsOverlord { get; set; }
 
+        public Overlord.Overlord Overlord { get; private set; }
+
         /// <summary>
         /// Gets the Hero Party.
         /// </summary>
-        public HeroParty HeroParty
-        {
-            get
-            {
-                return heroParty;
-            }
-        }
+        public HeroParty HeroParty { get; private set; }
 
         /// <summary>
         /// Gets or sets the Hero of the Player - if the player is not overlord.
