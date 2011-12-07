@@ -112,18 +112,22 @@ namespace Descent
 
             root.AddClickAction("doneJoin", n =>
             {
-
                 n.JoinGame(InputElement.GetInputFrom("connectInput"), 1337);
 
-                System.Threading.Thread.Sleep(200);
-
-                // We need the connection and a response back that sets the id before we can set the Nickname.
-                if (InputElement.GetInputFrom("nameInput").Length > 0)
+                Player.Instance.EventManager.AcceptPlayerEvent += new AcceptPlayerHandler((sender, eventArgs) =>
                 {
-                    n.Nickname = InputElement.GetInputFrom("nameInput");
-                }
+                    if (eventArgs.PlayerId == Player.Instance.Id)
+                    {
+                        if (InputElement.GetInputFrom("nameInput").Length > 0)
+                        {
+                            n.Nickname = InputElement.GetInputFrom("nameInput");
+                        }
 
-                n.StateManager = new StateManager(gui, new FullModel());
+                        n.StateManager = new StateManager(gui, new FullModel());
+
+                        Player.Instance.EventManager.QueueEvent(EventType.PlayerJoined, new PlayerJoinedEventArgs(Player.Instance.Id, Player.Instance.Nickname));
+                    }
+                });
             });
 
             Player.Instance.EventManager.PlayerJoinedEvent += new PlayerJoinedHandler((sender, eventArgs) =>

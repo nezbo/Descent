@@ -18,6 +18,8 @@ namespace Descent.Messaging.Events
 
     #region Initialization of game
 
+    public delegate void AcceptPlayerHandler(object sender, PlayerEventArgs eventArgs);
+
     public delegate void PlayerJoinedHandler(object sender, PlayerJoinedEventArgs eventArgs);
 
     public delegate void PlayersInGameHandler(object sender, PlayersInGameEventArgs eventArgs);
@@ -174,7 +176,8 @@ namespace Descent.Messaging.Events
     {
         private readonly EventType[] needResponses = new EventType[] { };
 
-        private LinkedList<string> queue = new LinkedList<string>();
+        private Queue<string> queue = new Queue<string>();
+
         private Dictionary<string, int> responses = new Dictionary<string, int>(); // Key is eventid and int is number of players who responded.
 
         private bool awaitingResponses = false;
@@ -183,6 +186,8 @@ namespace Descent.Messaging.Events
         private Random random = new Random();
 
         #region Event declarations
+
+        public event AcceptPlayerHandler AcceptPlayerEvent;
 
         public event PlayerJoinedHandler PlayerJoinedEvent;
 
@@ -310,7 +315,11 @@ namespace Descent.Messaging.Events
         /// <param name="eventString">Event string to queue.</param>
         public void QueueStringEvent(string eventString)
         {
-            queue.AddLast(eventString);
+            lock (queue)
+            {
+                queue.Enqueue(eventString);
+                //queue.AddLast(eventString);  
+            }
         }
 
         /// <summary>
@@ -321,7 +330,13 @@ namespace Descent.Messaging.Events
         public void QueueEvent(EventType eventType, GameEventArgs eventArgs)
         {
             AddRequiredEventArgs(eventType, eventArgs);
-            queue.AddLast(EncodeMessage(eventType, eventArgs));
+            
+            lock (queue)
+            {
+                queue.Enqueue(EncodeMessage(eventType, eventArgs));
+                //queue.AddLast(EncodeMessage(eventType, eventArgs));  
+            }
+            
         }
 
         /// <summary>
@@ -329,15 +344,25 @@ namespace Descent.Messaging.Events
         /// </summary>
         public void ProcessEventQueue()
         {
-
             // Converting to array before looping. If the collection is looped on the state-thread while the
             // gui thread adds a new event, an InvalidOperationException will be thrown. TODO: Should we use a synclock instead?
-            foreach (string s in queue.ToArray())
+
+            lock (queue)
             {
-                ParseAndFire(s, true);
-            }
-            
-            queue.Clear();
+                while (queue.Count > 0)
+                {
+                    string evtStr = queue.Dequeue();
+                    ParseAndFire(evtStr, true);
+                }
+                /*
+                foreach (string s in queue)
+                {
+                    ParseAndFire(s, true);
+                }
+
+                queue.Clear(); 
+                 * */
+            }   
         }
 
         /// <summary>
@@ -409,6 +434,9 @@ namespace Descent.Messaging.Events
             // Fire the actual event.
             switch (eventType)
             {
+                case EventType.AcceptPlayer:
+                    if (AcceptPlayerEvent != null) AcceptPlayerEvent(this, (PlayerEventArgs)eventArgs);
+                    break;
                 case EventType.PlayerJoined:
                     if (PlayerJoinedEvent != null) PlayerJoinedEvent(this, (PlayerJoinedEventArgs)eventArgs);
                     break;
@@ -649,6 +677,9 @@ namespace Descent.Messaging.Events
         {
             switch (eventType)
             {
+                case EventType.AcceptPlayer:
+                    return new PlayerEventArgs(args);
+                    break;
                 case EventType.PlayerJoined:
                     return new PlayerJoinedEventArgs(args);
                     break;

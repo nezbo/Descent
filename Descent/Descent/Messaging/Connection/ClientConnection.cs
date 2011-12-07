@@ -65,8 +65,7 @@ namespace Descent.Messaging.Connection
                 client.Id = int.Parse(split[1]);
                 Console.WriteLine("RECEIVED ID: " + client.Id);
                 
-                // PlayerJoined event
-                Player.Instance.EventManager.QueueEvent(EventType.PlayerJoined, new PlayerJoinedEventArgs(client.Id, Player.Instance.Nickname));
+                Player.Instance.EventManager.QueueEvent(EventType.AcceptPlayer, new PlayerEventArgs(client.Id));
             }
             else
             {
