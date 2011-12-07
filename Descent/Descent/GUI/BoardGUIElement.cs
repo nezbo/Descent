@@ -40,6 +40,7 @@ namespace Descent.GUI
             this.board = board;
             xDisp = -2 * 95;
             yDisp = 17 * 95;
+            this.role = role;
 
             // marked
             this.markedSquares = new Dictionary<Vector2, bool>();
@@ -71,7 +72,7 @@ namespace Descent.GUI
             {
                 for (int y = 0; y < board.Height; y++)
                 {
-                    if (board.IsSquareWithinBoard(x, y) && (role == Role.Overlord || board.SquareVisibleByPlayers(new Point(x, y))))
+                    if (board.SquareVisibleByPlayers(new Point(x, y)) || (role == Role.Overlord && board.IsSquareWithinBoard(x, y)))
                     {
                         v = CalcVector(x, y);
                         if (board[x, y] != null) draw.Draw(board.FloorTexture, new Vector2(x * 95 - xDisp, y * 95 - yDisp), Color.White);

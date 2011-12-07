@@ -45,6 +45,7 @@ namespace Descent.State
             eventManager.PlayersInGameEvent += new PlayersInGameHandler(PlayersInGame);
             eventManager.ReadyEvent += new ReadyHandler(BeginGame);
             eventManager.BeginGameEvent += new BeginGameHandler(BeginGame);
+            eventManager.OverlordIsEvent += new OverlordIsHandler(OverLordIs);
 
             // initiate start
             stateMachine = new StateMachine(new State[] { State.InLobby, State.DrawHeroCard, State.DrawSkillCards, State.BuyEquipment, State.NewRound, State.NewRound });
@@ -52,10 +53,23 @@ namespace Descent.State
 
             StateChanged();
             gui.CreateMenuGUI(model);
-            gui.CreateBoardGUI(FullModel.Board, DetermineRole());
         }
 
         // event handlers
+        private void OverLordIs(object sender, OverlordIsEventArgs eventArgs)
+        {
+            if (Player.Instance.Id == eventArgs.PlayerId)
+            {
+                Player.Instance.IsOverlord = true;
+            }
+            else
+            {
+                Player.Instance.SetPlayerHero(eventArgs.PlayerId, null);
+                Player.Instance.IsOverlord = false;
+            }
+            gui.CreateBoardGUI(FullModel.Board, DetermineRole());
+        }
+
         private void PlayerJoined(object sender, PlayerJoinedEventArgs eventArgs)
         {
             Player.Instance.SetPlayerNick(eventArgs.PlayerId, eventArgs.PlayerNick);
@@ -146,6 +160,7 @@ namespace Descent.State
                                                                  {
                                                                      Player.Instance.EventManager.QueueEvent(
                                                                          EventType.BeginGame, new GameEventArgs());
+                                                                     Player.Instance.EventManager.QueueEvent(EventType.OverlordIs, new OverlordIsEventArgs(Player.Instance.Id));
                                                                  }
                                                                  System.Diagnostics.Debug.WriteLine("Start clicked!");
                                                              });
