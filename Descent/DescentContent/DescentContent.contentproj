@@ -419,8 +419,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="door.png">
-      <Name>door</Name>
+    <Compile Include="door-None.png">
+      <Name>door-None</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

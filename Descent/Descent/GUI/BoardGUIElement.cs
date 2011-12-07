@@ -38,13 +38,14 @@ namespace Descent.GUI
             : base(game, "board", 0, 0, game.GraphicsDevice.Viewport.Width, game.GraphicsDevice.Viewport.Height)
         {
             this.board = board;
-            xDisp = -2 * 95;
-            yDisp = 17 * 95;
+            xDisp = -2 * TileSize;
+            yDisp = 17 * TileSize;
             this.role = role;
 
             // marked
             this.markedSquares = new Dictionary<Vector2, bool>();
             this.markTexture = new Texture2D(this.Game.GraphicsDevice, TileSize, TileSize);
+            //markTexture.SetData(new Color[] { Color.White });
 
             // event on click
             this.AddClickAction("board", n => System.Diagnostics.Debug.WriteLine("TODO: board clicks")); //TODO
@@ -52,15 +53,16 @@ namespace Descent.GUI
 
         public override bool HandleClick(int x, int y)
         {
-            //TODO:
-            //this.xClick = formel for at finde x square
-            //this.yClick = formel for at finde y square
-            return base.HandleClick(x, y);
+            this.xClick = (xDisp + x) / TileSize;
+            this.yClick = (yDisp + y) / TileSize;
+            System.Diagnostics.Debug.WriteLine(xClick + "," + yClick);
+            this.MarkSquare(xClick, yClick, false);
+            return true;
         }
 
         private Vector2 CalcVector(int x, int y)
         {
-            return new Vector2(x * 95 - xDisp, y * 95 - yDisp);
+            return new Vector2(x * TileSize - xDisp, y * TileSize - yDisp);
         }
 
         public override void Draw(SpriteBatch draw)
@@ -74,19 +76,18 @@ namespace Descent.GUI
                 {
                     if (board.SquareVisibleByPlayers(new Point(x, y)) || (role == Role.Overlord && board.IsSquareWithinBoard(x, y)))
                     {
-                        v = CalcVector(x, y);
-                        if (board[x, y] != null) draw.Draw(board.FloorTexture, new Vector2(x * 95 - xDisp, y * 95 - yDisp), Color.White);
+                        if (board[x, y] != null) draw.Draw(board.FloorTexture, CalcVector(x, y), Color.White);
                     }
                 }
             }
 
             // doors
-            foreach (Door d in board.RelevantDoors)
+            foreach (Door d in (role == Role.Overlord ? board.AllDoors : board.RelevantDoors))
             {
                 float rotation = MathHelper.Pi * 0.5f;
                 Point position = d.TopLeftCorner;
                 draw.Draw(d.Texture,
-                    new Vector2(position.X,position.Y), 
+                    CalcVector(d.TopLeftCorner.X, d.TopLeftCorner.Y),
                     null,
                     Color.White,
                     rotation,
@@ -141,13 +142,14 @@ namespace Descent.GUI
             // Marks (if any)
             foreach (Vector2 pos in markedSquares.Keys)
             {
+                v = CalcVector((int)pos.X, (int)pos.Y);
                 if (markedSquares[pos])
                 {
-                    draw.Draw(markTexture, pos, PositiveHighlight);
+                    draw.Draw(markTexture, v, PositiveHighlight);
                 }
                 else
                 {
-                    draw.Draw(markTexture, pos, NegativeHighlight);
+                    draw.Draw(markTexture, v, NegativeHighlight);
                 }
             }
         }
@@ -160,7 +162,8 @@ namespace Descent.GUI
         /// <param name="positive">True if the highlight should indicate a eligible. False if it should indicate inaccessibility.</param>
         public void MarkSquare(int x, int y, bool positive)
         {
-            markedSquares.Add(new Vector2(x, y), positive);
+            markedSquares[new Vector2(x, y)] = positive;
+
         }
 
         /// <summary>
@@ -176,10 +179,10 @@ namespace Descent.GUI
             base.Update(gameTime);
 
             KeyboardState keyState = Keyboard.GetState();
-            if (keyState.IsKeyDown(Keys.Left) && xDisp > -BorderTiles * 95) xDisp -= 10;
-            if (keyState.IsKeyDown(Keys.Right) && xDisp < (board.Width + BorderTiles - 1) * 95 - Game.GraphicsDevice.Viewport.Width) xDisp += 10;
-            if (keyState.IsKeyDown(Keys.Up) && yDisp > -BorderTiles * 95) yDisp -= 10;
-            if (keyState.IsKeyDown(Keys.Down) && yDisp < (board.Height + BorderTiles) * 95 - Game.GraphicsDevice.Viewport.Height) yDisp += 10;
+            if (keyState.IsKeyDown(Keys.Left) && xDisp > -BorderTiles * TileSize) xDisp -= 10;
+            if (keyState.IsKeyDown(Keys.Right) && xDisp < (board.Width + BorderTiles - 1) * TileSize - Game.GraphicsDevice.Viewport.Width) xDisp += 10;
+            if (keyState.IsKeyDown(Keys.Up) && yDisp > -BorderTiles * TileSize) yDisp -= 10;
+            if (keyState.IsKeyDown(Keys.Down) && yDisp < (board.Height + BorderTiles) * TileSize - Game.GraphicsDevice.Viewport.Height) yDisp += 10;
         }
     }
 }

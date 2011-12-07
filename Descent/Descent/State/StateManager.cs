@@ -18,7 +18,7 @@ namespace Descent.State
     /// <summary>
     /// The handler of all states. Knows about the current state and what to do next.
     /// </summary>
-    /// <author>Martin Marcher</author>
+    /// <author>Martin Marcher & Emil Juul Jacobsen</author>
     public class StateManager
     {
         private readonly StateMachine stateMachine;
