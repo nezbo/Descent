@@ -200,7 +200,7 @@ class_chart HERO_PARTY
 	query
 		"How many heroes are in the HeroParty?",
 		"How many heroes have yet to take their turn?",
-		"Has 'this' heroes yet to take their turn?",
+		"Has 'this' hero yet to take his turn?",
 		"How many conquest tokens do the heroes have?",
 		"Is the pool of conquest tokens empty?"
 	command
@@ -222,17 +222,14 @@ class_chart OVERLORD
 	explanation
 		"The role of a overlord, that a hero can be"
 	query
-		"What cards do you have in your deck?",
-		"What cards do you have in play?",
-		"What cards have you discarded?",
+		"What cards do you have in your hand?",
+		"What cards do you have in power?",
 		"How many threat tokens do you have?",
-		"What cards do you have?"
 	command
-		"Add 'this' card to your deck!",
-		"Remove 'this' card from your deck!",
-		"Add 'this' card to your cards in play!",
-		"Remove 'this' card from your cards in play!",
-		"Add 'this' card to your discarded cards!",
+		"Add 'this' card to your cards in hand!",
+		"Remove 'this' card from your cards in hand!",
+		"Add 'this' card to your powers!",
+		"Remove 'this' card from your powers!",
 		"Remove all your discarded cards!"
 	constraint
 		"When it is not the overlords turn, the overlord cannot have more than 7 cards in hand."

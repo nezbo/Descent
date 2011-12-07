@@ -29,6 +29,7 @@ component
 				ensure
 					Result -> conquestTokens = 0;
 			end
+			heroes: MAP[int, Hero] -- What heroes is in the party?
 			removeConquestTokens: Void -- Remove 'this' number of conquest tokens from the pool of tokens!
 				-> tokens: INTEGER
 				require
