@@ -419,14 +419,12 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="door-None.png">
+    <Compile Include="Images\Board\door-None.png">
       <Name>door-None</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="door-Red.png">
+    <Compile Include="Images\Board\door-Red.png">
       <Name>door-Red</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>

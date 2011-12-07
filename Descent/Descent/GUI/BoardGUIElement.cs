@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Descent.Model.Board;
 using Descent.Model.Player;
 using Microsoft.Xna.Framework.Input;
@@ -53,8 +54,8 @@ namespace Descent.GUI
 
         public override bool HandleClick(int x, int y)
         {
-            this.xClick = (xDisp + x) / TileSize;
-            this.yClick = (yDisp + y) / TileSize;
+            this.xClick = (int)Math.Floor((xDisp + x) / (double)TileSize);
+            this.yClick = (int)Math.Floor((yDisp + y) / (double)TileSize);
             System.Diagnostics.Debug.WriteLine(xClick + "," + yClick);
             this.MarkSquare(xClick, yClick, false);
             return true;

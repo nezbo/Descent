@@ -75,10 +75,11 @@ rock,6,20,
 rock,11,13,
 rock,12,13,
 rock,13,13,
-rune,17,12,red
+rune,17,12,Red
 pit,6,21,
 pit,11,5,
 pit,12,5,
 pit,13,5,
 pit,14,5,
-door,3,4,red
+door,0,2,21,2,22,1,3,21,3,22,V,None
+door,3,12,11,13,11,4,12,10,13,10,H,Red

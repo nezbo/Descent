@@ -101,9 +101,17 @@ namespace Descent.Model.Board
             }
         }
 
+        /// <summary>
+        /// Gets all doors that are revealed at the moment.
+        /// </summary>
         public Door[] RelevantDoors
         {
             get { return doors.Where(door => door.Areas.Any(area => revealedAreas.Contains(area))).ToArray(); }
+        }
+
+        public Door[] AllDoors
+        {
+            get { return doors.ToArray(); }
         }
 
         #endregion
