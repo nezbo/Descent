@@ -68,6 +68,7 @@ namespace Descent.State
             {
                 Player.Instance.SetPlayerNick(p.Id, p.Nickname);
             }
+            StateChanged();
         }
 
         private void ReadyEvent(object sender, GameEventArgs eventArgs)

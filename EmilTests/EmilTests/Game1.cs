@@ -8,6 +8,8 @@ using Microsoft.Xna.Framework.Input;
 
 namespace EmilTests
 {
+    using Descent.Messaging.Events;
+
     /// <summary>
     /// This is the main type for your game
     /// </summary>
@@ -91,22 +93,40 @@ namespace EmilTests
             root.AddText("doneJoin", "Join!", new Vector2(0, 0));
             root.AddClickAction("doneCreate", n =>
                                                 {
+                                                    // Create the state manager.
+                                                    n.StateManager = new StateManager(gui, new FullModel());
+
+                                                    // Start the game. TODO: Try/catch error handling.
+                                                    n.StartGame(1337);
+
+                                                    // Set the nickname. Since this is the server, it will be set on id 1 always.
                                                     if (InputElement.GetInputFrom("nameInput").Length > 0)
                                                     {
                                                         n.Nickname = InputElement.GetInputFrom("nameInput");
                                                     }
-                                                    n.StateManager = new StateManager(gui, new FullModel());
-                                                    n.StartGame(1337);
                                                 });
+
             root.AddClickAction("doneJoin", n =>
                                                 {
+                                                    
+                                                    n.JoinGame(InputElement.GetInputFrom("connectInput"), 1337);
+
+                                                    System.Threading.Thread.Sleep(200);
+
+                                                    // We need the connection and a response back that sets the id before we can set the Nickname.
                                                     if (InputElement.GetInputFrom("nameInput").Length > 0)
                                                     {
                                                         n.Nickname = InputElement.GetInputFrom("nameInput");
                                                     }
+
                                                     n.StateManager = new StateManager(gui, new FullModel());
-                                                    n.JoinGame(InputElement.GetInputFrom("connectInput"), 1337);
                                                 });
+
+            Player.Instance.EventManager.PlayerJoinedEvent += new PlayerJoinedHandler((sender, eventArgs) =>
+                {
+                    // If the PlayerJoined event is about our local player(the id will be set just before this, so 
+                   
+                });
 
             // placing the root in the gui
             gui.ChangeStateGUI(root);

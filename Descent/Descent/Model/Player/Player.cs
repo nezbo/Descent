@@ -87,7 +87,18 @@ namespace Descent.Model.Player
             }
         }
 
-        public string Nickname { get; set; }
+        public string Nickname
+        {
+            get
+            {
+                return GetPlayerNick(Player.Instance.Id);
+            }
+            
+            set
+            {
+                SetPlayerNick(Player.Instance.Id, value);
+            }
+        }
 
         /// <summary>
         /// What is your role?
@@ -147,7 +158,7 @@ namespace Descent.Model.Player
                 int c = 0;
                 foreach (string playerNick in playerNicks)
                 {
-                    if (playerNick != "") c++;
+                    if (playerNick != null) c++;
                 }
                 return c;
             }
