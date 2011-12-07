@@ -13,7 +13,6 @@ namespace Descent.Model.Board
     using System.Collections.Generic;
     using System.Diagnostics.Contracts;
     using System.Linq;
-    using System.Text;
 
     using Descent.Model.Player.Figure;
 
@@ -40,9 +39,9 @@ namespace Descent.Model.Board
 
         private Rectangle bounds;
 
-        private HashSet<int> revealedAreas = new HashSet<int>();  
+        private HashSet<int> revealedAreas = new HashSet<int>();
 
-        private List<Door> doors = new List<Door>(); 
+        private List<Door> doors = new List<Door>();
 
         private Collection<Hero> heroesInTown = new Collection<Hero>();
 
@@ -58,12 +57,12 @@ namespace Descent.Model.Board
         /// Gets the width of the board
         /// What is your width?
         /// </summary>
-        public int Width 
-        { 
+        public int Width
+        {
             get
             {
                 return bounds.Width;
-            } 
+            }
         }
 
         /// <summary>
@@ -87,7 +86,7 @@ namespace Descent.Model.Board
             {
                 return heroesInTown.ToArray();
             }
-        } 
+        }
 
         public Dictionary<Hero, Point> HeroesOnBoard
         {
@@ -186,7 +185,7 @@ namespace Descent.Model.Board
         public bool IsSquareWithinBoard(int x, int y)
         {
             if (!bounds.Contains(x, y)) return false;
-            if(board[x, y] == null) return false;
+            if (board[x, y] == null) return false;
             return true;
         }
 
@@ -203,7 +202,7 @@ namespace Descent.Model.Board
         public bool IsSquareWithinBoard(Point point)
         {
             Contract.Requires(point != null);
-            return IsSquareWithinBoard(point.X,  point.Y);
+            return IsSquareWithinBoard(point.X, point.Y);
         }
 
         /// <summary>
@@ -267,18 +266,18 @@ namespace Descent.Model.Board
             }
             else
             {
-                if(from.X > to.X)
+                if (from.X > to.X)
                 {
                     var temp = from;
                     from = to;
                     to = temp;
                 }
 
-                double a = (double) (to.Y - from.Y)/(to.X - from.X);
+                double a = (double)(to.Y - from.Y) / (to.X - from.X);
 
                 for (double xn = from.X + .5; xn < to.X; xn++)
                 {
-                    double yn = (xn - from.X)*a + from.Y;
+                    double yn = (xn - from.X) * a + from.Y;
                     if (Math.Abs(yn - Math.Truncate(yn) - .5) < .0000001)
                     {
                         int plus = (a > 0) ? 1 : -1;
@@ -287,8 +286,8 @@ namespace Descent.Model.Board
                     }
                     else
                     {
-                        points.Add(new Point((int) Math.Truncate(xn), (int) Math.Round(yn)));
-                        points.Add(new Point((int) Math.Truncate(xn) + 1, (int) Math.Round(yn)));
+                        points.Add(new Point((int)Math.Truncate(xn), (int)Math.Round(yn)));
+                        points.Add(new Point((int)Math.Truncate(xn) + 1, (int)Math.Round(yn)));
                     }
                 }
 

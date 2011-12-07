@@ -87,6 +87,7 @@
         /// <param name="y">The y-coordinate of the click</param>
         public virtual bool HandleClick(int x, int y)
         {
+            string name = Name;
             // is it within me?
             if (this.HasPoint(x, y))
             {
@@ -105,13 +106,19 @@
                     return true;
                 }
 
-                // ok, its within me, ill handle it!
-                if (onClick != null)
+                // ok, its within me
+                if (drawBg)
                 {
-                    onClick(Player.Instance);
+                    if (onClick != null)
+                    {
+                        onClick(Player.Instance);
+                    }
+                    focus = true;
+                    return true;
                 }
-                focus = true;
-                return true;
+                focus = false;
+                return false;
+
             }
             // nope, wasnt me :(
 

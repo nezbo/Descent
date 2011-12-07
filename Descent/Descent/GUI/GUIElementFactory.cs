@@ -20,7 +20,7 @@
     {
         private static GUIElement CreateEmptyRoot(Game game)
         {
-            GUIElement result = new GUIElement(game, "state", 0, 0, game.GraphicsDevice.Viewport.Width, game.GraphicsDevice.Viewport.Height);
+            GUIElement result = new GUIElement(game, "root", 0, 0, game.GraphicsDevice.Viewport.Width, game.GraphicsDevice.Viewport.Height);
             result.SetDrawBackground(false);
 
             return result;
@@ -60,10 +60,8 @@
                         GUIElement p3 = new GUIElement(game, "player3", RelW(g, 56), RelH(g, 40), RelW(g, 20), RelH(g, 20));
                         GUIElement p4 = new GUIElement(game, "player4", RelW(g, 23), RelH(g, 65), RelW(g, 20), RelH(g, 20));
                         GUIElement p5 = new GUIElement(game, "player5", RelW(g, 56), RelH(g, 65), RelW(g, 20), RelH(g, 20));
-                        GUIElement ready = new GUIElement(game, "ready", RelW(g, 85), RelH(g, 90), RelW(g, 10), RelH(g, 5));
 
                         root.AddChild(box);
-                        root.AddChild(ready);
                         box.AddChild(p1);
                         box.AddChild(p2);
                         box.AddChild(p3);
@@ -76,14 +74,14 @@
                         root.AddText("player3", "Hero:", pos);
                         root.AddText("player4", "Hero:", pos);
                         root.AddText("player5", "Hero:", pos);
-                        root.AddText("ready", "Ready", new Vector2(0, 0));
 
-                        break;
-                    }
-                case State.DrawHeroCard:
-                    {
-                        GUIElement cardE = new GUIElement(game, "hero", RelW(g, 25), RelH(g, 40), RelW(g, 50), RelH(g, 20)); //TODO: proper values
-                        root.AddChild(cardE);
+                        if (role == Role.Overlord)
+                        {
+                            GUIElement start = new GUIElement(game, "start", RelW(g, 85), RelH(g, 90), RelW(g, 10), RelH(g, 5));
+                            root.AddChild(start);
+                            root.AddText("start", "Start Game", new Vector2(0, 0));
+                        }
+
                         break;
                     }
             }

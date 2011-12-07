@@ -332,6 +332,51 @@ namespace Descent.Model
 
         #endregion
 
+        #region Load Heroes
+
+        private void LoadHeroes(Game game)
+        {
+            StreamReader reader = new StreamReader(TitleContainer.OpenStream("heroes.txt"));
+
+            List<Hero> heroes = new List<Hero>();
+            int n = int.Parse(reader.ReadLine());
+            for (int i = 0; i < n; i++)
+            {
+                string line = reader.ReadLine();
+                string[] data = line.Split(new char[] { ',' }, 11);
+
+                int id = int.Parse(data[0]);
+                string name = data[1];
+                int cost = int.Parse(data[2]);
+                int health = int.Parse(data[3]);
+                int fatigue = int.Parse(data[4]);
+                int armor = int.Parse(data[5]);
+                int speed = int.Parse(data[6]);
+
+                int[] dice = data[7].Split('/').Select(int.Parse).ToArray();
+                Dictionary<EAttackType, int> diceDictionary = new Dictionary<EAttackType, int>();
+                diceDictionary[EAttackType.MELEE] = dice[0];
+                diceDictionary[EAttackType.RANGED] = dice[1];
+                diceDictionary[EAttackType.MAGIC] = dice[2];
+
+                int[] skills = data[8].Split('/').Select(int.Parse).ToArray();
+                Dictionary<EAttackType, int> skillDictionary = new Dictionary<EAttackType, int>();
+                skillDictionary[EAttackType.MELEE] = dice[0];
+                skillDictionary[EAttackType.RANGED] = dice[1];
+                skillDictionary[EAttackType.MAGIC] = dice[2];
+
+                int hands = int.Parse(data[9]);
+
+                string text = data[10];
+
+                heroes.Add(new Hero(id, name, cost, health, fatigue, armor, speed, diceDictionary, skillDictionary, hands, text));
+            }
+
+            FullModel.heroes = heroes;
+        }
+
+        #endregion
+
         #endregion
 
         #region Getters
@@ -394,6 +439,10 @@ namespace Descent.Model
             return null;
         }
 
+        public static Hero GetHero(int id)
+        {
+            return heroes[id];
+        }
         #endregion
     }
 }
