@@ -232,7 +232,6 @@
                     builder.Append(currentLine + nextWord.Substring(0, end) + "-\n"); // add what we had space for
                     currentLine = "";
                     words[wordsIndex] = words[wordsIndex].Substring(end, words[wordsIndex].Length - end); // let the remaining be
-
                 }
                 else// word doesn't fit, bit is not too long
                 {

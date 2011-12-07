@@ -45,7 +45,7 @@ namespace Descent.GUI
             return new BoardGUIElement(game, board, role);
         }
 
-        public static GUIElement CreateStateElement(Game game, State state, Role role)
+        public static GUIElement CreateStateElement(Game game, State state, Role role, GameState gameState)
         {
             Viewport g = game.GraphicsDevice.Viewport;
 
@@ -88,8 +88,8 @@ namespace Descent.GUI
                     }
                 case State.BuyEquipment:
                     {
-                        GUIElement money = new GUIElement(game, "money", 0, 0, RelW(g, 10), RelH(g, 10));
-                        GUIElement box = new GUIElement(game, "shop", RelW(g, 10), RelH(g, 10), RelW(g, 80), RelH(g, 70));
+                        GUIElement money = new GUIElement(game, "money", 0, 0, RelW(g, 8), RelH(g, 8));
+                        GUIElement box = new GUIElement(game, "shop", RelW(g, 10), RelH(g, 10), RelW(g, 80), RelH(g, 80));
 
                         int startY = RelH(g, 15);
                         int startX = RelW(g, 15);
@@ -99,14 +99,20 @@ namespace Descent.GUI
 
                         int width = RelW(g, 10);
 
-                        Equipment[] shopContent = herbderb;
+                        Equipment[] shopContent = gameState.CurrentEquipment;
                         for (int y = 0; y < 4; y++)
                         {
                             for (int x = 0; x < 6; x++)
                             {
-                                box.AddChild(new EquipmentElement(game, startX + (x + 1) * width + x * spacerX, startY + (y + 1) * width + y * spacerY, width, width, shopContent[x + y]));
+                                box.AddChild(new EquipmentElement(game, startX + x * width + x * spacerX, startY + y * width + y * spacerY, width, width, shopContent[x + y]));
                             }
                         }
+
+                        money.AddText(money.Name, "Money:\n300", new Vector2(5, 5));
+
+                        root.AddChild(money);
+                        root.AddChild(box);
+                        break;
                     }
             }
 

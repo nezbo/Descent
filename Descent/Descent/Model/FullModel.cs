@@ -35,7 +35,7 @@ namespace Descent.Model
 
         private static List<Hero> heroes;
 
-        private static List<OverlordCard> overlordCards; 
+        private static List<OverlordCard> overlordCards;
 
         private static Dictionary<EDice, Dice> diceDictionary;
 
@@ -61,7 +61,7 @@ namespace Descent.Model
         {
             get { return heroParty; }
         }
- 
+
         #region Load Content
 
         /// <summary>
@@ -82,6 +82,7 @@ namespace Descent.Model
 
             FullModel.game = game;
             heroParty = new HeroParty();
+            overlordCards = new List<OverlordCard>();
 
             LoadDice(game);
             LoadMonsters(game);
@@ -134,7 +135,7 @@ namespace Descent.Model
                 List<Ability> abilities = data[8].Split('/').Select(Ability.GetAbility).ToList();
 
 
-                Rectangle size = new Rectangle(0,0,int.Parse(data[9]), int.Parse(data[10]));
+                Rectangle size = new Rectangle(0, 0, int.Parse(data[9]), int.Parse(data[10]));
 
                 Texture2D texture = game.Content.Load<Texture2D>("Images/Monsters/" + id);
 
@@ -208,7 +209,7 @@ namespace Descent.Model
 
         #region Load Equipement
 
-        private static void LoadEquipment (Game game)
+        private static void LoadEquipment(Game game)
         {
             StreamReader reader = new StreamReader(TitleContainer.OpenStream("equipmentWithTreasure.txt"));
 
@@ -229,7 +230,7 @@ namespace Descent.Model
                 if (line.StartsWith("//")) continue;
 
                 string[] data = line.Split(',');
-                System.Diagnostics.Debug.Assert(data.Length == 12, "Error when loading equipment, at line " + (i + 2));                
+                System.Diagnostics.Debug.Assert(data.Length == 12, "Error when loading equipment, at line " + (i + 2));
 
                 int id = int.Parse(data[0]);
                 string name = data[1];
@@ -265,7 +266,7 @@ namespace Descent.Model
 
         private void LoadMarkers(Game game)
         {
-            
+
         }
 
         #endregion
@@ -284,9 +285,9 @@ namespace Descent.Model
             for (int y = 0; y < height; y++)
             {
                 char[] c = reader.ReadLine().ToCharArray();
-                for(int x = 0; x < c.Length; x++)
+                for (int x = 0; x < c.Length; x++)
                 {
-                    switch(c[x])
+                    switch (c[x])
                     {
                         case ' ':
                             board[x, y] = null;
@@ -326,7 +327,7 @@ namespace Descent.Model
                         RuneKey.TryParse(data[12], out color);
                         Orientation orientation;
                         Orientation.TryParse(data[11], out orientation);
-                        board.AddDoor(new Door(int.Parse(data[1]), new Point(int.Parse(data[2]), int.Parse(data[3])), new Point(int.Parse(data[4]), int.Parse(data[5])), int.Parse(data[6]), new Point(int.Parse(data[7]), int.Parse(data[8])), new Point(int.Parse(data[9]), int.Parse(data[10])), orientation, color, game.Content.Load<Texture2D>("Images/Board/door-"+color.ToString())));
+                        board.AddDoor(new Door(int.Parse(data[1]), new Point(int.Parse(data[2]), int.Parse(data[3])), new Point(int.Parse(data[4]), int.Parse(data[5])), int.Parse(data[6]), new Point(int.Parse(data[7]), int.Parse(data[8])), new Point(int.Parse(data[9]), int.Parse(data[10])), orientation, color, game.Content.Load<Texture2D>("Images/Board/door-" + color.ToString())));
                         break;
                     default:
                         board[int.Parse(data[1]), int.Parse(data[2])].Marker = GetMarker(data[0], data[3]);
@@ -405,7 +406,7 @@ namespace Descent.Model
 
         public static Equipment GetEquipment(int id)
         {
-            return AllEquipment.Single(equipment => equipment.Id == id);
+            return AllEquipment.First(equipment => equipment.Id == id);
         }
 
         public static Dice GetDice(EDice dice)
@@ -445,7 +446,7 @@ namespace Descent.Model
                 case "rune":
                     return new Marker(name + "-" + other, game.Content.Load<Texture2D>("Images/Board/" + name + "-" + other));
                 default:
-                    break;                    
+                    break;
             }
             System.Diagnostics.Debug.Assert(false);
             return null;
@@ -471,7 +472,7 @@ namespace Descent.Model
                     allEquipment.AddRange(equipmentList);
                 }
                 return allEquipment.ToArray();
-            } 
+            }
         }
 
         public static OverlordCard[] AllOverlordCards

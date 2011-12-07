@@ -138,7 +138,7 @@ namespace Descent.State
         {
             State newState = stateMachine.CurrentState;
 
-            GUIElement root = GUIElementFactory.CreateStateElement(gui.Game, stateMachine.CurrentState, Player.Instance.IsServer ? Role.Overlord : Role.InactiveHero);
+            GUIElement root = GUIElementFactory.CreateStateElement(gui.Game, stateMachine.CurrentState, Player.Instance.IsServer ? Role.Overlord : Role.InactiveHero, gameState);
 
             switch (newState) // Fill in events and drawables
             {

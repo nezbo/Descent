@@ -61,7 +61,7 @@ namespace Descent
 
             // creation of elements
             this.gui = new GUI.GUI(this);
-            GUIElement root = GUIElementFactory.CreateStateElement(this, Descent.State.State.ActivateMonsters, Descent.Model.Player.Role.Overlord);
+            GUIElement root = GUIElementFactory.CreateStateElement(this, Descent.State.State.ActivateMonsters, Descent.Model.Player.Role.Overlord, null);
             GUIElement createGame = new GUIElement(this, "create", 100, 250, 300, 100);
             GUIElement joinGame = new GUIElement(this, "join", 100, 550, 300, 100);
             GUIElement changeName = new GUIElement(this, "changeName", 500, 250, 200, 100);

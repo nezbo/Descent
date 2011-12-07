@@ -26,6 +26,10 @@ namespace Descent.State
 
         public GameState()
         {
+            currentEquipment = new List<Equipment>();
+            overlordCards = new List<OverlordCard>();
+            heroes = new List<Hero>();
+
             currentEquipment.AddRange(FullModel.AllEquipment);
             overlordCards.AddRange(FullModel.AllOverlordCards);
             heroes.AddRange(FullModel.AllHeroes);
