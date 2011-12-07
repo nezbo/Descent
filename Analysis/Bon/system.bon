@@ -146,7 +146,8 @@ cluster_chart STATE_STUFF
 		author: "Martin Marcher";
 	explanation
 		"All classes related to state, such as state machine and the state class."
-	class STATE_MANAGER description "The external API for state changes."
+	class GAME_STATE description "Holds information and does calculation related to game logic."
+    class STATE_MANAGER description "The external API for state changes."
 	class STATE_MACHINE description "The handler of all states."
 	class STATE description "A collection of all different states."
 end
@@ -959,6 +960,24 @@ class_chart GAME_EVENT_ARGS
 		"Do you need a response?"
 	command
 		"Populate yourself with arguments using this argument array."
+end
+
+class_chart GAME_STATE
+    indexing
+        author: "Simon Henriksen & Martin Marcher";
+    query
+        "Show me all your equipment.",
+        "Can I buy 'this' equipment?",
+        "Give me 'n' Overlord Cards.",
+        "Give me a Hero.",
+        "What is in 'this' chest?",
+        "Give me 'this kind' of treasure."
+    command
+        "Notify me when the Overlord deck is empty!",
+        "Remove 'this' equipment!",
+        "Remove 'these' Overlord Cards!",
+        "Remove 'this' Hero!",
+        "Remove 'this' treasure card!"
 end
 
 class_chart STATE_MANAGER
