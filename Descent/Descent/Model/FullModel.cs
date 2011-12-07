@@ -319,8 +319,10 @@ namespace Descent.Model
                         break;
                     case "door":
                         RuneKey color;
-                        RuneKey.TryParse(data[3], out color);
-                        // TODO board.AddDoor(new Door(int.Parse(data[1]), int.Parse(data[2]), color));
+                        RuneKey.TryParse(data[12], out color);
+                        Orientation orientation;
+                        Orientation.TryParse(data[11], out orientation);
+                        board.AddDoor(new Door(int.Parse(data[1]), new Point(int.Parse(data[2]), int.Parse(data[3])), new Point(int.Parse(data[4]), int.Parse(data[5])), int.Parse(data[6]), new Point(int.Parse(data[7]), int.Parse(data[8])), new Point(int.Parse(data[9]), int.Parse(data[10])), orientation, color, game.Content.Load<Texture2D>("Images/Board/door-"+color.ToString())));
                         break;
                     default:
                         board[int.Parse(data[1]), int.Parse(data[2])].Marker = GetMarker(data[0], data[3]);
