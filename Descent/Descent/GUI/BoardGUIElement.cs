@@ -82,22 +82,6 @@ namespace Descent.GUI
                 }
             }
 
-            // doors
-            foreach (Door d in (role == Role.Overlord ? board.AllDoors : board.RelevantDoors))
-            {
-                float rotation = MathHelper.Pi * 0.5f;
-                Point position = d.TopLeftCorner;
-                draw.Draw(d.Texture,
-                    CalcVector(d.TopLeftCorner.X, d.TopLeftCorner.Y),
-                    null,
-                    Color.White,
-                    rotation,
-                    new Vector2(0, d.Texture.Height),
-                    1.0f,
-                    SpriteEffects.None,
-                    0f);
-            }
-
             // Figures and markers
             Square s;
 
@@ -152,6 +136,22 @@ namespace Descent.GUI
                 {
                     draw.Draw(markTexture, v, NegativeHighlight);
                 }
+            }
+
+            // doors
+            foreach (Door d in (role == Role.Overlord ? board.AllDoors : board.RelevantDoors))
+            {
+                float rotation = d.Orientation == Orientation.H ? MathHelper.Pi * 0.5f : 0.0f;
+                Point position = d.TopLeftCorner;
+                draw.Draw(d.Texture,
+                    CalcVector(d.TopLeftCorner.X, d.TopLeftCorner.Y),
+                    null,
+                    Color.White,
+                    rotation,
+                    new Vector2(0, d.Texture.Height),
+                    1.0f,
+                    SpriteEffects.None,
+                    0f);
             }
         }
 
