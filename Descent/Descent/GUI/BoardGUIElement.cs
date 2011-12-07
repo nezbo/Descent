@@ -80,6 +80,22 @@ namespace Descent.GUI
                 }
             }
 
+            // doors
+            foreach (Door d in board.RelevantDoors)
+            {
+                float rotation = MathHelper.Pi * 0.5f;
+                Point position = d.TopLeftCorner;
+                draw.Draw(d.Texture,
+                    new Vector2(position.X,position.Y), 
+                    null,
+                    Color.White,
+                    rotation,
+                    new Vector2(0, d.Texture.Height),
+                    1.0f,
+                    SpriteEffects.None,
+                    0f);
+            }
+
             // Figures and markers
             Square s;
 
