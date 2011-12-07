@@ -283,5 +283,10 @@
             // draw the children on top
             foreach (GUIElement e in children) e.Draw(draw);
         }
+
+        public override void Update(GameTime gameTime)
+        {
+            foreach (GUIElement e in children) e.Update(gameTime);
+        }
     }
 }
