@@ -45,8 +45,8 @@ namespace Descent.GUI
 
             // marked
             this.markedSquares = new Dictionary<Vector2, bool>();
-            this.markTexture = new Texture2D(this.Game.GraphicsDevice, TileSize, TileSize);
-            //markTexture.SetData(new Color[] { Color.White });
+            this.markTexture = new Texture2D(Game.GraphicsDevice, 1, 1);
+            this.markTexture.SetData(new Color[] { Color.White });
 
             // event on click
             this.AddClickAction("board", n => System.Diagnostics.Debug.WriteLine("TODO: board clicks")); //TODO
@@ -75,7 +75,7 @@ namespace Descent.GUI
             {
                 for (int y = 0; y < board.Height; y++)
                 {
-                    if (board.SquareVisibleByPlayers(new Point(x, y)) || (role == Role.Overlord && board.IsSquareWithinBoard(x, y)))
+                    if (board.SquareVisibleByPlayers(x, y) || (role == Role.Overlord && board.IsSquareWithinBoard(x, y)))
                     {
                         if (board[x, y] != null) draw.Draw(board.FloorTexture, CalcVector(x, y), Color.White);
                     }
@@ -89,7 +89,7 @@ namespace Descent.GUI
             {
                 for (int y = 0; y < board.Height; y++)
                 {
-                    if (role == Role.Overlord || board.SquareVisibleByPlayers(new Point(x, y)))
+                    if (role == Role.Overlord || board.SquareVisibleByPlayers(x, y))
                     {
                         s = board[x, y];
                         if (s == null) continue;
@@ -103,7 +103,7 @@ namespace Descent.GUI
             {
                 for (int y = 0; y < board.Height; y++)
                 {
-                    if (role == Role.Overlord || board.SquareVisibleByPlayers(new Point(x, y)))
+                    if (role == Role.Overlord || board.SquareVisibleByPlayers(x, y))
                     {
                         s = board[x, y];
                         if (s == null) continue;
@@ -125,16 +125,24 @@ namespace Descent.GUI
             }
 
             // Marks (if any)
+            Rectangle r;
             foreach (Vector2 pos in markedSquares.Keys)
             {
-                v = CalcVector((int)pos.X, (int)pos.Y);
-                if (markedSquares[pos])
+                DrawMark(draw, (int)pos.X, (int)pos.Y, markedSquares[pos]);
+            }
+
+            // overlord fog
+            if (role == Role.Overlord)
+            {
+                for (int x = 0; x < board.Width; x++)
                 {
-                    draw.Draw(markTexture, v, PositiveHighlight);
-                }
-                else
-                {
-                    draw.Draw(markTexture, v, NegativeHighlight);
+                    for (int y = 0; y < board.Height; y++)
+                    {
+                        if (board.IsSquareWithinBoard(x, y) && !board.SquareVisibleByPlayers(x, y))
+                        {
+                            DrawMark(draw, x, y, false);
+                        }
+                    }
                 }
             }
 
@@ -144,14 +152,28 @@ namespace Descent.GUI
                 float rotation = d.Orientation == Orientation.H ? MathHelper.Pi * 0.5f : 0.0f;
                 Point position = d.TopLeftCorner;
                 draw.Draw(d.Texture,
-                    CalcVector(d.TopLeftCorner.X, d.TopLeftCorner.Y),
+                    CalcVector(d.TopLeftCorner.X + 1, d.TopLeftCorner.Y + 1),
                     null,
                     Color.White,
                     rotation,
-                    new Vector2(0, d.Texture.Height),
+                    new Vector2(d.Texture.Width / 2, d.Texture.Height / 2),
                     1.0f,
                     SpriteEffects.None,
                     0f);
+            }
+        }
+
+        private void DrawMark(SpriteBatch draw, int boardX, int boardY, bool positiveMark)
+        {
+            Vector2 screenPoint = CalcVector(boardX, boardY);
+            Rectangle r = new Rectangle((int)screenPoint.X, (int)screenPoint.Y, TileSize, TileSize);
+            if (positiveMark)
+            {
+                draw.Draw(markTexture, r, PositiveHighlight);
+            }
+            else
+            {
+                draw.Draw(markTexture, r, NegativeHighlight);
             }
         }
 

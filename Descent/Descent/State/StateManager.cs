@@ -155,7 +155,11 @@ namespace Descent.State
                             root.AddText("players", "IP: " + Player.Instance.Connection.Ip, new Vector2(50, 50));
                             root.AddClickAction("start", n =>
                                                              {
-                                                                 if (Player.Instance.NumberOfPlayers >= 3)
+#if DEBUG
+                                                                 if (Player.Instance.NumberOfPlayers >= 1) //TODO 3
+#else 
+                                                                     if (Player.Instance.NumberOfPlayers >= 3) //TODO 3
+#endif
                                                                  {
                                                                      Player.Instance.EventManager.QueueEvent(
                                                                          EventType.BeginGame, new GameEventArgs());
