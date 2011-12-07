@@ -97,9 +97,6 @@ namespace EmilTests
             root.AddText("doneJoin", "Join!", new Vector2(0, 0));
             root.AddClickAction("doneCreate", n =>
                                                 {
-                                                    // Create the state manager.
-                                                    n.StateManager = new StateManager(gui, new FullModel());
-
                                                     // Start the game. TODO: Try/catch error handling.
                                                     n.StartGame(1337);
 
@@ -108,6 +105,9 @@ namespace EmilTests
                                                     {
                                                         n.Nickname = InputElement.GetInputFrom("nameInput");
                                                     }
+
+                                                    // Create the state manager.
+                                                    n.StateManager = new StateManager(gui, new FullModel());
                                                 });
 
             root.AddClickAction("doneJoin", n =>
@@ -115,22 +115,24 @@ namespace EmilTests
 
                                                     n.JoinGame(InputElement.GetInputFrom("connectInput"), 1337);
 
-                                                    System.Threading.Thread.Sleep(200);
-
-                                                    // We need the connection and a response back that sets the id before we can set the Nickname.
-                                                    if (InputElement.GetInputFrom("nameInput").Length > 0)
+                                                    Player.Instance.EventManager.AcceptPlayerEvent += new AcceptPlayerHandler((sender, eventArgs) =>
                                                     {
-                                                        n.Nickname = InputElement.GetInputFrom("nameInput");
-                                                    }
+                                                        if (eventArgs.PlayerId == Player.Instance.Id)
+                                                        {
+                                                            if (InputElement.GetInputFrom("nameInput").Length > 0)
+                                                            {
+                                                                n.Nickname = InputElement.GetInputFrom("nameInput");
+                                                            }
 
-                                                    n.StateManager = new StateManager(gui, new FullModel());
+                                                            n.StateManager = new StateManager(gui, new FullModel()); 
+
+                                                            Player.Instance.EventManager.QueueEvent(EventType.PlayerJoined, new PlayerJoinedEventArgs(Player.Instance.Id, Player.Instance.Nickname));
+                                                            
+                                                        }
+
+                                                    });
+                                                    
                                                 });
-
-            Player.Instance.EventManager.PlayerJoinedEvent += new PlayerJoinedHandler((sender, eventArgs) =>
-                {
-                    // If the PlayerJoined event is about our local player(the id will be set just before this, so 
-
-                });
 
             // placing the root in the gui
             gui.ChangeStateGUI(root);

@@ -71,6 +71,6 @@ namespace Descent.Messaging.Events
         KilledFigure = 56,
         DamageTaken = 57,
         MissedAttack = 58,
-
+        AcceptPlayer = 59
     }
 }
