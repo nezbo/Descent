@@ -15,20 +15,42 @@ namespace MessagingTest
         static void Main(string[] args)
         {
 
-            RolledDicesEventArgs rEventArgs = new RolledDicesEventArgs(new string[] {"0", "2", "1", "6"});
-            Console.WriteLine(rEventArgs);
-
-            Player.Instance.Nickname = "Simon";
             EventManager eventManager = Player.Instance.EventManager;
 
             eventManager.ChatMessageEvent += new ChatMessageHandler((sender, eventArgs) => Console.WriteLine("Received chat event from {0}: {1}", eventArgs.SenderId, eventArgs));
 
             eventManager.AllRespondedNoActionEvent += new AllRespondedNoActionHandler((sender, eventArgs) => Console.WriteLine("Received responses from all other players"));
 
+            eventManager.AcceptPlayerEvent += new AcceptPlayerHandler(
+                (sender, eventArgs) =>
+                    {
+                        if (eventArgs.PlayerId == Player.Instance.Id)
+                        {
+                            Player.Instance.Nickname = "Simon";
+                            eventManager.QueueEvent(EventType.PlayerJoined, new PlayerJoinedEventArgs(Player.Instance.Id, Player.Instance.Nickname));
+                        }
+                    });
+
             eventManager.PlayerJoinedEvent += new PlayerJoinedHandler(
-                (sender, eventArgs) => 
-                    Player.Instance.SetPlayerNick(eventArgs.PlayerId, eventArgs.PlayerNick)
-             );
+                (sender, eventArgs) =>
+                    {
+                        Console.WriteLine("PlayerJoined: " + eventArgs.PlayerNick);
+                        Player.Instance.SetPlayerNick(eventArgs.PlayerId, eventArgs.PlayerNick);
+                        if (Player.Instance.IsServer) eventManager.FirePlayersInGameEvent();
+                        Console.WriteLine("Number of players: " + Player.Instance.NumberOfPlayers);
+                    }   
+            );
+
+            eventManager.PlayersInGameEvent += new PlayersInGameHandler(
+                (sender, eventArgs) =>
+                    {
+                        foreach (PlayerInGame p in eventArgs.Players)
+                        {
+                            Player.Instance.SetPlayerNick(p.Id, p.Nickname);
+                        }
+                        Console.WriteLine("Number of players: " + Player.Instance.NumberOfPlayers);
+                    }
+            );
 
             Console.WriteLine("Enter 'server' for server mode or 'client' for client mode.");
             string type = Console.ReadLine();
