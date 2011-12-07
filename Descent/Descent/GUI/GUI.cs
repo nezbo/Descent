@@ -97,27 +97,30 @@ namespace Descent.GUI
         /// <param name="delta">The number of milliseconds since last update</param>
         public override void Update(GameTime gameTime)
         {
-            // mouseclick
-            MouseState ms = Mouse.GetState();
-            if (ms.LeftButton == ButtonState.Pressed && !mouseDownBefore)
+            if (Game.IsActive)
             {
-                HandleClick(ms.X, ms.Y);
-            }
-            mouseDownBefore = (ms.LeftButton == ButtonState.Pressed);
-
-            // key tuped
-            KeyboardState keyState = Keyboard.GetState();
-            List<Keys> pressed = new List<Keys>(keyState.GetPressedKeys());
-            foreach (Keys key in Enum.GetValues(typeof(Keys)))
-            {
-                bool isDown = pressed.Contains(key);
-                if (isDown && lastKeyboardState.IsKeyUp(key))
+                // mouseclick
+                MouseState ms = Mouse.GetState();
+                if (ms.LeftButton == ButtonState.Pressed && !mouseDownBefore)
                 {
-                    HandleKeyPress(key);
+                    HandleClick(ms.X, ms.Y);
                 }
-            }
+                mouseDownBefore = (ms.LeftButton == ButtonState.Pressed);
 
-            lastKeyboardState = keyState;
+                // key tuped
+                KeyboardState keyState = Keyboard.GetState();
+                List<Keys> pressed = new List<Keys>(keyState.GetPressedKeys());
+                foreach (Keys key in Enum.GetValues(typeof(Keys)))
+                {
+                    bool isDown = pressed.Contains(key);
+                    if (isDown && lastKeyboardState.IsKeyUp(key))
+                    {
+                        HandleKeyPress(key);
+                    }
+                }
+
+                lastKeyboardState = keyState;
+            }
 
             // general update
             foreach (GUIElement l in layers)
