@@ -51,7 +51,7 @@ namespace Descent.State
 
             StateChanged();
             gui.CreateMenuGUI(model);
-            gui.CreateBoardGUI(FullModel.Board);
+            gui.CreateBoardGUI(FullModel.Board, DetermineRole());
         }
 
         // event handlers
@@ -144,6 +144,11 @@ namespace Descent.State
                         {
                             root.AddText("player" + i, Player.Instance.GetPlayerNick(i) ?? "", new Vector2(5, 50));
                         }
+                        if (Player.Instance.IsServer)
+                        {
+                            root.AddText("box", "IP: " + Player.Instance.Connection.Ip, new Vector2(0, 0));
+                        }
+
                         root.AddClickAction("ready", n => n.EventManager.QueueEvent(EventType.Ready, new GameEventArgs()));
 
                         break;

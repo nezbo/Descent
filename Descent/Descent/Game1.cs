@@ -97,9 +97,6 @@ namespace Descent
             root.AddText("doneJoin", "Join!", new Vector2(0, 0));
             root.AddClickAction("doneCreate", n =>
             {
-                // Create the state manager.
-                n.StateManager = new StateManager(gui, new FullModel());
-
                 // Start the game. TODO: Try/catch error handling.
                 n.StartGame(1337);
 
@@ -108,6 +105,9 @@ namespace Descent
                 {
                     n.Nickname = InputElement.GetInputFrom("nameInput");
                 }
+
+                // Create the state manager.
+                n.StateManager = new StateManager(gui, new FullModel());
             });
 
             root.AddClickAction("doneJoin", n =>

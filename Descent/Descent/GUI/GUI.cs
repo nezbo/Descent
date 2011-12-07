@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Descent.Model;
 using Descent.Model.Board;
+using Descent.Model.Player;
 using Microsoft.Xna.Framework.Input;
 
 namespace Descent.GUI
@@ -139,9 +140,9 @@ namespace Descent.GUI
         /// that displays the game board.
         /// </summary>
         /// <param name="board">The board to be displayed.</param>
-        public void CreateBoardGUI(Board board)
+        public void CreateBoardGUI(Board board, Role role)
         {
-            layers[0] = GUIElementFactory.CreateBoardElement(Game, board);
+            layers[0] = GUIElementFactory.CreateBoardElement(Game, board, role);
         }
 
         /// <summary>

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Descent.Model.Board;
+using Descent.Model.Player;
 using Microsoft.Xna.Framework.Input;
 
 namespace Descent.GUI
@@ -26,13 +27,14 @@ namespace Descent.GUI
         private Texture2D markTexture;
 
         private Board board;
+        private Role role;
         private int xDisp, yDisp;
         private Dictionary<Vector2, bool> markedSquares;
 
         // for clicks
         private int xClick, yClick;
 
-        public BoardGUIElement(Game game, Board board)
+        public BoardGUIElement(Game game, Board board, Role role)
             : base(game, "board", 0, 0, game.GraphicsDevice.Viewport.Width, game.GraphicsDevice.Viewport.Height)
         {
             this.board = board;
@@ -69,7 +71,7 @@ namespace Descent.GUI
             {
                 for (int y = 0; y < board.Height; y++)
                 {
-                    if (board.IsSquareWithinBoard(x, y))
+                    if (board.IsSquareWithinBoard(x, y) && (role == Role.Overlord || board.SquareVisibleByPlayers(new Point(x, y))))
                     {
                         v = CalcVector(x, y);
                         if (board[x, y] != null) draw.Draw(board.FloorTexture, new Vector2(x * 95 - xDisp, y * 95 - yDisp), Color.White);
@@ -84,11 +86,13 @@ namespace Descent.GUI
             {
                 for (int y = 0; y < board.Height; y++)
                 {
-                    s = board[x, y];
-                    if (s == null) continue;
-                    v = CalcVector(x, y);
-                    if (s.Marker != null) draw.Draw(s.Marker.Texture, v, Color.White);
-
+                    if (role == Role.Overlord || board.SquareVisibleByPlayers(new Point(x, y)))
+                    {
+                        s = board[x, y];
+                        if (s == null) continue;
+                        v = CalcVector(x, y);
+                        if (s.Marker != null) draw.Draw(s.Marker.Texture, v, Color.White);
+                    }
                 }
             }
 
@@ -96,22 +100,24 @@ namespace Descent.GUI
             {
                 for (int y = 0; y < board.Height; y++)
                 {
-                    s = board[x, y];
-                    if (s == null) continue;
-                    v = CalcVector(x, y);
-                    if (s.Figure != null && s.Figure is Monster && ((Monster)s.Figure).Orientation == Orientation.V)
-                        draw.Draw(
-                            s.Figure.Texture,
-                            v,
-                            null,
-                            Color.White,
-                            (float)(MathHelper.Pi * 0.5),
-                            new Vector2(0, s.Figure.Texture.Height),
-                            1.0f,
-                            SpriteEffects.None,
-                            0f);
-                    else if (s.Figure != null) draw.Draw(s.Figure.Texture, v, Color.White);
-
+                    if (role == Role.Overlord || board.SquareVisibleByPlayers(new Point(x, y)))
+                    {
+                        s = board[x, y];
+                        if (s == null) continue;
+                        v = CalcVector(x, y);
+                        if (s.Figure != null && s.Figure is Monster && ((Monster)s.Figure).Orientation == Orientation.V)
+                            draw.Draw(
+                                s.Figure.Texture,
+                                v,
+                                null,
+                                Color.White,
+                                (float)(MathHelper.Pi * 0.5),
+                                new Vector2(0, s.Figure.Texture.Height),
+                                1.0f,
+                                SpriteEffects.None,
+                                0f);
+                        else if (s.Figure != null) draw.Draw(s.Figure.Texture, v, Color.White);
+                    }
                 }
             }
 

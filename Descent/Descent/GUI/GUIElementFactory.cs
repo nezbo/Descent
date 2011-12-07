@@ -38,9 +38,9 @@
 
         // public
 
-        public static GUIElement CreateBoardElement(Game game, Board board)
+        public static GUIElement CreateBoardElement(Game game, Board board, Role role)
         {
-            return new BoardGUIElement(game, board);
+            return new BoardGUIElement(game, board, role);
         }
 
         public static GUIElement CreateStateElement(Game game, State state, Role role)
@@ -60,7 +60,7 @@
                         GUIElement p3 = new GUIElement(game, "player3", RelW(g, 56), RelH(g, 40), RelW(g, 20), RelH(g, 20));
                         GUIElement p4 = new GUIElement(game, "player4", RelW(g, 23), RelH(g, 65), RelW(g, 20), RelH(g, 20));
                         GUIElement p5 = new GUIElement(game, "player5", RelW(g, 56), RelH(g, 65), RelW(g, 20), RelH(g, 20));
-                        GUIElement ready = new GUIElement(game, "ready", RelW(g, 82), RelH(g, 85), RelW(g, 16), RelH(g,10));
+                        GUIElement ready = new GUIElement(game, "ready", RelW(g, 85), RelH(g, 90), RelW(g, 10), RelH(g, 5));
 
                         root.AddChild(box);
                         root.AddChild(ready);
