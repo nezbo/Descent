@@ -92,14 +92,19 @@ namespace Descent.GUI
                         GUIElement box = new GUIElement(game, "shop", RelW(g, 10), RelH(g, 10), RelW(g, 80), RelH(g, 70));
 
                         int startY = RelH(g, 15);
-                        int startX = RelH(g, 15);
+                        int startX = RelW(g, 15);
 
+                        int spacerX = RelW(g, 2);
+                        int spacerY = RelH(g, 5);
 
+                        int width = RelW(g, 10);
+
+                        Equipment[] shopContent = herbderb;
                         for (int y = 0; y < 4; y++)
                         {
                             for (int x = 0; x < 6; x++)
                             {
-                                box.AddChild(new EquipmentElement(game, Equipment));
+                                box.AddChild(new EquipmentElement(game, startX + (x + 1) * width + x * spacerX, startY + (y + 1) * width + y * spacerY, width, width, shopContent[x + y]));
                             }
                         }
                     }
