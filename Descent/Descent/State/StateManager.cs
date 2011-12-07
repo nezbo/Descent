@@ -12,6 +12,7 @@ namespace Descent.State
     using Descent.Model.Player;
     using Descent.Model.Player.Figure;
     using Descent.Model.Player.Figure.HeroStuff;
+    using System.Linq;
 
     using Microsoft.Xna.Framework;
 
@@ -47,9 +48,10 @@ namespace Descent.State
             eventManager.ReadyEvent += new ReadyHandler(BeginGame);
             eventManager.BeginGameEvent += new BeginGameHandler(BeginGame);
             eventManager.OverlordIsEvent += new OverlordIsHandler(OverLordIs);
+            eventManager.GiveOverlordCardsEvent += new GiveOverlordCardsHandler(GiveOverlordCards);
 
             // initiate start
-            stateMachine = new StateMachine(new State[] { State.InLobby, State.DrawOverlordCards, 
+            stateMachine = new StateMachine(new State[] { State.InLobby, State.Initiation, State.DrawOverlordCards, 
                 State.DrawHeroCard, State.DrawSkillCards, 
                 State.BuyEquipment, State.NewRound, State.NewRound });
             stateMachine.StateChanged += StateChanged;
@@ -57,46 +59,7 @@ namespace Descent.State
             StateChanged();
         }
 
-        // event handlers
-        private void OverLordIs(object sender, OverlordIsEventArgs eventArgs)
-        {
-            if (Player.Instance.Id == eventArgs.PlayerId)
-            {
-                Player.Instance.IsOverlord = true;
-            }
-
-            gui.CreateBoardGUI(FullModel.Board, DetermineRole());
-            gui.CreateMenuGUI(model, DetermineRole());
-        }
-
-        private void PlayerJoined(object sender, PlayerJoinedEventArgs eventArgs)
-        {
-            Player.Instance.SetPlayerNick(eventArgs.PlayerId, eventArgs.PlayerNick);
-            if (Player.Instance.IsServer) eventManager.FirePlayersInGameEvent();
-            StateChanged();
-        }
-
-        private void PlayersInGame(object sender, PlayersInGameEventArgs eventArgs)
-        {
-            foreach (PlayerInGame p in eventArgs.Players)
-            {
-                Player.Instance.SetPlayerNick(p.Id, p.Nickname);
-            }
-            StateChanged();
-        }
-
-        private void BeginGame(object sender, GameEventArgs eventArgs)
-        {
-            switch (stateMachine.CurrentState)
-            {
-                case State.InLobby:
-                    {
-                        stateMachine.ChangeToNextState();
-                        break;
-                    }
-            }
-        }
-
+     
         // stuff?
 
         public State CurrentState
@@ -190,6 +153,70 @@ namespace Descent.State
             heroesYetToAct = new Collection<Hero>(heroParty.AllHeroes);
 
             stateMachine.PlaceStates(State.WaitForHeroTurn);
+            stateMachine.ChangeToNextState();
+        }
+
+        // event handlers
+  
+        private void PlayerJoined(object sender, PlayerJoinedEventArgs eventArgs)
+        {
+            Contract.Requires(CurrentState == State.InLobby);
+            Contract.Ensures(CurrentState == State.InLobby);
+
+            Player.Instance.SetPlayerNick(eventArgs.PlayerId, eventArgs.PlayerNick);
+            if (Player.Instance.IsServer) eventManager.FirePlayersInGameEvent();
+            StateChanged();
+        }
+
+        private void PlayersInGame(object sender, PlayersInGameEventArgs eventArgs)
+        {
+            Contract.Requires(CurrentState == State.InLobby);
+            Contract.Ensures(CurrentState == State.InLobby);
+
+            foreach (PlayerInGame p in eventArgs.Players)
+            {
+                Player.Instance.SetPlayerNick(p.Id, p.Nickname);
+            }
+            StateChanged();
+        }
+
+        private void BeginGame(object sender, GameEventArgs eventArgs)
+        {
+            Contract.Requires(CurrentState == State.InLobby);
+            Contract.Ensures(CurrentState == State.Initiation);
+            stateMachine.ChangeToNextState();
+        }
+
+        private void OverLordIs(object sender, OverlordIsEventArgs eventArgs)
+        {
+            Contract.Requires(CurrentState == State.Initiation);
+            Contract.Ensures(CurrentState == State.DrawOverlordCards);
+
+            if (Player.Instance.Id == eventArgs.PlayerId)
+            {
+                Player.Instance.IsOverlord = true;
+            }
+
+            if (Player.Instance.IsServer)
+            {
+                eventManager.QueueEvent(EventType.GiveOverlordCards, new GiveOverlordCardsEventArgs(gameState.GetOverlordCards(3).Select(card => card.Id).ToArray()));  
+            }
+            
+            gui.CreateBoardGUI(FullModel.Board, DetermineRole());
+            gui.CreateMenuGUI(model, DetermineRole());
+
+            stateMachine.ChangeToNextState();
+        }
+
+        private void GiveOverlordCards(object sender, GiveOverlordCardsEventArgs eventArgs)
+        {
+            Contract.Requires(CurrentState == State.DrawOverlordCards);
+            Contract.Ensures(CurrentState == State.DrawHeroCard);
+
+            foreach (int overlordCardId in eventArgs.OverlordCardIds)
+            {
+                Player.Instance.Overlord.Hand.Add(FullModel.GetOverlordCard(overlordCardId));
+            }
             stateMachine.ChangeToNextState();
         }
 

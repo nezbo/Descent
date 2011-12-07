@@ -736,7 +736,7 @@ namespace Descent.Messaging.Events
                     break;
                 case EventType.DenyBuy:
                     return new PlayerEventArgs(args);
-                    break
+                    break;
                 case EventType.GiveConquestTokens:
                     return new TokenEventArgs(args);
                     break;

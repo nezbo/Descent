@@ -35,7 +35,7 @@ namespace Descent.Model
 
         private static List<Hero> heroes;
 
-        private static List<OverlordCard> overlordCards; 
+        private static List<OverlordCard> overlordCards = new List<OverlordCard>(); //TODO Must be loaded properly 
 
         private static Dictionary<EDice, Dice> diceDictionary;
 
@@ -406,6 +406,11 @@ namespace Descent.Model
         public static Equipment GetEquipment(int id)
         {
             return AllEquipment.Single(equipment => equipment.Id == id);
+        }
+
+        public static OverlordCard GetOverlordCard(int id)
+        {
+            return overlordCards.Single(overlordCard => overlordCard.Id == id);
         }
 
         public static Dice GetDice(EDice dice)

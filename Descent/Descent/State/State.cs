@@ -89,6 +89,7 @@
         ChooseMonster,
         MonsterTurn,
         MonsterTurnInitiation,
-        DeleteMonsterTurn
+        DeleteMonsterTurn,
+        Initiation
     }
 }

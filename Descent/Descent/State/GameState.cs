@@ -1,5 +1,7 @@
 ﻿using System.Diagnostics.Contracts;
+using Descent.Messaging.Events;
 using Descent.Model;
+using Descent.Model.Player;
 using Descent.Model.Player.Figure;
 using Descent.Model.Player.Figure.HeroStuff;
 using Descent.Model.Player.Overlord;
@@ -19,9 +21,9 @@ namespace Descent.State
     /// </author>
     public class GameState
     {
-        private List<Equipment> currentEquipment;
-        private List<OverlordCard> overlordCards;
-        private List<Hero> heroes;
+        private List<Equipment> currentEquipment = new List<Equipment>();
+        private List<OverlordCard> overlordCards = new List<OverlordCard>();
+        private List<Hero> heroes = new List<Hero>();
         //TODO private List<Treasure> treasures;
 
         public GameState()
@@ -30,6 +32,9 @@ namespace Descent.State
             overlordCards.AddRange(FullModel.AllOverlordCards);
             heroes.AddRange(FullModel.AllHeroes);
             //TODO treasures.AddRange(FullModel.AllTreasures);
+
+            // Listen to events
+            Player.Instance.EventManager.GiveOverlordCardsEvent += GiveOverlordCards;
         }
 
         public Equipment[] CurrentEquipment
@@ -97,5 +102,14 @@ namespace Descent.State
             treasures.Remove(FullModel.GetTreasure(treasureId));
         }
         */
+
+        #region Event listeners
+
+        private void GiveOverlordCards(object sender, GiveOverlordCardsEventArgs eventArgs)
+        {
+            RemoveOverlordCards(eventArgs.OverlordCardIds);
+        }
+
+        #endregion
     }
 }
