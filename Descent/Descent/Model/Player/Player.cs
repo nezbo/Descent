@@ -63,7 +63,8 @@ namespace Descent.Model.Player
         private EventManager eventManager;
 
         private string[] playerNicks;
-        private Hero[] playerHeroes;
+
+        private HeroParty heroParty;
 
         /// <summary>
         /// Prevents a default instance of the <see cref="Player"/> class from being created.
@@ -73,7 +74,7 @@ namespace Descent.Model.Player
             IsOverlord = false;
             eventManager = new EventManager();
             playerNicks = new string[5];
-            playerHeroes = new Hero[5];
+            heroParty = new HeroParty();
         }
 
         /// <summary>
@@ -88,6 +89,9 @@ namespace Descent.Model.Player
             }
         }
 
+        /// <summary>
+        /// Gets or sets the Players nickname.
+        /// </summary>
         public string Nickname
         {
             get
@@ -104,9 +108,31 @@ namespace Descent.Model.Player
         public bool IsOverlord { get; set; }
 
         /// <summary>
+        /// Gets the Hero Party.
+        /// </summary>
+        public HeroParty HeroParty
+        {
+            get
+            {
+                return heroParty;
+            }
+        }
+
+        /// <summary>
         /// Gets or sets the Hero of the Player - if the player is not overlord.
         /// </summary>
-        public Hero Hero { get; set; }
+        public Hero Hero
+        {
+            get
+            {
+                return HeroParty.Heroes[Player.Instance.Id];
+            }
+            
+            set
+            {
+                HeroParty.Heroes[Player.Instance.Id] = value;
+            }
+        }
 
         /// <summary>
         /// Gets the unique ID.
@@ -133,16 +159,6 @@ namespace Descent.Model.Player
         public string GetPlayerNick(int id)
         {
             return playerNicks[id - 1];
-        }
-
-        public void SetPlayerHero(int id, Hero hero)
-        {
-            playerHeroes[id - 1] = hero;
-        }
-
-        public Hero GetPlayerHero(int id)
-        {
-            return playerHeroes[id - 1];
         }
 
         /// <summary>

@@ -63,11 +63,7 @@ namespace Descent.State
             {
                 Player.Instance.IsOverlord = true;
             }
-            else
-            {
-                Player.Instance.SetPlayerHero(eventArgs.PlayerId, null);
-                Player.Instance.IsOverlord = false;
-            }
+
             gui.CreateBoardGUI(FullModel.Board, DetermineRole());
             gui.CreateMenuGUI(model, DetermineRole());
         }
