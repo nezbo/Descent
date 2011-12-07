@@ -409,6 +409,11 @@ namespace Descent.Model
             return AllEquipment.First(equipment => equipment.Id == id);
         }
 
+        public static OverlordCard GetOverlordCard(int id)
+        {
+            return overlordCards.Single(overlordCard => overlordCard.Id == id);
+        }
+
         public static Dice GetDice(EDice dice)
         {
             return diceDictionary[dice];

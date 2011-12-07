@@ -64,9 +64,13 @@ namespace Descent.Messaging.Events
 
     public delegate void GivePotionHandler(object sender, GivePotionEventArgs eventArgs);
 
+    public delegate void DenyBuyHandler(object sender, PlayerEventArgs eventArgs);
+
     public delegate void FinishedBuyHandler(object sender, GameEventArgs eventArgs);
 
     public delegate void GiveConquestTokensHandler(object sender, TokenEventArgs eventArgs);
+
+    public delegate void RemoveConquestTokensHandler(object sender, TokenEventArgs eventArgs);
 
     public delegate void GiveCoinsHandler(object sender, GiveCoinsEventArgs eventArgs);
 
@@ -77,6 +81,8 @@ namespace Descent.Messaging.Events
     public delegate void GiveThreatTokensHandler(object sender, TokenEventArgs eventArgs);
 
     public delegate void RemoveThreatTokensHandler(object sender, TokenEventArgs eventArgs);
+
+    public delegate void GiveTreasureHandler(object sender, TreasureEventArgs eventArgs);
 
     #endregion
 
@@ -225,9 +231,13 @@ namespace Descent.Messaging.Events
 
         public event GivePotionHandler GivePotionEvent;
 
+        public event DenyBuyHandler DenyBuyEvent;
+
         public event FinishedBuyHandler FinishedBuyEvent;
 
-        public event GiveConquestTokensHandler GiveConquestTokenEvent;
+        public event GiveConquestTokensHandler GiveConquestTokensEvent;
+
+        public event RemoveConquestTokensHandler RemoveConquestTokensEvent;
 
         public event GiveCoinsHandler GiveCoinsEvent;
 
@@ -238,6 +248,8 @@ namespace Descent.Messaging.Events
         public event GiveThreatTokensHandler GiveThreatTokensEvent;
 
         public event RemoveThreatTokensHandler RemoveThreatTokensEvent;
+
+        public event GiveTreasureHandler GiveTreasureEvent;
 
         public event StartPlacementHandler StartPlacementEvent;
         
@@ -493,11 +505,17 @@ namespace Descent.Messaging.Events
                 case EventType.GivePotion:
                     if (GivePotionEvent != null) GivePotionEvent(this, (GivePotionEventArgs)eventArgs);
                     break;
+                case EventType.DenyBuy:
+                    if (DenyBuyEvent != null) DenyBuyEvent(this, (PlayerEventArgs)eventArgs);
+                    break;
                 case EventType.FinishedBuy:
                     if (FinishedBuyEvent != null) FinishedBuyEvent(this, eventArgs);
                     break;
-                case EventType.GiveConquestToken:
-                    if (GiveConquestTokenEvent != null) GiveConquestTokenEvent(this, (TokenEventArgs)eventArgs);
+                case EventType.GiveConquestTokens:
+                    if (GiveConquestTokensEvent != null) GiveConquestTokensEvent(this, (TokenEventArgs)eventArgs);
+                    break;
+                case EventType.RemoveConquestTokens:
+                    if (RemoveConquestTokensEvent != null) RemoveConquestTokensEvent(this, (TokenEventArgs)eventArgs);
                     break;
                 case EventType.GiveCoins:
                     if (GiveCoinsEvent != null) GiveCoinsEvent(this, (GiveCoinsEventArgs)eventArgs);
@@ -514,6 +532,9 @@ namespace Descent.Messaging.Events
                 case EventType.RemoveThreatTokens:
                     if (RemoveThreatTokensEvent != null) RemoveThreatTokensEvent(this, (TokenEventArgs)eventArgs);
                     break;
+                case EventType.GiveTreasure:
+                    if (GiveTreasureEvent != null) GiveTreasureEvent(this, (TreasureEventArgs)eventArgs);
+                    break;
                 case EventType.StartPlacement:
                     if (StartPlacementEvent != null) StartPlacementEvent(this, eventArgs);
                     break;
@@ -524,7 +545,7 @@ namespace Descent.Messaging.Events
                     if (PlaceHeroEvent != null) PlaceHeroEvent(this, (PlaceHeroEventArgs)eventArgs);
                     break;
                 case EventType.DenyPlacement:
-                   if (DenyPlacementEvent != null) DenyPlacementEvent(this, (PlayerEventArgs)eventArgs);
+                    if (DenyPlacementEvent != null) DenyPlacementEvent(this, (PlayerEventArgs)eventArgs);
                     break;
                 case EventType.RequestTurn:
                     if (RequestTurnEvent != null) RequestTurnEvent(this, eventArgs);
@@ -713,7 +734,13 @@ namespace Descent.Messaging.Events
                 case EventType.GivePotion:
                     return new GivePotionEventArgs(args);
                     break;
-                case EventType.GiveConquestToken:
+                case EventType.DenyBuy:
+                    return new PlayerEventArgs(args);
+                    break;
+                case EventType.GiveConquestTokens:
+                    return new TokenEventArgs(args);
+                    break;
+                case EventType.RemoveConquestTokens:
                     return new TokenEventArgs(args);
                     break;
                 case EventType.GiveCoins:
@@ -730,6 +757,9 @@ namespace Descent.Messaging.Events
                     break;
                 case EventType.RemoveThreatTokens:
                     return new TokenEventArgs(args);
+                    break;
+                case EventType.GiveTreasure:
+                    return new TreasureEventArgs(args);
                     break;
                 case EventType.RequestPlacement:
                     return new CoordinatesEventArgs(args);
