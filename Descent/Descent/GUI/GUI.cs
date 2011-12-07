@@ -150,9 +150,9 @@ namespace Descent.GUI
         /// that displays the chat and player stats
         /// </summary>
         /// <param name="model"></param>
-        public void CreateMenuGUI(FullModel model)
+        public void CreateMenuGUI(FullModel model, Role role)
         {
-            layers[2] = GUIElementFactory.CreateMenuElement(Game);
+            layers[2] = GUIElementFactory.CreateMenuElement(Game, role);
         }
     }
 }

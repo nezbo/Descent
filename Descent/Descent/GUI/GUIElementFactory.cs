@@ -89,9 +89,18 @@
             return root;
         }
 
-        public static GUIElement CreateMenuElement(Game game)
+        public static GUIElement CreateMenuElement(Game game, Role role)
         {
             GUIElement root = CreateEmptyRoot(game);
+
+            if (role == Role.Overlord)
+            {
+                // populate with overlord menus
+            }
+            else
+            {
+                // populate with player stuff
+            }
 
             root.AddChild(new Chat(game));
 

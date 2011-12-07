@@ -48,11 +48,12 @@ namespace Descent.State
             eventManager.OverlordIsEvent += new OverlordIsHandler(OverLordIs);
 
             // initiate start
-            stateMachine = new StateMachine(new State[] { State.InLobby, State.DrawHeroCard, State.DrawSkillCards, State.BuyEquipment, State.NewRound, State.NewRound });
+            stateMachine = new StateMachine(new State[] { State.InLobby, State.DrawOverlordCards, 
+                State.DrawHeroCard, State.DrawSkillCards, 
+                State.BuyEquipment, State.NewRound, State.NewRound });
             stateMachine.StateChanged += StateChanged;
 
             StateChanged();
-            gui.CreateMenuGUI(model);
         }
 
         // event handlers
@@ -68,6 +69,7 @@ namespace Descent.State
                 Player.Instance.IsOverlord = false;
             }
             gui.CreateBoardGUI(FullModel.Board, DetermineRole());
+            gui.CreateMenuGUI(model, DetermineRole());
         }
 
         private void PlayerJoined(object sender, PlayerJoinedEventArgs eventArgs)
