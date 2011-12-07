@@ -140,6 +140,8 @@
     <Compile Include="Model\Player\Figure\HeroStuff\SurgeAbility.cs" />
     <Compile Include="Model\Player\Figure\Monster.cs" />
     <Compile Include="Model\Player\HeroParty.cs" />
+    <Compile Include="Model\Player\Overlord\OverlordCard.cs" />
+    <Compile Include="Model\Player\Overlord\SpawnCard.cs" />
     <Compile Include="Model\Player\Player.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

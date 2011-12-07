@@ -57,7 +57,7 @@ namespace Descent.Model.Player.Figure
         {
             get
             {
-                int total = this.MaxFatigueContribution.GetInvocationList().Cast<Bonus<int>>().Sum(bonus => bonus.Invoke());
+                int total = MaxFatigueContribution == null ? 0 : MaxFatigueContribution.GetInvocationList().Cast<Bonus<int>>().Sum(bonus => bonus.Invoke());
                 return maxFatigue + total;
             }
 
@@ -116,7 +116,7 @@ namespace Descent.Model.Player.Figure
         /// <param name="numberOfSkills">
         /// The number of skills
         /// </param>
-        public Hero(int id, string name, Dictionary<EAttackType, int> numberOfSkills, int hands)
+        public Hero(int id, string name, int conquest, int health, int fatigue, int armor, int speed, Dictionary<EAttackType, int> blackDice, Dictionary<EAttackType, int> numberOfSkills, int hands, string text)
             : base(id, name)
         {
             this.numberOfSkills = numberOfSkills;

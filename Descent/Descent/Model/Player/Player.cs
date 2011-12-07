@@ -4,13 +4,13 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+
 using System.Diagnostics.Contracts;
+using Descent.Messaging.Connection;
 
 namespace Descent.Model.Player
 {
-    using System.Collections.Generic;
 
-    using Descent.Messaging.Connection;
     using Descent.Messaging.Events;
     using Descent.State;
     using Figure;
@@ -71,6 +71,7 @@ namespace Descent.Model.Player
         /// </summary>
         private Player()
         {
+            IsOverlord = false;
             eventManager = new EventManager();
             playerNicks = new string[5];
             heroParty = new HeroParty();
@@ -97,17 +98,13 @@ namespace Descent.Model.Player
             {
                 return GetPlayerNick(Player.Instance.Id);
             }
-            
+
             set
             {
                 SetPlayerNick(Player.Instance.Id, value);
             }
         }
 
-        /// <summary>
-        /// What is your role?
-        /// If the player is overlord, return true, else false
-        /// </summary>
         public bool IsOverlord { get; set; }
 
         /// <summary>

@@ -24,50 +24,32 @@ component
 			revised: "01-12-2011";
 		feature
 			numberOfHeroes: INTEGER -- How many players are in the HeroParty?
-			numberOfHeroesYetToAct: INTEGER -- How many players have yet to take their turn?
-				ensure
-					Result >= 0;
-					Result <= numberOfPlayers;
-			end
-			hasHeroActedYet: BOOLEAN -- Has 'this' player yet to take their turn?
-				-> hero: Hero
-				require
-					hero /= Void
-			end
 			conquestTokens: INTEGER -- How many conquest tokens do the players have?
 			isConquestPoolEmpty: BOOLEAN -- How many conquest tokens do the players have?
 				ensure
 					Result -> conquestTokens = 0;
 			end
-			heroHasActed: Void -- Remove 'this' player from the list of players yet to act!
-				-> hero: Hero
-				require
-					hero /= Void;
-					hasHeroActedYet = false;
-				ensure
-					hasHeroActedYet = true;
-					numberOfHeroesYetToAct = old numberOfHeroesYetToAct - 1;
-			end
-			resetYetToAct: Void -- Reset list of Hero yet to act!
-				require
-					numberOfHeroesYetToAct = 0;
-				ensure
-					numberOfHeroesYetToAct = numberOfHeroes;
-			end
 			removeConquestTokens: Void -- Remove 'this' number of conquest tokens from the pool of tokens!
-				-> INTEGER: tokens
+				-> tokens: INTEGER
 				require
 					tokens > 0;
 				ensure
-					conquestTokens = old conquestTokens - tokens;
+					conquestTokens = old conquestTokens - tokens or conquestTokens = 0;
 			end
 			addConquestTokens: Void -- Add 'this' number of conquest tokens to the pool of tokens!
-				-> INTEGER: tokens
+				-> tokens: INTEGER
 				require
 					tokens > 0;
 				ensure
 					conquestTokens = old conquestTokens + tokens;
 			end
+            hasRuneKey: BOOLEAN -- Do you have this rune key?
+                -> runeKey: RUNE_KEY
+            addRuneKey -- Add 'this' rune key!
+                -> runeKey: RUNE_KEY
+                ensure
+                    hasRuneKey(runeKey);
+            end
 		invariant
 			numberOfHeroes >= 2 and numberOfHeroes <= 4;
 			conquestTokens >= 0;
@@ -455,7 +437,8 @@ component
 			width: INTEGER -- What is your width?
 			height: INTEGER -- What is your height?
 			heroesInTown: SEQUENCE[HERO] -- What heroes are currently in town?
-			withinBoard: BOOLEAN -- Is the coordinate (x/y) within the board?
+			heroesOnBoard: MAP[HERO, POINT] -- Where are the heroes on the board?
+            withinBoard: BOOLEAN -- Is the coordinate (x/y) within the board?
 				-> coord: POINT
 				require 
 					coord /= Void;
@@ -486,6 +469,8 @@ component
             distance: INTEGER -- What is the distance between these squares?
                 -> here: POINT
                 -> there: POINT
+            openDoor -- Open the door adjecent to this square!
+                -> point: POINT
             get: SQUARE -- Can I have the square object for this coordinate?
                 -> x: INTEGER
                 -> y: INTEGER

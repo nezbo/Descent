@@ -41,6 +41,8 @@ namespace Descent.Model
 
         private static Board.Board board;
 
+        private static HeroParty heroParty;
+
         #endregion
 
         public static Board.Board Board
@@ -51,6 +53,11 @@ namespace Descent.Model
             }
         }
 
+        public static HeroParty HeroParty
+        {
+            get { return heroParty; }
+        }
+ 
         #region Load Content
 
         /// <summary>
@@ -70,11 +77,13 @@ namespace Descent.Model
             }
 
             FullModel.game = game;
+            heroParty = new HeroParty();
 
             LoadDice(game);
             LoadMonsters(game);
             LoadEquipment(game);
             LoadMap(game);
+            LoadHeroes(game);
         }
 
         #region Load Monsters
@@ -279,7 +288,7 @@ namespace Descent.Model
                             board[x, y] = null;
                             break;
                         default:
-                            board[x, y] = new Square();
+                            board[x, y] = new Square(int.Parse(c[x].ToString()));
                             break;
                     }
                 }
@@ -309,9 +318,9 @@ namespace Descent.Model
                         board[x, y].Figure = monster;
                         break;
                     case "door":
-                        Door.RuneColor color;
-                        Door.RuneColor.TryParse(data[3], out color);
-                        board.AddDoor(new Door(int.Parse(data[1]), int.Parse(data[2]), color));
+                        RuneKey color;
+                        RuneKey.TryParse(data[3], out color);
+                        // TODO board.AddDoor(new Door(int.Parse(data[1]), int.Parse(data[2]), color));
                         break;
                     default:
                         board[int.Parse(data[1]), int.Parse(data[2])].Marker = GetMarker(data[0], data[3]);
@@ -320,6 +329,51 @@ namespace Descent.Model
             }
 
             FullModel.board = board;
+        }
+
+        #endregion
+
+        #region Load Heroes
+
+        private static void LoadHeroes(Game game)
+        {
+            StreamReader reader = new StreamReader(TitleContainer.OpenStream("heroes.txt"));
+
+            List<Hero> heroes = new List<Hero>();
+            int n = int.Parse(reader.ReadLine());
+            for (int i = 0; i < n; i++)
+            {
+                string line = reader.ReadLine();
+                string[] data = line.Split(new char[] { ',' }, 11);
+
+                int id = int.Parse(data[0]);
+                string name = data[1];
+                int cost = int.Parse(data[2]);
+                int health = int.Parse(data[3]);
+                int fatigue = int.Parse(data[4]);
+                int armor = int.Parse(data[5]);
+                int speed = int.Parse(data[6]);
+
+                int[] dice = data[7].Split('/').Select(int.Parse).ToArray();
+                Dictionary<EAttackType, int> diceDictionary = new Dictionary<EAttackType, int>();
+                diceDictionary[EAttackType.MELEE] = dice[0];
+                diceDictionary[EAttackType.RANGED] = dice[1];
+                diceDictionary[EAttackType.MAGIC] = dice[2];
+
+                int[] skills = data[8].Split('/').Select(int.Parse).ToArray();
+                Dictionary<EAttackType, int> skillDictionary = new Dictionary<EAttackType, int>();
+                skillDictionary[EAttackType.MELEE] = dice[0];
+                skillDictionary[EAttackType.RANGED] = dice[1];
+                skillDictionary[EAttackType.MAGIC] = dice[2];
+
+                int hands = int.Parse(data[9]);
+
+                string text = data[10];
+
+                heroes.Add(new Hero(id, name, cost, health, fatigue, armor, speed, diceDictionary, skillDictionary, hands, text));
+            }
+
+            FullModel.heroes = heroes;
         }
 
         #endregion
@@ -385,6 +439,13 @@ namespace Descent.Model
             System.Diagnostics.Debug.Assert(false);
             return null;
         }
+
+        public static Hero GetHero(int id)
+        {
+            return heroes[id - 1];
+        }
+
+
 
         #endregion
     }

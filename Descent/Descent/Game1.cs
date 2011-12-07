@@ -57,6 +57,8 @@ namespace Descent
             FullModel.LoadContent(this);
             // TODO: use this.Content to load your game content here
 
+            System.Diagnostics.Debug.WriteLine(FullModel.GetHero(2).Name);
+
             // creation of elements
             this.gui = new GUI.GUI(this);
             GUIElement root = GUIElementFactory.CreateStateElement(this, Descent.State.State.ActivateMonsters, Descent.Model.Player.Role.Overlord);

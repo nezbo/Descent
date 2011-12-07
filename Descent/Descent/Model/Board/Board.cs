@@ -4,6 +4,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using System.Collections.ObjectModel;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Descent.Model.Board
@@ -16,6 +17,9 @@ namespace Descent.Model.Board
     using Descent.Model.Player.Figure;
 
     using Microsoft.Xna.Framework;
+
+
+    public enum Orientation { H, V }
 
     /// <summary>
     /// TODO: Update summary.
@@ -31,7 +35,7 @@ namespace Descent.Model.Board
         /// <summary>
         /// The board, made up of squares
         /// </summary>
-        private Square[,] board;
+        private readonly Square[,] board;
 
         private Rectangle bounds;
 
@@ -39,7 +43,9 @@ namespace Descent.Model.Board
 
         private List<Door> doors = new List<Door>();
 
-        private List<Hero> town = new List<Hero>();
+        private Collection<Hero> heroesInTown = new Collection<Hero>();
+
+        private Dictionary<Hero, Point> heroesOnBoard = new Dictionary<Hero, Point>(); 
 
         private Texture2D floorTexture;
 
@@ -74,13 +80,18 @@ namespace Descent.Model.Board
         /// <summary>
         /// Gets the list of heroes in Town
         /// </summary>
-        public List<Hero> HeroesInTown
+        public Hero[] HeroesInTown
         {
             get
             {
-                return town;
+                return heroesInTown.ToArray();
             }
         }
+
+        public Dictionary<Hero, Point> HeroesOnBoard
+        {
+            get { return heroesOnBoard; }
+        } 
 
         public Texture2D FloorTexture
         {
@@ -90,12 +101,9 @@ namespace Descent.Model.Board
             }
         }
 
-        public HashSet<int> RevealedAreas
+        public Door[] RelevantDoors
         {
-            get
-            {
-                return revealedAreas;
-            }
+            get { return doors.Where(door => door.Areas.Any(area => revealedAreas.Contains(area))).ToArray(); }
         }
 
         #endregion
@@ -120,6 +128,19 @@ namespace Descent.Model.Board
             set
             {
                 board[x, y] = value;
+            }
+        }
+
+        public Square this[Point p]
+        {
+
+            get
+            {
+                return board[p.X, p.Y];
+            }
+            set
+            {
+                board[p.X, p.Y] = value;
             }
         }
 
@@ -295,10 +316,12 @@ namespace Descent.Model.Board
             return points.ToArray();
         }
 
+        /// <summary>
+        /// Should the square be shown on the board?
+        /// </summary>
         public bool SquareVisibleByPlayers(Point point)
         {
-            //TODO
-            return false;
+            return IsSquareWithinBoard(point) && revealedAreas.Contains(this[point].Area);
         }
 
         /// <summary>
@@ -311,9 +334,29 @@ namespace Descent.Model.Board
             return Math.Max(Math.Abs(here.X - there.X), Math.Abs(here.Y - there.Y));
         }
 
+        /// <summary>
+        /// Open a door
+        /// </summary>
+        /// <param name="point"></param>
+        public void OpenDoor(Point point)
+        {
+            Contract.Requires(CanOpenDoor(point));
+            revealedAreas.Add(GetDoor(point).Areas.Where(area => area != this[point].Area).First());
+        }
+
+        public bool CanOpenDoor(Point point)
+        {
+            return !GetDoor(point).IsRuneDoor || FullModel.HeroParty.HasRuneKey(GetDoor(point).KeyColor);
+        }
+
         public void AddDoor(Door door)
         {
             doors.Add(door);
+        }
+
+        private Door GetDoor(Point point)
+        {
+            return doors.Where(door => door.IsAdjecentSquare(point)).First();
         }
 
         #endregion
@@ -322,7 +365,7 @@ namespace Descent.Model.Board
         {
             var b = new Board(20, 20, null);
             var a = new int[30, 30];
-            var points = b.SquaresBetweenPoints(new Point(26, 6), new Point(1, 26));
+            var points = b.SquaresBetweenPoints(new Point(1, 2), new Point(2, 5));
             foreach (Point p in points)
             {
                 a[p.X, p.Y] = 1;
