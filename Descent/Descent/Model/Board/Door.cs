@@ -4,15 +4,13 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using Descent.GUI;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Descent.Model.Board
 {
-    using System;
-    using System.Collections.Generic;
     using System.Diagnostics.Contracts;
-    using System.Linq;
-    using System.Text;
 
     public enum RuneKey
     {
@@ -22,7 +20,7 @@ namespace Descent.Model.Board
     /// <summary>
     /// TODO: Update summary.
     /// </summary>
-    public class Door
+    public class Door : Drawable
     {
         private readonly int[] areas;
 
@@ -33,6 +31,8 @@ namespace Descent.Model.Board
         private readonly RuneKey keyColor;
 
         private bool opened = false;
+
+        private Texture2D tex;
 
         public bool Opened
         {
@@ -89,7 +89,7 @@ namespace Descent.Model.Board
             }
         }
 
-        public Door(int area1, Point point1InArea1, Point point2InArea1, int area2, Point point1InArea2, Point point2InArea2, Orientation orientation, RuneKey color)
+        public Door(int area1, Point point1InArea1, Point point2InArea1, int area2, Point point1InArea2, Point point2InArea2, Orientation orientation, RuneKey color, Texture2D texture)
         {
             Contract.Requires(area1 != area2);
 
@@ -104,6 +104,8 @@ namespace Descent.Model.Board
             points = new Point[,] { { point1InArea1, point2InArea1 }, { point1InArea2, point2InArea2 } };
             this.orientation = orientation;
             this.keyColor = color;
+
+            this.tex = texture;
         }
 
         public bool IsAdjecentSquare(Point point)
@@ -113,6 +115,11 @@ namespace Descent.Model.Board
                 if (p == point) return true;
             }
             return false;
+        }
+
+        public Texture2D Texture
+        {
+            get { return tex; }
         }
     }
 }
