@@ -18,8 +18,14 @@ namespace Descent.Model.Board
     /// </summary>
     public class Square
     {
-
         #region FIELDS
+
+        private readonly int area;
+
+        public int Area
+        {
+            get { return area; }
+        }
 
         /// <summary>
         /// Gets or sets Marker.
