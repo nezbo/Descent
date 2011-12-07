@@ -45,7 +45,7 @@ namespace Descent.Model.Board
 
         private Collection<Hero> heroesInTown = new Collection<Hero>();
 
-        private Dictionary<Hero, Point> heroesOnBoard = new Dictionary<Hero, Point>(); 
+        private Dictionary<Hero, Point> heroesOnBoard = new Dictionary<Hero, Point>();
 
         private Texture2D floorTexture;
 
@@ -91,7 +91,7 @@ namespace Descent.Model.Board
         public Dictionary<Hero, Point> HeroesOnBoard
         {
             get { return heroesOnBoard; }
-        } 
+        }
 
         public Texture2D FloorTexture
         {
@@ -227,10 +227,9 @@ namespace Descent.Model.Board
         /// <returns>
         /// True if the point is within the dungeon, and there is no figure on it
         /// </returns>
-        public bool IsStandable(Point point)
+        public bool IsStandable(int x, int y)
         {
-            Contract.Requires(point != null);
-            return IsSquareWithinBoard(point) && SquareVisibleByPlayers(point) && board[point.X, point.Y].Figure == null;
+            return IsSquareWithinBoard(x, y) && SquareVisibleByPlayers(x, y) && board[x, y].Figure == null;
         }
 
         /// <summary>
@@ -250,7 +249,7 @@ namespace Descent.Model.Board
         public bool IsThereLineOfSight(Point from, Point to, bool ignoreMonsters)
         {
             return SquaresBetweenPoints(from, to).Count(
-                point => !(IsStandable(point) || (ignoreMonsters && (board[point.X, point.Y].Figure is Monster)))) == 0;
+                point => !(IsStandable(point.X,point.Y) || (ignoreMonsters && (board[point.X, point.Y].Figure is Monster)))) == 0;
         }
 
         /// <summary>
@@ -327,9 +326,9 @@ namespace Descent.Model.Board
         /// <summary>
         /// Should the square be shown on the board?
         /// </summary>
-        public bool SquareVisibleByPlayers(Point point)
+        public bool SquareVisibleByPlayers(int x, int y)
         {
-            return IsSquareWithinBoard(point) && revealedAreas.Contains(this[point].Area);
+            return IsSquareWithinBoard(x, y) && revealedAreas.Contains(this[x, y].Area);
         }
 
         /// <summary>
