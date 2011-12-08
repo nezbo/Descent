@@ -119,7 +119,7 @@ namespace Descent.State
                         if (Player.Instance.IsServer)
                         {
                             root.AddText("players", "IP: " + Player.Instance.Connection.Ip, new Vector2(50, 50));
-                            root.AddClickAction("start", n =>
+                            root.AddClickAction("start", (n, g) =>
                                                              {
 #if DEBUG
                                                                  if (Player.Instance.NumberOfPlayers >= 1) //TODO 3
@@ -141,7 +141,13 @@ namespace Descent.State
                     {
                         if (role != Role.Overlord)
                         {
-                            root.AddClickAction("done",n => n.EventManager.QueueEvent(EventType.FinishedBuy, new GameEventArgs()));
+                            root.AddClickAction("done", (n, g) =>
+                                                            {
+                                                                n.EventManager.QueueEvent(EventType.FinishedBuy,
+                                                                                          new GameEventArgs());
+                                                                g.AddClickAction(g.Name, null);
+                                                                g.SetDrawBackground(false);
+                                                            });
                         }
                         break;
                     }
@@ -230,11 +236,11 @@ namespace Descent.State
         {
             Contract.Requires(CurrentState == State.DrawHeroCard);
             Contract.Ensures(CurrentState == State.DrawHeroCard || CurrentState == State.BuyEquipment);
-            
+
             Player.Instance.HeroParty.Heroes[eventArgs.PlayerId] = FullModel.GetHero(eventArgs.HeroId);
             gameState.RemoveHero(eventArgs.HeroId);
             stateMachine.ChangeToNextState();
-            
+
             if (CurrentState == State.BuyEquipment) // TODO Should be DrawSkillCard
             {
                 playersRemaining.AddRange(Player.Instance.HeroParty.PlayerIds);

@@ -75,12 +75,17 @@ namespace MessagingTest
             Thread updateThread = new Thread(Update);
             updateThread.Start();
 
+            if (type.Equals("client"))
+            {
+                Thread spamThread = new Thread(SpamThread);
+                spamThread.Start();
+            }
+
             while (true)
             {
                 string eventString = Console.ReadLine();
                 eventManager.ParseAndFire(eventString, true);
             }
-
 
             /*
             string type = Console.ReadLine();
@@ -111,6 +116,15 @@ namespace MessagingTest
             while (true)
             {
                 Player.Instance.EventManager.ProcessEventQueue();
+            }
+        }
+
+        static void SpamThread()
+        {
+            while (true)
+            {
+                //Thread.Sleep(10);
+                Player.Instance.EventManager.QueueEvent(EventType.ChatMessage, new ChatMessageEventArgs("Herp derp derp derp derp derp"));
             }
         }
     }

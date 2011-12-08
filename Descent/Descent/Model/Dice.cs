@@ -1,18 +1,10 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="Dice.cs" company="">
-// TODO: Update copyright text.
-// </copyright>
-// -----------------------------------------------------------------------
-
+﻿
 namespace Descent.Model
 {
     using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Text;
 
-    using Microsoft.Xna.Framework;
+    using Descent.GUI;
+
     using Microsoft.Xna.Framework.Graphics;
 
     #region EDice Enum
@@ -25,16 +17,34 @@ namespace Descent.Model
     /// </summary>
     public enum EDice
     {
+        /// <summary>
+        /// A Red dice
+        /// </summary>
         R,
 
+        /// <summary>
+        /// A White dice
+        /// </summary>
         W,
 
+        /// <summary>
+        /// A Blue dice
+        /// </summary>
         U,
 
+        /// <summary>
+        /// A Green dice
+        /// </summary>
         G,
 
+        /// <summary>
+        /// A Yellow dice
+        /// </summary>
         Y,
 
+        /// <summary>
+        /// A Black dice
+        /// </summary>
         B
     }
     #endregion
@@ -45,7 +55,7 @@ namespace Descent.Model
     /// <author>
     /// Jonas Breindahl (jobre@itu.dk)
     /// </author>
-    public class Dice
+    public class Dice : Drawable
     {
         #region Fields
         private int[][] sides;
@@ -54,7 +64,7 @@ namespace Descent.Model
 
         private int activeSideIndex;
 
-        private Texture2D Sides;
+        private Texture2D[] textures;
 
         #endregion
 
@@ -74,7 +84,7 @@ namespace Descent.Model
         }
 
         /// <summary>
-        /// Gets and sets the index of the upside
+        /// Gets or sets the index of the upside
         /// </summary>
         public int SideIndex
         {
@@ -89,14 +99,49 @@ namespace Descent.Model
             }
         }
 
+        /// <summary>
+        /// Gets the color of the dice
+        /// </summary>
+        public EDice Color
+        {
+            get
+            {
+                return color;
+            }
+        }
+
+        /// <summary>
+        /// Gets the texture of the current side of the dice
+        /// </summary>
+        public Texture2D Texture
+        {
+            get
+            {
+                return textures[activeSideIndex];
+            }
+        }
+
         #endregion
 
         #region Initialization
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Dice"/> class.
+        /// </summary>
+        /// <param name="color">
+        /// The color.
+        /// </param>
+        /// <param name="sides">
+        /// The sides.
+        /// </param>
+        /// <param name="textures">
+        /// The textures.
+        /// </param>
         public Dice(EDice color, int[][] sides, Texture2D[] textures)
         {
             this.color = color;
             this.sides = sides;
+            this.textures = textures;
         }
         #endregion
 
@@ -112,5 +157,14 @@ namespace Descent.Model
         }
 
         #endregion
+
+        /// <summary>
+        /// Returns a copy of the Dice
+        /// </summary>
+        /// <returns></returns>
+        public Dice Clone()
+        {
+            return new Dice(color, sides, textures);
+        }
     }
 }

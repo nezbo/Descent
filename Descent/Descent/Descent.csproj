@@ -104,15 +104,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Game1.cs" />
-    <Compile Include="GUI\BoardGUIElement.cs" />
-    <Compile Include="GUI\Chat.cs" />
+    <Compile Include="GUI\SubElements\BoardGUIElement.cs" />
+    <Compile Include="GUI\SubElements\Chat.cs" />
     <Compile Include="GUI\Drawable.cs" />
-    <Compile Include="GUI\EquipmentElement.cs" />
+    <Compile Include="GUI\SubElements\EquipmentElement.cs" />
     <Compile Include="GUI\GUI.cs" />
     <Compile Include="GUI\GUIElement.cs" />
     <Compile Include="GUI\GUIElementFactory.cs" />
     <Compile Include="GUI\Image.cs" />
-    <Compile Include="GUI\InputElement.cs" />
+    <Compile Include="GUI\SubElements\HeroElement.cs" />
+    <Compile Include="GUI\SubElements\InputElement.cs" />
     <Compile Include="GUI\Text.cs" />
     <Compile Include="Messaging\AsyncSockets\AsyncSocketsClient.cs" />
     <Compile Include="Messaging\AsyncSockets\AsyncSocketsServer.cs" />
@@ -152,6 +153,7 @@
     <Compile Include="Messaging\Events\EventType.cs" />
     <Compile Include="Model\Board\Board.cs" />
     <Compile Include="Model\Board\Door.cs" />
+    <Compile Include="Model\Board\Marker\Chest.cs" />
     <Compile Include="Model\Board\Marker\Marker.cs" />
     <Compile Include="Model\Board\Square.cs" />
     <Compile Include="Model\Board\Town.cs" />
@@ -219,7 +221,6 @@
     <Content Include="equipment.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="overlordcards.txt" />
     <None Include="quest1.map">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -232,8 +233,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Game.ico" />
-    <Content Include="GameThumbnail.png" />
-    <Content Include="heroes.txt" />
+    <Content Include="heroes.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="monsters.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
