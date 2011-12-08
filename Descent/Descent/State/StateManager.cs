@@ -59,7 +59,7 @@ namespace Descent.State
 
             // initiate start
             stateMachine = new StateMachine(new State[] { State.InLobby, State.Initiation, State.DrawOverlordCards, //TODO DrawSkillCards
-                State.BuyEquipment, State.NewRound, State.NewRound });
+                State.BuyEquipment, State.Equip, State.WaitForChooseSquare, State.NewRound, State.NewRound });
             stateMachine.StateChanged += StateChanged;
 
             StateChanged();
