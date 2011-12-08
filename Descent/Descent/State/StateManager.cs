@@ -218,6 +218,19 @@ namespace Descent.State
                 Player.Instance.Overlord.Hand.Add(FullModel.GetOverlordCard(overlordCardId));
             }
 
+            foreach (int playerId in Player.Instance.HeroParty.Heroes.Keys)
+            {
+                stateMachine.PlaceStates(State.DrawHeroCard);
+                int heroId = gameState.getHero().Id;
+
+                if (Player.Instance.IsServer)
+                {
+                    eventManager.QueueEvent(EventType.AssignHero, new AssignHeroEventArgs(playerId, heroId));  
+                }
+                
+                gameState.RemoveHero(heroId);
+            }
+
             if (Player.Instance.IsServer)
             {
                 foreach (int playerId in Player.Instance.HeroParty.Heroes.Keys)

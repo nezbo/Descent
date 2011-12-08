@@ -90,6 +90,13 @@ namespace Descent.Model
             LoadEquipment(game);
             LoadMap(game);
             LoadHeroes(game);
+
+            // TODO: Load cards the right way..
+            overlordCards.Add(new SpawnCard(monsters.ToArray()));
+            overlordCards.Add(new SpawnCard(monsters.ToArray()));
+            overlordCards.Add(new SpawnCard(monsters.ToArray()));
+            overlordCards.Add(new SpawnCard(monsters.ToArray()));
+            overlordCards.Add(new SpawnCard(monsters.ToArray()));
         }
 
         #region Load Monsters
@@ -428,7 +435,7 @@ namespace Descent.Model
 
         public static OverlordCard GetOverlordCard(int id)
         {
-            return overlordCards.Single(overlordCard => overlordCard.Id == id);
+            return overlordCards.First(overlordCard => overlordCard.Id == id);
         }
 
         /// <summary>

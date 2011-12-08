@@ -92,15 +92,12 @@ namespace Descent.Messaging.AsyncSockets
                         //content = content.Substring(content.IndexOf("<EOF>"), content.Length - 5);
 
                         System.Console.WriteLine("Message: " + newMessage);
-                    }
 
-                    /*
-                    if (MessageReceivedEvent != null)
-                    {
-                        MessageReceivedEvent(this, message);
+                        if (MessageReceivedEvent != null)
+                        {
+                            MessageReceivedEvent(this, newMessage);
+                        }
                     }
-                     * */
-                    
 
                     str.Clear();
                 }
