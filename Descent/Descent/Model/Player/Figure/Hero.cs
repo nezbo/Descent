@@ -15,6 +15,7 @@ namespace Descent.Model.Player.Figure
     using Descent.Model.Player.Figure.HeroStuff;
 
     using Microsoft.Xna.Framework;
+    using Microsoft.Xna.Framework.Graphics;
 
     /// <summary>
     /// A hero, made from a hero-sheet
@@ -126,10 +127,34 @@ namespace Descent.Model.Player.Figure
         /// <param name="name">
         /// The name of the hero
         /// </param>
-        /// <param name="numberOfSkills">
-        /// The number of skills
+        /// <param name="conquest">
+        /// The conquest token cost of the hero
         /// </param>
-        public Hero(int id, string name, int conquest, int health, int fatigue, int armor, int speed, Dictionary<EAttackType, int> blackDice, Dictionary<EAttackType, int> numberOfSkills, int hands, string text)
+        /// <param name="health">
+        /// The the starting max health of the hero
+        /// </param>
+        /// <param name="fatigue">
+        /// The fatigue of the hero
+        /// </param>
+        /// <param name="armor">
+        /// The natural armor of the hero
+        /// </param>
+        /// <param name="speed">
+        /// The base speed of the hero
+        /// </param>
+        /// <param name="blackDice">
+        /// The black dice the hero have in each type
+        /// </param>
+        /// <param name="numberOfSkills">
+        /// The number of skills in each type
+        /// </param>
+        /// <param name="hands">
+        /// The number of hands the hero have
+        /// </param>
+        /// <param name="text">
+        /// The text of the hero ability
+        /// </param>
+        public Hero(int id, string name, int conquest, int health, int fatigue, int armor, int speed, Dictionary<EAttackType, int> blackDice, Dictionary<EAttackType, int> numberOfSkills, int hands, string text, Texture2D texture)
             : base(id, name)
         {
             this.cost = conquest;
@@ -141,6 +166,7 @@ namespace Descent.Model.Player.Figure
             this.numberOfSkills = numberOfSkills;
             this.hands = hands;
             abilityText = text;
+            this.Texture = texture;
             inventory = new Inventory(this);
 
             Coins += 300;

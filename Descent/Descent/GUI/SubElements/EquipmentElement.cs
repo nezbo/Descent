@@ -43,12 +43,15 @@ namespace Descent.GUI
                             break;
                         }
                 }
-            }
 
-            this.AddClickAction(this.Name, (n, g) => n.EventManager.QueueEvent(EventType.RequestBuyEquipment,
-                                                                          new RequestBuyEquipmentEventArgs(
-                                                                              equipment.Id)));
-            this.AddText(this.Name, equipment.Name, new Vector2(0, 0));
+
+                this.AddClickAction(
+                    this.Name,
+                    (n, g) =>
+                    n.EventManager.QueueEvent(
+                        EventType.RequestBuyEquipment, new RequestBuyEquipmentEventArgs(equipment.Id)));
+                this.AddText(this.Name, equipment.Name, new Vector2(0, 0));
+            }
         }
     }
 }

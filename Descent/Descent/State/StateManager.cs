@@ -35,7 +35,7 @@ namespace Descent.State
         // other
         private Hero currentHero;
         private Collection<Hero> heroesYetToAct;
-        private List<int> playersRemaining = new List<int>();
+        private readonly List<int> playersRemaining = new List<int>();
 
         public StateManager(GUI gui, FullModel model)
         {
@@ -53,10 +53,16 @@ namespace Descent.State
             eventManager.RequestBuyEquipmentEvent += new RequestBuyEquipmentHandler(RequestBuyEquipment);
             eventManager.GiveEquipmentEvent += new GiveEquipmentHandler(GiveEquipment);
             eventManager.FinishedBuyEvent += new FinishedBuyHandler(FinishedBuy);
+            eventManager.UnequipEvent += new UnequipHandler(UnequipItem);
+            eventManager.EquipEvent += new EquipHandler(EquipItem);
+            eventManager.FinishedReequipEvent += new FinishedReequipHandler(FinishedReequip);
+            eventManager.RequestPlacementEvent += new RequestPlacementHandler(RequestPlacement);
+            eventManager.PlaceHeroEvent += new PlaceHeroHandler(PlaceHero);
+            eventManager.NewRoundEvent += new NewRoundHandler(NewRound);
 
             // initiate start
             stateMachine = new StateMachine(new State[] { State.InLobby, State.Initiation, State.DrawOverlordCards, //TODO DrawSkillCards
-                State.BuyEquipment, State.NewRound, State.NewRound });
+                State.BuyEquipment, State.Equip, State.WaitForChooseSquare, State.NewRound, State.NewRound });
             stateMachine.StateChanged += StateChanged;
 
             StateChanged();
@@ -157,6 +163,11 @@ namespace Descent.State
             gui.ChangeStateGUI(root); // change the GUI's state element.
         }
 
+        private void AllPlayersRemain()
+        {
+            playersRemaining.AddRange(Player.Instance.HeroParty.PlayerIds);
+        }
+
         // event handlers
 
         private void PlayerJoined(object sender, PlayerJoinedEventArgs eventArgs)
@@ -210,8 +221,10 @@ namespace Descent.State
 
         private void GiveOverlordCards(object sender, GiveOverlordCardsEventArgs eventArgs)
         {
+#if !DEBUG
             Contract.Requires(CurrentState == State.DrawOverlordCards);
             Contract.Ensures(CurrentState == State.DrawHeroCard);
+#endif
 
             foreach (int overlordCardId in eventArgs.OverlordCardIds)
             {
@@ -246,7 +259,7 @@ namespace Descent.State
             if (CurrentState == State.BuyEquipment) // TODO Should be DrawSkillCard
             {
                 gui.CreateMenuGUI(model, DetermineRole());
-                playersRemaining.AddRange(Player.Instance.HeroParty.PlayerIds);
+                AllPlayersRemain();
             }
         }
 
@@ -268,6 +281,7 @@ namespace Descent.State
             {
                 System.Diagnostics.Debug.WriteLine("Buy denied!");
             }
+            StateChanged();
         }
 
         private void GiveEquipment(object sender, GiveEquipmentEventArgs eventArgs)
@@ -278,27 +292,90 @@ namespace Descent.State
             Equipment equipment = FullModel.GetEquipment(eventArgs.EquipmentId);
             gameState.AddToUnequippedEquipment(eventArgs.PlayerId, equipment);
             Player.Instance.HeroParty.Heroes[eventArgs.PlayerId].Coins -= equipment.BuyPrice;
+            System.Diagnostics.Debug.WriteLine(eventArgs.PlayerId + ": " + Player.Instance.HeroParty.Heroes[eventArgs.PlayerId].Coins);
+            StateChanged();
         }
 
         private void FinishedBuy(object sender, GameEventArgs eventArgs)
         {
             Contract.Requires(CurrentState == State.BuyEquipment);
-            Contract.Ensures(CurrentState == ((playersRemaining.Count > 0) ? State.BuyEquipment : State.Equip));
+            Contract.Ensures(CurrentState == ((playersRemaining.Count == Player.Instance.HeroParty.NumberOfHeroes) ?State.Equip : State.BuyEquipment));
 
             playersRemaining.Remove(eventArgs.SenderId);
 
             if (playersRemaining.Count == 0)
             {
+                AllPlayersRemain();
                 stateMachine.ChangeToNextState();
+            }
+            StateChanged();
+        }
+
+        private void UnequipItem(object sender, EquipEventArgs eventArgs)
+        {
+            Contract.Requires(CurrentState == State.Equip);
+            Contract.Ensures(CurrentState == Contract.OldValue(CurrentState));
+
+            //TODO Player.Instance.HeroParty.Heroes[eventArgs.SenderId].Inventory[eventArgs.InventoryField] = null;
+            StateChanged();
+        }
+
+        private void EquipItem(object sender, EquipEventArgs eventArgs)
+        {
+            Contract.Requires(CurrentState == State.Equip);
+            Contract.Ensures(CurrentState == Contract.OldValue(CurrentState));
+
+            //TODO Player.Instance.HeroParty.Heroes[eventArgs.SenderId].Inventory[eventArgs.InventoryField] = FullModel.GetEquipment(eventArgs.EquipmentId);
+            StateChanged();
+        }
+
+        private void FinishedReequip(object sender, GameEventArgs eventArgs)
+        {
+            Contract.Requires(CurrentState == State.Equip);
+            Contract.Ensures(CurrentState == ((playersRemaining.Count == Player.Instance.HeroParty.NumberOfHeroes) ? State.WaitForChooseSquare : State.Equip));
+
+            playersRemaining.Remove(eventArgs.SenderId);
+
+            if (playersRemaining.Count == 0)
+            {
+                AllPlayersRemain();
+                stateMachine.ChangeToNextState();
+            }
+            StateChanged();
+        }
+
+        private void RequestPlacement(object sender, CoordinatesEventArgs eventArgs)
+        {
+            Contract.Requires(CurrentState == State.WaitForChooseSquare);
+            Contract.Ensures(CurrentState == State.WaitForChooseSquare);
+
+            if (FullModel.Board.IsValidStartSquare(new Point(eventArgs.X, eventArgs.Y)))
+            {
+                eventManager.QueueEvent(EventType.PlaceHero, new PlaceHeroEventArgs(eventArgs.SenderId, eventArgs.X, eventArgs.Y));
             }
         }
 
-        private void NewRound()
+        private void PlaceHero(object sender, PlaceHeroEventArgs eventArgs)
         {
-            Contract.Requires(CurrentState == State.InLobby); // TODO: Find the right state(s)
+            Contract.Requires(CurrentState == State.WaitForChooseSquare);
+            Contract.Ensures(CurrentState == ((playersRemaining.Count == 0) ? State.NewRound : State.WaitForChooseSquare));
+
+            FullModel.Board[eventArgs.X, eventArgs.Y].Figure = Player.Instance.HeroParty.Heroes[eventArgs.PlayerId];
+            playersRemaining.Remove(eventArgs.PlayerId);
+
+            if (playersRemaining.Count == 0)
+            {
+                stateMachine.ChangeToNextState();
+                eventManager.QueueEvent(EventType.NewRound, new GameEventArgs());
+            }
+        }
+
+        private void NewRound(object sender, GameEventArgs eventArgs)
+        {
+            Contract.Requires(CurrentState == State.NewRound);
             Contract.Ensures(CurrentState == State.WaitForHeroTurn);
 
-            heroesYetToAct = new Collection<Hero>(heroParty.AllHeroes);
+            AllPlayersRemain();
 
             stateMachine.PlaceStates(State.WaitForHeroTurn);
             stateMachine.ChangeToNextState();
@@ -523,7 +600,6 @@ namespace Descent.State
         {
             Contract.Requires(CurrentState == State.WaitForChooseMonster);
 
-            NewRound();
         }
 
         private void MonsterTurnInitiation()
