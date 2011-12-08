@@ -13,28 +13,36 @@ namespace Descent.GUI
         {
             equipment = eq;
 
-            switch (equipment.Rarity)
+            if (equipment == null)
             {
-                case EquipmentRarity.Common:
-                    {
-                        this.SetBackground("Images/Other/equipbg");
-                        break;
-                    }
-                case EquipmentRarity.Bronze:
-                    {
-                        this.SetBackground("Images/Other/equipbg-bronze");
-                        break;
-                    }
-                case EquipmentRarity.Silver:
-                    {
-                        this.SetBackground("Images/Other/equipbg-silver");
-                        break;
-                    }
-                case EquipmentRarity.Gold:
-                    {
-                        this.SetBackground("Images/Other/equipbg-gold");
-                        break;
-                    }
+                this.SetBackground("Image/Other/equipbg");
+                this.AddText(this.Name, "Empty", new Vector2(0, 0));
+            }
+            else
+            {
+                switch (equipment.Rarity)
+                {
+                    case EquipmentRarity.Common:
+                        {
+                            this.SetBackground("Images/Other/equipbg");
+                            break;
+                        }
+                    case EquipmentRarity.Bronze:
+                        {
+                            this.SetBackground("Images/Other/equipbg-bronze");
+                            break;
+                        }
+                    case EquipmentRarity.Silver:
+                        {
+                            this.SetBackground("Images/Other/equipbg-silver");
+                            break;
+                        }
+                    case EquipmentRarity.Gold:
+                        {
+                            this.SetBackground("Images/Other/equipbg-gold");
+                            break;
+                        }
+                }
             }
 
             this.AddClickAction(this.Name, (n, g) => n.EventManager.QueueEvent(EventType.RequestBuyEquipment,
