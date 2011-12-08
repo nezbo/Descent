@@ -5,15 +5,13 @@ using Descent.Model.Board;
 namespace Descent.State
 {
     using System.Diagnostics.Contracts;
-
+    using System.Linq;
     using Descent.GUI;
     using Descent.Messaging.Events;
     using Descent.Model;
     using Descent.Model.Player;
     using Descent.Model.Player.Figure;
     using Descent.Model.Player.Figure.HeroStuff;
-    using System.Linq;
-
     using Microsoft.Xna.Framework;
 
     /// <summary>
@@ -59,7 +57,7 @@ namespace Descent.State
             StateChanged();
         }
 
-     
+
         // stuff?
 
         public State CurrentState
@@ -103,7 +101,8 @@ namespace Descent.State
         {
             State newState = stateMachine.CurrentState;
 
-            GUIElement root = GUIElementFactory.CreateStateElement(gui.Game, stateMachine.CurrentState, Player.Instance.IsServer ? Role.Overlord : Role.InactiveHero, gameState);
+            Role role = DetermineRole();
+            GUIElement root = GUIElementFactory.CreateStateElement(gui.Game, stateMachine.CurrentState, role, gameState);
 
             switch (newState) // Fill in events and drawables
             {
@@ -136,6 +135,10 @@ namespace Descent.State
                     }
                 case State.BuyEquipment:
                     {
+                        if (role != Role.Overlord)
+                        {
+                            root.AddClickAction("done",n => n.EventManager.QueueEvent(EventType.FinishedBuy, new GameEventArgs()));
+                        }
                         break;
                     }
             }
@@ -144,7 +147,7 @@ namespace Descent.State
         }
 
         // event handlers
-  
+
         private void PlayerJoined(object sender, PlayerJoinedEventArgs eventArgs)
         {
             Contract.Requires(CurrentState == State.InLobby);
@@ -186,9 +189,9 @@ namespace Descent.State
 
             if (Player.Instance.IsServer)
             {
-                eventManager.QueueEvent(EventType.GiveOverlordCards, new GiveOverlordCardsEventArgs(gameState.GetOverlordCards(3).Select(card => card.Id).ToArray()));  
+                eventManager.QueueEvent(EventType.GiveOverlordCards, new GiveOverlordCardsEventArgs(gameState.GetOverlordCards(3).Select(card => card.Id).ToArray()));
             }
-            
+
             gui.CreateBoardGUI(FullModel.Board, DetermineRole());
             gui.CreateMenuGUI(model, DetermineRole());
 
