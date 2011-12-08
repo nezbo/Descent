@@ -34,6 +34,14 @@ namespace Descent.Model.Player
         public Dictionary<int, Hero> Heroes { get; private set; }
 
         /// <summary>
+        /// Gets all ids of the hero players.
+        /// </summary>
+        public int[] PlayerIds
+        {
+            get { return Heroes.Keys.ToArray(); }
+        }
+
+        /// <summary>
         /// Gets the runekeys of the hero party.
         /// </summary>
         public HashSet<RuneKey> RuneKeys { get; private set; } 
@@ -138,10 +146,10 @@ namespace Descent.Model.Player
         /// The invariant of the HeroParty class
         /// </summary>
         [ContractInvariantMethod]
-        public void ObjectInvariant()
+        private void ObjectInvariant()
         {
             Contract.Invariant(ConquestTokens >= 0);
-            Contract.Invariant(NumberOfHeroes >= 2 && NumberOfHeroes <= 4);
+            Contract.Invariant(NumberOfHeroes >= 0 && NumberOfHeroes <= 4);
         }
         #endregion 
     }

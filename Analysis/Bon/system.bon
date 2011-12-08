@@ -971,13 +971,15 @@ class_chart GAME_STATE
         "Give me 'n' Overlord Cards.",
         "Give me a Hero.",
         "What is in 'this' chest?",
-        "Give me 'this kind' of treasure."
+        "Give me 'this kind' of treasure.",
+        "What has 'this Hero' not equipped?"
     command
         "Notify me when the Overlord deck is empty!",
         "Remove 'this' equipment!",
         "Remove 'these' Overlord Cards!",
         "Remove 'this' Hero!",
-        "Remove 'this' treasure card!"
+        "Remove 'this' treasure card!",
+        "'This Hero' unequipped 'this Equipment'!"
 end
 
 class_chart STATE_MANAGER

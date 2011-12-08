@@ -153,7 +153,7 @@ namespace Descent.Model.Player.Figure
         public void RemoveFatigue(int amount)
         {
             Contract.Requires(amount > 0);
-            Contract.Requires(amount <= fatigue);
+            Contract.Requires(amount <= Fatigue);
             Contract.Ensures(
                 Contract.OldValue(fatigue) - amount < 0 ?
                 fatigue == 0 :
@@ -189,10 +189,9 @@ namespace Descent.Model.Player.Figure
         /// The invariant of the Hero class
         /// </summary>
         [ContractInvariantMethod]
-        public void ObjectInvariant()
+        private void ObjectInvariant()
         {
             Contract.Invariant(fatigue >= 0 && fatigue <= MaxFatigue);
-            base.ObjectInvariant();
         }
         #endregion
     }
