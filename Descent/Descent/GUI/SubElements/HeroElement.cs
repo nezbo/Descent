@@ -40,11 +40,11 @@ namespace Descent.GUI.SubElements
             equipment.Add(hero.Inventory.Shield);
             equipment.AddRange(hero.Inventory.OtherItems);
 
-            AddChild(new EquipmentPanel(game, "Equipped", 300, Bound.Height - 50, equipment));
+            AddChild(new EquipmentPanel(game, "Equipped", 300, Bound.Height - 50, equipment, new List<int>(new int[] { 0, 1, 2, 3, 4 })));
 
-            AddChild(new EquipmentPanel(game, "Backpack", 450, Bound.Height - 50, new List<Equipment>(hero.Inventory.Backpack)));
+            AddChild(new EquipmentPanel(game, "Backpack", 450, Bound.Height - 50, new List<Equipment>(hero.Inventory.Backpack), new List<int>(new int[] { 5, 6, 7 })));
 
-            AddChild(new EquipmentPanel(game, "Potions", 600, Bound.Height - 50, new List<Equipment>(hero.Inventory.Potions)));
+            AddChild(new EquipmentPanel(game, "Potions", 600, Bound.Height - 50, new List<Equipment>(hero.Inventory.Potions), new List<int>(new int[] { 8, 9, 10 })));
         }
 
         public override void Draw(SpriteBatch draw)
