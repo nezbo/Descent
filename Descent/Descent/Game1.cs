@@ -114,6 +114,7 @@ namespace Descent
 
             root.AddClickAction("doneJoin", (n, g) =>
             {
+                g.AddClickAction(g.Name, null);
                 n.JoinGame(InputElement.GetInputFrom("connectInput"), 1337);
 
                 Player.Instance.EventManager.AcceptPlayerEvent += new AcceptPlayerHandler((sender, eventArgs) =>
