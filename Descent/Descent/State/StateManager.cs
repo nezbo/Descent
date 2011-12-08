@@ -190,6 +190,17 @@ namespace Descent.State
                         }
                         break;
                     }
+                case State.WaitForHeroTurn:
+                    {
+                        if (role != Role.Overlord)
+                        {
+                            root.AddClickAction("take turn", (n, g) =>
+                                                                 {
+                                                                     n.EventManager.QueueEvent(EventType.RequestTurn, new GameEventArgs());
+                                                                 });
+                        }
+                        break;
+                    }
             }
 
             gui.ChangeStateGUI(root); // change the GUI's state element.
