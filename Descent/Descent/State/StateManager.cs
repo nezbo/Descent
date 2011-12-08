@@ -478,7 +478,7 @@ namespace Descent.State
             Contract.Requires(playersRemaining.Contains(eventArgs.PlayerId));
             Contract.Ensures(CurrentState == State.Equip);
 
-            gameState.CurrentPlayer = eventArgs.SenderId;
+            gameState.CurrentPlayer = eventArgs.PlayerId;
 
             //TODO Refresh Hero's cards
 
