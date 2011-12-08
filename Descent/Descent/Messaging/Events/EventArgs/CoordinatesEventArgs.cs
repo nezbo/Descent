@@ -19,8 +19,6 @@ namespace Descent.Messaging.Events
     {
         public CoordinatesEventArgs(int x, int y)
         {
-            Contract.Requires(x >= 0);
-            Contract.Requires(y >= 0);
             X = x;
             Y = y;
         }
