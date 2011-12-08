@@ -444,7 +444,7 @@ namespace Descent.Model
             {
                 string line = reader.ReadLine();
                 if (line.StartsWith("//")) continue;
-                OverlordCard card;
+                OverlordCard card = null;
 
                 string[] data = line.Split(new char[]{','}, 9);
 
@@ -480,6 +480,8 @@ namespace Descent.Model
                         card = new EventCard(id, name, description, cost, sell);
                         break;
                 }
+
+                overlordCards.Add(card);
             }
         }
 
