@@ -50,6 +50,7 @@ namespace Descent.State
             eventManager.OverlordIsEvent += new OverlordIsHandler(OverLordIs);
             eventManager.GiveOverlordCardsEvent += new GiveOverlordCardsHandler(GiveOverlordCards);
             eventManager.AssignHeroEvent += new AssignHeroHandler(AssignHero);
+            eventManager.RequestBuyEquipmentEvent += new RequestBuyEquipmentHandler(RequestBuyEquipment);
             eventManager.GiveEquipmentEvent += new GiveEquipmentHandler(GiveEquipment);
             eventManager.FinishedBuyEvent += new FinishedBuyHandler(FinishedBuy);
 
@@ -249,6 +250,22 @@ namespace Descent.State
             }
         }
 
+        private void RequestBuyEquipment(object sender, RequestBuyEquipmentEventArgs eventArgs)
+        {
+            Contract.Requires(CurrentState == State.BuyEquipment);
+            Contract.Ensures(CurrentState == State.BuyEquipment);
+
+            if (!Player.Instance.IsServer)
+            {
+                return;
+            }
+
+            if (gameState.CanBuyEquipment(eventArgs.EquipmentId))
+            {
+                eventManager.QueueEvent(EventType.GiveEquipment, new GiveEquipmentEventArgs(eventArgs.SenderId, eventArgs.EquipmentId, false));
+            }
+        }
+
         private void GiveEquipment(object sender, GiveEquipmentEventArgs eventArgs)
         {
             Contract.Requires(CurrentState == State.BuyEquipment);
@@ -256,7 +273,7 @@ namespace Descent.State
 
             Equipment equipment = FullModel.GetEquipment(eventArgs.EquipmentId);
             gameState.AddToUnequippedEquipment(eventArgs.PlayerId, equipment);
-            gameState.RemoveEquipment(equipment.Id);
+            Player.Instance.HeroParty.Heroes[eventArgs.PlayerId].Coins -= equipment.BuyPrice;
         }
 
         private void FinishedBuy(object sender, GameEventArgs eventArgs)
