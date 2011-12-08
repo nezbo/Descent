@@ -463,9 +463,9 @@ namespace Descent.Model
                         string[] creaturesToSpawn = data[6].Split('/');
                         for (int j = 0; j < creaturesToSpawn.Length; j++)
                         {
-                            for (int k = 0; k < int.Parse(creaturesToSpawn[j].Split(' ')[0]); k++)
+                            for (int k = 0; k < int.Parse(creaturesToSpawn[j].Split(' ')[1]); k++)
                             {
-                                monsters.Add(GetMonster(int.Parse(creaturesToSpawn[j].Split(' ')[1])));
+                                monsters.Add(GetMonster(int.Parse(creaturesToSpawn[j].Split(' ')[0])));
                             }
                         }
                         card = new SpawnCard(id, name, description, cost, sell, monsters.ToArray());
