@@ -31,8 +31,17 @@ namespace Descent.GUI
 
         private void SendMessage(string text)
         {
+
+            #if DEBUG
+            // Allow for sending events directly through the chat if we're in debug.
+            if (text.IndexOf("evt: ") == 0)
+            {
+                manager.QueueStringEvent(text.Substring(5));
+            }
+            #endif
+
             string message = Player.Instance.Nickname + ": " + text;
-            manager.QueueEvent(EventType.ChatMessage, new ChatMessageEventArgs(message));
+            manager.QueueEvent(EventType.ChatMessage, new ChatMessageEventArgs(message)); 
         }
 
         private void FormatAndAdd(string text)
