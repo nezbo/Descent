@@ -211,7 +211,7 @@ namespace Descent.State
         private void GiveOverlordCards(object sender, GiveOverlordCardsEventArgs eventArgs)
         {
             Contract.Requires(CurrentState == State.DrawOverlordCards);
-            Contract.Ensures(CurrentState == State.DrawHeroCard);
+            //Contract.Ensures(CurrentState == State.DrawHeroCard);
 
             foreach (int overlordCardId in eventArgs.OverlordCardIds)
             {

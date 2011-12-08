@@ -89,7 +89,6 @@ namespace Descent.GUI
                     }
                 case State.BuyEquipment:
                     {
-                        GUIElement money = new GUIElement(game, "money", 0, 0, RelW(g, 8), RelH(g, 8));
                         GUIElement box = new GUIElement(game, "shop", RelW(g, 10), RelH(g, 10), RelW(g, 80), RelH(g, 80));
 
                         int startY = RelH(g, 15);
@@ -123,12 +122,13 @@ namespace Descent.GUI
                         if (role != Role.Overlord)
                         {
                             GUIElement done = new GUIElement(game, "done", RelW(g, 85), RelH(g, 90), RelW(g, 10), RelH(g, 5));
+                            GUIElement money = new GUIElement(game, "money", 0, 0, RelW(g, 8), RelH(g, 8));
+
+                            money.AddText(money.Name, "Money:\n" + Player.Instance.Hero.Coins, new Vector2(5, 5));
+
                             root.AddChild(done);
+                            root.AddChild(money);
                         }
-
-                        money.AddText(money.Name, "Money:\n" + Player.Instance.Hero.Coins, new Vector2(5, 5));
-
-                        root.AddChild(money);
                         root.AddChild(box);
                         break;
                     }
