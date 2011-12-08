@@ -201,6 +201,25 @@ namespace Descent.State
                         }
                         break;
                     }
+                case State.WaitForChooseAction:
+                    {
+                        if (role == Role.ActiveHero)
+                        {
+                            root.AddClickAction("advance", (n, g) =>
+                                                               {
+                                                                   n.EventManager.QueueEvent(EventType.ChooseAction, new ChooseActionEventArgs(ActionType.Advance));
+                                                               });
+                            root.AddClickAction("run", (n, g) =>
+                            {
+                                n.EventManager.QueueEvent(EventType.ChooseAction, new ChooseActionEventArgs(ActionType.Run));
+                            });
+                            root.AddClickAction("battle", (n, g) =>
+                            {
+                                n.EventManager.QueueEvent(EventType.ChooseAction, new ChooseActionEventArgs(ActionType.Battle));
+                            });
+                        }
+                        break;
+                    }
             }
 
             gui.ChangeStateGUI(root); // change the GUI's state element.
