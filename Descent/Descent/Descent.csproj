@@ -112,6 +112,7 @@
     <Compile Include="GUI\GUIElement.cs" />
     <Compile Include="GUI\GUIElementFactory.cs" />
     <Compile Include="GUI\Image.cs" />
+    <Compile Include="GUI\SubElements\EquipmentPanel.cs" />
     <Compile Include="GUI\SubElements\HeroElement.cs" />
     <Compile Include="GUI\SubElements\InputElement.cs" />
     <Compile Include="GUI\Text.cs" />

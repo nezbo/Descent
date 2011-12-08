@@ -79,6 +79,11 @@
             return this.focus;
         }
 
+        protected virtual void ActOnDirectClick(int x, int y)
+        {
+            // can be implemented if needed
+        }
+
         /// <summary>
         /// Determines if a click is within the GUIElement and acts
         /// upon the click if possible.
@@ -109,6 +114,7 @@
                 // ok, its within me
                 if (drawBg)
                 {
+                    ActOnDirectClick(x, y);
                     if (onClick != null)
                     {
                         onClick(Player.Instance, this);
@@ -131,7 +137,7 @@
         public virtual void Move(int x, int y)
         {
             Bound = new Rectangle(Bound.X + x, Bound.Y + y, Bound.Width, Bound.Height);
-            foreach(GUIElement e in children) Move(x,y);
+            foreach (GUIElement e in children) Move(x, y);
         }
 
         /// <summary>

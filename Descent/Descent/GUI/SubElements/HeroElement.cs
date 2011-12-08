@@ -21,7 +21,7 @@ namespace Descent.GUI.SubElements
             : base(game, "hero", 0, 0, (int)(game.GraphicsDevice.Viewport.Width * (3 / 4.0)), game.GraphicsDevice.Viewport.Height)
         {
             this.hero = hero;
-            this.SetDrawBackground(false);
+            this.SetBackground("boxbg");
 
             //this.AddDrawable(this.Name, new Image(hero.BigTexture), new Vector2(0, this.Bound.Height - hero.BigTexture.Height));
             health = game.Content.Load<Texture2D>("Images/Other/health-small");
@@ -32,8 +32,7 @@ namespace Descent.GUI.SubElements
             fatigueRect = new Rectangle(210, this.Bound.Height - 200 + 66, 66, 66);
             movementRect = new Rectangle(210, this.Bound.Height - 200 + 132, 66, 66);
 
-            // the subelements
-            GUIElement equip = new GUIElement(game, "equipment", 300, Bound.Height - 50, 120, 590);
+            // the equipment panels
 
             List<Equipment> equipment = new List<Equipment>();
             equipment.Add(hero.Inventory.Weapon);
@@ -41,16 +40,7 @@ namespace Descent.GUI.SubElements
             equipment.Add(hero.Inventory.Shield);
             equipment.AddRange(hero.Inventory.OtherItems);
 
-            int height = 0;
-            int space = 10;
-            for (int i = 0; i < equipment.Count; i++)
-            {
-                EquipmentElement e = GUIElementFactory.CreateEquipmentElement(game, 310,
-                                                                              Bound.Height + i * height + i * space,
-                                                                              equipment[i]);
-                height = e.Bound.Height;
-                equip.AddChild(e);
-            }
+            AddChild(new EquipmentPanel(game, 300, Bound.Height - 50, equipment));
         }
 
         public override void Draw(SpriteBatch draw)

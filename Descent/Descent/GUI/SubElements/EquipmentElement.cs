@@ -15,7 +15,7 @@ namespace Descent.GUI
 
             if (equipment == null)
             {
-                this.SetBackground("Image/Other/equipbg");
+                this.SetBackground("Images/Other/equipbg");
                 this.AddText(this.Name, "Empty", new Vector2(0, 0));
             }
             else
