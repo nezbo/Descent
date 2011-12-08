@@ -156,6 +156,16 @@ namespace Descent.GUI
                         }
                         break;
                     }
+                case State.WaitForHeroTurn:
+                    {
+                        if (role != Role.Overlord)
+                        {
+                            GUIElement takeTurn = new GUIElement(game, "take turn", RelW(g, 42), RelH(g, 45), RelW(g, 16), RelH(g, 10));
+                            root.AddChild(takeTurn);
+                            root.AddText(takeTurn.Name, "Take Turn", new Vector2(5, 10));
+                        }
+                        break;
+                    }
             }
 
             return root;
