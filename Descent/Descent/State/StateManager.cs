@@ -366,7 +366,10 @@ namespace Descent.State
             if (playersRemaining.Count == 0)
             {
                 stateMachine.ChangeToNextState();
-                eventManager.QueueEvent(EventType.NewRound, new GameEventArgs());
+                if (Player.Instance.IsServer)
+                {
+                    eventManager.QueueEvent(EventType.NewRound, new GameEventArgs());
+                }
             }
         }
 
