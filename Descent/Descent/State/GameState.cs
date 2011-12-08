@@ -45,6 +45,8 @@ namespace Descent.State
             Player.Instance.EventManager.GiveEquipmentEvent += GiveEquipment;
         }
 
+        public int CurrentPlayer { get; set; }
+
         public Equipment[] CurrentEquipment
         {
             get { return currentEquipment.ToArray(); }
@@ -136,6 +138,14 @@ namespace Descent.State
             Contract.Ensures(!UnequippedEquipment(playerId).Contains(equipment));
 
             unequippedEquipment[playerId].Remove(equipment);
+        }
+
+        public void RemoveAllUnequippedEquipment(int playerId)
+        {
+            Contract.Requires(playerId > 0);
+            Contract.Ensures(UnequippedEquipment(playerId).Length == 0);
+
+            unequippedEquipment[playerId].Clear();
         }
 
         #region Event listeners

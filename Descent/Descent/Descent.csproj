@@ -112,6 +112,7 @@
     <Compile Include="GUI\GUIElement.cs" />
     <Compile Include="GUI\GUIElementFactory.cs" />
     <Compile Include="GUI\Image.cs" />
+    <Compile Include="GUI\SubElements\EquipmentPanel.cs" />
     <Compile Include="GUI\SubElements\HeroElement.cs" />
     <Compile Include="GUI\SubElements\InputElement.cs" />
     <Compile Include="GUI\Text.cs" />
@@ -126,11 +127,12 @@
     <Compile Include="Messaging\Events\EventArgs\CoordinatesEventArgs.cs" />
     <Compile Include="Messaging\Events\EventArgs\ChooseActionEventArgs.cs" />
     <Compile Include="Messaging\Events\EventArgs\ChestEventArgs.cs" />
+    <Compile Include="Messaging\Events\EventArgs\InventoryFieldEventArgs.cs" />
     <Compile Include="Messaging\Events\EventArgs\DamageEventArgs.cs" />
     <Compile Include="Messaging\Events\EventArgs\RerollDicesEventArgs.cs" />
     <Compile Include="Messaging\Events\EventArgs\RolledDicesEventArgs.cs" />
     <Compile Include="Messaging\Events\EventArgs\SpawnMonsterEventArgs.cs" />
-    <Compile Include="Messaging\Events\EventArgs\InventoryFieldEventArgs.cs" />
+    <Compile Include="Messaging\Events\EventArgs\EquipEventArgs.cs" />
     <Compile Include="Messaging\Events\EventArgs\PointsEventArgs.cs" />
     <Compile Include="Messaging\Events\EventArgs\PlayerEventArgs.cs" />
     <Compile Include="Messaging\Events\EventArgs\PlaceHeroEventArgs.cs" />

@@ -32,8 +32,7 @@ namespace Descent.GUI.SubElements
             fatigueRect = new Rectangle(210, this.Bound.Height - 200 + 66, 66, 66);
             movementRect = new Rectangle(210, this.Bound.Height - 200 + 132, 66, 66);
 
-            // the subelements
-            GUIElement equip = new GUIElement(game, "equipment", 300, Bound.Height - 50, 120, 590);
+            // the equipment panels
 
             List<Equipment> equipment = new List<Equipment>();
             equipment.Add(hero.Inventory.Weapon);
@@ -41,16 +40,11 @@ namespace Descent.GUI.SubElements
             equipment.Add(hero.Inventory.Shield);
             equipment.AddRange(hero.Inventory.OtherItems);
 
-            int height = 0;
-            int space = 10;
-            for (int i = 0; i < equipment.Count; i++)
-            {
-                EquipmentElement e = GUIElementFactory.CreateEquipmentElement(game, 310,
-                                                                              Bound.Height + i * height + i * space,
-                                                                              equipment[i]);
-                height = e.Bound.Height;
-                equip.AddChild(e);
-            }
+            AddChild(new EquipmentPanel(game, "Equipped", 300, Bound.Height - 50, equipment));
+
+            AddChild(new EquipmentPanel(game, "Backpack", 450, Bound.Height - 50, new List<Equipment>(hero.Inventory.Backpack)));
+
+            AddChild(new EquipmentPanel(game, "Potions", 600, Bound.Height - 50, new List<Equipment>(hero.Inventory.Potions)));
         }
 
         public override void Draw(SpriteBatch draw)
@@ -63,7 +57,7 @@ namespace Descent.GUI.SubElements
 
             draw.DrawString(GUI.Font, hero.Health + "/" + hero.MaxHealth, new Vector2(healthRect.X, healthRect.Y), Color.White);
             draw.DrawString(GUI.Font, hero.Fatigue + "/" + hero.MaxFatigue, new Vector2(fatigueRect.X, fatigueRect.Y), Color.White);
-            draw.DrawString(GUI.Font, hero.SpeedLeft + "/" + hero.Speed, new Vector2(movementRect.X, movementRect.Y), Color.White);
+            draw.DrawString(GUI.Font, hero.MovementLeft + "/" + hero.Speed, new Vector2(movementRect.X, movementRect.Y), Color.White);
         }
     }
 }

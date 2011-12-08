@@ -56,8 +56,7 @@ namespace Descent.GUI
         {
             this.xClick = (int)Math.Floor((xDisp + x) / (double)TileSize);
             this.yClick = (int)Math.Floor((yDisp + y) / (double)TileSize);
-            System.Diagnostics.Debug.WriteLine(xClick + "," + yClick);
-            this.MarkSquare(xClick, yClick, false);
+            // TODO: Send square marked
             return true;
         }
 

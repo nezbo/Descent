@@ -75,6 +75,8 @@ namespace Descent.Messaging.Events
         DenyBuy = 61,
         GiveTreasure = 62,
         Equip = 63,
-        Unequip = 64
+        Unequip = 64,
+        SquareMarked = 65,
+        InventoryFieldMarked = 66
     }
 }
