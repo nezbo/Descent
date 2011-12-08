@@ -89,7 +89,7 @@ namespace Descent.State
 
         public bool IsAHeroTurn()
         {
-            return stateMachine.IsOneMoreRecentThanOther(State.HeroTurn, State.OverlordTurn);
+            return Player.Instance.HeroParty.Heroes.Keys.Contains(gameState.CurrentPlayer);
         }
 
         private Role DetermineRole()
@@ -98,7 +98,7 @@ namespace Descent.State
 
             if (IsAHeroTurn())
             {
-                return Player.Instance.Hero == currentHero ? Role.ActiveHero : Role.InactiveHero;
+                return Player.Instance.Id == gameState.CurrentPlayer ? Role.ActiveHero : Role.InactiveHero;
             }
             return Role.InactiveHero; // its not the hero's turns so they are all inactive
         }
@@ -187,6 +187,36 @@ namespace Descent.State
                                                             {
                                                                 n.EventManager.QueueEvent(EventType.FinishedReequip, new GameEventArgs());
                                                             });
+                        }
+                        break;
+                    }
+                case State.WaitForHeroTurn:
+                    {
+                        if (role != Role.Overlord)
+                        {
+                            root.AddClickAction("take turn", (n, g) =>
+                                                                 {
+                                                                     n.EventManager.QueueEvent(EventType.RequestTurn, new GameEventArgs());
+                                                                 });
+                        }
+                        break;
+                    }
+                case State.WaitForChooseAction:
+                    {
+                        if (role == Role.ActiveHero)
+                        {
+                            root.AddClickAction("advance", (n, g) =>
+                                                               {
+                                                                   n.EventManager.QueueEvent(EventType.ChooseAction, new ChooseActionEventArgs(ActionType.Advance));
+                                                               });
+                            root.AddClickAction("run", (n, g) =>
+                            {
+                                n.EventManager.QueueEvent(EventType.ChooseAction, new ChooseActionEventArgs(ActionType.Run));
+                            });
+                            root.AddClickAction("battle", (n, g) =>
+                            {
+                                n.EventManager.QueueEvent(EventType.ChooseAction, new ChooseActionEventArgs(ActionType.Battle));
+                            });
                         }
                         break;
                     }
@@ -403,7 +433,8 @@ namespace Descent.State
             Contract.Requires(CurrentState == State.WaitForChooseSquare);
             Contract.Ensures(CurrentState == ((playersRemaining.Count == 0) ? State.NewRound : State.WaitForChooseSquare));
 
-            FullModel.Board[eventArgs.X, eventArgs.Y].Figure = Player.Instance.HeroParty.Heroes[eventArgs.PlayerId];
+            FullModel.Board.PlaceHero(Player.Instance.HeroParty.Heroes[eventArgs.PlayerId], new Point(eventArgs.X, eventArgs.Y));
+
             playersRemaining.Remove(eventArgs.PlayerId);
 
             if (playersRemaining.Count == 0)
@@ -430,9 +461,10 @@ namespace Descent.State
 
         private void MoveTo(object sender, CoordinatesEventArgs eventArgs)
         {
-            FullModel.Board[FullModel.Board.HeroesOnBoard[Player.Instance.Hero]].Figure = null;
-            FullModel.Board[eventArgs.X, eventArgs.Y].Figure = Player.Instance.Hero;
-            Player.Instance.Hero.RemoveMovement(1);
+            Hero hero = Player.Instance.HeroParty.Heroes[eventArgs.SenderId];
+
+            FullModel.Board.MoveHero(hero, new Point(eventArgs.X, eventArgs.Y));
+            hero.RemoveMovement(1);
         }
 
         #region Local event listeners
@@ -476,9 +508,9 @@ namespace Descent.State
             Contract.Requires(CurrentState == State.WaitForHeroTurn);
             Contract.Requires(gameState.CurrentPlayer == 0);
             Contract.Requires(playersRemaining.Contains(eventArgs.PlayerId));
-            Contract.Ensures(CurrentState == State.WaitForChooseAction);
+            Contract.Ensures(CurrentState == State.Equip);
 
-            gameState.CurrentPlayer = eventArgs.SenderId;
+            gameState.CurrentPlayer = eventArgs.PlayerId;
 
             //TODO Refresh Hero's cards
 

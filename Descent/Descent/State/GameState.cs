@@ -146,7 +146,7 @@ namespace Descent.State
             Contract.Requires(playerId > 0);
             Contract.Ensures(UnequippedEquipment(playerId).Length == 0);
 
-            unequippedEquipment[playerId].Clear();
+            if(unequippedEquipment.ContainsKey(playerId)) unequippedEquipment[playerId].Clear();
         }
 
         #region Event listeners

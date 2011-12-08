@@ -498,6 +498,19 @@
             return doors.Where(door => door.IsAdjecentSquare(point)).First();
         }
 
+        public void MoveHero(Hero hero, Point point)
+        {
+            this[heroesOnBoard[hero]].Figure = null;
+            this[point].Figure = hero;
+            heroesOnBoard[hero] = point;
+        }
+
+        public void PlaceHero(Hero hero, Point point)
+        {
+            this[point].Figure = hero;
+            heroesOnBoard[hero] = point;
+        }
+
         #endregion
     }
 }

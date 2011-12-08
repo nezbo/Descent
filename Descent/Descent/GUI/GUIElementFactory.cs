@@ -156,6 +156,35 @@ namespace Descent.GUI
                         }
                         break;
                     }
+                case State.WaitForHeroTurn:
+                    {
+                        if (role != Role.Overlord)
+                        {
+                            GUIElement takeTurn = new GUIElement(game, "take turn", RelW(g, 3), RelW(g, 3), RelW(g, 15), RelH(g, 5));
+                            root.AddChild(takeTurn);
+                            root.AddText(takeTurn.Name, "Take Turn", new Vector2(5, 5));
+                        }
+                        break;
+                    }
+                case State.WaitForChooseAction:
+                    {
+                        if (role == Role.ActiveHero)
+                        {
+                            GUIElement advance = new GUIElement(game, "advance", RelW(g, 45), RelH(g, 40), RelW(g, 10), RelH(g, 5));
+                            GUIElement run = new GUIElement(game, "run", RelW(g, 45), RelH(g, 47), RelW(g, 10), RelH(g, 5));
+                            GUIElement battle = new GUIElement(game, "battle", RelW(g, 45), RelH(g, 54), RelW(g, 10), RelH(g, 5));
+
+                            Vector2 v = new Vector2(5, 5);
+                            advance.AddText(advance.Name, "Advance", v);
+                            run.AddText(run.Name, "Run", v);
+                            battle.AddText(battle.Name, "Battle", v);
+
+                            root.AddChild(advance);
+                            root.AddChild(run);
+                            root.AddChild(battle);
+                        }
+                        break;
+                    }
             }
 
             return root;
