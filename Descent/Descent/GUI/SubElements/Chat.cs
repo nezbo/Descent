@@ -37,6 +37,7 @@ namespace Descent.GUI
             if (text.IndexOf("evt: ") == 0)
             {
                 manager.QueueStringEvent(text.Substring(5));
+                return;
             }
             #endif
 

@@ -15,7 +15,7 @@ namespace Descent.GUI
 
             if (equipment == null)
             {
-                this.SetBackground("Image/Other/equipbg");
+                this.SetBackground("Images/Other/equipbg");
                 this.AddText(this.Name, "Empty", new Vector2(0, 0));
             }
             else
@@ -43,12 +43,15 @@ namespace Descent.GUI
                             break;
                         }
                 }
-            }
 
-            this.AddClickAction(this.Name, (n, g) => n.EventManager.QueueEvent(EventType.RequestBuyEquipment,
-                                                                          new RequestBuyEquipmentEventArgs(
-                                                                              equipment.Id)));
-            this.AddText(this.Name, equipment.Name, new Vector2(0, 0));
+
+                this.AddClickAction(
+                    this.Name,
+                    (n, g) =>
+                    n.EventManager.QueueEvent(
+                        EventType.RequestBuyEquipment, new RequestBuyEquipmentEventArgs(equipment.Id)));
+                this.AddText(this.Name, equipment.Name, new Vector2(0, 0));
+            }
         }
     }
 }
