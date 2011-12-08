@@ -122,7 +122,7 @@ namespace Descent.State
             Contract.Requires(equipment != null);
             Contract.Ensures(UnequippedEquipment(playerId).Contains(equipment));
 
-            if (unequippedEquipment.ContainsKey(playerId))
+            if (!unequippedEquipment.ContainsKey(playerId))
             {
                 unequippedEquipment[playerId] = new List<Equipment>();
             }

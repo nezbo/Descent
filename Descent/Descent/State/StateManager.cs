@@ -260,9 +260,13 @@ namespace Descent.State
                 return;
             }
 
-            if (gameState.CanBuyEquipment(eventArgs.EquipmentId))
+            if (gameState.CanBuyEquipment(eventArgs.EquipmentId) && Player.Instance.HeroParty.Heroes[eventArgs.SenderId].Coins >= FullModel.GetEquipment(eventArgs.EquipmentId).BuyPrice)
             {
                 eventManager.QueueEvent(EventType.GiveEquipment, new GiveEquipmentEventArgs(eventArgs.SenderId, eventArgs.EquipmentId, false));
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("Buy denied!");
             }
         }
 
