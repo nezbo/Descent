@@ -251,6 +251,7 @@ namespace Descent.Model
 
             EAttackType attackType;
             EAttackType.TryParse(data[5], out attackType);
+            attackType = type == EquipmentType.Weapon ? attackType : EAttackType.NONE;
 
             int buyPrice = data[6].Equals(string.Empty) ? 0 : int.Parse(data[6]);
             int hands = data[7].Equals(string.Empty) ? 0 : int.Parse(data[7]);
@@ -260,7 +261,16 @@ namespace Descent.Model
             List<SurgeAbility> surgeAbilities =
                 data[11].Split('/').Select(s => SurgeAbility.GetSurgeAbility(s)).ToList();
 
-            return new Equipment(id, name, type, rarity, buyPrice, surgeAbilities, hands, abilities);
+            return new Equipment(
+                id: id, 
+                name: name, 
+                type: type, 
+                attackType: attackType, 
+                rarity: rarity, 
+                buyPrice: buyPrice, 
+                surgeAbilities: surgeAbilities, 
+                hands: hands, 
+                abilities: abilities);
         }
 
         private static void LoadTreasures(Game game, StreamReader reader)

@@ -74,6 +74,7 @@ namespace Descent.Model.Player.Figure.HeroStuff
         private string name;
         private EquipmentType type;
         private EquipmentRarity rarity;
+        private EAttackType attackType;
         private int buyPrice;
         private List<SurgeAbility> surgeAbilities;
         private int hands;
@@ -129,6 +130,14 @@ namespace Descent.Model.Player.Figure.HeroStuff
             get
             {
                 return type;
+            }
+        }
+
+        public EAttackType AttackType
+        {
+            get
+            {
+                return attackType;
             }
         }
 
@@ -225,13 +234,14 @@ namespace Descent.Model.Player.Figure.HeroStuff
         /// <param name="hands">
         /// The number of hands it takes to wield, if the equipment is a weapon
         /// </param>
-        public Equipment(int id, string name, EquipmentType type, EquipmentRarity rarity, int buyPrice, List<SurgeAbility> surgeAbilities, int hands, List<Ability> abilities)
+        public Equipment(int id, string name, EquipmentType type, EAttackType attackType, EquipmentRarity rarity, int buyPrice, List<SurgeAbility> surgeAbilities, int hands, List<Ability> abilities)
         {
             Contract.Requires(surgeAbilities != null);
             Contract.Requires(abilities != null);
             this.id = id;
             this.name = name;
             this.type = type;
+            this.attackType = attackType;
             this.rarity = rarity;
             this.buyPrice = rarity == EquipmentRarity.Common ? buyPrice : 0;
             this.surgeAbilities = surgeAbilities;

@@ -135,6 +135,9 @@ namespace Descent.Model.Player.Figure
             this.hands = hands;
             abilityText = text;
             inventory = new Inventory(this);
+
+
+            DiceContribution += this.BlackDice;
         }
 
         #endregion
@@ -198,7 +201,20 @@ namespace Descent.Model.Player.Figure
             skills[skill.Type].Remove(skill);
         }
 
-        /// <summary>
+        private List<Dice> BlackDice()
+        {
+            List<Dice> dice = new List<Dice>();
+            if (inventory.Weapon == null) return dice;
+
+            for (int i = 0; i < blackDice[inventory.Weapon.AttackType]; i++)
+            {
+                dice.Add(FullModel.GetDice(EDice.B));
+            }
+
+            return dice;
+        }
+
+            /// <summary>
         /// The invariant of the Hero class
         /// </summary>
         [ContractInvariantMethod]

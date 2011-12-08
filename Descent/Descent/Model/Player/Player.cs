@@ -39,7 +39,7 @@ namespace Descent.Model.Player
     /// </author>
     public enum EAttackType
     {
-        MAGIC, MELEE, RANGED, NONE
+        NONE, MAGIC, MELEE, RANGED
     }
 
     /// <summary>
