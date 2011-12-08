@@ -123,9 +123,10 @@ namespace Descent.GUI
                         if (role != Role.Overlord)
                         {
                             GUIElement done = new GUIElement(game, "done", RelW(g, 85), RelH(g, 90), RelW(g, 10), RelH(g, 5));
+                            root.AddChild(done);
                         }
 
-                        money.AddText(money.Name, "Money:\n300", new Vector2(5, 5));
+                        money.AddText(money.Name, "Money:\n" + Player.Instance.Hero.Coins, new Vector2(5, 5));
 
                         root.AddChild(money);
                         root.AddChild(box);
@@ -152,6 +153,11 @@ namespace Descent.GUI
             root.AddChild(new Chat(game));
 
             return root;
+        }
+
+        public static EquipmentElement CreateEquipmentElement(Game game, int x, int y, Equipment equipment)
+        {
+            return new EquipmentElement(game, x, y, RelW(game.GraphicsDevice.Viewport, 10), RelW(game.GraphicsDevice.Viewport, 10), equipment);
         }
     }
 }
