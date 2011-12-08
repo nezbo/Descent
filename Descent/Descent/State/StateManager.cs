@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 using Descent.Model.Board;
@@ -34,6 +35,7 @@ namespace Descent.State
         // other
         private Hero currentHero;
         private Collection<Hero> heroesYetToAct;
+        private List<int> playersRemaining = new List<int>();
 
         public StateManager(GUI gui, FullModel model)
         {
@@ -48,6 +50,8 @@ namespace Descent.State
             eventManager.OverlordIsEvent += new OverlordIsHandler(OverLordIs);
             eventManager.GiveOverlordCardsEvent += new GiveOverlordCardsHandler(GiveOverlordCards);
             eventManager.AssignHeroEvent += new AssignHeroHandler(AssignHero);
+            eventManager.GiveEquipmentEvent += new GiveEquipmentHandler(GiveEquipment);
+            eventManager.FinishedBuyEvent += new FinishedBuyHandler(FinishedBuy);
 
             // initiate start
             stateMachine = new StateMachine(new State[] { State.InLobby, State.Initiation, State.DrawOverlordCards, //TODO DrawSkillCards
@@ -233,7 +237,30 @@ namespace Descent.State
             
             if (CurrentState == State.BuyEquipment) // TODO Should be DrawSkillCard
             {
-                System.Diagnostics.Debug.WriteLine("done " + CurrentState);
+                playersRemaining.AddRange(Player.Instance.HeroParty.PlayerIds);
+            }
+        }
+
+        private void GiveEquipment(object sender, GiveEquipmentEventArgs eventArgs)
+        {
+            Contract.Requires(CurrentState == State.BuyEquipment);
+            Contract.Ensures(CurrentState == Contract.OldValue(CurrentState));
+
+            Equipment equipment = FullModel.GetEquipment(eventArgs.EquipmentId);
+            gameState.AddToUnequippedEquipment(eventArgs.PlayerId, equipment);
+            gameState.RemoveEquipment(equipment.Id);
+        }
+
+        private void FinishedBuy(object sender, GameEventArgs eventArgs)
+        {
+            Contract.Requires(CurrentState == State.BuyEquipment);
+            Contract.Ensures(CurrentState == ((playersRemaining.Count > 0) ? State.BuyEquipment : State.Equip));
+
+            playersRemaining.Remove(eventArgs.SenderId);
+
+            if (playersRemaining.Count == 0)
+            {
+                stateMachine.ChangeToNextState();
             }
         }
 

@@ -97,6 +97,7 @@ namespace Descent.Model.Player.Figure
             isMaster = master;
             Speed = speed;
             MaxHealth = health;
+            this.health = health;
             Armor = armor;
             attackType = type;
             DiceForAttack = dice;

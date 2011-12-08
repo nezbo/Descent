@@ -24,6 +24,8 @@ namespace Descent.State
         private List<Equipment> currentEquipment = new List<Equipment>();
         private List<OverlordCard> overlordCards = new List<OverlordCard>();
         private List<Hero> heroes = new List<Hero>();
+        private Dictionary<int, List<Equipment>> unequippedEquipment; 
+
         //TODO private List<Treasure> treasures;
 
         public GameState()
@@ -31,6 +33,7 @@ namespace Descent.State
             currentEquipment = new List<Equipment>();
             overlordCards = new List<OverlordCard>();
             heroes = new List<Hero>();
+            unequippedEquipment = new Dictionary<int, List<Equipment>>();
 
             currentEquipment.AddRange(FullModel.AllEquipment);
             overlordCards.AddRange(FullModel.AllOverlordCards);
@@ -62,6 +65,13 @@ namespace Descent.State
             return heroes.OrderBy(x => System.Guid.NewGuid()).First();
         }
 
+        public Equipment[] UnequippedEquipment(int playerId)
+        {
+            Contract.Requires(playerId > 0);
+            if(!unequippedEquipment.Keys.Contains(playerId)) return new Equipment[0];
+            return unequippedEquipment[playerId].ToArray();
+        }
+
         /// <summary>
         /// Gets the contents of a chest.
         /// </summary>
@@ -81,8 +91,6 @@ namespace Descent.State
 
         public void RemoveEquipment(int equipmentId)
         {
-            Contract.Requires(currentEquipment.Contains(FullModel.GetEquipment(equipmentId)));
-            Contract.Ensures(!currentEquipment.Contains(FullModel.GetEquipment(equipmentId)));
 
             currentEquipment.Remove(FullModel.GetEquipment(equipmentId));
         }
@@ -106,6 +114,28 @@ namespace Descent.State
             treasures.Remove(FullModel.GetTreasure(treasureId));
         }
         */
+
+        public void AddToUnequippedEquipment(int playerId, Equipment equipment)
+        {
+            Contract.Requires(playerId > 0);
+            Contract.Requires(equipment != null);
+            Contract.Ensures(UnequippedEquipment(playerId).Contains(equipment));
+
+            if (unequippedEquipment[playerId] == null)
+            {
+                unequippedEquipment[playerId] = new List<Equipment>();
+            }
+            unequippedEquipment[playerId].Add(equipment);
+        }
+
+        public void RemoveFromUnequippedEquipment(int playerId, Equipment equipment)
+        {
+            Contract.Requires(playerId > 0);
+            Contract.Requires(equipment != null);
+            Contract.Ensures(!UnequippedEquipment(playerId).Contains(equipment));
+
+            unequippedEquipment[playerId].Remove(equipment);
+        }
 
         #region Event listeners
 

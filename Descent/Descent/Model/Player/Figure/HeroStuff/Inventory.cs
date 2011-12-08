@@ -296,7 +296,7 @@ namespace Descent.Model.Player.Figure.HeroStuff
         [ContractInvariantMethod]
         private void Invariant()
         {
-            Contract.Invariant(0 < FreeHands && FreeHands < MaxHands);
+            Contract.Invariant(0 < FreeHands && FreeHands <= MaxHands);
         }
     }
 }

@@ -73,29 +73,29 @@
 
         #region Fields
 
-        private int uniqueID;
+        protected int uniqueID;
 
-        private string name;
+        protected string name;
 
-        private int maxHealth;
+        protected int maxHealth;
 
-        private int health;
+        protected int health;
 
-        private int armor;
+        protected int armor;
 
-        private int speed;
+        protected int speed;
 
-        private int speedLeft;
+        protected int speedLeft;
 
-        private int attacksLeft;
+        protected int attacksLeft;
 
-        private List<Dice> diceForAttacks = new List<Dice>();
+        protected List<Dice> diceForAttacks = new List<Dice>();
 
-        private List<Ability> abilities = new List<Ability>(); 
+        protected List<Ability> abilities = new List<Ability>();
 
-        private List<Effect> effects = new List<Effect>();
+        protected List<Effect> effects = new List<Effect>();
 
-        private Texture2D texture;
+        protected Texture2D texture;
 
         #endregion
 
@@ -420,7 +420,7 @@
         /// Checks that a lot of numbers are zero or 
         /// </summary>
         [ContractInvariantMethod]
-        public void ObjectInvariant()
+        private void ObjectInvariant()
         {
             Contract.Invariant(Name.Length > 0);
             Contract.Invariant(MaxHealth > 0);
