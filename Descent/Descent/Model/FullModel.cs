@@ -458,7 +458,7 @@ namespace Descent.Model
 
                 switch (type)
                 {
-                    case "spawn":
+                    case "Spawn":
                         List<Monster> monsters = new List<Monster>();
                         string[] creaturesToSpawn = data[6].Split('/');
                         for (int j = 0; j < creaturesToSpawn.Length; j++)
@@ -470,18 +470,18 @@ namespace Descent.Model
                         }
                         card = new SpawnCard(id, name, description, cost, sell, monsters.ToArray());
                         break;
-                    case "power":
+                    case "Power":
                         card = new PowerCard(id, name, description, cost, sell);
                         break;
-                    case "trap":
+                    case "Trap":
                         card = new TrapCard(id, name, description, cost, sell);
                         break;
-                    case "event":
+                    case "Event":
                         card = new EventCard(id, name, description, cost, sell);
                         break;
                 }
-
-                overlordCards.Add(card);
+                if(card != null)
+                    overlordCards.Add(card);
             }
         }
 
