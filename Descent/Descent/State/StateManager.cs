@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 
 using Descent.Model.Board;
 
@@ -130,14 +129,14 @@ namespace Descent.State
                             root.AddClickAction("start", (n, g) =>
                                                              {
 #if DEBUG
-                                                                 if (Player.Instance.NumberOfPlayers >= 1) //TODO 3
+                                                                 if (n.NumberOfPlayers >= 1) //TODO 3
 #else 
-                                                                     if (Player.Instance.NumberOfPlayers >= 3) //TODO 3
+                                                                     if (n.NumberOfPlayers >= 3) //TODO 3
 #endif
                                                                  {
-                                                                     Player.Instance.EventManager.QueueEvent(
+                                                                     n.EventManager.QueueEvent(
                                                                          EventType.BeginGame, new GameEventArgs());
-                                                                     Player.Instance.EventManager.QueueEvent(EventType.OverlordIs, new OverlordIsEventArgs(Player.Instance.Id));
+                                                                     n.EventManager.QueueEvent(EventType.OverlordIs, new OverlordIsEventArgs(Player.Instance.Id));
                                                                  }
                                                                  System.Diagnostics.Debug.WriteLine("Start clicked!");
                                                              });
@@ -179,8 +178,12 @@ namespace Descent.State
                                                                 if (g is EquipmentElement)
                                                                 {
                                                                     int id = ((EquipmentElement)g).Id;
-                                                                    Player.Instance.EventManager.QueueEvent(EventType.InventoryFieldMarked, new InventoryFieldEventArgs(id));
+                                                                    n.EventManager.QueueEvent(EventType.InventoryFieldMarked, new InventoryFieldEventArgs(id));
                                                                 }
+                                                            });
+                            root.AddClickAction("done", (n, g) =>
+                                                            {
+                                                                n.EventManager.QueueEvent(EventType.FinishedReequip, new GameEventArgs());
                                                             });
                         }
                         break;
