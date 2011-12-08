@@ -84,7 +84,7 @@ namespace Descent.GUI
 
             if (eventArgs.Free)
             {
-                this.FormatAndAdd(playerName + " received " + equipmentName + ".");
+                FormatAndAdd(playerName + " received " + equipmentName + ".");
             }
             else
             {
