@@ -1,23 +1,25 @@
-1
-1,Spawn,Bane Spider Swarm,2,4,2,1 2/2 1
-2,Spawn,Beastmen War Party,2,4,2,3 2/4 1
-3,Spawn,Skeleton Patrol,2,4,2,21 2/22 1
-4,Spawn,Hell Hound Pack,1,5,2,11 2
-5,Spawn,Razorwing Flock,1,5,2,19 2
-6,Spawn,Sorcerer Circle,1,5,2,23 2
-7,Power,Brilliant Commander,1,17,5
-8,Power,DOOM!,1,20,5
-9,Power,Evil Genius,1,25,5
-10,Power,Hordes of the Things,2,18,5
-11,Power,Trapmaster,1,16,6
-12,Event,Dodge,3,2,1
-13,Event,Rage,2,4,1
-14,Event,Charge,2,4,1
-15,Event,Aim,3,2,1
-16,Trap,Crushing Block,1,7,3,Space
-17,Trap,Paralyzing Gas,1,5,3,Door
-18,Trap,Explosive Rune,1,12,4,Chest
-19,Trap,Mimic,1,8,3,Chest
-20,Trap,Dark Charm,1,8,2,Hero
-21,Spiked Pit,2,3,2,Space
-22,Trap,Explosive Door,1,9,3,Door
+24
+1,Spawn,Bane Spider Swarm,2,4,2,1 2/2 1,Play this card before activating any of your monsters this turn. You may spawn 2 2 Bane Spiders and 1 Master Bane Spider.
+2,Spawn,Beastmen War Party,2,4,2,3 2/4 1,Play this card before activating any of your monsters this turn. You may spawn 2 Beastmen and 1 Master Beastmen.
+3,Spawn,Skeleton Patrol,2,4,2,21 2/22 1,Play this card before activating any of your monsters this turn. You may spawn 2 Skeleton and 1 Master Skeleton.
+4,Spawn,Hell Hound Pack,1,5,2,11 2,Play this card before activating any of your monsters this turn. You may spawn 2 Hell Hounds.
+5,Spawn,Razorwing Flock,1,5,2,19 2,Play this card before activating any of your monsters this turn. You may spawn 2 Razorwings.
+6,Spawn,Sorcerer Circle,1,5,2,23 2,Play this card before activating any of your monsters this turn. You may spawn 2 Sorcerers.
+7,Power,Brilliant Commander,1,17,5,,Play this card at the start of your turn and place it face up in front of you. When you reveal a new area, upgrade any 1 monster in that area to a master of that monster's type.
+8,Power,DOOM!,1,20,5,,Play this card at the start of your turn and place it face up in front of you. All of your monsters roll 1 extra power die when attacking.
+9,Power,Evil Genius,1,25,5,,Play this card at the start of your turn and place it face up in front of you. Draw 1 extra overlord card each turn.
+10,Power,Hordes of the Things,2,18,5,,Play this card at the start of you turn and place it face up in front of you. When you reveal a new area, place your choice of: 2 extra Beastmen, 2 extra Skeletons, or 2 extra Bane Spiders adjacent to any other monster in the revealed area.
+11,Power,Trapmaster,1,16,6,,Play this card at the start of your turn and place it face up in front of you. Lower the threat cost of the Trap cards you play by 1, Trap cards that deal damage deal an additional 2 wounds.
+12,Event,Dodge,3,2,1,,Play after a hero has attacked a monster. The monster dodges the attack.
+13,Event,Rage,2,4,1,,Play when you activate a monster. The monster may attack twice during this activation.
+14,Event,Charge,2,4,1,,Play when you activate a monster. Double the monster's speed for this activation.
+15,Event,Aim,3,2,1,,Play immediately after declaring an attack but before rolling any dice. Your attack is an aimed attack.
+16,Event,Gust of Wind,2,6,2,,Play at the start of your turn. Until the start of your next turn, the heroes' torches are blown out and they cannot trace line of sight farther than 5 spaces away. This card does not affect monster's line of sight.
+17,Trap,Crushing Block,1,7,3,Space,Play this card when a hero moves into an empty space that is not adjacent to any obstacles. Place a one space rubble token on that space. The hero suffers 4 wounds (ignoring armor), reducing by 1 wound for each surge he rolls on 4 power dice. Then move the hero to an adjacent space of your choice.
+18,Trap,Paralyzing Gas,1,5,3,Door,Play this card when a hero opens a door. Unless the hero rolls a blank on one power die, his turn immediately ends and you may place one stun token on him. If the hero player rolls a blank, this card has no effect.
+19,Trap,Explosive Rune,1,12,4,Chest,Play this card when a hero opens a chest. The hero that opened the chest, as well as every hero adjacent to the chest, suffers 6 wounds (ignoring armor). Each affected hero may roll 3 power dice and reduce the effect by 2 wounds for each surge he rolls.
+20,Trap,Mimic,1,8,3,Chest,Play this card when a hero opens a chest. The chest is alive, and its contents cannot be distributed until it is killed. Move the chest marker to an adjacent space. Treat it as a Beastman and activate it immediately. After its activation, the hero's turn resumes. If the chest is killed, the content of the chest are immediately distributed.
+21,Trap,Dark Charm,1,8,2,Hero,Play at the start of your turn and choose one hero. the chosen hero player must roll one power die. If the result is a blank, nothing happens. If the result is not a blank, the hero must make one attack that you declare. This attack may target any hero, including the attacking hero, but is subject to the normal attack rules, including range and line of sight.
+22,Trap,Spiked Pit,2,3,2,Space,Play this card when a hero moves into an empty space. Unless the hero rolls a black on one power die, he falls into the pit and suffers 2 wounds (ignoring armor). If the hero rolls a blank, the hero immediately moves to an adjacent space of his choice.
+23,Trap,Explosive Door,1,9,3,Door,Play this card when a hero opens a door. Every hero adjacent to the door suffers 4 wounds (ignoring armor). Each affected hero may roll 4 power dice and reduce the effect by 1 wound for each surge he rolls.
+24,Trap,Curse of the Monkey God,1,11,4,Chest,Play this card when a hero opens a chest. The hero player must roll a power die. If he rolls a blank, nothing happens. If he does not roll a blank, the hero is transformed into a monkey.

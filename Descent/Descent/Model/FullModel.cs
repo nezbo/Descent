@@ -446,7 +446,7 @@ namespace Descent.Model
                 if (line.StartsWith("//")) continue;
                 OverlordCard card;
 
-                string[] data = line.Split(new char[]{','}, 8);
+                string[] data = line.Split(new char[]{','}, 9);
 
                 int id = int.Parse(data[0]);
                 string type = data[1];
