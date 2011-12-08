@@ -203,7 +203,6 @@ namespace Descent.State
             }
 
             gui.CreateBoardGUI(FullModel.Board, DetermineRole());
-            gui.CreateMenuGUI(model, DetermineRole());
 
             stateMachine.ChangeToNextState();
         }
@@ -225,9 +224,9 @@ namespace Descent.State
 
                 if (Player.Instance.IsServer)
                 {
-                    eventManager.QueueEvent(EventType.AssignHero, new AssignHeroEventArgs(playerId, heroId));  
+                    eventManager.QueueEvent(EventType.AssignHero, new AssignHeroEventArgs(playerId, heroId));
                 }
-                
+
                 gameState.RemoveHero(heroId);
             }
 
@@ -256,6 +255,7 @@ namespace Descent.State
 
             if (CurrentState == State.BuyEquipment) // TODO Should be DrawSkillCard
             {
+                gui.CreateMenuGUI(model, DetermineRole());
                 playersRemaining.AddRange(Player.Instance.HeroParty.PlayerIds);
             }
         }
