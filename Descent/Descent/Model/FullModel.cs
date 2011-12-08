@@ -90,6 +90,13 @@ namespace Descent.Model
             LoadEquipment(game);
             LoadMap(game);
             LoadHeroes(game);
+
+            // TODO: Load cards the right way..
+            overlordCards.Add(new SpawnCard(monsters.ToArray()));
+            overlordCards.Add(new SpawnCard(monsters.ToArray()));
+            overlordCards.Add(new SpawnCard(monsters.ToArray()));
+            overlordCards.Add(new SpawnCard(monsters.ToArray()));
+            overlordCards.Add(new SpawnCard(monsters.ToArray()));
         }
 
         #region Load Monsters
@@ -222,7 +229,7 @@ namespace Descent.Model
                 System.Diagnostics.Debug.Assert(data.Length == 12, "Error when loading equipment, at line " + (i + 2));
 
                 Equipment eq = LoadEquipment(data);
-                
+
 
                 equipmentlists[eq.Type].Add(eq);
             }
@@ -230,7 +237,7 @@ namespace Descent.Model
             townEquipment = equipmentlists;
 
             //LoadTreasures(game, reader);
-            
+
 
         }
 
@@ -438,7 +445,7 @@ namespace Descent.Model
 
         public static OverlordCard GetOverlordCard(int id)
         {
-            return overlordCards.Single(overlordCard => overlordCard.Id == id);
+            return overlordCards.First(overlordCard => overlordCard.Id == id);
         }
 
         /// <summary>

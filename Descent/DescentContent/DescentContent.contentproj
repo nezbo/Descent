@@ -473,11 +473,6 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="Images\Dice\G1100.png">
-      <Name>G1100</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
     <Compile Include="Images\Dice\G0210.png">
       <Name>G0210</Name>
       <Importer>TextureImporter</Importer>
@@ -485,6 +480,11 @@
     </Compile>
     <Compile Include="Images\Dice\G0300.png">
       <Name>G0300</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Images\Dice\G1100.png">
+      <Name>G1100</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
@@ -590,6 +590,23 @@
     </Compile>
     <Compile Include="Images\Dice\Y3000.png">
       <Name>Y3000</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Images\Other\fatigue-small.png">
+      <Name>fatigue-small</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Images\Other\health-small.png">
+      <Name>health-small</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Images\Other\movement-small.png">
+      <Name>movement-small</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
