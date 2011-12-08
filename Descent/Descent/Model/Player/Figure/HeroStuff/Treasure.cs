@@ -26,12 +26,6 @@ namespace Descent.Model.Player.Figure.HeroStuff
 
         private Equipment equipment;
 
-        private Potion potion;
-
-        private int coin;
-
-        private Treasure treasure;
-
         #endregion
 
         #region Properties
@@ -81,56 +75,28 @@ namespace Descent.Model.Player.Figure.HeroStuff
             }
         }
 
-        /// <summary>
-        /// Gets the potion from the treasure
-        /// This is none, if there is no equipment
-        /// </summary>
-        public Potion Potion
-        {
-            get
-            {
-                return potion;
-            }
-        }
-
-        /// <summary>
-        /// Gets the number of coins in the treasure
-        /// This is 0 if there is not any
-        /// </summary>
-        public int Coin
-        {
-            get
-            {
-                return coin;
-            }
-        }
-
-        /// <summary>
-        /// Gets a new treasure
-        /// This is used for treasure caches
-        /// This is null if there is no new treasure
-        /// </summary>
-        public Treasure NewTreasure
-        {
-            get
-            {
-                return treasure;
-            }
-        }
-
         #endregion
 
         #region Initialization
 
-
-        public Treasure(int id, string name, EquipmentRarity rarity, Equipment equipment, Potion potion, int coin)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Treasure"/> class.
+        /// </summary>
+        /// <param name="id">
+        /// The id of the treasure
+        /// </param>
+        /// <param name="rarity">
+        /// The rarity of the treasure
+        /// </param>
+        /// <param name="equipment">
+        /// The equipment equipment in the treasure
+        /// </param>
+        public Treasure(int id, EquipmentRarity rarity, Equipment equipment)
         {
             this.id = id;
-            this.name = name;
+            this.name = equipment == null ? "Treasure Cache" : equipment.Name;
             this.rarity = rarity;
             this.equipment = equipment;
-            this.potion = potion;
-            this.coin = coin;
         }
 
         #endregion

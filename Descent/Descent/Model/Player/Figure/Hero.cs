@@ -51,6 +51,8 @@ namespace Descent.Model.Player.Figure
 
         private readonly Inventory inventory;
 
+
+
         #endregion
 
         #region Properties
@@ -96,6 +98,11 @@ namespace Descent.Model.Player.Figure
         }
 
         /// <summary>
+        /// Gets or sets the number of coins owned by the hero
+        /// </summary>
+        public int Coins { get; set; }
+
+        /// <summary>
         /// Gets the inventory of the hero
         /// </summary>
         public Inventory Inventory
@@ -135,6 +142,9 @@ namespace Descent.Model.Player.Figure
             this.hands = hands;
             abilityText = text;
             inventory = new Inventory(this);
+
+            Coins += 300;
+            DiceContribution += this.BlackDice;
         }
 
         #endregion
@@ -199,6 +209,24 @@ namespace Descent.Model.Player.Figure
         }
 
         /// <summary>
+        /// A method that returns the number of black dice for the weapon type equipped.
+        /// This list of black dice is empty if there is now weapon equipped.
+        /// </summary>
+        /// <returns></returns>
+        private List<Dice> BlackDice()
+        {
+            List<Dice> dice = new List<Dice>();
+            if (inventory.Weapon == null) return dice;
+
+            for (int i = 0; i < blackDice[inventory.Weapon.AttackType]; i++)
+            {
+                dice.Add(FullModel.GetDice(EDice.B));
+            }
+
+            return dice;
+        }
+
+            /// <summary>
         /// The invariant of the Hero class
         /// </summary>
         [ContractInvariantMethod]

@@ -42,6 +42,7 @@ namespace Descent.State
 
             // Listen to events
             Player.Instance.EventManager.GiveOverlordCardsEvent += GiveOverlordCards;
+            Player.Instance.EventManager.GiveEquipmentEvent += GiveEquipment;
         }
 
         public Equipment[] CurrentEquipment
@@ -121,7 +122,7 @@ namespace Descent.State
             Contract.Requires(equipment != null);
             Contract.Ensures(UnequippedEquipment(playerId).Contains(equipment));
 
-            if (unequippedEquipment[playerId] == null)
+            if (!unequippedEquipment.ContainsKey(playerId))
             {
                 unequippedEquipment[playerId] = new List<Equipment>();
             }
@@ -142,6 +143,11 @@ namespace Descent.State
         private void GiveOverlordCards(object sender, GiveOverlordCardsEventArgs eventArgs)
         {
             RemoveOverlordCards(eventArgs.OverlordCardIds);
+        }
+
+        private void GiveEquipment(object sender, GiveEquipmentEventArgs eventArgs)
+        {
+            RemoveEquipment(eventArgs.EquipmentId);
         }
 
         #endregion
