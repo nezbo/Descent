@@ -429,7 +429,7 @@ namespace Descent.Model
 
                 string text = data[10];
 
-                Texture2D texture = game.Content.Load<Texture2D>("Images/Monster/3");
+                Texture2D texture = game.Content.Load<Texture2D>("Images/Monsters/3");
 
                 heroes.Add(new Hero(id, name, cost, health, fatigue, armor, speed, diceDictionary, skillDictionary, hands, text, texture));
             }
