@@ -39,7 +39,7 @@ namespace Descent.Model
 
         private static Dictionary<EDice, Dice> diceDictionary;
 
-        private static Dictionary<EquipmentType, List<Equipment>> equipment;
+        private static Dictionary<EquipmentType, List<Equipment>> townEquipment;
 
         private static List<Marker> markers;
 
@@ -47,7 +47,6 @@ namespace Descent.Model
 
         private static HeroParty heroParty;
 
-        #endregion
 
         public static Board.Board Board
         {
@@ -61,6 +60,8 @@ namespace Descent.Model
         {
             get { return heroParty; }
         }
+
+        #endregion
 
         #region Load Content
 
@@ -172,7 +173,20 @@ namespace Descent.Model
                 EDice eDice;
                 Enum.TryParse(data[0], false, out eDice);
 
-                int[][] sides = AddSides(data);
+                Texture2D[] textures = new Texture2D[6];
+                int[][] sides = new int[6][];
+                for (int side = 0; side < 6; side++)
+                {
+                    sides[side] = new int[4];
+
+                    char[] sideArray = data[side + 1].ToCharArray();
+                    textures[side] = game.Content.Load<Texture2D>("Images/Dice/" + data[0] + data[side + 1]);
+
+                    for (int value = 0; value < 4; value++)
+                    {
+                        sides[side][value] = int.Parse(sideArray[value] + string.Empty);
+                    }
+                }
 
                 dice[eDice] = new Dice(eDice, sides, null);
             }
@@ -180,31 +194,6 @@ namespace Descent.Model
             diceDictionary = dice;
         }
 
-        /// <summary>
-        /// Reads the sides of a dice
-        /// </summary>
-        /// <param name="data">
-        /// The array of sides
-        /// </param>
-        /// <returns>
-        /// A 6 by 4 array with 6 sides, each with 4 parts, range, damage, surges and 
-        /// </returns>
-        private static int[][] AddSides(string[] data)
-        {
-            int[][] sides = new int[6][];
-            for (int side = 0; side < 6; side++)
-            {
-                sides[side] = new int[4];
-
-                char[] sideArray = data[side + 1].ToCharArray();
-                for (int value = 0; value < 4; value++)
-                {
-                    sides[side][value] = int.Parse(sideArray[value] + string.Empty);
-                }
-            }
-
-            return sides;
-        }
         #endregion
 
         #region Load Equipement
@@ -232,32 +221,42 @@ namespace Descent.Model
                 string[] data = line.Split(',');
                 System.Diagnostics.Debug.Assert(data.Length == 12, "Error when loading equipment, at line " + (i + 2));
 
-                int id = int.Parse(data[0]);
-                string name = data[1];
+                Equipment eq = LoadEquipment(data);
+                
 
-                EquipmentRarity rarity;
-                EquipmentRarity.TryParse(data[2], out rarity);
-
-                EquipmentType type;
-                EquipmentType.TryParse(data[3], out type);
-
-                string other = data[4];
-
-                EAttackType attackType;
-                EAttackType.TryParse(data[5], out attackType);
-
-                int buyPrice = data[6].Equals(string.Empty) ? 0 : int.Parse(data[6]);
-                int hands = data[7].Equals(string.Empty) ? 0 : int.Parse(data[7]);
-                int amount = data[8].Equals(string.Empty) ? 0 : int.Parse(data[8]);
-                List<Dice> dice = data[9].Split(' ').Select(GetDice).ToList();
-                List<Ability> abilities = data[10].Split('/').Select(s => Ability.GetAbility(s)).ToList();
-                List<SurgeAbility> surgeAbilities =
-                    data[11].Split('/').Select(s => SurgeAbility.GetSurgeAbility(s)).ToList();
-
-                equipmentlists[type].Add(new Equipment(name, type, rarity, buyPrice, surgeAbilities, hands, abilities));
+                equipmentlists[eq.Type].Add(eq);
             }
 
-            equipment = equipmentlists;
+            townEquipment = equipmentlists;
+        }
+
+        private static Equipment LoadEquipment(string[] data)
+        {
+            Contract.Requires(data.Length == 12);
+
+            int id = int.Parse(data[0]);
+            string name = data[1];
+
+            EquipmentRarity rarity;
+            EquipmentRarity.TryParse(data[2], out rarity);
+
+            EquipmentType type;
+            EquipmentType.TryParse(data[3], out type);
+
+            string other = data[4];
+
+            EAttackType attackType;
+            EAttackType.TryParse(data[5], out attackType);
+
+            int buyPrice = data[6].Equals(string.Empty) ? 0 : int.Parse(data[6]);
+            int hands = data[7].Equals(string.Empty) ? 0 : int.Parse(data[7]);
+            int amount = data[8].Equals(string.Empty) ? 0 : int.Parse(data[8]);
+            List<Dice> dice = data[9].Split(' ').Select(GetDice).ToList();
+            List<Ability> abilities = data[10].Split('/').Select(s => Ability.GetAbility(s)).ToList();
+            List<SurgeAbility> surgeAbilities =
+                data[11].Split('/').Select(s => SurgeAbility.GetSurgeAbility(s)).ToList();
+
+            return new Equipment(id, name, type, rarity, buyPrice, surgeAbilities, hands, abilities);
         }
 
         #endregion
@@ -293,7 +292,7 @@ namespace Descent.Model
                             board[x, y] = null;
                             break;
                         default:
-                            board[x, y] = new Square(int.Parse(c[x].ToString()));
+                            board[x, y] = new Square(int.Parse(c[x] + string.Empty));
                             break;
                     }
                 }
@@ -414,9 +413,19 @@ namespace Descent.Model
             return overlordCards.Single(overlordCard => overlordCard.Id == id);
         }
 
+        /// <summary>
+        /// Get an instance of the dice, of the given color
+        /// </summary>
+        /// <param name="dice">
+        /// The dice.
+        /// </param>
+        /// <returns>
+        /// A die of that color
+        /// </returns>
         public static Dice GetDice(EDice dice)
         {
-            return diceDictionary[dice];
+            Contract.Ensures(Contract.Result<Dice>().Color == dice);
+            return diceDictionary[dice].Clone();
         }
 
         public static Dice GetDice(string dice)
@@ -459,7 +468,7 @@ namespace Descent.Model
 
         public static Hero GetHero(int id)
         {
-            return heroes[id - 1];
+            return heroes[id];
         }
 
         public static Hero[] AllHeroes
@@ -472,7 +481,7 @@ namespace Descent.Model
             get
             {
                 List<Equipment> allEquipment = new List<Equipment>();
-                foreach (var equipmentList in equipment.Values)
+                foreach (var equipmentList in townEquipment.Values)
                 {
                     allEquipment.AddRange(equipmentList);
                 }
