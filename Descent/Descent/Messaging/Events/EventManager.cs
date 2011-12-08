@@ -330,7 +330,6 @@ namespace Descent.Messaging.Events
             lock (queue)
             {
                 queue.Enqueue(eventString);
-                //queue.AddLast(eventString);  
             }
         }
 
@@ -345,9 +344,7 @@ namespace Descent.Messaging.Events
             
             lock (queue)
             {
-                Console.WriteLine("Queued event: " + EncodeMessage(eventType, eventArgs));
                 queue.Enqueue(EncodeMessage(eventType, eventArgs));
-                //queue.AddLast(EncodeMessage(eventType, eventArgs));  
             }
             
         }
@@ -357,9 +354,7 @@ namespace Descent.Messaging.Events
         /// </summary>
         public void ProcessEventQueue()
         {
-            // Converting to array before looping. If the collection is looped on the state-thread while the
-            // gui thread adds a new event, an InvalidOperationException will be thrown. TODO: Should we use a synclock instead?
-
+            // Looping the queue. We try to get a lock beforehand, since items can be added from other threads.
             lock (queue)
             {
                 while (queue.Count > 0)
@@ -367,14 +362,6 @@ namespace Descent.Messaging.Events
                     string evtStr = queue.Dequeue();
                     ParseAndFire(evtStr, true);
                 }
-                /*
-                foreach (string s in queue)
-                {
-                    ParseAndFire(s, true);
-                }
-
-                queue.Clear(); 
-                 * */
             }   
         }
 
@@ -433,13 +420,18 @@ namespace Descent.Messaging.Events
         /// <param name="sendOnNetwork">Should this event be sent to the other players?</param>
         private void Fire(EventType eventType, GameEventArgs eventArgs, bool sendOnNetwork)
         {
-            Console.WriteLine("[{0}]: {1}", eventArgs.SenderId, eventType.ToString());
+            #if DEBUG
+            System.Diagnostics.Debug.WriteLine("[{0}]: {1}", eventArgs.SenderId, eventType.ToString());
+            #endif
 
             // If I am the player who sent this message (aka it did not come through the network)
             // and the event needs responses, then prepare for collecting responses.
             if (eventArgs.SenderId == Player.Instance.Id && eventArgs.NeedResponse)
             {
-                Console.WriteLine("Awaiting responses from other players");
+                #if DEBUG
+                System.Diagnostics.Debug.WriteLine("Awaiting responses from other players");
+                #endif
+
                 responses[eventArgs.EventId] = 0;
                 awaitingResponses = true;
             }
