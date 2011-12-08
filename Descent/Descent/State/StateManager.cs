@@ -89,7 +89,7 @@ namespace Descent.State
 
         public bool IsAHeroTurn()
         {
-            return stateMachine.IsOneMoreRecentThanOther(State.HeroTurn, State.OverlordTurn);
+            return Player.Instance.HeroParty.Heroes.Keys.Contains(gameState.CurrentPlayer);
         }
 
         private Role DetermineRole()
