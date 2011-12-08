@@ -23,7 +23,7 @@ namespace Descent.GUI
 
             // external events
             manager.ChatMessageEvent += new ChatMessageHandler(GetMessage);
-            manager.RequestBuyEquipmentEvent += new RequestBuyEquipmentHandler(ItemBought);
+            manager.GiveEquipmentEvent += new GiveEquipmentHandler(GiveEquipment);
 
             this.SetDrawBackground(true);
             this.SetBackground("chatbg");
@@ -77,11 +77,19 @@ namespace Descent.GUI
             FormatAndAdd(eventArgs.ToString());
         }
 
-        private void ItemBought(object sender, RequestBuyEquipmentEventArgs eventArgs)
+        private void GiveEquipment(object sender, GiveEquipmentEventArgs eventArgs)
         {
-            string playerName = Player.Instance.GetPlayerNick(eventArgs.SenderId);
+            string playerName = Player.Instance.GetPlayerNick(eventArgs.PlayerId);
             string equipmentName = FullModel.GetEquipment(eventArgs.EquipmentId).Name;
-            FormatAndAdd(playerName + " bought " + equipmentName + ".");
+
+            if (eventArgs.Free)
+            {
+                this.FormatAndAdd(playerName + " received " + equipmentName + ".");
+            }
+            else
+            {
+                FormatAndAdd(playerName + " bought " + equipmentName + "."); 
+            }
         }
     }
 }
