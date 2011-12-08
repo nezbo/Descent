@@ -157,6 +157,17 @@ namespace Descent.State
                                                                 g.AddClickAction(g.Name, null);
                                                                 g.SetDrawBackground(false);
                                                             });
+                            root.AddClickAction("item", (n, g) =>
+                                                            {
+                                                                if (g is EquipmentElement)
+                                                                {
+                                                                    EquipmentElement eq = (EquipmentElement)g;
+                                                                    n.EventManager.QueueEvent(
+                                                                    EventType.RequestBuyEquipment,
+                                                                    new RequestBuyEquipmentEventArgs(eq.Equipment.Id));
+                                                                }
+                                                            });
+
                         }
                         break;
                     }
@@ -306,7 +317,7 @@ namespace Descent.State
         private void FinishedBuy(object sender, GameEventArgs eventArgs)
         {
             Contract.Requires(CurrentState == State.BuyEquipment);
-            Contract.Ensures(CurrentState == ((playersRemaining.Count == Player.Instance.HeroParty.NumberOfHeroes) ?State.Equip : State.BuyEquipment));
+            Contract.Ensures(CurrentState == ((playersRemaining.Count == Player.Instance.HeroParty.NumberOfHeroes) ? State.Equip : State.BuyEquipment));
 
             playersRemaining.Remove(eventArgs.SenderId);
 
@@ -342,7 +353,7 @@ namespace Descent.State
             Contract.Ensures(CurrentState == (gameState.CurrentPlayer != 0 ? State.WaitForChooseAction : (playersRemaining.Count == Player.Instance.HeroParty.NumberOfHeroes) ? State.WaitForChooseSquare : State.Equip));
 
             playersRemaining.Remove(eventArgs.SenderId);
-            
+
             if (gameState.CurrentPlayer != 0)
             {
                 stateMachine.ChangeToNextState();
