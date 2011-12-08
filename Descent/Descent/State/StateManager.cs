@@ -349,7 +349,7 @@ namespace Descent.State
             Contract.Requires(CurrentState == State.WaitForChooseSquare);
             Contract.Ensures(CurrentState == State.WaitForChooseSquare);
 
-            if (FullModel.Board.IsValidStartSquare(new Point(eventArgs.X, eventArgs.Y)))
+            if (Player.Instance.IsServer && FullModel.Board.IsValidStartSquare(new Point(eventArgs.X, eventArgs.Y)))
             {
                 eventManager.QueueEvent(EventType.PlaceHero, new PlaceHeroEventArgs(eventArgs.SenderId, eventArgs.X, eventArgs.Y));
             }
