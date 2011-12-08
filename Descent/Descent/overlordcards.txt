@@ -8,9 +8,16 @@
 7,Power,Brilliant Commander,1,17,5
 8,Power,DOOM!,1,20,5
 9,Power,Evil Genius,1,25,5
-10,Hordes of the Things,2,18,5
+10,Power,Hordes of the Things,2,18,5
 11,Power,Trapmaster,1,16,6
 12,Event,Dodge,3,2,1
 13,Event,Rage,2,4,1
 14,Event,Charge,2,4,1
 15,Event,Aim,3,2,1
+16,Trap,Crushing Block,1,7,3,Space
+17,Trap,Paralyzing Gas,1,5,3,Door
+18,Trap,Explosive Rune,1,12,4,Chest
+19,Trap,Mimic,1,8,3,Chest
+20,Trap,Dark Charm,1,8,2,Hero
+21,Spiked Pit,2,3,2,Space
+22,Trap,Explosive Door,1,9,3,Door

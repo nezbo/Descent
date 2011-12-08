@@ -21,9 +21,15 @@
             get { return monstersToSpawn; }
         }
 
-        public SpawnCard(Monster[] spawnMonsters)
+        public SpawnCard(int id, string name, string description, int playPrice, int sellPrice, Monster[] spawnMonsters)
+            : base(id, name, description, playPrice, sellPrice)
         {
             monstersToSpawn = spawnMonsters;
+        }
+
+        public override void PlayCard()
+        {
+            // TODO: Monster spawn event
         }
     }
 }
