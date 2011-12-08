@@ -230,17 +230,6 @@ namespace Descent.State
                 gameState.RemoveHero(heroId);
             }
 
-            if (Player.Instance.IsServer)
-            {
-                foreach (int playerId in Player.Instance.HeroParty.Heroes.Keys)
-                {
-                    stateMachine.PlaceStates(State.DrawHeroCard);
-                    int heroId = gameState.getHero().Id;
-                    eventManager.QueueEvent(EventType.AssignHero, new AssignHeroEventArgs(playerId, heroId));
-                    gameState.RemoveHero(heroId);
-                }
-            }
-
             stateMachine.ChangeToNextState();
         }
 
