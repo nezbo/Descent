@@ -81,7 +81,7 @@ namespace Descent.GUI
 
                         if (Player.Instance.IsServer)
                         {
-                            GUIElement start = new GUIElement(game, "start", RelW(g, 85), RelH(g, 90), RelW(g, 10), RelH(g, 5));
+                            GUIElement start = new GUIElement(game, "start", RelW(g, 84), RelH(g, 90), RelW(g, 12), RelH(g, 5));
                             root.AddChild(start);
                             root.AddText("start", "Start Game", new Vector2(0, 0));
                         }
@@ -122,6 +122,7 @@ namespace Descent.GUI
                             GUIElement money = new GUIElement(game, "money", 0, 0, RelW(g, 8), RelH(g, 8));
 
                             money.AddText(money.Name, "Money:\n" + Player.Instance.Hero.Coins, new Vector2(5, 5));
+                            done.AddText(done.Name, "Done", new Vector2(0, 0));
 
                             root.AddChild(done);
                             root.AddChild(money);
@@ -148,6 +149,10 @@ namespace Descent.GUI
                                 EquipmentElement eq = GUIElementFactory.CreateEquipmentElement(game, startX + x * width + x * spacerX, startY, current, x + 100);
                                 root.AddChild(eq);
                             }
+
+                            GUIElement done = new GUIElement(game, "done", RelW(g, 85), RelH(g, 90), RelW(g, 10), RelH(g, 5));
+                            done.AddText(done.Name, "Done", new Vector2(0, 0));
+                            root.AddChild(done);
                         }
                         break;
                     }
