@@ -21,7 +21,10 @@ namespace Descent.Model
     using Microsoft.Xna.Framework.Graphics;
 
     /// <summary>
-    /// TODO: Update summary.
+    /// Full Model has access to the entire model of the program,
+    /// and the responsebility of loading/creating the model entities.
+    /// When the game needs instances of monsters, dice or heroes,
+    /// they call the FullModel which then returns a 
     /// </summary>
     public class FullModel
     {
@@ -39,7 +42,9 @@ namespace Descent.Model
 
         private static Dictionary<EDice, Dice> diceDictionary;
 
-        private static Dictionary<EquipmentType, List<Equipment>> townEquipment;
+        private static List<Equipment> townEquipment;
+
+        private static Dictionary<EquipmentRarity, Treasure> treasures = new Dictionary<EquipmentRarity, Treasure>();
 
         private static List<Marker> markers;
 
@@ -213,13 +218,7 @@ namespace Descent.Model
             int n = int.Parse(reader.ReadLine());
             string line;
 
-            Dictionary<EquipmentType, List<Equipment>> equipmentlists = new Dictionary<EquipmentType, List<Equipment>>();
-            equipmentlists[EquipmentType.Weapon] = new List<Equipment>();
-            equipmentlists[EquipmentType.Armor] = new List<Equipment>();
-            equipmentlists[EquipmentType.Shield] = new List<Equipment>();
-            equipmentlists[EquipmentType.Weapon] = new List<Equipment>();
-            equipmentlists[EquipmentType.Other] = new List<Equipment>();
-            equipmentlists[EquipmentType.Potion] = new List<Equipment>();
+            List<Equipment> equipmentList = new List<Equipment>();
 
             for (int i = 0; i < n; i++)
             {
@@ -228,17 +227,19 @@ namespace Descent.Model
 
                 string[] data = line.Split(',');
                 System.Diagnostics.Debug.Assert(data.Length == 12, "Error when loading equipment, at line " + (i + 2));
-
+                
                 Equipment eq = LoadEquipment(data);
 
-
-                equipmentlists[eq.Type].Add(eq);
+                for (int j = 0; j < int.Parse(data[8]); j++)
+                {
+                    equipmentList.Add(eq);
+                }
             }
 
-            townEquipment = equipmentlists;
+            townEquipment = equipmentList;
             System.Diagnostics.Debug.WriteLine("Common equipment loaded successfully!");
 
-            //LoadTreasures(game, reader);
+            LoadTreasures(game, reader);
 
             System.Diagnostics.Debug.WriteLine("Equipment loaded successfully!");
         }
@@ -257,6 +258,7 @@ namespace Descent.Model
 
                 EquipmentRarity rarity;
                 EquipmentRarity.TryParse(data[2], out rarity);
+                if (!treasures.ContainsKey(rarity)) treasures[rarity] = new List<Treasure>();
 
                 if (data[1].Equals("Treasure Cache"))
                 {
@@ -427,7 +429,9 @@ namespace Descent.Model
 
                 string text = data[10];
 
-                heroes.Add(new Hero(id, name, cost, health, fatigue, armor, speed, diceDictionary, skillDictionary, hands, text));
+                Texture2D texture = game.Content.Load<Texture2D>("Images/Monster/3");
+
+                heroes.Add(new Hero(id, name, cost, health, fatigue, armor, speed, diceDictionary, skillDictionary, hands, text, texture));
             }
 
             FullModel.heroes = heroes;
@@ -531,13 +535,7 @@ namespace Descent.Model
         {
             get
             {
-                List<Equipment> allEquipment = new List<Equipment>();
-                foreach (var equipmentList in townEquipment.Values)
-                {
-                    allEquipment.AddRange(equipmentList);
-                }
-
-                return allEquipment.ToArray();
+                return townEquipment.ToArray();
             }
         }
 
