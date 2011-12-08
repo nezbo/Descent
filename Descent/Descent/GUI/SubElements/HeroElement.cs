@@ -57,7 +57,7 @@ namespace Descent.GUI.SubElements
 
             draw.DrawString(GUI.Font, hero.Health + "/" + hero.MaxHealth, new Vector2(healthRect.X, healthRect.Y), Color.White);
             draw.DrawString(GUI.Font, hero.Fatigue + "/" + hero.MaxFatigue, new Vector2(fatigueRect.X, fatigueRect.Y), Color.White);
-            draw.DrawString(GUI.Font, hero.SpeedLeft + "/" + hero.Speed, new Vector2(movementRect.X, movementRect.Y), Color.White);
+            draw.DrawString(GUI.Font, hero.MovementLeft + "/" + hero.Speed, new Vector2(movementRect.X, movementRect.Y), Color.White);
         }
     }
 }

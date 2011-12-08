@@ -85,7 +85,7 @@
 
         protected int speed;
 
-        protected int speedLeft;
+        protected int movementLeft;
 
         protected int attacksLeft;
 
@@ -191,16 +191,16 @@
         /// <summary>
         /// Gets the total amount of speed left
         /// </summary>
-        public int SpeedLeft 
+        public int MovementLeft 
         { 
             get
             {
-                return speedLeft;
+                return movementLeft;
             }
 
             private set
             {
-                speedLeft = value;
+                movementLeft = value;
             }
         }
 
@@ -365,17 +365,24 @@
             health = (int)MathHelper.Clamp(health - amount, 0, MaxHealth);
         }
 
+        public void SetMovement(int amount)
+        {
+            Contract.Requires(amount >= 0);
+            Contract.Ensures(MovementLeft == amount);
+            movementLeft = amount;
+        }
+
         /// <summary>
         /// Adds speed to the speed total
         /// </summary>
         /// <param name="amount">
         /// The amount to be added
         /// </param>
-        public void AddSpeed(int amount)
+        public void AddMovement(int amount)
         {
             Contract.Requires(amount > 0);
-            Contract.Ensures(SpeedLeft == Contract.OldValue(SpeedLeft) + amount);
-            speedLeft = (int)MathHelper.Clamp(speedLeft + amount, 0, int.MaxValue);
+            Contract.Ensures(MovementLeft == Contract.OldValue(MovementLeft) + amount);
+            movementLeft = movementLeft + amount;
         }
 
         /// <summary>
@@ -384,14 +391,39 @@
         /// <param name="amount">
         /// The amount to be removed
         /// </param>
-        public void RemoveSpeed(int amount)
+        public void RemoveMovement(int amount)
         {
             Contract.Requires(amount > 0);
-            Contract.Ensures(
-                Contract.OldValue(SpeedLeft) - amount < 0 ?
-                SpeedLeft == 0 :
-                SpeedLeft == Contract.OldValue(SpeedLeft) - amount);
-            speedLeft = (int)MathHelper.Clamp(SpeedLeft - amount, 0, int.MaxValue);
+            Contract.Requires(amount <= MovementLeft);
+            Contract.Ensures(MovementLeft == Contract.OldValue(MovementLeft) - amount);
+            movementLeft -= amount;
+        }
+
+        /// <summary>
+        /// Sets how many attacks the hero has (without bonus). Used at the start of the hero's turn.
+        /// </summary>
+        public void SetAttacks(int amount)
+        {
+            Contract.Requires(amount >= 0);
+            Contract.Ensures(AttacksLeft == amount);
+            attacksLeft = amount;
+        }
+
+        /// <summary>
+        /// Add one attack.
+        /// </summary>
+        public void AddAttack()
+        {
+            attacksLeft++;
+        }
+
+        /// <summary>
+        /// Remove one attack.
+        /// </summary>
+        public void RemoveAttack()
+        {
+            Contract.Requires(AttacksLeft > 0);
+            attacksLeft--;
         }
 
         /// <summary>
@@ -427,7 +459,7 @@
             Contract.Invariant(Health >= 0 && Health <= MaxHealth);
             Contract.Invariant(Speed > 0);
             Contract.Invariant(Armor >= 0);
-            Contract.Invariant(SpeedLeft >= 0);
+            Contract.Invariant(MovementLeft >= 0);
             Contract.Invariant(AttacksLeft >= 0);
         }
         #endregion

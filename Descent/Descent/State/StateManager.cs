@@ -24,17 +24,11 @@ namespace Descent.State
         private readonly StateMachine stateMachine;
         private readonly GUI gui;
         private readonly FullModel model;
-        private HeroParty heroParty;
         private EventManager eventManager = Player.Instance.EventManager;
         private GameState gameState = new GameState();
 
         // fields for different game logic variables
-        // server only
-        private int ReadyCount = 0;
-
-        // other
         private Hero currentHero;
-        private Collection<Hero> heroesYetToAct;
         private readonly List<int> playersRemaining = new List<int>();
 
         public StateManager(GUI gui, FullModel model)
@@ -61,6 +55,7 @@ namespace Descent.State
             eventManager.NewRoundEvent += new NewRoundHandler(NewRound);
             eventManager.RequestTurnEvent += new RequestTurnHandler(RequestTurn);
             eventManager.TurnChangedEvent += new TurnChangedHandler(TurnChanged);
+            eventManager.ChooseActionEvent += new ChooseActionHandler(ChooseAction);
 
             // initiate start
             stateMachine = new StateMachine(new State[] { State.InLobby, State.Initiation, State.DrawOverlordCards, //TODO DrawSkillCards
@@ -349,7 +344,7 @@ namespace Descent.State
             Contract.Requires(CurrentState == State.Equip);
             Contract.Ensures(CurrentState == Contract.OldValue(CurrentState));
 
-            //TODO Player.Instance.HeroParty.Heroes[eventArgs.SenderId].Inventory[eventArgs.InventoryField] = null;
+            Player.Instance.HeroParty.Heroes[eventArgs.SenderId].Inventory[eventArgs.InventoryField] = null;
             StateChanged();
         }
 
@@ -358,7 +353,7 @@ namespace Descent.State
             Contract.Requires(CurrentState == State.Equip);
             Contract.Ensures(CurrentState == Contract.OldValue(CurrentState));
 
-            //TODO Player.Instance.HeroParty.Heroes[eventArgs.SenderId].Inventory[eventArgs.InventoryField] = FullModel.GetEquipment(eventArgs.EquipmentId);
+            Player.Instance.HeroParty.Heroes[eventArgs.SenderId].Inventory[eventArgs.InventoryField] = FullModel.GetEquipment(eventArgs.EquipmentId);
             StateChanged();
         }
 
@@ -367,6 +362,7 @@ namespace Descent.State
             Contract.Requires(CurrentState == State.Equip);
             Contract.Ensures(CurrentState == (gameState.CurrentPlayer != 0 ? State.WaitForChooseAction : (playersRemaining.Count == Player.Instance.HeroParty.NumberOfHeroes) ? State.WaitForChooseSquare : State.Equip));
 
+            gameState.RemoveAllUnequippedEquipment(eventArgs.SenderId);
             playersRemaining.Remove(eventArgs.SenderId);
 
             if (gameState.CurrentPlayer != 0)
@@ -446,17 +442,37 @@ namespace Descent.State
 
             //TODO Refresh Hero's cards
 
-            stateMachine.PlaceStates(State.HeroTurn, State.Equip, State.WaitForChooseAction);
+            stateMachine.PlaceStates(State.HeroTurn, State.Equip, State.WaitForChooseAction, State.WaitForPerformAction);
             stateMachine.ChangeToNextState();
             stateMachine.ChangeToNextState();
         }
 
-        private void ChooseAction(/* TODO HeroAction action*/)
+        private void ChooseAction(object sender, ChooseActionEventArgs eventArgs)
         {
             Contract.Requires(CurrentState == State.WaitForChooseAction);
             Contract.Ensures(CurrentState == State.WaitForPerformAction);
 
-            // Add movement and battle points to hero(?) object
+            Hero hero = Player.Instance.HeroParty.Heroes[gameState.CurrentPlayer];
+            int movement = 0, attacks = 0;
+
+            switch (eventArgs.ActionType)
+            {
+                case ActionType.Run:
+                    movement = hero.Speed * 2;
+                    attacks = 0;
+                    break;
+                case ActionType.Battle:
+                    movement = 0;
+                    attacks = 2;
+                    break;
+                case ActionType.Advance:
+                    movement = hero.Speed;
+                    attacks = 1;
+                    break;
+            }
+
+            hero.SetMovement(movement);
+            hero.SetAttacks(attacks);
 
             stateMachine.ChangeToNextState();
         }
@@ -479,16 +495,16 @@ namespace Descent.State
         {
             Contract.Requires(CurrentState == State.WaitForPerformAction);
 
-            heroesYetToAct.Remove(currentHero);
+            //heroesYetToAct.Remove(currentHero);
             currentHero = null;
 
-            if (heroesYetToAct.Count == 0)
+            //if (heroesYetToAct.Count == 0)
             {
                 stateMachine.PlaceStates(State.OverlordTurn);
                 stateMachine.ChangeToNextState();
                 OverlordTurnInitiation();
             }
-            else
+            //else
             {
                 stateMachine.PlaceStates(State.WaitForHeroTurn);
                 stateMachine.ChangeToNextState();

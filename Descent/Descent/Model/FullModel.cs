@@ -52,7 +52,6 @@ namespace Descent.Model
 
         private static HeroParty heroParty;
 
-
         public static Board.Board Board
         {
             get
@@ -95,13 +94,7 @@ namespace Descent.Model
             LoadEquipment(game);
             LoadMap(game);
             LoadHeroes(game);
-
-            // TODO: Load cards the right way..
-            overlordCards.Add(new SpawnCard(monsters.ToArray()));
-            overlordCards.Add(new SpawnCard(monsters.ToArray()));
-            overlordCards.Add(new SpawnCard(monsters.ToArray()));
-            overlordCards.Add(new SpawnCard(monsters.ToArray()));
-            overlordCards.Add(new SpawnCard(monsters.ToArray()));
+            LoadOverlordCards(game);
         }
 
         #region Load Monsters
@@ -439,6 +432,58 @@ namespace Descent.Model
 
         #endregion
 
+        #region Load Overlord Cards
+
+        private static void LoadOverlordCards(Game game)
+        {
+            StreamReader reader = new StreamReader(TitleContainer.OpenStream("overlordcards.txt"));
+            overlordCards = new List<OverlordCard>();
+
+            int n = int.Parse(reader.ReadLine());
+            for (int i = 0; i < n; i++)
+            {
+                string line = reader.ReadLine();
+                if (line.StartsWith("//")) continue;
+                OverlordCard card;
+
+                string[] data = line.Split(new char[]{','}, 8);
+
+                int id = int.Parse(data[0]);
+                string type = data[1];
+                string name = data[2];
+                int amount = int.Parse(data[3]);
+                int cost = int.Parse(data[4]);
+                int sell = int.Parse(data[5]);
+                string description = data[7];
+
+                switch (type)
+                {
+                    case "spawn":
+                        List<Monster> monsters = new List<Monster>();
+                        string[] creaturesToSpawn = data[6].Split('/');
+                        for (int j = 0; j < creaturesToSpawn.Length; j++)
+                        {
+                            for (int k = 0; k < int.Parse(creaturesToSpawn[j].Split(' ')[0]); k++)
+                            {
+                                monsters.Add(GetMonster(int.Parse(creaturesToSpawn[j].Split(' ')[1])));
+                            }
+                        }
+                        card = new SpawnCard(id, name, description, cost, sell, monsters.ToArray());
+                        break;
+                    case "power":
+                        card = new PowerCard(id, name, description, cost, sell);
+                        break;
+                    case "trap":
+                        card = new TrapCard(id, name, description, cost, sell);
+                        break;
+                    case "event":
+                        card = new EventCard(id, name, description, cost, sell);
+                        break;
+                }
+            }
+        }
+
+        #endregion
         #endregion
 
         #region Getters

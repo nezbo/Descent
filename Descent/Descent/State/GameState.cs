@@ -140,6 +140,14 @@ namespace Descent.State
             unequippedEquipment[playerId].Remove(equipment);
         }
 
+        public void RemoveAllUnequippedEquipment(int playerId)
+        {
+            Contract.Requires(playerId > 0);
+            Contract.Ensures(UnequippedEquipment(playerId).Length == 0);
+
+            unequippedEquipment[playerId].Clear();
+        }
+
         #region Event listeners
 
         private void GiveOverlordCards(object sender, GiveOverlordCardsEventArgs eventArgs)
