@@ -476,7 +476,7 @@ namespace Descent.State
             Contract.Requires(CurrentState == State.WaitForHeroTurn);
             Contract.Requires(gameState.CurrentPlayer == 0);
             Contract.Requires(playersRemaining.Contains(eventArgs.PlayerId));
-            Contract.Ensures(CurrentState == State.WaitForChooseAction);
+            Contract.Ensures(CurrentState == State.Equip);
 
             gameState.CurrentPlayer = eventArgs.SenderId;
 
