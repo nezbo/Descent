@@ -5,12 +5,14 @@ namespace Descent.GUI
 {
     public class EquipmentElement : GUIElement
     {
-        public Equipment Equipment { get; set; }
+        public Equipment Equipment { get; internal set; }
+        public int Id { get; internal set; }
 
-        public EquipmentElement(Game game, int posX, int posY, int width, int height, Equipment eq)
+        public EquipmentElement(Game game, int posX, int posY, int width, int height, Equipment eq, int id)
             : base(game, "item", posX, posY, width, height)
         {
             Equipment = eq;
+            Id = id;
 
             if (Equipment == null)
             {

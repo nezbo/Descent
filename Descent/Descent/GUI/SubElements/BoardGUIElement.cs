@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Descent.Messaging.Events;
 using Descent.Model.Board;
 using Descent.Model.Player;
 using Microsoft.Xna.Framework.Input;
@@ -32,9 +33,6 @@ namespace Descent.GUI
         private int xDisp, yDisp;
         private Dictionary<Vector2, bool> markedSquares;
 
-        // for clicks
-        private int xClick, yClick;
-
         public BoardGUIElement(Game game, Board board, Role role)
             : base(game, "board", 0, 0, game.GraphicsDevice.Viewport.Width, game.GraphicsDevice.Viewport.Height)
         {
@@ -54,9 +52,11 @@ namespace Descent.GUI
 
         public override bool HandleClick(int x, int y)
         {
-            this.xClick = (int)Math.Floor((xDisp + x) / (double)TileSize);
-            this.yClick = (int)Math.Floor((yDisp + y) / (double)TileSize);
-            // TODO: Send square marked
+            int xClick = (int)Math.Floor((xDisp + x) / (double)TileSize);
+            int yClick = (int)Math.Floor((yDisp + y) / (double)TileSize);
+
+            Player.Instance.EventManager.QueueEvent(EventType.SquareMarked, new CoordinatesEventArgs(xClick, yClick));
+
             return true;
         }
 

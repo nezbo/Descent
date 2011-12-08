@@ -170,6 +170,21 @@ namespace Descent.State
                         }
                         break;
                     }
+                case State.Equip:
+                    {
+                        if (role != Role.Overlord)
+                        {
+                            root.AddClickAction("item", (n, g) =>
+                                                            {
+                                                                if (g is EquipmentElement)
+                                                                {
+                                                                    int id = ((EquipmentElement)g).Id;
+                                                                    Player.Instance.EventManager.QueueEvent(EventType.InventoryFieldMarked, new InventoryFieldEventArgs(id));
+                                                                }
+                                                            });
+                        }
+                        break;
+                    }
             }
 
             gui.ChangeStateGUI(root); // change the GUI's state element.

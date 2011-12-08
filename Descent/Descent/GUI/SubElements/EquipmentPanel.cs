@@ -8,7 +8,7 @@ namespace Descent.GUI.SubElements
     {
         private bool expanded;
 
-        public EquipmentPanel(Game game, string title, int x, int y, List<Equipment> content)
+        public EquipmentPanel(Game game, string title, int x, int y, List<Equipment> content, List<int> ids)
             : base(game, "equipment panel", x, y, 1, 1)
         {
             expanded = false;
@@ -22,7 +22,7 @@ namespace Descent.GUI.SubElements
             {
                 EquipmentElement e = GUIElementFactory.CreateEquipmentElement(game, Bound.X + 10,
                                                                               Bound.Y + 50 + i * height + i * space,
-                                                                              content[i]);
+                                                                              content[i], ids[i]);
                 height = e.Bound.Height;
                 innerWidth = e.Bound.Width;
                 AddChild(e);
