@@ -19,6 +19,7 @@ namespace Descent.GUI.SubElements
             : base(game, "hero", 0, 0, (int)(game.GraphicsDevice.Viewport.Width * (3 / 4.0)), game.GraphicsDevice.Viewport.Height)
         {
             this.hero = hero;
+            this.SetDrawBackground(false);
 
             //this.AddDrawable(this.Name, new Image(hero.BigTexture), new Vector2(0, this.Bound.Height - hero.BigTexture.Height));
             health = game.Content.Load<Texture2D>("Images/Other/health-small");

@@ -128,6 +128,12 @@
             return false;
         }
 
+        public virtual void Move(int x, int y)
+        {
+            Bound = new Rectangle(Bound.X + x, Bound.Y + y, Bound.Width, Bound.Height);
+            foreach(GUIElement e in children) Move(x,y);
+        }
+
         /// <summary>
         /// Reacts to the given key type if this GUIElement
         /// is focused.
