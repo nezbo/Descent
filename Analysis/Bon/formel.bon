@@ -530,6 +530,8 @@ component
                 ensure
                     Result.type = type;
             end
+            unequippedEquipment: SEQUENCE[EQUIPMENT] -- What has 'this Hero' not equipped?
+                -> hero: HERO
             removeEquipment -- Remove 'this' equipment!
                 -> equipment: EQUIPMENT
                 require
@@ -552,6 +554,15 @@ component
                 -> treasure: TREASURE
                 require
                     treasure /= Void;
+            end
+            unequipEquipment -- 'This Hero' unequipped 'this Equipment'!
+                -> hero: HERO
+                -> equipment: EQUIPMENT
+                require
+                    hero /= Void;
+                    equipment /= Void;
+                ensure
+                    not unequippedEquipment(hero).contains(equipment);
             end
     end
 	class STATE_MANAGER

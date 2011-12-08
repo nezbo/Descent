@@ -104,13 +104,17 @@ namespace Descent.GUI
                         {
                             for (int x = 0; x < 6; x++)
                             {
-                                EquipmentElement eq = new EquipmentElement(game, startX + x * width + x * spacerX,
-                                                                           startY + y * width + y * spacerY, width, width,
-                                                                           shopContent[x + y]);
-                                box.AddChild(eq);
-                                if (role == Role.Overlord)
+                                if (shopContent.Length > (x + y * 6))
                                 {
-                                    eq.AddClickAction(eq.Name, null);
+                                    Equipment current = shopContent[x + y * 6];
+                                    EquipmentElement eq = new EquipmentElement(game, startX + x * width + x * spacerX,
+                                                                               startY + y * width + y * spacerY, width, width,
+                                                                               current);
+                                    box.AddChild(eq);
+                                    if (role == Role.Overlord)
+                                    {
+                                        eq.AddClickAction(eq.Name, null);
+                                    }
                                 }
                             }
                         }

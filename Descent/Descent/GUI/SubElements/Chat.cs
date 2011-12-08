@@ -14,7 +14,7 @@ namespace Descent.GUI
         private LinkedList<string> messages;
 
         public Chat(Game game)
-            : base(game, "chat", (int)(game.GraphicsDevice.Viewport.Width * (3 / 4.0)), game.GraphicsDevice.Viewport.Height / 2, game.GraphicsDevice.Viewport.Width / 4, game.GraphicsDevice.Viewport.Height / 2)
+            : base(game, "chat", (int)(game.Window.ClientBounds.Width * (3 / 4.0)), game.Window.ClientBounds.Height / 2, game.Window.ClientBounds.Width / 4, game.Window.ClientBounds.Height / 2)
         {
             InputElement input = new InputElement(game, "chatInput", Bound.X + 10, Bound.Y + Bound.Height - 40, Bound.Width - 18, 30);
             //input.SetDrawBackground(false);

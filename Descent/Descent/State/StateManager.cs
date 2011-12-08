@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 using Descent.Model.Board;
@@ -34,6 +35,7 @@ namespace Descent.State
         // other
         private Hero currentHero;
         private Collection<Hero> heroesYetToAct;
+        private List<int> playersRemaining = new List<int>();
 
         public StateManager(GUI gui, FullModel model)
         {
@@ -48,6 +50,8 @@ namespace Descent.State
             eventManager.OverlordIsEvent += new OverlordIsHandler(OverLordIs);
             eventManager.GiveOverlordCardsEvent += new GiveOverlordCardsHandler(GiveOverlordCards);
             eventManager.AssignHeroEvent += new AssignHeroHandler(AssignHero);
+            eventManager.GiveEquipmentEvent += new GiveEquipmentHandler(GiveEquipment);
+            eventManager.FinishedBuyEvent += new FinishedBuyHandler(FinishedBuy);
 
             // initiate start
             stateMachine = new StateMachine(new State[] { State.InLobby, State.Initiation, State.DrawOverlordCards, //TODO DrawSkillCards
@@ -115,7 +119,7 @@ namespace Descent.State
                         if (Player.Instance.IsServer)
                         {
                             root.AddText("players", "IP: " + Player.Instance.Connection.Ip, new Vector2(50, 50));
-                            root.AddClickAction("start", n =>
+                            root.AddClickAction("start", (n, g) =>
                                                              {
 #if DEBUG
                                                                  if (Player.Instance.NumberOfPlayers >= 1) //TODO 3
@@ -137,7 +141,13 @@ namespace Descent.State
                     {
                         if (role != Role.Overlord)
                         {
-                            root.AddClickAction("done",n => n.EventManager.QueueEvent(EventType.FinishedBuy, new GameEventArgs()));
+                            root.AddClickAction("done", (n, g) =>
+                                                            {
+                                                                n.EventManager.QueueEvent(EventType.FinishedBuy,
+                                                                                          new GameEventArgs());
+                                                                g.AddClickAction(g.Name, null);
+                                                                g.SetDrawBackground(false);
+                                                            });
                         }
                         break;
                     }
@@ -226,14 +236,37 @@ namespace Descent.State
         {
             Contract.Requires(CurrentState == State.DrawHeroCard);
             Contract.Ensures(CurrentState == State.DrawHeroCard || CurrentState == State.BuyEquipment);
-            
+
             Player.Instance.HeroParty.Heroes[eventArgs.PlayerId] = FullModel.GetHero(eventArgs.HeroId);
             gameState.RemoveHero(eventArgs.HeroId);
             stateMachine.ChangeToNextState();
-            
+
             if (CurrentState == State.BuyEquipment) // TODO Should be DrawSkillCard
             {
-                System.Diagnostics.Debug.WriteLine("done " + CurrentState);
+                playersRemaining.AddRange(Player.Instance.HeroParty.PlayerIds);
+            }
+        }
+
+        private void GiveEquipment(object sender, GiveEquipmentEventArgs eventArgs)
+        {
+            Contract.Requires(CurrentState == State.BuyEquipment);
+            Contract.Ensures(CurrentState == Contract.OldValue(CurrentState));
+
+            Equipment equipment = FullModel.GetEquipment(eventArgs.EquipmentId);
+            gameState.AddToUnequippedEquipment(eventArgs.PlayerId, equipment);
+            gameState.RemoveEquipment(equipment.Id);
+        }
+
+        private void FinishedBuy(object sender, GameEventArgs eventArgs)
+        {
+            Contract.Requires(CurrentState == State.BuyEquipment);
+            Contract.Ensures(CurrentState == ((playersRemaining.Count > 0) ? State.BuyEquipment : State.Equip));
+
+            playersRemaining.Remove(eventArgs.SenderId);
+
+            if (playersRemaining.Count == 0)
+            {
+                stateMachine.ChangeToNextState();
             }
         }
 

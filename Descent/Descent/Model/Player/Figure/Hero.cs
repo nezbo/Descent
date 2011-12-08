@@ -35,11 +35,17 @@ namespace Descent.Model.Player.Figure
 
         #region Fields
 
+        private int cost;
+
         private int maxFatigue;
         private int fatigue = 0;
 
+        private Dictionary<EAttackType, int> blackDice; 
+
         private Dictionary<EAttackType, int> numberOfSkills = new Dictionary<EAttackType, int>(); 
         private Dictionary<EAttackType, List<Skill>>  skills = new Dictionary<EAttackType, List<Skill>>();
+
+        private string abilityText;
 
         private int hands;
 
@@ -119,8 +125,15 @@ namespace Descent.Model.Player.Figure
         public Hero(int id, string name, int conquest, int health, int fatigue, int armor, int speed, Dictionary<EAttackType, int> blackDice, Dictionary<EAttackType, int> numberOfSkills, int hands, string text)
             : base(id, name)
         {
+            this.cost = conquest;
+            this.MaxHealth = health;
+            this.MaxFatigue = fatigue;
+            this.Armor = armor;
+            this.Speed = speed;
+            this.blackDice = blackDice;
             this.numberOfSkills = numberOfSkills;
             this.hands = hands;
+            abilityText = text;
             inventory = new Inventory(this);
         }
 
@@ -153,7 +166,7 @@ namespace Descent.Model.Player.Figure
         public void RemoveFatigue(int amount)
         {
             Contract.Requires(amount > 0);
-            Contract.Requires(amount <= fatigue);
+            Contract.Requires(amount <= Fatigue);
             Contract.Ensures(
                 Contract.OldValue(fatigue) - amount < 0 ?
                 fatigue == 0 :
@@ -189,10 +202,9 @@ namespace Descent.Model.Player.Figure
         /// The invariant of the Hero class
         /// </summary>
         [ContractInvariantMethod]
-        public void ObjectInvariant()
+        private void ObjectInvariant()
         {
             Contract.Invariant(fatigue >= 0 && fatigue <= MaxFatigue);
-            base.ObjectInvariant();
         }
         #endregion
     }

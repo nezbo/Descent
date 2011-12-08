@@ -123,7 +123,7 @@ namespace Descent.Model.Player.Figure.HeroStuff
         #region Initialization
 
 
-        public Treasure(int id, string name, EquipmentRarity rarity, Equipment equipment, Potion potion, int coin, Treasure treasure)
+        public Treasure(int id, string name, EquipmentRarity rarity, Equipment equipment, Potion potion, int coin)
         {
             this.id = id;
             this.name = name;
@@ -131,7 +131,6 @@ namespace Descent.Model.Player.Figure.HeroStuff
             this.equipment = equipment;
             this.potion = potion;
             this.coin = coin;
-            this.treasure = treasure;
         }
 
         #endregion

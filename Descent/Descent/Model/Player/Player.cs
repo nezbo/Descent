@@ -186,8 +186,10 @@ namespace Descent.Model.Player
 
             set
             {
-                Contract.Requires(stateManager == null);
-                stateManager = value;
+                if (stateManager == null)
+                {
+                    stateManager = value;
+                }
             }
         }
 
