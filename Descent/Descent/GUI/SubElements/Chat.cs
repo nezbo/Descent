@@ -23,7 +23,7 @@ namespace Descent.GUI
 
             // external events
             manager.ChatMessageEvent += new ChatMessageHandler(GetMessage);
-            manager.RequestBuyEquipmentEvent += new RequestBuyEquipmentHandler(ItemBought);
+            manager.GiveEquipmentEvent += new GiveEquipmentHandler(GiveEquipment);
 
             this.SetDrawBackground(true);
             this.SetBackground("chatbg");
@@ -31,8 +31,18 @@ namespace Descent.GUI
 
         private void SendMessage(string text)
         {
+
+            #if DEBUG
+            // Allow for sending events directly through the chat if we're in debug.
+            if (text.IndexOf("evt: ") == 0)
+            {
+                manager.QueueStringEvent(text.Substring(5));
+                return;
+            }
+            #endif
+
             string message = Player.Instance.Nickname + ": " + text;
-            manager.QueueEvent(EventType.ChatMessage, new ChatMessageEventArgs(message));
+            manager.QueueEvent(EventType.ChatMessage, new ChatMessageEventArgs(message)); 
         }
 
         private void FormatAndAdd(string text)
@@ -77,11 +87,19 @@ namespace Descent.GUI
             FormatAndAdd(eventArgs.ToString());
         }
 
-        private void ItemBought(object sender, RequestBuyEquipmentEventArgs eventArgs)
+        private void GiveEquipment(object sender, GiveEquipmentEventArgs eventArgs)
         {
-            string playerName = Player.Instance.GetPlayerNick(eventArgs.SenderId);
+            string playerName = Player.Instance.GetPlayerNick(eventArgs.PlayerId);
             string equipmentName = FullModel.GetEquipment(eventArgs.EquipmentId).Name;
-            FormatAndAdd(playerName + " bought " + equipmentName + ".");
+
+            if (eventArgs.Free)
+            {
+                FormatAndAdd(playerName + " received " + equipmentName + ".");
+            }
+            else
+            {
+                FormatAndAdd(playerName + " bought " + equipmentName + "."); 
+            }
         }
     }
 }

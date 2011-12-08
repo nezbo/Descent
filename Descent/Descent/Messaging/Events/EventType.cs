@@ -54,7 +54,6 @@ namespace Descent.Messaging.Events
         AddFatigue = 39,
         RemoveFatigue = 40,
         AddMovement = 41,
-        RemoveFromInventory = 42,
         UseOverlordCard = 43,
         AddPowerOverlordCard = 44,
         SpawnMonster = 45,
@@ -74,6 +73,8 @@ namespace Descent.Messaging.Events
         AcceptPlayer = 59,
         RemoveConquestTokens = 60,
         DenyBuy = 61,
-        GiveTreasure = 62
+        GiveTreasure = 62,
+        Equip = 63,
+        Unequip = 64
     }
 }
