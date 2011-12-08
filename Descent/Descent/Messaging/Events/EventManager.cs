@@ -133,7 +133,7 @@ namespace Descent.Messaging.Events
     public delegate void SpawnFinishedHandler(object sender, GameEventArgs eventArgs);
 
     public delegate void StartMonsterTurnHandler(object sender, CoordinatesEventArgs eventArgs);
-    
+
     public delegate void EndMonsterTurnHandler(object sender, GameEventArgs eventArgs);
 
     #endregion
@@ -171,7 +171,7 @@ namespace Descent.Messaging.Events
     public delegate void SquareMarkedHandler(object sender, CoordinatesEventArgs eventArgs);
 
     #endregion
-    
+
     public delegate void AllRespondedNoActionHandler(object sender, EventArgs eventArgs); // Special delegate, contains no eventArgs info.
     #endregion
 
@@ -252,7 +252,7 @@ namespace Descent.Messaging.Events
         public event GiveTreasureHandler GiveTreasureEvent;
 
         public event StartPlacementHandler StartPlacementEvent;
-        
+
         public event RequestPlacementHandler RequestPlacementEvent;
 
         public event PlaceHeroHandler PlaceHeroEvent;
@@ -342,13 +342,14 @@ namespace Descent.Messaging.Events
         public void QueueEvent(EventType eventType, GameEventArgs eventArgs)
         {
             AddRequiredEventArgs(eventType, eventArgs);
-            
+
             lock (queue)
             {
+                Console.WriteLine("Queued event: " + EncodeMessage(eventType, eventArgs));
                 queue.Enqueue(EncodeMessage(eventType, eventArgs));
                 //queue.AddLast(EncodeMessage(eventType, eventArgs));  
             }
-            
+
         }
 
         /// <summary>
@@ -374,7 +375,7 @@ namespace Descent.Messaging.Events
 
                 queue.Clear(); 
                  * */
-            }   
+            }
         }
 
         /// <summary>
@@ -390,7 +391,7 @@ namespace Descent.Messaging.Events
             string eventId = messageParts[1];
             EventType eventType = (EventType)Enum.ToObject(typeof(EventType), int.Parse(messageParts[2]));
             bool needResponse = Convert.ToBoolean(int.Parse(messageParts[3]));
-            
+
             GameEventArgs eventArgs = new GameEventArgs();
 
             // Optional arguments
@@ -398,14 +399,14 @@ namespace Descent.Messaging.Events
             {
                 string[] eventArgStrings = new string[messageParts.Length - 4];
                 Array.Copy(messageParts, 4, eventArgStrings, 0, messageParts.Length - 4);
-                eventArgs = BuildEventArgs(eventType, eventArgStrings);  
+                eventArgs = BuildEventArgs(eventType, eventArgStrings);
             }
 
             eventArgs.SenderId = sender;
             eventArgs.EventId = eventId;
             eventArgs.EventType = eventType;
             eventArgs.NeedResponse = needResponse;
-            
+
             Fire(eventType, eventArgs, sendOnNetwork);
         }
 
@@ -416,7 +417,7 @@ namespace Descent.Messaging.Events
 
             for (int i = 1; i <= Player.Instance.NumberOfPlayers; i++)
             {
-                playersInGame[i-1] = new PlayerInGame(i, Player.Instance.GetPlayerNick(i));
+                playersInGame[i - 1] = new PlayerInGame(i, Player.Instance.GetPlayerNick(i));
             }
 
             QueueEvent(EventType.PlayersInGame, new PlayersInGameEventArgs(playersInGame));
@@ -629,9 +630,9 @@ namespace Descent.Messaging.Events
 
             if (sendOnNetwork)
             {
-                Player.Instance.Connection.SendString(EncodeMessage(eventType, eventArgs)); 
+                Player.Instance.Connection.SendString(EncodeMessage(eventType, eventArgs));
             }
-            
+
         }
 
         /// <summary>
@@ -654,7 +655,7 @@ namespace Descent.Messaging.Events
                     AllRespondedNoActionEvent(this, new EventArgs());
                     responses.Remove(eventId);
                 }
-            } 
+            }
         }
 
         private void AddResponse()
@@ -810,7 +811,7 @@ namespace Descent.Messaging.Events
                     return new ChestEventArgs(args);
                     break;
                 case EventType.OpenDoor:
-                    return new CoordinatesEventArgs(args); 
+                    return new CoordinatesEventArgs(args);
                     break;
                 case EventType.AttackSquare:
                     return new CoordinatesEventArgs(args);
