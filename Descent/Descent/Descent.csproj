@@ -78,15 +78,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Game1.cs" />
-    <Compile Include="GUI\BoardGUIElement.cs" />
-    <Compile Include="GUI\Chat.cs" />
+    <Compile Include="GUI\SubElements\BoardGUIElement.cs" />
+    <Compile Include="GUI\SubElements\Chat.cs" />
     <Compile Include="GUI\Drawable.cs" />
-    <Compile Include="GUI\EquipmentElement.cs" />
+    <Compile Include="GUI\SubElements\EquipmentElement.cs" />
     <Compile Include="GUI\GUI.cs" />
     <Compile Include="GUI\GUIElement.cs" />
     <Compile Include="GUI\GUIElementFactory.cs" />
     <Compile Include="GUI\Image.cs" />
-    <Compile Include="GUI\InputElement.cs" />
+    <Compile Include="GUI\SubElements\HeroElement.cs" />
+    <Compile Include="GUI\SubElements\InputElement.cs" />
     <Compile Include="GUI\Text.cs" />
     <Compile Include="Messaging\AsyncSockets\AsyncSocketsClient.cs" />
     <Compile Include="Messaging\AsyncSockets\AsyncSocketsServer.cs" />

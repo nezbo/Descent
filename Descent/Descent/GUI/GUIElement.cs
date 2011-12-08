@@ -36,7 +36,7 @@
 
         private Dictionary<Drawable, Rectangle> visuals;
         protected Collection<Text> texts;
-        private Action<Player> onClick = null;
+        private Action<Player, GUIElement> onClick = null;
 
         /// <summary>
         /// Creates a GUIElement with the given boundaries.
@@ -111,7 +111,7 @@
                 {
                     if (onClick != null)
                     {
-                        onClick(Player.Instance);
+                        onClick(Player.Instance, this);
                     }
                     focus = true;
                     return true;
@@ -145,7 +145,7 @@
         /// </summary>
         /// <param name="target">The target GUIElement for the action</param>
         /// <param name="action">The new On Click action</param>
-        public void AddClickAction(string target, Action<Player> action)
+        public void AddClickAction(string target, Action<Player, GUIElement> action)
         {
             if (this.Name == target)
             {
