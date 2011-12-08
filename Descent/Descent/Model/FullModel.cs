@@ -493,7 +493,7 @@ namespace Descent.Model
 
         public static Hero GetHero(int id)
         {
-            return heroes[id];
+            return heroes.First(hero => hero.Id == id);
         }
 
         public static Hero[] AllHeroes
