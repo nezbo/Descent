@@ -56,6 +56,10 @@ namespace Descent.State
             eventManager.RequestTurnEvent += new RequestTurnHandler(RequestTurn);
             eventManager.TurnChangedEvent += new TurnChangedHandler(TurnChanged);
             eventManager.ChooseActionEvent += new ChooseActionHandler(ChooseAction);
+            eventManager.MoveToEvent += new MoveToHandler(MoveTo);
+
+            // Internal events
+            eventManager.SquareMarkedEvent += new SquareMarkedHandler(SquareMarked);
 
             // initiate start
             stateMachine = new StateMachine(new State[] { State.InLobby, State.Initiation, State.DrawOverlordCards, //TODO DrawSkillCards
@@ -402,6 +406,36 @@ namespace Descent.State
             stateMachine.PlaceStates(State.WaitForHeroTurn);
             stateMachine.ChangeToNextState();
         }
+
+        private void MoveTo(object sender, CoordinatesEventArgs eventArgs)
+        {
+            FullModel.Board[FullModel.Board.HeroesOnBoard[Player.Instance.Hero]].Figure = null;
+            FullModel.Board[eventArgs.X, eventArgs.Y].Figure = Player.Instance.Hero;
+            Player.Instance.Hero.RemoveMovement(1);
+        }
+
+        #region Local event listeners
+        private void SquareMarked(object sender, CoordinatesEventArgs eventArgs)
+        {
+            switch (CurrentState)
+            {
+                case State.WaitForChooseSquare:
+                    if (playersRemaining.Contains(Player.Instance.Id))
+                    {
+                        eventManager.QueueEvent(EventType.RequestPlacement, new CoordinatesEventArgs(eventArgs.X, eventArgs.Y));
+                    }
+
+                    break;
+                case State.WaitForPerformAction:
+                    if (FullModel.Board.Distance(FullModel.Board.HeroesOnBoard[Player.Instance.Hero], new Point(eventArgs.X, eventArgs.Y)) == 1)
+                    {
+                        eventManager.QueueEvent(EventType.MoveTo, new CoordinatesEventArgs(eventArgs.X, eventArgs.Y));
+                    }
+
+                    break;
+            }
+        }
+        #endregion
 
         #region Hero methods
 
