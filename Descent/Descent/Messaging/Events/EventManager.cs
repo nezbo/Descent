@@ -118,7 +118,9 @@ namespace Descent.Messaging.Events
 
     public delegate void AddMovementHandler(object sender, PointsEventArgs eventArgs);
 
-    public delegate void RemoveFromInventoryHandler(object sender, InventoryFieldEventArgs eventArgs);
+    public delegate void EquipHandler(object sender, EquipEventArgs eventArgs);
+
+    public delegate void UnequipHandler(object sender, EquipEventArgs eventArgs);
 
     #endregion
 
@@ -277,7 +279,9 @@ namespace Descent.Messaging.Events
 
         public event AddMovementHandler AddMovementEvent;
 
-        public event RemoveFromInventoryHandler RemoveFromInventoryEvent;
+        public event EquipHandler EquipEvent;
+
+        public event UnequipHandler UnequipEvent;
 
         public event UseOvelordCardHandler UseOverlordCardEvent;
 
@@ -567,8 +571,11 @@ namespace Descent.Messaging.Events
                 case EventType.AddMovement:
                     if (AddMovementEvent != null) AddMovementEvent(this, (PointsEventArgs)eventArgs);
                     break;
-                case EventType.RemoveFromInventory:
-                    if (RemoveFromInventoryEvent != null) RemoveFromInventoryEvent(this, (InventoryFieldEventArgs)eventArgs);
+                case EventType.Equip:
+                    if (EquipEvent != null) EquipEvent(this, (EquipEventArgs)eventArgs);
+                    break;
+                case EventType.Unequip:
+                    if (UnequipEvent != null) UnequipEvent(this, (EquipEventArgs)eventArgs);
                     break;
                 case EventType.UseOverlordCard:
                     if (UseOverlordCardEvent != null) UseOverlordCardEvent(this, (OverlordCardEventArgs)eventArgs);
@@ -781,8 +788,11 @@ namespace Descent.Messaging.Events
                 case EventType.AddMovement:
                     return new PointsEventArgs(args);
                     break;
-                case EventType.RemoveFromInventory:
-                    return new InventoryFieldEventArgs(args);
+                case EventType.Equip:
+                    return new EquipEventArgs(args);
+                    break;
+                case EventType.Unequip:
+                    return new EquipEventArgs(args);
                     break;
                 case EventType.UseOverlordCard:
                     return new OverlordCardEventArgs(args);
