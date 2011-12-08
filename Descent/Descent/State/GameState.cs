@@ -60,6 +60,7 @@ namespace Descent.State
 
         public OverlordCard[] GetOverlordCards(int count)
         {
+            Console.WriteLine("OoverlordCards.Count:" + overlordCards.Count);
             return overlordCards.OrderBy(x => System.Guid.NewGuid()).Take(count).ToArray();
         }
 

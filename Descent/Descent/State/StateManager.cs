@@ -12,6 +12,8 @@ namespace Descent.State
     using Descent.Model.Player;
     using Descent.Model.Player.Figure;
     using Descent.Model.Player.Figure.HeroStuff;
+    using Descent.Model.Player.Overlord;
+
     using Microsoft.Xna.Framework;
 
     /// <summary>
@@ -246,6 +248,7 @@ namespace Descent.State
 
             if (Player.Instance.IsServer)
             {
+                OverlordCard[] overlordcards = gameState.GetOverlordCards(3);
                 eventManager.QueueEvent(EventType.GiveOverlordCards, new GiveOverlordCardsEventArgs(gameState.GetOverlordCards(3).Select(card => card.Id).ToArray()));
             }
 

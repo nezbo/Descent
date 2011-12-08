@@ -846,6 +846,12 @@ namespace Descent.Messaging.Events
                 case EventType.MissedAttack:
                     return new PlayerEventArgs(args);
                     break;
+                case EventType.SquareMarked;
+                    return new CoordinatesEventArgs(args);
+                    break;
+                case EventType.InventoryFieldMarked:
+                    return new InventoryFieldEventArgs(args);
+                    break;
                 default:
                     return new GameEventArgs();
             }
