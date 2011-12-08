@@ -215,11 +215,17 @@ namespace Descent.Model.Player.Figure.HeroStuff
         /// <summary>
         /// Initializes a new instance of the <see cref="Equipment"/> class.
         /// </summary>
+        /// <param name="id">
+        /// The id.
+        /// </param>
         /// <param name="name">
         /// The name of the equipment
         /// </param>
         /// <param name="type">
         /// The equipments type
+        /// </param>
+        /// <param name="attackType">
+        /// The attack Type.
         /// </param>
         /// <param name="rarity">
         /// The rarity of the equipment
@@ -233,6 +239,9 @@ namespace Descent.Model.Player.Figure.HeroStuff
         /// </param>
         /// <param name="hands">
         /// The number of hands it takes to wield, if the equipment is a weapon
+        /// </param>
+        /// <param name="abilities">
+        /// The abilities.
         /// </param>
         public Equipment(int id, string name, EquipmentType type, EAttackType attackType, EquipmentRarity rarity, int buyPrice, List<SurgeAbility> surgeAbilities, int hands, List<Ability> abilities)
         {

@@ -24,7 +24,7 @@
 //22,Plate Mail,Bronze,Armor,,,500,,1,,Armor 3/Hero.Speed:Set:3/,??
 //23,Ring of Quickness,Bronze,Other,,,500,,1,,When(State=BeginTurn&State=Turn(Hero):Gain:Movement 1,
 24,Staff of Punishment,Bronze,Weapon,,Magic,500,2,1,W G,,1 Damage 1/1 Range 1
-//25,Treasure Cache,Bronze,,,,,,1,,Recieve:PotionHealing&Recieve:BronzeTreasure,
+25,Treasure Cache,Bronze,,,,,,1,,Recieve:PotionHealing&Recieve:BronzeTreasure,
 //26,Treasure Cache,Bronze,,,,,,1,,Recieve:PotionVitality&Recieve:BronzeTreasure,
 //27,Treasure Cache,Bronze,,,,,,2,,Recieve:Coin 50&Recieve:BronzeTreasure,
 //28,Scorpion Helmet,Silver,Other,,,750,,1,,When(MakingAttack(Type=Ranged)):Gain:Range 1&Gain:Damage 1,
@@ -32,7 +32,7 @@
 30,Ice Storm,Silver,Weapon,Rune,Magic,750,2,1,W G G,Blast 1,2 Blast 1
 //31,Bow of Bone,Silver,Weapon,,Ranged,750,2,1,U G Y,Pierce 3,1 Damage 1/1 Range 1
 //32,Cloak of Mists,Silver,Armor,,,750,,1,,Armor 1/WhenTakingDamage:??,
-//33,Shield of Light,Silver,Shield,,,750,1,1,,When(TakingDamage):Exhaust&CancelDamage:2,
+//33,Shield of Light,Silver,Shield,,,750,1,1,,When(TakingDamage):Exhaust&CancelDamage	:2,
 34,Serpent Blade,Silver,Weapon,,Melee,750,1,1,R G G,,1 Damage 1
 //35,Petrify,Silver,Weapon,,Magic,750,2,1,W G G,When(DealDamage(State=Turn(Hero)&State=Attack)):Deal:Stun 1,1 Damage 1/2 Stun 1
 36,Drain Life,Silver,Weapon,Rune,Magic,750,2,1,W G Y,Pierce 2,1 Pierce 2/1 Damage 1
@@ -57,7 +57,7 @@
 //55,Elven Cloak,Gold,Armor,,,1000,,1,,Armor 2/WhenTakingDamage:??,
 56,Deflect,Gold,Other,,,1000,,1,,Fear 1,
 //57,Frost Axe,Gold,Weapon,,Melee,1000,2,1,R G G Y,When(MakingAttack(Type=Melee)):Gain:Surge 2,1 Damage 1/1 Pierce 3
-//58,Treasure Cache,Gold,,,,,,1,,Recieve:PotionHealing/Recieve:TreasureGold
+//58,Treasure Cache,Gold,,,,,,1,,Recieve:PotionHealing/Recieve:TreasureGold,
 //59,Treasure Cache,Gold,,,,,,1,,Recieve:PotionVitality/Recieve:TreasureGold
 
 

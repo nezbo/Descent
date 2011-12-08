@@ -248,9 +248,10 @@ namespace Descent.Model.Board
 
         public bool IsValidStartSquare(Point point)
         {
-            for (int x = point.X-1; x < point.X+1; x++)
+            if (!IsStandable(point.X, point.Y)) return false;
+            for (int x = point.X-1; x <= point.X+1; x++)
             {
-                for (int y = point.Y - 1; y < point.Y + 1; y++)
+                for (int y = point.Y - 1; y <= point.Y + 1; y++)
                 {
                     if (IsSquareWithinBoard(x, y) && IsStandable(x, y) && this[x, y].Marker != null && this[x, y].Marker.Name.Equals("glyph-open")) return true;
                 }
