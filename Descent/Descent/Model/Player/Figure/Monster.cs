@@ -108,7 +108,7 @@ namespace Descent.Model.Player.Figure
 
         public Monster Clone(int newID)
         {
-            return new Monster(newID, Name, isMaster, Speed, Health, Armor, attackType, new List<Dice>(DiceForAttack), size, Texture);
+            return new Monster(newID, Name, isMaster, Speed, MaxHealth, Armor, attackType, new List<Dice>(DiceForAttack), size, Texture);
         }
 
         #endregion

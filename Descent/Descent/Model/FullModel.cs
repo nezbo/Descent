@@ -228,6 +228,10 @@ namespace Descent.Model
             }
 
             townEquipment = equipmentlists;
+
+            //LoadTreasures(game, reader);
+            
+
         }
 
         private static Equipment LoadEquipment(string[] data)
@@ -257,6 +261,20 @@ namespace Descent.Model
                 data[11].Split('/').Select(s => SurgeAbility.GetSurgeAbility(s)).ToList();
 
             return new Equipment(id, name, type, rarity, buyPrice, surgeAbilities, hands, abilities);
+        }
+
+        private static void LoadTreasures(Game game, StreamReader reader)
+        {
+            int n = int.Parse(reader.ReadLine());
+
+            Dictionary<EquipmentRarity, List<Treasure>> treasures = new Dictionary<EquipmentRarity, List<Treasure>>();
+            for (int i = 0; i < n; i++)
+            {
+                string line = reader.ReadLine();
+                if (line.StartsWith("//")) continue;
+
+                string[] data = line.Split(',');
+            }
         }
 
         #endregion
@@ -485,6 +503,7 @@ namespace Descent.Model
                 {
                     allEquipment.AddRange(equipmentList);
                 }
+
                 return allEquipment.ToArray();
             }
         }
