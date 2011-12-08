@@ -35,13 +35,11 @@ namespace Descent.Model
 
         private static Dictionary<EDice, Dice> diceDictionary;
 
-        private static Dictionary<EquipmentType, List<Equipment>> equipment;
+        private static Dictionary<EquipmentType, List<Equipment>> townEquipment;
 
         private static List<Marker> markers;
 
         private static Board.Board board;
-
-        private static HeroParty heroParty;
 
         #endregion
 
@@ -53,11 +51,6 @@ namespace Descent.Model
             }
         }
 
-        public static HeroParty HeroParty
-        {
-            get { return heroParty; }
-        }
- 
         #region Load Content
 
         /// <summary>
@@ -77,13 +70,11 @@ namespace Descent.Model
             }
 
             FullModel.game = game;
-            heroParty = new HeroParty();
 
             LoadDice(game);
             LoadMonsters(game);
             LoadEquipment(game);
             LoadMap(game);
-            LoadHeroes(game);
         }
 
         #region Load Monsters
@@ -167,7 +158,20 @@ namespace Descent.Model
                 EDice eDice;
                 Enum.TryParse(data[0], false, out eDice);
 
-                int[][] sides = AddSides(data);
+                Texture2D[] textures = new Texture2D[6];
+                int[][] sides = new int[6][];
+                for (int side = 0; side < 6; side++)
+                {
+                    sides[side] = new int[4];
+
+                    char[] sideArray = data[side + 1].ToCharArray();
+                    textures[side] = game.Content.Load<Texture2D>(data[0] + data[side + 1]);
+
+                    for (int value = 0; value < 4; value++)
+                    {
+                        sides[side][value] = int.Parse(sideArray[value] + string.Empty);
+                    }
+                }
 
                 dice[eDice] = new Dice(eDice, sides, null);
             }
@@ -186,20 +190,12 @@ namespace Descent.Model
         /// </returns>
         private static int[][] AddSides(string[] data)
         {
-            int[][] sides = new int[6][];
-            for (int side = 0; side < 6; side++)
-            {
-                sides[side] = new int[4];
-
-                char[] sideArray = data[side + 1].ToCharArray();
-                for (int value = 0; value < 4; value++)
-                {
-                    sides[side][value] = int.Parse(sideArray[value] + string.Empty);
-                }
-            }
+            
 
             return sides;
         }
+
+
         #endregion
 
         #region Load Equipement
@@ -225,34 +221,44 @@ namespace Descent.Model
                 if (line.StartsWith("//")) continue;
 
                 string[] data = line.Split(',');
-                System.Diagnostics.Debug.Assert(data.Length == 12, "Error when loading equipment, at line " + (i + 2));                
+                System.Diagnostics.Debug.Assert(data.Length == 12, "Error when loading equipment, at line " + (i + 2));
 
-                int id = int.Parse(data[0]);
-                string name = data[1];
+                Equipment eq = LoadEquipment(data);
+                
 
-                EquipmentRarity rarity;
-                EquipmentRarity.TryParse(data[2], out rarity);
-
-                EquipmentType type;
-                EquipmentType.TryParse(data[3], out type);
-
-                string other = data[4];
-
-                EAttackType attackType;
-                EAttackType.TryParse(data[5], out attackType);
-
-                int buyPrice = data[6].Equals(string.Empty) ? 0 : int.Parse(data[6]);
-                int hands = data[7].Equals(string.Empty) ? 0 : int.Parse(data[7]);
-                int amount = data[8].Equals(string.Empty) ? 0 : int.Parse(data[8]);
-                List<Dice> dice = data[9].Split(' ').Select(GetDice).ToList();
-                List<Ability> abilities = data[10].Split('/').Select(s => Ability.GetAbility(s)).ToList();
-                List<SurgeAbility> surgeAbilities =
-                    data[11].Split('/').Select(s => SurgeAbility.GetSurgeAbility(s)).ToList();
-
-                equipmentlists[type].Add(new Equipment(name, type, rarity, buyPrice, surgeAbilities, hands, abilities));
+                equipmentlists[eq.Type].Add(eq);
             }
 
-            equipment = equipmentlists;
+            townEquipment = equipmentlists;
+        }
+
+        private static Equipment LoadEquipment(string[] data)
+        {
+            Contract.Requires(data.Length == 12);
+
+            int id = int.Parse(data[0]);
+            string name = data[1];
+
+            EquipmentRarity rarity;
+            EquipmentRarity.TryParse(data[2], out rarity);
+
+            EquipmentType type;
+            EquipmentType.TryParse(data[3], out type);
+
+            string other = data[4];
+
+            EAttackType attackType;
+            EAttackType.TryParse(data[5], out attackType);
+
+            int buyPrice = data[6].Equals(string.Empty) ? 0 : int.Parse(data[6]);
+            int hands = data[7].Equals(string.Empty) ? 0 : int.Parse(data[7]);
+            int amount = data[8].Equals(string.Empty) ? 0 : int.Parse(data[8]);
+            List<Dice> dice = data[9].Split(' ').Select(GetDice).ToList();
+            List<Ability> abilities = data[10].Split('/').Select(s => Ability.GetAbility(s)).ToList();
+            List<SurgeAbility> surgeAbilities =
+                data[11].Split('/').Select(s => SurgeAbility.GetSurgeAbility(s)).ToList();
+
+            return new Equipment(id, name, type, rarity, buyPrice, surgeAbilities, hands, abilities);
         }
 
         #endregion
@@ -288,7 +294,7 @@ namespace Descent.Model
                             board[x, y] = null;
                             break;
                         default:
-                            board[x, y] = new Square(int.Parse(c[x].ToString()));
+                            board[x, y] = new Square();
                             break;
                     }
                 }
@@ -318,11 +324,9 @@ namespace Descent.Model
                         board[x, y].Figure = monster;
                         break;
                     case "door":
-                        RuneKey color;
-                        RuneKey.TryParse(data[12], out color);
-                        Orientation orientation;
-                        Orientation.TryParse(data[11], out orientation);
-                        board.AddDoor(new Door(int.Parse(data[1]), new Point(int.Parse(data[2]), int.Parse(data[3])), new Point(int.Parse(data[4]), int.Parse(data[5])), int.Parse(data[6]), new Point(int.Parse(data[7]), int.Parse(data[8])), new Point(int.Parse(data[9]), int.Parse(data[10])), orientation, color, game.Content.Load<Texture2D>("Images/Board/door-"+color.ToString())));
+                        Door.RuneColor color;
+                        Door.RuneColor.TryParse(data[3], out color);
+                        board.AddDoor(new Door(int.Parse(data[1]), int.Parse(data[2]), color));
                         break;
                     default:
                         board[int.Parse(data[1]), int.Parse(data[2])].Marker = GetMarker(data[0], data[3]);
@@ -337,7 +341,7 @@ namespace Descent.Model
 
         #region Load Heroes
 
-        private static void LoadHeroes(Game game)
+        private void LoadHeroes(Game game)
         {
             StreamReader reader = new StreamReader(TitleContainer.OpenStream("heroes.txt"));
 
@@ -399,9 +403,19 @@ namespace Descent.Model
             return monsters.Single(monster => monster.Id == id).Clone(monstersInPlay++);
         }
 
+        /// <summary>
+        /// Get an instance of the dice, of the given color
+        /// </summary>
+        /// <param name="dice">
+        /// The dice.
+        /// </param>
+        /// <returns>
+        /// A die of that color
+        /// </returns>
         public static Dice GetDice(EDice dice)
         {
-            return diceDictionary[dice];
+            Contract.Ensures(Contract.Result<Dice>().Color == dice);
+            return diceDictionary[dice].Clone();
         }
 
         public static Dice GetDice(string dice)
@@ -444,10 +458,8 @@ namespace Descent.Model
 
         public static Hero GetHero(int id)
         {
-            return heroes[id - 1];
+            return heroes[id];
         }
-
-
 
         #endregion
     }

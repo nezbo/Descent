@@ -124,6 +124,7 @@
     <Compile Include="Messaging\Events\EventType.cs" />
     <Compile Include="Model\Board\Board.cs" />
     <Compile Include="Model\Board\Door.cs" />
+    <Compile Include="Model\Board\Marker\Chest.cs" />
     <Compile Include="Model\Board\Marker\Marker.cs" />
     <Compile Include="Model\Board\Square.cs" />
     <Compile Include="Model\Board\Town.cs" />
@@ -138,11 +139,9 @@
     <Compile Include="Model\Player\Figure\HeroStuff\Potion.cs" />
     <Compile Include="Model\Player\Figure\HeroStuff\Skill.cs" />
     <Compile Include="Model\Player\Figure\HeroStuff\SurgeAbility.cs" />
+    <Compile Include="Model\Player\Figure\HeroStuff\Treasure.cs" />
     <Compile Include="Model\Player\Figure\Monster.cs" />
     <Compile Include="Model\Player\HeroParty.cs" />
-    <Compile Include="Model\Player\Overlord\Overlord.cs" />
-    <Compile Include="Model\Player\Overlord\OverlordCard.cs" />
-    <Compile Include="Model\Player\Overlord\SpawnCard.cs" />
     <Compile Include="Model\Player\Player.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -189,7 +188,6 @@
     <Content Include="equipment.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="overlordcards.txt" />
     <None Include="quest1.map">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -202,8 +200,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Game.ico" />
-    <Content Include="GameThumbnail.png" />
-    <Content Include="heroes.txt" />
+    <Content Include="heroes.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="monsters.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
