@@ -414,7 +414,8 @@ namespace Descent.State
             Contract.Requires(CurrentState == State.WaitForChooseSquare);
             Contract.Ensures(CurrentState == ((playersRemaining.Count == 0) ? State.NewRound : State.WaitForChooseSquare));
 
-            FullModel.Board[eventArgs.X, eventArgs.Y].Figure = Player.Instance.HeroParty.Heroes[eventArgs.PlayerId];
+            FullModel.Board.PlaceHero(Player.Instance.HeroParty.Heroes[eventArgs.PlayerId], new Point(eventArgs.X, eventArgs.Y));
+
             playersRemaining.Remove(eventArgs.PlayerId);
 
             if (playersRemaining.Count == 0)
@@ -441,9 +442,10 @@ namespace Descent.State
 
         private void MoveTo(object sender, CoordinatesEventArgs eventArgs)
         {
-            FullModel.Board[FullModel.Board.HeroesOnBoard[Player.Instance.Hero]].Figure = null;
-            FullModel.Board[eventArgs.X, eventArgs.Y].Figure = Player.Instance.Hero;
-            Player.Instance.Hero.RemoveMovement(1);
+            Hero hero = Player.Instance.HeroParty.Heroes[eventArgs.SenderId];
+
+            FullModel.Board.MoveHero(hero, new Point(eventArgs.X, eventArgs.Y));
+            hero.RemoveMovement(1);
         }
 
         #region Local event listeners
