@@ -146,7 +146,8 @@ cluster_chart STATE_STUFF
 		author: "Martin Marcher";
 	explanation
 		"All classes related to state, such as state machine and the state class."
-	class STATE_MANAGER description "The external API for state changes."
+	class GAME_STATE description "Holds information and does calculation related to game logic."
+    class STATE_MANAGER description "The external API for state changes."
 	class STATE_MACHINE description "The handler of all states."
 	class STATE description "A collection of all different states."
 end
@@ -200,7 +201,7 @@ class_chart HERO_PARTY
 	query
 		"How many heroes are in the HeroParty?",
 		"How many heroes have yet to take their turn?",
-		"Has 'this' heroes yet to take their turn?",
+		"Has 'this' hero yet to take his turn?",
 		"How many conquest tokens do the heroes have?",
 		"Is the pool of conquest tokens empty?"
 	command
@@ -222,17 +223,14 @@ class_chart OVERLORD
 	explanation
 		"The role of a overlord, that a hero can be"
 	query
-		"What cards do you have in your deck?",
-		"What cards do you have in play?",
-		"What cards have you discarded?",
+		"What cards do you have in your hand?",
+		"What cards do you have in power?",
 		"How many threat tokens do you have?",
-		"What cards do you have?"
 	command
-		"Add 'this' card to your deck!",
-		"Remove 'this' card from your deck!",
-		"Add 'this' card to your cards in play!",
-		"Remove 'this' card from your cards in play!",
-		"Add 'this' card to your discarded cards!",
+		"Add 'this' card to your cards in hand!",
+		"Remove 'this' card from your cards in hand!",
+		"Add 'this' card to your powers!",
+		"Remove 'this' card from your powers!",
 		"Remove all your discarded cards!"
 	constraint
 		"When it is not the overlords turn, the overlord cannot have more than 7 cards in hand."
@@ -962,6 +960,24 @@ class_chart GAME_EVENT_ARGS
 		"Do you need a response?"
 	command
 		"Populate yourself with arguments using this argument array."
+end
+
+class_chart GAME_STATE
+    indexing
+        author: "Simon Henriksen & Martin Marcher";
+    query
+        "Show me all your equipment.",
+        "Can I buy 'this' equipment?",
+        "Give me 'n' Overlord Cards.",
+        "Give me a Hero.",
+        "What is in 'this' chest?",
+        "Give me 'this kind' of treasure."
+    command
+        "Notify me when the Overlord deck is empty!",
+        "Remove 'this' equipment!",
+        "Remove 'these' Overlord Cards!",
+        "Remove 'this' Hero!",
+        "Remove 'this' treasure card!"
 end
 
 class_chart STATE_MANAGER

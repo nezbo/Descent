@@ -1,4 +1,6 @@
 ﻿
+using Descent.Model.Player.Overlord;
+
 namespace Descent.Model
 {
     using System;
@@ -33,6 +35,8 @@ namespace Descent.Model
 
         private static List<Hero> heroes;
 
+        private static List<OverlordCard> overlordCards;
+
         private static Dictionary<EDice, Dice> diceDictionary;
 
         private static Dictionary<EquipmentType, List<Equipment>> townEquipment;
@@ -41,7 +45,8 @@ namespace Descent.Model
 
         private static Board.Board board;
 
-        #endregion
+        private static HeroParty heroParty;
+
 
         public static Board.Board Board
         {
@@ -50,6 +55,13 @@ namespace Descent.Model
                 return board;
             }
         }
+
+        public static HeroParty HeroParty
+        {
+            get { return heroParty; }
+        }
+
+        #endregion
 
         #region Load Content
 
@@ -70,11 +82,14 @@ namespace Descent.Model
             }
 
             FullModel.game = game;
+            heroParty = new HeroParty();
+            overlordCards = new List<OverlordCard>();
 
             LoadDice(game);
             LoadMonsters(game);
             LoadEquipment(game);
             LoadMap(game);
+            LoadHeroes(game);
         }
 
         #region Load Monsters
@@ -121,7 +136,7 @@ namespace Descent.Model
                 List<Ability> abilities = data[8].Split('/').Select(Ability.GetAbility).ToList();
 
 
-                Rectangle size = new Rectangle(0,0,int.Parse(data[9]), int.Parse(data[10]));
+                Rectangle size = new Rectangle(0, 0, int.Parse(data[9]), int.Parse(data[10]));
 
                 Texture2D texture = game.Content.Load<Texture2D>("Images/Monsters/" + id);
 
@@ -165,7 +180,7 @@ namespace Descent.Model
                     sides[side] = new int[4];
 
                     char[] sideArray = data[side + 1].ToCharArray();
-                    textures[side] = game.Content.Load<Texture2D>(data[0] + data[side + 1]);
+                    textures[side] = game.Content.Load<Texture2D>("Images/Dice/" + data[0] + data[side + 1]);
 
                     for (int value = 0; value < 4; value++)
                     {
@@ -179,28 +194,11 @@ namespace Descent.Model
             diceDictionary = dice;
         }
 
-        /// <summary>
-        /// Reads the sides of a dice
-        /// </summary>
-        /// <param name="data">
-        /// The array of sides
-        /// </param>
-        /// <returns>
-        /// A 6 by 4 array with 6 sides, each with 4 parts, range, damage, surges and 
-        /// </returns>
-        private static int[][] AddSides(string[] data)
-        {
-            
-
-            return sides;
-        }
-
-
         #endregion
 
         #region Load Equipement
 
-        private static void LoadEquipment (Game game)
+        private static void LoadEquipment(Game game)
         {
             StreamReader reader = new StreamReader(TitleContainer.OpenStream("equipmentWithTreasure.txt"));
 
@@ -267,7 +265,7 @@ namespace Descent.Model
 
         private void LoadMarkers(Game game)
         {
-            
+
         }
 
         #endregion
@@ -286,15 +284,15 @@ namespace Descent.Model
             for (int y = 0; y < height; y++)
             {
                 char[] c = reader.ReadLine().ToCharArray();
-                for(int x = 0; x < c.Length; x++)
+                for (int x = 0; x < c.Length; x++)
                 {
-                    switch(c[x])
+                    switch (c[x])
                     {
                         case ' ':
                             board[x, y] = null;
                             break;
                         default:
-                            board[x, y] = new Square();
+                            board[x, y] = new Square(int.Parse(c[x] + string.Empty));
                             break;
                     }
                 }
@@ -324,9 +322,11 @@ namespace Descent.Model
                         board[x, y].Figure = monster;
                         break;
                     case "door":
-                        Door.RuneColor color;
-                        Door.RuneColor.TryParse(data[3], out color);
-                        board.AddDoor(new Door(int.Parse(data[1]), int.Parse(data[2]), color));
+                        RuneKey color;
+                        RuneKey.TryParse(data[12], out color);
+                        Orientation orientation;
+                        Orientation.TryParse(data[11], out orientation);
+                        board.AddDoor(new Door(int.Parse(data[1]), new Point(int.Parse(data[2]), int.Parse(data[3])), new Point(int.Parse(data[4]), int.Parse(data[5])), int.Parse(data[6]), new Point(int.Parse(data[7]), int.Parse(data[8])), new Point(int.Parse(data[9]), int.Parse(data[10])), orientation, color, game.Content.Load<Texture2D>("Images/Board/door-" + color.ToString())));
                         break;
                     default:
                         board[int.Parse(data[1]), int.Parse(data[2])].Marker = GetMarker(data[0], data[3]);
@@ -341,7 +341,7 @@ namespace Descent.Model
 
         #region Load Heroes
 
-        private void LoadHeroes(Game game)
+        private static void LoadHeroes(Game game)
         {
             StreamReader reader = new StreamReader(TitleContainer.OpenStream("heroes.txt"));
 
@@ -403,6 +403,16 @@ namespace Descent.Model
             return monsters.Single(monster => monster.Id == id).Clone(monstersInPlay++);
         }
 
+        public static Equipment GetEquipment(int id)
+        {
+            return AllEquipment.First(equipment => equipment.Id == id);
+        }
+
+        public static OverlordCard GetOverlordCard(int id)
+        {
+            return overlordCards.Single(overlordCard => overlordCard.Id == id);
+        }
+
         /// <summary>
         /// Get an instance of the dice, of the given color
         /// </summary>
@@ -450,7 +460,7 @@ namespace Descent.Model
                 case "rune":
                     return new Marker(name + "-" + other, game.Content.Load<Texture2D>("Images/Board/" + name + "-" + other));
                 default:
-                    break;                    
+                    break;
             }
             System.Diagnostics.Debug.Assert(false);
             return null;
@@ -460,6 +470,35 @@ namespace Descent.Model
         {
             return heroes[id];
         }
+
+        public static Hero[] AllHeroes
+        {
+            get { return heroes.ToArray(); }
+        }
+
+        public static Equipment[] AllEquipment
+        {
+            get
+            {
+                List<Equipment> allEquipment = new List<Equipment>();
+                foreach (var equipmentList in townEquipment.Values)
+                {
+                    allEquipment.AddRange(equipmentList);
+                }
+                return allEquipment.ToArray();
+            }
+        }
+
+        public static OverlordCard[] AllOverlordCards
+        {
+            get { return overlordCards.ToArray(); }
+        }
+
+        /* TODO
+        public static Treasure[] AllTreasures
+        {
+            return treasures.ToArray();
+        }*/
 
         #endregion
     }

@@ -67,7 +67,6 @@ namespace Descent.Model.Player
         /// </summary>
         private Player()
         {
-            IsOverlord = false;
             eventManager = new EventManager();
             playerNicks = new string[5];
             Overlord = new Overlord.Overlord();
@@ -102,7 +101,12 @@ namespace Descent.Model.Player
             }
         }
 
-        public bool IsOverlord { get; set; }
+        public bool IsOverlord
+        {
+            get { return (Id == OverlordId); }
+        }
+
+        public int OverlordId { get; set; }
 
         public Overlord.Overlord Overlord { get; private set; }
 

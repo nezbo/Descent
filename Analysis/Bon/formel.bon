@@ -29,6 +29,7 @@ component
 				ensure
 					Result -> conquestTokens = 0;
 			end
+			heroes: MAP[int, Hero] -- What heroes is in the party?
 			removeConquestTokens: Void -- Remove 'this' number of conquest tokens from the pool of tokens!
 				-> tokens: INTEGER
 				require
@@ -499,6 +500,60 @@ end
 
 static_diagram FORMAL_STATE_STUFF
 component
+    class GAME_STATE
+        indexing
+            author: "Simon Henriksen & Martin Marcher";
+        feature
+            allEquipment: SEQUENCE[EQUIPMENT] -- Show me all your equipment
+            canBuyEquipment: BOOLEAN -- Can I buy 'this' equipment?
+                -> equipment: EQUIPMENT
+                require
+                    allEquipment /= Void;
+                ensure
+                    Result -> allEquipment.contains(equipment);
+            end
+            getOverlordCards: SEQUENCE[OVERLORD_CARD] -- Give me 'n' Overlord Cards.
+                -> count: INTEGER
+                require
+                    count > 0;
+                ensure
+                    Result.length = count;
+            end
+            getHero: HERO -- Give me a Hero.
+            getChestContents: SEQUENCE[INTEGER] -- What is in 'this' chest?
+                -> chestId: INTEGER
+                ensure
+                    Result.length = 4;
+            end
+            getTreasure: TREASURE -- Give me 'this kind' of treasure.
+                -> type: TREASURE_TYPE
+                ensure
+                    Result.type = type;
+            end
+            removeEquipment -- Remove 'this' equipment!
+                -> equipment: EQUIPMENT
+                require
+                    equipment /= Void;
+                    allEquipment.contains(equipment)
+                ensure
+                    not allEquipment.contains(equipment)
+            end
+            removeOverlordCards -- Remove 'these' Overlord Cards!
+                -> cards: SEQUENCE[OVERLORD_CARD]
+                require
+                    cards.length > 0;
+            end
+            removeHero -- Remove 'this' Hero!
+                -> hero: HERO
+                require
+                    hero /= Void;
+            end
+            removeTreasure -- Remove 'this' treasure card!
+                -> treasure: TREASURE
+                require
+                    treasure /= Void;
+            end
+    end
 	class STATE_MANAGER
 		indexing 
 			author: "Martin Marcher";

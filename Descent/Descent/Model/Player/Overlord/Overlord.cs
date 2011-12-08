@@ -13,25 +13,19 @@
     {
         public Overlord()
         {
-            CardsInDeck = new List<OverlordCard>();
-            CardsInPlay = new List<OverlordCard>();
-            CardsInDiscard = new List<OverlordCard>();   
+            Hand = new List<OverlordCard>();
+            Power = new List<OverlordCard>();
         }
 
         /// <summary>
-        /// Gets the cards that the overlord can use, but has not put into play yet.
+        /// Gets the cards that the overlord currently has in hand..
         /// </summary>
-        public List<OverlordCard> CardsInDeck { get; private set; }
+        public List<OverlordCard> Hand { get; private set; }
 
         /// <summary>
-        /// Gets the cards that the overlord currently has in play/in hand.
+        /// Gets the cards that the overlord has put in power.
         /// </summary>
-        public List<OverlordCard> CardsInPlay { get; private set; }
-
-        /// <summary>
-        /// Gets the cards that the overlord has used and put in his discard pile.
-        /// </summary>
-        public List<OverlordCard> CardsInDiscard { get; private set; }
+        public List<OverlordCard> Power { get; private set; }
 
         /// <summary>
         /// Gets the number of threattokens the overlord has.

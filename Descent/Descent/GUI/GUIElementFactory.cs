@@ -1,4 +1,6 @@
-﻿namespace Descent.GUI
+﻿using Descent.Model.Player.Figure.HeroStuff;
+
+namespace Descent.GUI
 {
     using Descent.Model.Board;
     using Descent.Model.Player;
@@ -43,7 +45,7 @@
             return new BoardGUIElement(game, board, role);
         }
 
-        public static GUIElement CreateStateElement(Game game, State state, Role role)
+        public static GUIElement CreateStateElement(Game game, State state, Role role, GameState gameState)
         {
             Viewport g = game.GraphicsDevice.Viewport;
 
@@ -75,13 +77,53 @@
                         root.AddText("player4", "Hero:", pos);
                         root.AddText("player5", "Hero:", pos);
 
-                        if (role == Role.Overlord)
+                        if (Player.Instance.IsServer)
                         {
                             GUIElement start = new GUIElement(game, "start", RelW(g, 85), RelH(g, 90), RelW(g, 10), RelH(g, 5));
                             root.AddChild(start);
                             root.AddText("start", "Start Game", new Vector2(0, 0));
                         }
 
+                        break;
+                    }
+                case State.BuyEquipment:
+                    {
+                        GUIElement money = new GUIElement(game, "money", 0, 0, RelW(g, 8), RelH(g, 8));
+                        GUIElement box = new GUIElement(game, "shop", RelW(g, 10), RelH(g, 10), RelW(g, 80), RelH(g, 80));
+
+                        int startY = RelH(g, 15);
+                        int startX = RelW(g, 15);
+
+                        int spacerX = RelW(g, 2);
+                        int spacerY = RelH(g, 5);
+
+                        int width = RelW(g, 10);
+
+                        Equipment[] shopContent = gameState.CurrentEquipment;
+                        for (int y = 0; y < 4; y++)
+                        {
+                            for (int x = 0; x < 6; x++)
+                            {
+                                EquipmentElement eq = new EquipmentElement(game, startX + x * width + x * spacerX,
+                                                                           startY + y * width + y * spacerY, width, width,
+                                                                           shopContent[x + y]);
+                                box.AddChild(eq);
+                                if (role == Role.Overlord)
+                                {
+                                    eq.AddClickAction(eq.Name, null);
+                                }
+                            }
+                        }
+
+                        if (role != Role.Overlord)
+                        {
+                            GUIElement done = new GUIElement(game, "done", RelW(g, 85), RelH(g, 90), RelW(g, 10), RelH(g, 5));
+                        }
+
+                        money.AddText(money.Name, "Money:\n300", new Vector2(5, 5));
+
+                        root.AddChild(money);
+                        root.AddChild(box);
                         break;
                     }
             }

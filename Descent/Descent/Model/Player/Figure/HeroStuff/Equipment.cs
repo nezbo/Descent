@@ -66,65 +66,6 @@ namespace Descent.Model.Player.Figure.HeroStuff
     /// </author>
     public class Equipment
     {
-        #region Static
-
-        private static List<Equipment> equipment; 
-
-        public static List<Equipment> LoadContent(Game game)
-        {
-            if (equipment != null) return equipment;
-            StreamReader reader = new StreamReader(TitleContainer.OpenStream("equipment.txt"));
-
-            int n = int.Parse(reader.ReadLine());
-            string line;
-
-            List<Equipment> equipments = new List<Equipment>();
-            for (int i = 0; i < n; i++)
-            {
-                line = reader.ReadLine();
-                string[] data = line.Split(',');
-
-                int id = int.Parse(data[0]);
-                string name = data[1];
-
-                EquipmentRarity rarity;
-                EquipmentRarity.TryParse(data[2], out rarity);
-
-                EquipmentType type; 
-                EquipmentType.TryParse(data[3], out type);
-
-                string other = data[4];
-
-                EAttackType attackType;
-                bool succed = EAttackType.TryParse(data[5].ToUpper(), out attackType);
-                attackType = succed ? EAttackType.NONE : attackType;
-
-                int price = int.Parse(data[6]);
-
-                int hands = int.Parse(data[7]);
-
-                int amount = int.Parse(data[8]);
-
-                string diceString = data[9];
-                string[] diceArray = diceString.Split(' ');
-                List<Dice> diceList = diceArray.Select(FullModel.GetDice).ToList();
-
-                string abilitiesString = data[10];
-                string[] abilitiesArray = abilitiesString.Split('/');
-                List<Ability> abilityList = abilitiesArray.Select(Ability.GetAbility).ToList();
-
-                string surgeAbilitiesString = data[11];
-                string[] surgeAbilitiesArray = surgeAbilitiesString.Split('/');
-                List<SurgeAbility> surgeAbilityList =
-                    surgeAbilitiesArray.Select(SurgeAbility.GetSurgeAbility).ToList();
-
-                equipments.Add(new Equipment(name, type, rarity, price, surgeAbilityList, hands, abilityList));
-            }
-            
-            return equipment = equipments;
-        }
-
-        #endregion
 
         #region Fields
 
@@ -142,6 +83,11 @@ namespace Descent.Model.Player.Figure.HeroStuff
         #endregion
 
         #region Properties
+
+        public int Id
+        {
+            get { return id; }
+        }
 
         /// <summary>
         /// Gets the unique ID of the equipment

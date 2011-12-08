@@ -35,7 +35,7 @@ namespace Descent.Messaging.Events
         RequestBuyPotion = 17,
         GivePotion = 20,
         FinishedBuy = 21,
-        GiveConquestToken = 22,
+        GiveConquestTokens = 22,
         GiveCoins = 23,
         GiveOverlordCards = 25,
         RemoveOverlordCard = 26,
@@ -71,6 +71,9 @@ namespace Descent.Messaging.Events
         KilledFigure = 56,
         DamageTaken = 57,
         MissedAttack = 58,
-        AcceptPlayer = 59
+        AcceptPlayer = 59,
+        RemoveConquestTokens = 60,
+        DenyBuy = 61,
+        GiveTreasure = 62
     }
 }
