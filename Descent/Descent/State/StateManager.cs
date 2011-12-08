@@ -49,10 +49,10 @@ namespace Descent.State
             eventManager.BeginGameEvent += new BeginGameHandler(BeginGame);
             eventManager.OverlordIsEvent += new OverlordIsHandler(OverLordIs);
             eventManager.GiveOverlordCardsEvent += new GiveOverlordCardsHandler(GiveOverlordCards);
+            eventManager.AssignHeroEvent += new AssignHeroHandler(AssignHero);
 
             // initiate start
-            stateMachine = new StateMachine(new State[] { State.InLobby, State.Initiation, State.DrawOverlordCards, 
-                State.DrawHeroCard, State.DrawSkillCards, 
+            stateMachine = new StateMachine(new State[] { State.InLobby, State.Initiation, State.DrawOverlordCards, //TODO DrawSkillCards
                 State.BuyEquipment, State.NewRound, State.NewRound });
             stateMachine.StateChanged += StateChanged;
 
@@ -143,18 +143,6 @@ namespace Descent.State
             gui.ChangeStateGUI(root); // change the GUI's state element.
         }
 
-
-        private void NewRound()
-        {
-            Contract.Requires(CurrentState == State.InLobby); // TODO: Find the right state(s)
-            Contract.Ensures(CurrentState == State.WaitForHeroTurn);
-
-            heroesYetToAct = new Collection<Hero>(heroParty.AllHeroes);
-
-            stateMachine.PlaceStates(State.WaitForHeroTurn);
-            stateMachine.ChangeToNextState();
-        }
-
         // event handlers
   
         private void PlayerJoined(object sender, PlayerJoinedEventArgs eventArgs)
@@ -175,6 +163,7 @@ namespace Descent.State
             foreach (PlayerInGame p in eventArgs.Players)
             {
                 Player.Instance.SetPlayerNick(p.Id, p.Nickname);
+                Player.Instance.HeroParty.Heroes[p.Id] = null;
             }
             StateChanged();
         }
@@ -191,10 +180,9 @@ namespace Descent.State
             Contract.Requires(CurrentState == State.Initiation);
             Contract.Ensures(CurrentState == State.DrawOverlordCards);
 
-            if (Player.Instance.Id == eventArgs.PlayerId)
-            {
-                Player.Instance.IsOverlord = true;
-            }
+            Player.Instance.OverlordId = eventArgs.PlayerId;
+
+            Player.Instance.HeroParty.Heroes.Remove(Player.Instance.OverlordId);
 
             if (Player.Instance.IsServer)
             {
@@ -216,6 +204,44 @@ namespace Descent.State
             {
                 Player.Instance.Overlord.Hand.Add(FullModel.GetOverlordCard(overlordCardId));
             }
+
+            if (Player.Instance.IsServer)
+            {
+                foreach (int playerId in Player.Instance.HeroParty.Heroes.Keys)
+                {
+                    stateMachine.PlaceStates(State.DrawHeroCard);
+                    int heroId = gameState.getHero().Id;
+                    eventManager.QueueEvent(EventType.AssignHero, new AssignHeroEventArgs(playerId, heroId));
+                    gameState.RemoveHero(heroId);
+                }
+            }
+
+            stateMachine.ChangeToNextState();
+        }
+
+        private void AssignHero(object sender, AssignHeroEventArgs eventArgs)
+        {
+            Contract.Requires(CurrentState == State.DrawHeroCard);
+            Contract.Ensures(CurrentState == State.DrawHeroCard || CurrentState == State.BuyEquipment);
+            
+            Player.Instance.HeroParty.Heroes[eventArgs.PlayerId] = FullModel.GetHero(eventArgs.HeroId);
+            gameState.RemoveHero(eventArgs.HeroId);
+            stateMachine.ChangeToNextState();
+            
+            if (CurrentState == State.BuyEquipment) // TODO Should be DrawSkillCard
+            {
+                System.Diagnostics.Debug.WriteLine("done " + CurrentState);
+            }
+        }
+
+        private void NewRound()
+        {
+            Contract.Requires(CurrentState == State.InLobby); // TODO: Find the right state(s)
+            Contract.Ensures(CurrentState == State.WaitForHeroTurn);
+
+            heroesYetToAct = new Collection<Hero>(heroParty.AllHeroes);
+
+            stateMachine.PlaceStates(State.WaitForHeroTurn);
             stateMachine.ChangeToNextState();
         }
 
