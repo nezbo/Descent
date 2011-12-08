@@ -421,7 +421,7 @@ namespace Descent.Messaging.Events
         private void Fire(EventType eventType, GameEventArgs eventArgs, bool sendOnNetwork)
         {
             #if DEBUG
-            System.Diagnostics.Debug.WriteLine("[{0}]: {1}", eventArgs.SenderId, eventType.ToString());
+            System.Diagnostics.Debug.WriteLine("[{0}]: {1} - {2}", eventArgs.SenderId, eventType.ToString(), eventArgs.ToString());
             #endif
 
             // If I am the player who sent this message (aka it did not come through the network)
