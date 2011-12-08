@@ -1,4 +1,5 @@
-﻿using Descent.GUI.SubElements;
+﻿using System;
+using Descent.GUI.SubElements;
 using Descent.Model.Player.Figure.HeroStuff;
 
 namespace Descent.GUI
@@ -109,7 +110,7 @@ namespace Descent.GUI
                                     Equipment current = shopContent[x + y * 6];
                                     EquipmentElement eq = new EquipmentElement(game, startX + x * width + x * spacerX,
                                                                                startY + y * width + y * spacerY, width, width,
-                                                                               current);
+                                                                               current, x + y * 6 + 1000);
                                     box.AddChild(eq);
                                 }
                             }
@@ -130,6 +131,7 @@ namespace Descent.GUI
                     }
                 case State.Equip:
                     {
+
                         if (role != Role.Overlord)
                         {
                             int startX = RelW(g, 15);
@@ -138,13 +140,16 @@ namespace Descent.GUI
                             int width = RelW(g, 10);
 
                             Equipment[] unequipped = gameState.UnequippedEquipment(Player.Instance.Id);
-                            for (int x = 0; x < 6; x++)
+                            int boxes = Math.Max(1, unequipped.Length);
+
+                            for (int x = 0; x < boxes; x++)
                             {
-                                Equipment current = unequipped[x];
-                                EquipmentElement eq = GUIElementFactory.CreateEquipmentElement(game, startX + x * width + x * spacerX, startY, current);
-                                box.AddChild(eq);
+                                Equipment current = (x < unequipped.Length) ? unequipped[x] : null;
+                                EquipmentElement eq = GUIElementFactory.CreateEquipmentElement(game, startX + x * width + x * spacerX, startY, current, x + 100);
+                                root.AddChild(eq);
                             }
                         }
+                        break;
                     }
             }
 
@@ -169,9 +174,9 @@ namespace Descent.GUI
             return root;
         }
 
-        public static EquipmentElement CreateEquipmentElement(Game game, int x, int y, Equipment equipment)
+        public static EquipmentElement CreateEquipmentElement(Game game, int x, int y, Equipment equipment, int id)
         {
-            return new EquipmentElement(game, x, y, RelW(game.GraphicsDevice.Viewport, 10), RelW(game.GraphicsDevice.Viewport, 10), equipment);
+            return new EquipmentElement(game, x, y, RelW(game.GraphicsDevice.Viewport, 10), RelW(game.GraphicsDevice.Viewport, 10), equipment, id);
         }
     }
 }
