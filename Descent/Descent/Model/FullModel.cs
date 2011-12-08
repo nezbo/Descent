@@ -261,7 +261,6 @@ namespace Descent.Model
                 {
                     treasures[rarity].Add(new Treasure(int.Parse(data[0]), rarity, LoadEquipment(data)));
                 }
-                System.Diagnostics.Debug.WriteLine(line);
             }
 
             System.Diagnostics.Debug.WriteLine("Treasures loaded successfully!");
@@ -290,9 +289,8 @@ namespace Descent.Model
             int hands = data[7].Equals(string.Empty) ? 0 : int.Parse(data[7]);
             int amount = data[8].Equals(string.Empty) ? 0 : int.Parse(data[8]);
             List<Dice> dice = data[9].Split(' ').Select(GetDice).ToList();
-            List<Ability> abilities = data[10].Split('/').Select(s => Ability.GetAbility(s)).ToList();
-            List<SurgeAbility> surgeAbilities =
-                data[11].Split('/').Select(s => SurgeAbility.GetSurgeAbility(s)).ToList();
+            List<Ability> abilities = data[10].Split('/').Select(Ability.GetAbility).ToList();
+            List<SurgeAbility> surgeAbilities = data[11].Split('/').Select(SurgeAbility.GetSurgeAbility).ToList();
 
             return new Equipment(
                 id: id, 

@@ -1,35 +1,40 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="Board.cs" company="">
-// TODO: Update copyright text.
-// </copyright>
-// -----------------------------------------------------------------------
-
-using System.Collections.ObjectModel;
-using Microsoft.Xna.Framework.Graphics;
-
-namespace Descent.Model.Board
+﻿namespace Descent.Model.Board
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Diagnostics.Contracts;
     using System.Linq;
 
     using Descent.Model.Player.Figure;
 
     using Microsoft.Xna.Framework;
-
-
-    public enum Orientation { H, V }
+    using Microsoft.Xna.Framework.Graphics;
 
     /// <summary>
-    /// TODO: Update summary.
+    /// Indicates whether an object is horizontal or vertical
+    /// </summary>
+    public enum Orientation 
+    {
+        /// <summary>
+        /// Horizontal orientation
+        /// </summary>
+        H, 
+
+        /// <summary>
+        /// Vertical orientation
+        /// </summary>
+        V 
+    }
+
+    /// <summary>
+    /// A board of 
     /// </summary>
     /// <author>
-    /// Jonas Breindahl (jobre@itu.dk) & Martin Marcher
+    /// Jonas Breindahl (jobre@itu.dk), Martin Marcher
     /// </author>
     public class Board
     {
-
         #region Fields
 
         /// <summary>
@@ -88,11 +93,17 @@ namespace Descent.Model.Board
             }
         }
 
+        /// <summary>
+        /// Gets the points where all heroes are standing
+        /// </summary>
         public Dictionary<Hero, Point> HeroesOnBoard
         {
             get { return heroesOnBoard; }
         }
 
+        /// <summary>
+        /// Gets the texture for the floor of the dungeon
+        /// </summary>
         public Texture2D FloorTexture
         {
             get
@@ -109,6 +120,9 @@ namespace Descent.Model.Board
             get { return doors.Where(door => door.Areas.Any(area => revealedAreas.Contains(area))).ToArray(); }
         }
 
+        /// <summary>
+        /// Gets an array of all doors on the board
+        /// </summary>
         public Door[] AllDoors
         {
             get { return doors.ToArray(); }
@@ -127,25 +141,38 @@ namespace Descent.Model.Board
         /// <param name="y">
         /// The y coordinate
         /// </param>
+        /// <returns>
+        /// The square at coordinate (x, y)
+        /// </returns>
         public Square this[int x, int y]
         {
             get
             {
                 return board[x, y];
             }
+
             set
             {
                 board[x, y] = value;
             }
         }
 
+        /// <summary>
+        /// Access a point on the board
+        /// </summary>
+        /// <param name="p">
+        /// The point to be accessed
+        /// </param>
+        /// <returns>
+        /// The square at point p
+        /// </returns>
         public Square this[Point p]
         {
-
             get
             {
                 return board[p.X, p.Y];
             }
+
             set
             {
                 board[p.X, p.Y] = value;
@@ -165,17 +192,15 @@ namespace Descent.Model.Board
         /// <param name="height">
         /// The height of the board
         /// </param>
+        /// <param name="floorTexture">
+        /// The floor Texture.
+        /// </param>
         public Board(int width, int height, Texture2D floorTexture)
         {
             bounds = new Rectangle(0, 0, width, height);
             board = new Square[width, height];
             this.floorTexture = floorTexture;
             revealedAreas.Add(0);
-        }
-
-        public void CalculateDoors()
-        {
-            //TODO: Flood/Breadth-first algorithm
         }
 
         #endregion
@@ -221,8 +246,11 @@ namespace Descent.Model.Board
         /// <summary>
         /// Is the square inside the dungeon, and is there no figure?
         /// </summary>
-        /// <param name="point">
-        /// The point
+        /// <param name="x">
+        /// The x coordinate 
+        /// </param>
+        /// <param name="y">
+        /// The y coordinate
         /// </param>
         /// <returns>
         /// True if the point is within the dungeon, and there is no figure on it
@@ -233,11 +261,13 @@ namespace Descent.Model.Board
         }
 
         /// <summary>
+        /// Indicates whether the overlord can spawn on a space
         /// </summary>
         /// <param name="point">
-        /// The point.
+        /// The point
         /// </param>
         /// <returns>
+        /// Whether the overlord can spawn on the point
         /// </returns>
         public bool CanOverlordSpawn(Point point)
         {
@@ -246,23 +276,52 @@ namespace Descent.Model.Board
             return false;
         }
 
+        /// <summary>
+        /// Indicates whether a point is a valid start/spawn point
+        /// </summary>
+        /// <param name="point">
+        /// The point to check
+        /// </param>
+        /// <returns>
+        /// If a hero can spawn on the point, true,
+        /// if not, false
+        /// </returns>
         public bool IsValidStartSquare(Point point)
         {
             if (!IsStandable(point.X, point.Y)) return false;
-            for (int x = point.X-1; x <= point.X+1; x++)
+            for (int x = point.X - 1; x <= point.X + 1; x++)
             {
                 for (int y = point.Y - 1; y <= point.Y + 1; y++)
                 {
                     if (IsSquareWithinBoard(x, y) && IsStandable(x, y) && this[x, y].Marker != null && this[x, y].Marker.Name.Equals("glyph-open")) return true;
                 }
             }
+
             return false;
         }
 
+        /// <summary>
+        /// Indicates whether there is nothing in the way from one point to another
+        /// Monsters can be ignored, so it can be used to calculate where to spawn monsters
+        /// </summary>
+        /// <param name="from">
+        /// The start point
+        /// </param>
+        /// <param name="to">
+        /// The end point
+        /// </param>
+        /// <param name="ignoreMonsters">
+        /// If true, monsters will be ignored so they do not break line of sight
+        /// </param>
+        /// <returns>
+        /// True if there is a clear line of sight between from and to
+        /// </returns>
         public bool IsThereLineOfSight(Point from, Point to, bool ignoreMonsters)
         {
             return SquaresBetweenPoints(from, to).Count(
-                point => !(IsStandable(point.X,point.Y) || (ignoreMonsters && (board[point.X, point.Y].Figure is Monster)))) == 0;
+                point =>
+                !(IsStandable(point.X, point.Y) || (ignoreMonsters && (board[point.X, point.Y].Figure is Monster))))
+                   == 0;
         }
 
         /// <summary>
@@ -275,13 +334,16 @@ namespace Descent.Model.Board
         {
             var points = new HashSet<Point>();
 
-            if (from.X == to.X)
+            // if the lines are completely vertical
+            if (from.X == to.X) 
             {
                 for (int y = from.Y; y <= to.Y; y++)
                 {
                     points.Add(new Point(from.X, y));
                 }
             }
+
+            // if the lines are completely horizontal
             else if (from.Y == to.Y)
             {
                 for (int x = from.X; x <= to.X; x++)
@@ -289,8 +351,11 @@ namespace Descent.Model.Board
                     points.Add(new Point(x, from.Y));
                 }
             }
+
+            // the line is not straight
             else
             {
+                // if we are going left instead of right, switch the from and to
                 if (from.X > to.X)
                 {
                     var temp = from;
@@ -298,10 +363,13 @@ namespace Descent.Model.Board
                     to = temp;
                 }
 
+                // calculate the angle of descent/decline
                 double a = (double)(to.Y - from.Y) / (to.X - from.X);
 
+                // step by 0.5 from the from x-coordinate to the to x-coordinate
                 for (double xn = from.X + .5; xn < to.X; xn++)
                 {
+                    // calculate the y-value
                     double yn = (xn - from.X) * a + from.Y;
                     if (Math.Abs(yn - Math.Truncate(yn) - .5) < .0000001)
                     {
@@ -316,8 +384,10 @@ namespace Descent.Model.Board
                     }
                 }
 
+                // step by 0.5 from the from y-coordinate to the to y-coordinate
                 for (double yn = from.Y + .5; yn < to.Y; yn++)
                 {
+                    // calculates the x value
                     double xn = (yn - from.Y) / a + from.X;
                     if (Math.Abs(xn - Math.Truncate(xn) - .5) < .000001)
                     {
@@ -338,7 +408,18 @@ namespace Descent.Model.Board
 
         /// <summary>
         /// Should the square be shown on the board?
+        /// A square is visible by players if it has something on it,
+        /// and if that squares area has been revealed
         /// </summary>
+        /// <param name="x">
+        /// The x coordinate
+        /// </param>
+        /// <param name="y">
+        /// The y coordinate
+        /// </param>
+        /// <returns>
+        /// Whether a square is visible by players
+        /// </returns>
         public bool SquareVisibleByPlayers(int x, int y)
         {
             return IsSquareWithinBoard(x, y) && revealedAreas.Contains(this[x, y].Area);
@@ -346,7 +427,19 @@ namespace Descent.Model.Board
 
         /// <summary>
         /// Get the distance between to squares.
+        /// This distance does not take blocking into account,
+        /// such has there being a wall in the way
         /// </summary>
+        /// <param name="here">
+        /// The 'here' point
+        /// </param>
+        /// <param name="there">
+        /// The 'there' point
+        /// </param>
+        /// <returns>
+        /// The distance it would take to travel between the points, 
+        /// if there are no obstacles
+        /// </returns>
         public int Distance(Point here, Point there)
         {
             Contract.Requires(here != null);
@@ -357,47 +450,54 @@ namespace Descent.Model.Board
         /// <summary>
         /// Open a door
         /// </summary>
-        /// <param name="point"></param>
+        /// <param name="point">
+        /// A point adjacent to a door
+        /// </param>
         public void OpenDoor(Point point)
         {
             Contract.Requires(CanOpenDoor(point));
             revealedAreas.Add(GetDoor(point).Areas.Where(area => area != this[point].Area).First());
         }
 
+        /// <summary>
+        /// Calculates whether a party 
+        /// </summary>
+        /// <param name="point">
+        /// A point where there should be a door next to
+        /// </param>
+        /// <returns>
+        /// Whether a door next to the point is a runedoor, and if you have the key
+        /// </returns>
         public bool CanOpenDoor(Point point)
         {
             return !GetDoor(point).IsRuneDoor || FullModel.HeroParty.HasRuneKey(GetDoor(point).KeyColor);
         }
 
+        /// <summary>
+        /// Adds a door to the board
+        /// </summary>
+        /// <param name="door">
+        /// The door to be added
+        /// </param>
         public void AddDoor(Door door)
         {
             doors.Add(door);
         }
 
+        /// <summary>
+        /// Gets a door at a specific point, if there is any
+        /// </summary>
+        /// <param name="point">
+        /// The point next to the door
+        /// </param>
+        /// <returns>
+        /// The door
+        /// </returns>
         private Door GetDoor(Point point)
         {
             return doors.Where(door => door.IsAdjecentSquare(point)).First();
         }
 
         #endregion
-
-        public static void Main(string[] args)
-        {
-            var b = new Board(20, 20, null);
-            var a = new int[30, 30];
-            var points = b.SquaresBetweenPoints(new Point(1, 2), new Point(2, 5));
-            foreach (Point p in points)
-            {
-                a[p.X, p.Y] = 1;
-            }
-            for (int x = 0; x < 30; x++)
-            {
-                for (int y = 0; y < 30; y++)
-                {
-                    System.Diagnostics.Debug.Write(a[x, y]);
-                }
-                System.Diagnostics.Debug.WriteLine("");
-            }
-        }
     }
 }
