@@ -77,7 +77,7 @@ namespace Descent.GUI
                         root.AddText("player4", "Hero:", pos);
                         root.AddText("player5", "Hero:", pos);
 
-                        if (role == Role.Overlord)
+                        if (Player.Instance.IsServer)
                         {
                             GUIElement start = new GUIElement(game, "start", RelW(g, 85), RelH(g, 90), RelW(g, 10), RelH(g, 5));
                             root.AddChild(start);
@@ -104,8 +104,20 @@ namespace Descent.GUI
                         {
                             for (int x = 0; x < 6; x++)
                             {
-                                box.AddChild(new EquipmentElement(game, startX + x * width + x * spacerX, startY + y * width + y * spacerY, width, width, shopContent[x + y]));
+                                EquipmentElement eq = new EquipmentElement(game, startX + x * width + x * spacerX,
+                                                                           startY + y * width + y * spacerY, width, width,
+                                                                           shopContent[x + y]);
+                                box.AddChild(eq);
+                                if (role == Role.Overlord)
+                                {
+                                    eq.AddClickAction(eq.Name, null);
+                                }
                             }
+                        }
+
+                        if (role != Role.Overlord)
+                        {
+                            GUIElement done = new GUIElement(game, "done", RelW(g, 85), RelH(g, 90), RelW(g, 10), RelH(g, 5));
                         }
 
                         money.AddText(money.Name, "Money:\n300", new Vector2(5, 5));
