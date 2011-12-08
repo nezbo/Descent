@@ -1,4 +1,5 @@
-﻿using Descent.Model.Player.Figure.HeroStuff;
+﻿using Descent.GUI.SubElements;
+using Descent.Model.Player.Figure.HeroStuff;
 
 namespace Descent.GUI
 {
@@ -145,7 +146,7 @@ namespace Descent.GUI
             }
             else
             {
-                // populate with player stuff
+                root.AddChild(new HeroElement(game, Player.Instance.Hero));
             }
 
             root.AddChild(new Chat(game));

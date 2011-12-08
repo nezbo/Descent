@@ -229,7 +229,7 @@ namespace Descent.Model
                 System.Diagnostics.Debug.Assert(data.Length == 12, "Error when loading equipment, at line " + (i + 2));
 
                 Equipment eq = LoadEquipment(data);
-                
+
 
                 equipmentlists[eq.Type].Add(eq);
             }
@@ -237,7 +237,7 @@ namespace Descent.Model
             townEquipment = equipmentlists;
 
             //LoadTreasures(game, reader);
-            
+
 
         }
 
