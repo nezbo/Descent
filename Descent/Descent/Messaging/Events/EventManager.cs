@@ -172,6 +172,8 @@ namespace Descent.Messaging.Events
 
     public delegate void SquareMarkedHandler(object sender, CoordinatesEventArgs eventArgs);
 
+    public delegate void InventoryFieldMarkedHandler(object sender, InventoryFieldEventArgs eventArgs);
+
     #endregion
 
     public delegate void AllRespondedNoActionHandler(object sender, EventArgs eventArgs); // Special delegate, contains no eventArgs info.
@@ -182,6 +184,7 @@ namespace Descent.Messaging.Events
     /// </summary>
     public class EventManager
     {
+        private readonly EventType[] localOnly = new EventType[] { EventType.SquareMarked, EventType.InventoryFieldMarked };
         private readonly EventType[] needResponses = new EventType[] { };
 
         private Queue<string> queue = new Queue<string>();
@@ -321,6 +324,8 @@ namespace Descent.Messaging.Events
 
         public event SquareMarkedHandler SquareMarkedEvent;
 
+        public event InventoryFieldMarkedHandler InventoryFieldMarkedEvent;
+
         #endregion
 
         #endregion
@@ -350,7 +355,6 @@ namespace Descent.Messaging.Events
             {
                 queue.Enqueue(EncodeMessage(eventType, eventArgs));
             }
-
         }
 
         /// <summary>
@@ -625,9 +629,15 @@ namespace Descent.Messaging.Events
                 case EventType.MissedAttack:
                     if (MissedAttackEvent != null) MissedAttackEvent(this, (PlayerEventArgs)eventArgs);
                     break;
+                case EventType.SquareMarked:
+                    if (SquareMarkedEvent != null) SquareMarkedEvent(this, (CoordinatesEventArgs)eventArgs);
+                    break;
+                case EventType.InventoryFieldMarked:
+                    if (InventoryFieldMarkedEvent != null) InventoryFieldMarkedEvent(this, (InventoryFieldEventArgs)eventArgs);
+                    break;
             }
 
-            if (sendOnNetwork)
+            if (sendOnNetwork && !localOnly.Contains(eventType))
             {
                 Player.Instance.Connection.SendString(EncodeMessage(eventType, eventArgs));
             }

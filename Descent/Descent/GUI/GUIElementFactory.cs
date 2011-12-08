@@ -111,10 +111,6 @@ namespace Descent.GUI
                                                                                startY + y * width + y * spacerY, width, width,
                                                                                current);
                                     box.AddChild(eq);
-                                    if (role == Role.Overlord)
-                                    {
-                                        eq.AddClickAction(eq.Name, null);
-                                    }
                                 }
                             }
                         }
@@ -131,6 +127,24 @@ namespace Descent.GUI
                         }
                         root.AddChild(box);
                         break;
+                    }
+                case State.Equip:
+                    {
+                        if (role != Role.Overlord)
+                        {
+                            int startX = RelW(g, 15);
+                            int startY = RelH(g, 15);
+                            int spacerX = RelW(g, 2);
+                            int width = RelW(g, 10);
+
+                            Equipment[] unequipped = gameState.UnequippedEquipment(Player.Instance.Id);
+                            for (int x = 0; x < 6; x++)
+                            {
+                                Equipment current = unequipped[x];
+                                EquipmentElement eq = GUIElementFactory.CreateEquipmentElement(game, startX + x * width + x * spacerX, startY, current);
+                                box.AddChild(eq);
+                            }
+                        }
                     }
             }
 
