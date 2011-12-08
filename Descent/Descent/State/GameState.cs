@@ -45,6 +45,8 @@ namespace Descent.State
             Player.Instance.EventManager.GiveEquipmentEvent += GiveEquipment;
         }
 
+        public int CurrentPlayer { get; set; }
+
         public Equipment[] CurrentEquipment
         {
             get { return currentEquipment.ToArray(); }

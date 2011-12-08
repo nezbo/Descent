@@ -59,6 +59,8 @@ namespace Descent.State
             eventManager.RequestPlacementEvent += new RequestPlacementHandler(RequestPlacement);
             eventManager.PlaceHeroEvent += new PlaceHeroHandler(PlaceHero);
             eventManager.NewRoundEvent += new NewRoundHandler(NewRound);
+            eventManager.RequestTurnEvent += new RequestTurnHandler(RequestTurn);
+            eventManager.TurnChangedEvent += new TurnChangedHandler(TurnChanged);
 
             // initiate start
             stateMachine = new StateMachine(new State[] { State.InLobby, State.Initiation, State.DrawOverlordCards, //TODO DrawSkillCards
@@ -166,6 +168,11 @@ namespace Descent.State
         private void AllPlayersRemain()
         {
             playersRemaining.AddRange(Player.Instance.HeroParty.PlayerIds);
+        }
+
+        private void ResetCurrentPlayer()
+        {
+            gameState.CurrentPlayer = 0;
         }
 
         // event handlers
@@ -332,11 +339,15 @@ namespace Descent.State
         private void FinishedReequip(object sender, GameEventArgs eventArgs)
         {
             Contract.Requires(CurrentState == State.Equip);
-            Contract.Ensures(CurrentState == ((playersRemaining.Count == Player.Instance.HeroParty.NumberOfHeroes) ? State.WaitForChooseSquare : State.Equip));
+            Contract.Ensures(CurrentState == (gameState.CurrentPlayer != 0 ? State.WaitForChooseAction : (playersRemaining.Count == Player.Instance.HeroParty.NumberOfHeroes) ? State.WaitForChooseSquare : State.Equip));
 
             playersRemaining.Remove(eventArgs.SenderId);
-
-            if (playersRemaining.Count == 0)
+            
+            if (gameState.CurrentPlayer != 0)
+            {
+                stateMachine.ChangeToNextState();
+            }
+            else if (playersRemaining.Count == 0)
             {
                 AllPlayersRemain();
                 stateMachine.ChangeToNextState();
@@ -379,6 +390,7 @@ namespace Descent.State
             Contract.Ensures(CurrentState == State.WaitForHeroTurn);
 
             AllPlayersRemain();
+            ResetCurrentPlayer();
 
             stateMachine.PlaceStates(State.WaitForHeroTurn);
             stateMachine.ChangeToNextState();
@@ -386,44 +398,30 @@ namespace Descent.State
 
         #region Hero methods
 
-        private void HeroTurnChosen(Hero hero)
+        private void RequestTurn(object sender, GameEventArgs eventArgs)
         {
             Contract.Requires(CurrentState == State.WaitForHeroTurn);
-            Contract.Requires(heroesYetToAct.Contains(hero));
+            Contract.Ensures(CurrentState == Contract.OldValue(CurrentState));
 
-            currentHero = hero;
+            if (Player.Instance.IsServer && gameState.CurrentPlayer == 0 && playersRemaining.Contains(eventArgs.SenderId))
+            {
+                eventManager.QueueEvent(EventType.TurnChanged, new PlayerEventArgs(eventArgs.SenderId));
+            }
+        }
 
-            stateMachine.PlaceStates(State.HeroTurn);
+        private void TurnChanged(object sender, PlayerEventArgs eventArgs)
+        {
+            Contract.Requires(CurrentState == State.WaitForHeroTurn);
+            Contract.Requires(gameState.CurrentPlayer == 0);
+            Contract.Requires(playersRemaining.Contains(eventArgs.SenderId));
+            Contract.Ensures(CurrentState == State.WaitForChooseAction);
+
+            gameState.CurrentPlayer = eventArgs.SenderId;
+
+            //TODO Refresh Hero's cards
+
+            stateMachine.PlaceStates(State.HeroTurn, State.Equip, State.WaitForChooseAction);
             stateMachine.ChangeToNextState();
-            HeroTurnInitiation();
-        }
-
-        private void HeroTurnInitiation()
-        {
-            Contract.Requires(CurrentState == State.HeroTurn);
-            Contract.Ensures(CurrentState == State.WaitForItemSwitch);
-
-            // Refresh cards
-
-            stateMachine.PlaceStates(State.WaitForItemSwitch, State.WaitForChooseAction, State.WaitForPerformAction);
-            stateMachine.ChangeToNextState();
-        }
-
-        private void SwitchItems(Equipment item1, Equipment item2)
-        {
-            Contract.Requires(CurrentState == State.WaitForItemSwitch);
-            Contract.Requires(item1 != null);
-            Contract.Requires(item2 != null);
-            Contract.Ensures(CurrentState == State.WaitForItemSwitch);
-
-            // Switch the two items
-        }
-
-        private void SwitchitemDone()
-        {
-            Contract.Requires(CurrentState == State.WaitForItemSwitch);
-            Contract.Ensures(CurrentState != State.WaitForItemSwitch);
-
             stateMachine.ChangeToNextState();
         }
 
