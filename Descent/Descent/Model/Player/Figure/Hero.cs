@@ -51,6 +51,8 @@ namespace Descent.Model.Player.Figure
 
         private readonly Inventory inventory;
 
+
+
         #endregion
 
         #region Properties
@@ -96,6 +98,11 @@ namespace Descent.Model.Player.Figure
         }
 
         /// <summary>
+        /// Gets or sets the number of coins owned by the hero
+        /// </summary>
+        public int Coins { get; set; }
+
+        /// <summary>
         /// Gets the inventory of the hero
         /// </summary>
         public Inventory Inventory
@@ -136,7 +143,7 @@ namespace Descent.Model.Player.Figure
             abilityText = text;
             inventory = new Inventory(this);
 
-
+            Coins += 300;
             DiceContribution += this.BlackDice;
         }
 
@@ -201,6 +208,11 @@ namespace Descent.Model.Player.Figure
             skills[skill.Type].Remove(skill);
         }
 
+        /// <summary>
+        /// A method that returns the number of black dice for the weapon type equipped.
+        /// This list of black dice is empty if there is now weapon equipped.
+        /// </summary>
+        /// <returns></returns>
         private List<Dice> BlackDice()
         {
             List<Dice> dice = new List<Dice>();

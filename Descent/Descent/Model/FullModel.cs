@@ -120,7 +120,6 @@ namespace Descent.Model
                 line = reader.ReadLine();
 
                 if (line.StartsWith("//")) continue;
-                System.Diagnostics.Debug.WriteLine(line);
 
                 string[] data = line.Split(',');
                 System.Diagnostics.Debug.Assert(data.Length == 11, "Error when parsing monsters, at line " + (i + 2));
@@ -151,6 +150,7 @@ namespace Descent.Model
             }
 
             FullModel.monsters = monsters;
+            System.Diagnostics.Debug.WriteLine("Monsters loaded successfully!");
         }
         #endregion
 
@@ -199,6 +199,7 @@ namespace Descent.Model
             }
 
             diceDictionary = dice;
+            System.Diagnostics.Debug.WriteLine("Dice loaded successfully!");
         }
 
         #endregion
@@ -235,10 +236,40 @@ namespace Descent.Model
             }
 
             townEquipment = equipmentlists;
+            System.Diagnostics.Debug.WriteLine("Common equipment loaded successfully!");
 
             //LoadTreasures(game, reader);
 
+            System.Diagnostics.Debug.WriteLine("Equipment loaded successfully!");
+        }
 
+        private static void LoadTreasures(Game game, StreamReader reader)
+        {
+            int n = int.Parse(reader.ReadLine());
+
+            Dictionary<EquipmentRarity, List<Treasure>> treasures = new Dictionary<EquipmentRarity, List<Treasure>>();
+            for (int i = 0; i < n; i++)
+            {
+                string line = reader.ReadLine();
+                if (line.StartsWith("//")) continue;
+
+                string[] data = line.Split(',');
+
+                EquipmentRarity rarity;
+                EquipmentRarity.TryParse(data[2], out rarity);
+
+                if (data[1].Equals("Treasure Cache"))
+                {
+                    treasures[rarity].Add(new Treasure(int.Parse(data[0]), rarity, null));
+                }
+                else
+                {
+                    treasures[rarity].Add(new Treasure(int.Parse(data[0]), rarity, LoadEquipment(data)));
+                }
+                System.Diagnostics.Debug.WriteLine(line);
+            }
+
+            System.Diagnostics.Debug.WriteLine("Treasures loaded successfully!");
         }
 
         private static Equipment LoadEquipment(string[] data)
@@ -278,20 +309,6 @@ namespace Descent.Model
                 surgeAbilities: surgeAbilities, 
                 hands: hands, 
                 abilities: abilities);
-        }
-
-        private static void LoadTreasures(Game game, StreamReader reader)
-        {
-            int n = int.Parse(reader.ReadLine());
-
-            Dictionary<EquipmentRarity, List<Treasure>> treasures = new Dictionary<EquipmentRarity, List<Treasure>>();
-            for (int i = 0; i < n; i++)
-            {
-                string line = reader.ReadLine();
-                if (line.StartsWith("//")) continue;
-
-                string[] data = line.Split(',');
-            }
         }
 
         #endregion
@@ -342,7 +359,6 @@ namespace Descent.Model
             for (int i = 0; i < n; i++)
             {
                 string line = reader.ReadLine();
-                System.Diagnostics.Debug.WriteLine(line);
                 string[] data = line.Split(',');
 
                 switch (data[0])
