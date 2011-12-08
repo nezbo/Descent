@@ -345,6 +345,7 @@ namespace Descent.Messaging.Events
 
             lock (queue)
             {
+                Console.WriteLine("Queued event: " + EncodeMessage(eventType, eventArgs));
                 queue.Enqueue(EncodeMessage(eventType, eventArgs));
                 //queue.AddLast(EncodeMessage(eventType, eventArgs));  
             }
