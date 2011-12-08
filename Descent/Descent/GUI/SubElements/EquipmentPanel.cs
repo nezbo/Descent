@@ -8,10 +8,11 @@ namespace Descent.GUI.SubElements
     {
         private bool expanded;
 
-        public EquipmentPanel(Game game, int x, int y, List<Equipment> content)
+        public EquipmentPanel(Game game, string title, int x, int y, List<Equipment> content)
             : base(game, "equipment panel", x, y, 1, 1)
         {
             expanded = false;
+            SetBackground("boxbg");
 
             // create equipment elements
             int innerWidth = 0;
@@ -28,6 +29,8 @@ namespace Descent.GUI.SubElements
             }
 
             Bound = new Rectangle(Bound.X, Bound.Y, innerWidth + 20, 50 + content.Count * height + (content.Count - 1) * space);
+
+            AddText(this.Name, title, new Vector2(5, 10));
         }
 
         protected override void ActOnDirectClick(int x, int y)

@@ -21,7 +21,7 @@ namespace Descent.GUI.SubElements
             : base(game, "hero", 0, 0, (int)(game.GraphicsDevice.Viewport.Width * (3 / 4.0)), game.GraphicsDevice.Viewport.Height)
         {
             this.hero = hero;
-            this.SetBackground("boxbg");
+            this.SetDrawBackground(false);
 
             //this.AddDrawable(this.Name, new Image(hero.BigTexture), new Vector2(0, this.Bound.Height - hero.BigTexture.Height));
             health = game.Content.Load<Texture2D>("Images/Other/health-small");
@@ -40,7 +40,11 @@ namespace Descent.GUI.SubElements
             equipment.Add(hero.Inventory.Shield);
             equipment.AddRange(hero.Inventory.OtherItems);
 
-            AddChild(new EquipmentPanel(game, 300, Bound.Height - 50, equipment));
+            AddChild(new EquipmentPanel(game, "Equipped", 300, Bound.Height - 50, equipment));
+
+            AddChild(new EquipmentPanel(game, "Backpack", 450, Bound.Height - 50, new List<Equipment>(hero.Inventory.Backpack)));
+
+            AddChild(new EquipmentPanel(game, "Potions", 600, Bound.Height - 50, new List<Equipment>(hero.Inventory.Potions)));
         }
 
         public override void Draw(SpriteBatch draw)

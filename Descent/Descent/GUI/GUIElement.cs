@@ -137,7 +137,13 @@
         public virtual void Move(int x, int y)
         {
             Bound = new Rectangle(Bound.X + x, Bound.Y + y, Bound.Width, Bound.Height);
-            foreach (GUIElement e in children) Move(x, y);
+            foreach (GUIElement e in children) e.Move(x, y);
+            foreach (Text t in texts) t.Position = new Vector2(t.Position.X + x, t.Position.Y + y);
+            foreach (Drawable d in visuals.Keys)
+            {
+                Rectangle old = visuals[d];
+                visuals[d] = new Rectangle(old.X + x, old.Y + y, old.Width, old.Height);
+            }
         }
 
         /// <summary>
