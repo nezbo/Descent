@@ -44,7 +44,6 @@ namespace Descent.Model.Player
 
     /// <summary>
     /// The actual player, playing the game
-    /// TODO: Write Player class
     /// </summary>
     /// <author>
     /// Jonas Breindahl (jobre@itu.dk)
