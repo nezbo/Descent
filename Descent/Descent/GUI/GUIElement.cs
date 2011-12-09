@@ -170,6 +170,7 @@
                 visuals.Clear();
                 children.Clear();
             }
+            foreach (GUIElement e in children) e.Disable(target);
         }
 
         /// <summary>
