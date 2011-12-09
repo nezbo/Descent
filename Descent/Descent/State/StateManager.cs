@@ -429,7 +429,8 @@ namespace Descent.State
         private void GiveOverlordCards(object sender, GiveOverlordCardsEventArgs eventArgs)
         {
             Contract.Requires(CurrentState == State.DrawOverlordCards || CurrentState == State.OverlordTurn);
-            Contract.Ensures(CurrentState == (Contract.OldValue(CurrentState) == State.DrawOverlordCards ? State.DrawHeroCard : State.WaitForPlayCard));
+            // Contract.Ensures(CurrentState == (Contract.OldValue(CurrentState) == State.DrawOverlordCards ? State.DrawHeroCard : State.WaitForPlayCard)); TODO
+            Contract.Ensures(CurrentState == (Contract.OldValue(CurrentState) == State.DrawOverlordCards ? State.DrawHeroCard : State.ActivateMonstersInitiation));
 
             foreach (int overlordCardId in eventArgs.OverlordCardIds)
             {
@@ -808,7 +809,8 @@ namespace Descent.State
         {
             Contract.Requires(CurrentState == State.OverlordTurn);
             Contract.Ensures(CurrentState == Contract.OldValue(CurrentState));
-            Contract.Ensures(stateMachine.NextState == State.WaitForPlayCard);
+            // Contract.Ensures(stateMachine.NextState == State.WaitForPlayCard);
+            Contract.Ensures(stateMachine.NextState == State.ActivateMonstersInitiation);
 
             Player.Instance.Overlord.ThreatTokens += Player.Instance.HeroParty.NumberOfHeroes;
             if (Player.Instance.IsServer)
@@ -817,6 +819,7 @@ namespace Descent.State
             }
 
             stateMachine.PlaceStates(State.ActivateMonstersInitiation); // TODO Add State.WaitForPlayCard
+            StateChanged();
         }
 
         private void OverlordDiscardCard(/* TODO OverlordCard card*/)
