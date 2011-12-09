@@ -808,7 +808,15 @@ namespace Descent.State
         #region Overlord methods
         private void StartMonsterTurn(object sender, CoordinatesEventArgs eventArgs)
         {
-            StateChanged(); // State changes to ActivateMonsterInitiation
+            Contract.Requires(CurrentState == State.WaitForOverlordChooseAction);
+            // TODO Contract.Requires(monsterBag.contains(monster));
+            Contract.Ensures(CurrentState == State.WaitForPerformAction);
+
+            // Record monsterId
+
+            stateMachine.PlaceStates(State.MonsterTurn);
+            stateMachine.ChangeToNextState();
+            MonsterTurnInitiation();
         }
 
         // Helper method
@@ -824,6 +832,18 @@ namespace Descent.State
                 eventManager.QueueEvent(EventType.GiveOverlordCards, new GiveOverlordCardsEventArgs(gameState.GetOverlordCards(2).Select(card => card.Id).ToArray()));
             }
 
+            if (Player.Instance.IsOverlord)
+            {
+                // Mark monsters that the overlord can select in the WaitForOverlordChooseAction
+                Dictionary<Monster, Point> dictionary = FullModel.Board.MonstersOnBoard;
+
+                monstersRemaining = dictionary.Keys.ToList();
+                foreach (Point point in dictionary.Values)
+                {
+                    gui.MarkSquare(point.X, point.Y, true);
+                }  
+            }
+           
             stateMachine.PlaceStates(State.WaitForOverlordChooseAction);
             StateChanged();
         }
@@ -869,7 +889,7 @@ namespace Descent.State
         {
             Contract.Requires(CurrentState == State.WaitForPlayCard);
             Contract.Ensures(CurrentState == State.WaitForChooseMonster || CurrentState == State.WaitForPlaceMonster);
-
+            
             stateMachine.ChangeToNextState();
             if (CurrentState == State.SpawnMonsters)
             {
@@ -921,6 +941,7 @@ namespace Descent.State
             ActivateMonstersInitiation();
         }
 
+        // TODO Is not used ATM - going directly from WaitForOverlordChooseAction
         private void ActivateMonstersInitiation()
         {
             Contract.Requires(CurrentState == State.ActivateMonsters);
@@ -938,6 +959,7 @@ namespace Descent.State
             stateMachine.ChangeToNextState();
         }
 
+        // TODO NOT USED ATM
         private void ChooseMonster(Monster monster)
         {
             Contract.Requires(CurrentState == State.WaitForChooseMonster);
