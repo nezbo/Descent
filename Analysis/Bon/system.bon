@@ -53,7 +53,7 @@ cluster_chart EVENT_MODEL_CLUSTER
 	class BURN_EFFECT description "A burn Effect that damages a figure"
 	class STUN_EFFECT description "A stun Effect, that limits movement and attacks"
 	class WEB_EFFECT description "A web Effect that limits movement"
-	class ABILITY description "The abilities that a figure can have"
+	class ABILITY description "Any ability, that have an effect on figures, heroes and the overlord."
 	class EVENT description "A Event that will make something happen"
 	class TRIGGERED_EVENT description "An Event that is triggered by something og some ability"
 	class PASSIVE_EVENT description "An Event that is always on"
@@ -154,11 +154,27 @@ end
 
 class_chart MODEL
     indexing
-        author: "Martin Marcher";
+        author: "Martin Marcher, Jonas Breindahl";
+		in_cluster: "MODEL";
+		created: "02-12-2011";
+		revised: "09-12-2011";
+	explanation
+		"Holds references to all model related classes"
     query
         "Can I have the board?",
-        "Can I have the player with this id?",
-        "Can I have the hero party?"
+        "Can I have a copy of the monster with 'this' id?",
+		"Can I have a copy of the equipment with 'this' id?",
+		"Can I have the overlord card with 'this' id?",
+		"Can I have the dice of 'this' color?",
+		"Can I have the hero with 'this' id?",
+		"Can I have a list of all heroes?",
+		"Can I have a list of all town equipment?",
+		"Can I have a list of all overlord cards?",
+		"Can I have a list of all chests on the map?",
+		"Can I have a list of all treasures?",
+		"Can I have a list of all skills?"
+	command
+		"Load all content!"
 end
 
 class_chart ROLE

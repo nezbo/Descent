@@ -474,7 +474,7 @@
         {
             Door door = GetDoor(point);
             if (door == null) return false;
-            return !door.IsRuneDoor || FullModel.HeroParty.HasRuneKey(door.KeyColor);
+            return !door.IsRuneDoor || Player.Player.Instance.HeroParty.HasRuneKey(door.KeyColor);
         }
 
         /// <summary>

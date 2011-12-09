@@ -12,14 +12,16 @@ namespace Descent.Model.Player
     using Descent.Model.Player.Figure;
 
     /// <summary>
-    /// TODO: Update summary.
+    /// A party of heroes
     /// </summary>
     /// <author>
     /// Jonas Breindahl (jobre@itu.dk)
     /// </author>
     public class HeroParty
     {
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HeroParty"/> class.
+        /// </summary>
         public HeroParty()
         {
             Heroes = new Dictionary<int, Hero>();
@@ -30,11 +32,13 @@ namespace Descent.Model.Player
 
         /// <summary>
         /// Gets the heroes of players. Key is player id.
+        /// Can I have all hero and id's as a map?
         /// </summary>
         public Dictionary<int, Hero> Heroes { get; private set; }
 
         /// <summary>
         /// Gets all ids of the hero players.
+        /// Can I have a list of all heroes id?
         /// </summary>
         public int[] PlayerIds
         {
@@ -43,6 +47,7 @@ namespace Descent.Model.Player
 
         /// <summary>
         /// Gets the runekeys of the hero party.
+        /// Can I have a list of all rune keys the heroes have?
         /// </summary>
         public HashSet<RuneKey> RuneKeys { get; private set; } 
 
@@ -77,6 +82,7 @@ namespace Descent.Model.Player
 
         /// <summary>
         /// Gets a value indicating whether IsConquestPoolEmpty.
+        /// Is the pool of conquest tokens empty?
         /// </summary>
         public bool IsConquestPoolEmpty
         {
@@ -121,6 +127,7 @@ namespace Descent.Model.Player
 
         /// <summary>
         /// Add a hero to the hero party.
+        /// Add 'this' hero to the list of heroes in the HeroParty!
         /// </summary>
         /// <param name="playerId">PlayerId of the player that holds the Hero.</param>
         /// <param name="hero">The hero to add.</param>
@@ -129,14 +136,30 @@ namespace Descent.Model.Player
             Contract.Requires(hero != null);
             Contract.Ensures(AllHeroes.Contains(hero));
             Heroes.Add(playerId, hero);
-        } 
+        }
 
+        /// <summary>
+        /// Adds 
+        /// </summary>
+        /// <param name="runeKey">
+        /// The rune key.
+        /// </param>
         public void AddRuneKey(RuneKey runeKey)
         {
             Contract.Ensures(HasRuneKey(runeKey));
             RuneKeys.Add(runeKey);
         }
 
+        /// <summary>
+        /// Gets whether the party has a already picked up the rune key
+        /// </summary>
+        /// <param name="runeKey">
+        /// The rune key.
+        /// </param>
+        /// <returns>
+        /// True if the party has the key
+        /// </returns>
+        [Pure]
         public bool HasRuneKey(RuneKey runeKey)
         {
             return RuneKeys.Contains(runeKey);
