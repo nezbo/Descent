@@ -188,9 +188,18 @@
         }
 
         /// <summary>
+        /// Removes all children.
+        /// </summary>
+        public void ClearChildren()
+        {
+            children.Clear();
+        }
+
+        /// <summary>
         /// Add the drawable to be displayed at the given position
         /// in this GUIElement.
         /// </summary>
+        /// <param name="target">The target GUIElement for the action</param>
         /// <param name="visual">The drawable to display</param>
         /// <param name="position">Where the upper-left corner of the drawable should be</param>
         public void AddDrawable(string target, Drawable visual, Vector2 position)
