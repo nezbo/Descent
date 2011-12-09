@@ -41,11 +41,6 @@ namespace Descent.Model.Event
         {
             return true;
         }
-
-        private static Func<bool> IfAttacking()
-        {
-            return null;
-        }
         #endregion
 
         #region Fields

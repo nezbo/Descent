@@ -162,6 +162,7 @@
     <Compile Include="Model\Board\Town.cs" />
     <Compile Include="Model\Dice.cs" />
     <Compile Include="Model\Event\Ability.cs" />
+    <Compile Include="Model\Event\Attack.cs" />
     <Compile Include="Model\Event\Effect.cs" />
     <Compile Include="Model\FullModel.cs" />
     <Compile Include="Model\Player\Figure\Figure.cs" />
