@@ -134,6 +134,11 @@ namespace Descent.Model.Player.Figure.HeroStuff
             }
         }
 
+        public bool CanEquip(Equipment equipment)
+        {
+            return equipment.Hands <= FreeHands;
+        }
+
         /// <summary>
         /// Equip a weapon.
         /// </summary>
