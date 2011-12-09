@@ -528,7 +528,6 @@ namespace Descent.State
                 hero.Inventory[parsedId2] = equipment1;
             }
 
-            gui.CreateMenuGUI(DetermineRole());
             StateChanged();
         }
 
@@ -608,10 +607,7 @@ namespace Descent.State
             AllPlayersRemain();
             ResetCurrentPlayer();
 
-            for (int i = 0; i < Player.Instance.HeroParty.Heroes.Count; i++)
-            {
-                stateMachine.PlaceStates(State.WaitForHeroTurn); 
-            }
+            stateMachine.PlaceStates(State.WaitForHeroTurn); 
                 
             stateMachine.ChangeToNextState();
         }
