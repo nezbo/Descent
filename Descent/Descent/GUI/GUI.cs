@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Descent.Model;
 using Descent.Model.Board;
 using Descent.Model.Player;
 using Microsoft.Xna.Framework.Input;
@@ -153,7 +152,7 @@ namespace Descent.GUI
         /// that displays the chat and player stats
         /// </summary>
         /// <param name="model"></param>
-        public void CreateMenuGUI(FullModel model, Role role)
+        public void CreateMenuGUI(Role role)
         {
             layers[2] = GUIElementFactory.CreateMenuElement(Game, role);
         }

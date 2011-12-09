@@ -109,7 +109,7 @@ namespace Descent
                 }
 
                 // Create the state manager.
-                n.StateManager = new StateManager(gui, new FullModel());
+                n.StateManager = new StateManager(gui);
             });
 
             root.AddClickAction("doneJoin", (n, g) =>
@@ -126,7 +126,7 @@ namespace Descent
                             n.Nickname = InputElement.GetInputFrom("nameInput");
                         }
 
-                        n.StateManager = new StateManager(gui, new FullModel());
+                        n.StateManager = new StateManager(gui);
 
                         Player.Instance.EventManager.QueueEvent(EventType.PlayerJoined, new PlayerJoinedEventArgs(Player.Instance.Id, Player.Instance.Nickname));
                     }
