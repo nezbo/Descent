@@ -149,19 +149,13 @@ namespace Descent.State
                     }
                 case State.BuyEquipment:
                     {
-                        if (role != Role.Overlord)
+                        if (role != Role.Overlord && playersRemaining.Contains(Player.Instance.Id))
                         {
-                            if (!stateMachine.IsOneMoreRecentThanOther(State.BuyEquipment, State.HeroTurn) && role != Role.ActiveHero)
-                            {
-                                root.Disable("item");
-                                root.Disable("done");
-                            }
 
                             root.AddClickAction("done", (n, g) =>
                                                             {
                                                                 n.EventManager.QueueEvent(EventType.FinishedBuy,
                                                                                           new GameEventArgs());
-                                                                g.Disable("done");
                                                             });
                             root.AddClickAction("item", (n, g) =>
                                                             {
@@ -175,12 +169,17 @@ namespace Descent.State
                                                             });
 
                         }
+                        else
+                        {
+                            root.Disable(root.Name);
+                        }
                         break;
                     }
                 case State.Equip:
                     {
                         if (role != Role.Overlord)
                         {
+
                             root.AddClickAction("item", (n, g) =>
                                                             {
                                                                 if (g is EquipmentElement)
@@ -192,7 +191,7 @@ namespace Descent.State
                             root.AddClickAction("done", (n, g) =>
                                                             {
                                                                 n.EventManager.QueueEvent(EventType.FinishedReequip, new GameEventArgs());
-                                                                g.Disable("done");
+                                                                g.Disable(g.Name);
                                                             });
                         }
                         break;
@@ -533,7 +532,6 @@ namespace Descent.State
                 hero.Inventory[parsedId2] = equipment1;
             }
 
-            gui.CreateMenuGUI(DetermineRole());
             StateChanged();
         }
 
@@ -613,11 +611,7 @@ namespace Descent.State
             AllPlayersRemain();
             ResetCurrentPlayer();
 
-            for (int i = 0; i < Player.Instance.HeroParty.Heroes.Count; i++)
-            {
-                stateMachine.PlaceStates(State.WaitForHeroTurn);
-            }
-
+            stateMachine.PlaceStates(State.WaitForHeroTurn);
             stateMachine.ChangeToNextState();
         }
 

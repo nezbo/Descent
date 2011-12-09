@@ -46,7 +46,7 @@ namespace Descent.GUI.SubElements
                     EquipmentElement e = GUIElementFactory.CreateEquipmentElement(Game, Bound.X + 10,
                                                               Bound.Y + 50 + i * height + i * space,
                                                               inventory[slots[i]], slots[i]);
-                    equipments.Add(slots[i], e);
+                    equipments[slots[i]] = e;
                     changed = true;
                 }
             }
