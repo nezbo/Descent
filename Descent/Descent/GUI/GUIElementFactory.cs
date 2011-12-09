@@ -185,6 +185,17 @@ namespace Descent.GUI
                         }
                         break;
                     }
+                case State.WaitForPerformAction:
+                    {
+                        if (role == Role.ActiveHero)
+                        {
+                            GUIElement end = new GUIElement(game, "end", RelW(g, 3), RelW(g, 3), RelW(g, 15), RelH(g, 5));
+
+                            root.AddChild(end);
+                            root.AddText(end.Name, "End Turn", new Vector2(5, 5));
+                        }
+                        break;
+                    }
             }
 
             return root;
