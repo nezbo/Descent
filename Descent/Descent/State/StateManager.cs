@@ -891,9 +891,15 @@ namespace Descent.State
             Contract.Requires(CurrentState == State.ActivateMonsters);
             Contract.Ensures(CurrentState == State.WaitForChooseMonster);
 
+            System.Diagnostics.Debug.WriteLine("In ActivateMonstersInitiation");
             Dictionary<Monster, Point> dictionary = FullModel.Board.MonstersOnBoard;
 
             monstersRemaining = dictionary.Keys.ToList();
+            foreach (Monster monster in monstersRemaining)
+            {
+                System.Diagnostics.Debug.WriteLine(monster.Name);
+            }
+
             foreach (Point point in dictionary.Values)
             {
                 gui.MarkSquare(point.X, point.Y, true);
