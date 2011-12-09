@@ -54,6 +54,8 @@
 
         private Texture2D floorTexture;
 
+        private Dictionary<Monster, Point> monstersOnBoard = new Dictionary<Monster, Point>(); 
+
         #endregion
 
         #region Properties
@@ -100,6 +102,28 @@
         {
             get { return heroesOnBoard; }
         }
+
+        /// <summary>
+        /// Gets the points where all monsters are standing
+        /// </summary>
+        public Dictionary<Monster, Point> MonstersOnBoard
+        {
+            get
+            {
+                Dictionary<Monster, Point> dic = new Dictionary<Monster, Point>();
+                for (int x = 0; x < this.Width; x++)
+                {
+                    for (int y = 0; y < this.Height; y++)
+                    {
+                        if (SquareVisibleByPlayers(x, y) && this[x, y].Figure != null && this[x, y].Figure is Monster)
+                        {
+                            dic[(Monster)this[x, y].Figure] = new Point(x, y);
+                        }
+                    }
+                }
+                return dic;
+            }
+        } 
 
         /// <summary>
         /// Gets the texture for the floor of the dungeon

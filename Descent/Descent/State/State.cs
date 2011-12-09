@@ -90,6 +90,7 @@
         MonsterTurn,
         MonsterTurnInitiation,
         DeleteMonsterTurn,
-        Initiation
+        Initiation,
+        WaitForOverlordChooseAction
     }
 }
