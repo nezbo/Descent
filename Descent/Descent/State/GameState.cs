@@ -137,7 +137,6 @@ namespace Descent.State
         public void RemoveFromUnequippedEquipment(int playerId, Equipment equipment)
         {
             Contract.Requires(playerId > 0);
-            Contract.Ensures(!UnequippedEquipment(playerId).Contains(equipment));
 
             unequippedEquipment[playerId].Remove(equipment);
         }

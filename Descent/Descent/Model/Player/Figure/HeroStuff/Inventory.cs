@@ -336,16 +336,18 @@ namespace Descent.Model.Player.Figure.HeroStuff
         [Pure]
         public bool CanEquipAtIndex(int slot, Equipment equipment)
         {
-            Contract.Requires(equipment != null);
-            return equipment.Type == EquipmentType.Weapon ?
-                    slot == (int)EquipmentSlot.Weapon :
-                        equipment.Type == EquipmentType.Shield ?
-                        slot == (int)EquipmentSlot.Shield :
-                            equipment.Type == EquipmentType.Other ?
-                            slot >= (int)EquipmentSlot.Other && slot < (int)EquipmentSlot.Potion :
-                                equipment.Type == EquipmentType.Potion ?
-                                slot >= (int)EquipmentSlot.Potion && slot < (int)EquipmentSlot.Backpack :
-                                    slot >= (int)EquipmentSlot.Backpack && slot < this.Length;
+            if (equipment == null) return true;
+            return  slot == (int)EquipmentSlot.Weapon ? 
+                equipment.Type == EquipmentType.Weapon :
+                        slot == (int)EquipmentSlot.Shield ? 
+                        equipment.Type == EquipmentType.Shield :
+                               slot == (int)EquipmentSlot.Armor ? 
+                               equipment.Type == EquipmentType.Armor :
+                                    slot >= (int)EquipmentSlot.Other && slot < (int)EquipmentSlot.Potion ?
+                                    equipment.Type == EquipmentType.Other :
+                                        slot >= (int)EquipmentSlot.Potion && slot < (int)EquipmentSlot.Backpack?
+                                        equipment.Type == EquipmentType.Potion :
+                                            slot >= (int)EquipmentSlot.Backpack && slot < this.Length;
         }
 
         [ContractInvariantMethod]
