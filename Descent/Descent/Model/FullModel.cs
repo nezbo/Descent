@@ -467,8 +467,17 @@ namespace Descent.Model
                 string text = data[10];
 
                 Texture2D texture = game.Content.Load<Texture2D>("Images/Heroes/" + id);
+                Texture2D largeTexture;
+                try
+                {
+                    largeTexture = game.Content.Load<Texture2D>("Images/Heroes/BIG-" + id);
+                }
+                catch (Exception e)
+                {
+                    largeTexture = game.Content.Load<Texture2D>("Images/Heroes/BIG-0");
+                }
 
-                heroes.Add(new Hero(id, name, cost, health, fatigue, armor, speed, diceDictionary, skillDictionary, hands, text, texture));
+                heroes.Add(new Hero(id, name, cost, health, fatigue, armor, speed, diceDictionary, skillDictionary, hands, text, texture, largeTexture));
             }
 
             FullModel.heroes = heroes;

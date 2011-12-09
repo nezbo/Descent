@@ -721,6 +721,13 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Images\Heroes\BIG-13.png">
+      <Name>BIG-13</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="Images\Heroes\BIG-0.png">
       <Name>BIG-0</Name>
       <Importer>TextureImporter</Importer>
