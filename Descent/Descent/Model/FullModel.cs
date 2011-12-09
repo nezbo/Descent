@@ -540,6 +540,7 @@ namespace Descent.Model
             for (int i = 0; i < n; i++)
             {
                 string line = reader.ReadLine();
+                if (line.StartsWith("//")) continue;
                 string[] data = line.Split(new char[] { ',' }, 4);
                 int id = int.Parse(data[0]);
 
