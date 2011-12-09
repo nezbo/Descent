@@ -56,16 +56,7 @@ namespace Descent.Model.Player.Figure.HeroStuff
             set
             {
                 Contract.Requires(this[slot] == null);
-                Contract.Requires(
-                    value.Type == EquipmentType.Weapon ?
-                    slot == (int)EquipmentSlot.Weapon :
-                        value.Type == EquipmentType.Shield ?
-                        slot == (int)EquipmentSlot.Shield :
-                            value.Type == EquipmentType.Other ?
-                            slot >= (int)EquipmentSlot.Other && slot < (int)EquipmentSlot.Potion :
-                                value.Type == EquipmentType.Potion ?
-                                slot >= (int)EquipmentSlot.Potion && slot < (int)EquipmentSlot.Backpack :
-                                    slot >= (int)EquipmentSlot.Backpack && slot < this.Length);
+                Contract.Requires(this.CanEquipAtIndex(slot, value));
                 Contract.Requires(this[slot] == value);
 
                 inventory[slot] = value;
@@ -341,6 +332,20 @@ namespace Descent.Model.Player.Figure.HeroStuff
             inventory[(int)EquipmentSlot.Potion + index] = null;
             result.UnequipFromHero(hero);
             return result;
+        }
+
+        [Pure]
+        public bool CanEquipAtIndex(int slot, Equipment equipment)
+        {
+            return equipment.Type == EquipmentType.Weapon ?
+                    slot == (int)EquipmentSlot.Weapon :
+                        equipment.Type == EquipmentType.Shield ?
+                        slot == (int)EquipmentSlot.Shield :
+                            equipment.Type == EquipmentType.Other ?
+                            slot >= (int)EquipmentSlot.Other && slot < (int)EquipmentSlot.Potion :
+                                equipment.Type == EquipmentType.Potion ?
+                                slot >= (int)EquipmentSlot.Potion && slot < (int)EquipmentSlot.Backpack :
+                                    slot >= (int)EquipmentSlot.Backpack && slot < this.Length;
         }
 
         [ContractInvariantMethod]
