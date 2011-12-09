@@ -118,7 +118,7 @@ namespace Descent.Messaging.Events
 
     public delegate void AddMovementHandler(object sender, PointsEventArgs eventArgs);
 
-    public delegate void SwitchItemsHandler(object sender, SwitchItemsEventArgs eventArgs)
+    public delegate void SwitchItemsHandler(object sender, SwitchItemsEventArgs eventArgs);
 
     #endregion
 

@@ -140,6 +140,7 @@
     <Compile Include="Messaging\Events\EventArgs\OverlordCardEventArgs.cs" />
     <Compile Include="Messaging\Events\EventArgs\GiveOverlordCardsEventArgs.cs" />
     <Compile Include="Messaging\Events\EventArgs\GiveCoinsEventArgs.cs" />
+    <Compile Include="Messaging\Events\EventArgs\SwitchItemsEventArgs.cs" />
     <Compile Include="Messaging\Events\EventArgs\TokenEventArgs.cs" />
     <Compile Include="Messaging\Events\EventArgs\GivePotionEventArgs.cs" />
     <Compile Include="Messaging\Events\EventArgs\GiveEquipmentEventArgs.cs" />
