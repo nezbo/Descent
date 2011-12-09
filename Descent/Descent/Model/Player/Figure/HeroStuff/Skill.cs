@@ -1,16 +1,7 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="Skill.cs" company="">
-// TODO: Update copyright text.
-// </copyright>
-// -----------------------------------------------------------------------
-
+﻿
 namespace Descent.Model.Player.Figure.HeroStuff
 {
-    using System;
     using System.Collections.Generic;
-    using System.Diagnostics.Contracts;
-    using System.Linq;
-    using System.Text;
 
     using Descent.Model.Event;
 
@@ -26,12 +17,17 @@ namespace Descent.Model.Player.Figure.HeroStuff
 
         private EAttackType type;
 
+        private string description;
+
         private List<Ability> abilities = new List<Ability>(); 
 
         #endregion
 
         #region Properties
 
+        /// <summary>
+        /// Gets the name of the skill
+        /// </summary>
         public string Name
         {
             get
@@ -39,7 +35,10 @@ namespace Descent.Model.Player.Figure.HeroStuff
                 return name;
             }
         }
-
+        
+        /// <summary>
+        /// Gets the type of the skill (Melee, Ranged and Magic)
+        /// </summary>
         public EAttackType Type
         {
             get
@@ -48,6 +47,20 @@ namespace Descent.Model.Player.Figure.HeroStuff
             }
         }
 
+        /// <summary>
+        /// Gets the textual description of the skill
+        /// </summary>
+        public string Description
+        {
+            get
+            {
+                return description;
+            }
+        }
+
+        /// <summary>
+        /// Gets the list of abilities that implement the skill
+        /// </summary>
         public List<Ability> Abilities
         {
             get
@@ -69,10 +82,18 @@ namespace Descent.Model.Player.Figure.HeroStuff
         /// <param name="type">
         /// The type of the skill
         /// </param>
-        public Skill(string name, EAttackType type)
+        /// <param name="description">
+        /// The description, the text on the skill
+        /// </param>
+        /// <param name="abilities">
+        /// The abilities of the skill
+        /// </param>
+        public Skill(string name, EAttackType type, string description, List<Ability> abilities)
         {
             this.name = name;
             this.type = type;
+            this.description = description;
+            this.abilities = abilities;
         }
 
         #endregion

@@ -48,8 +48,6 @@ namespace Descent.Model
 
         private static List<Marker> markers;
 
-        private static List<Chest> chests; 
-
         private static Board.Board board;
 
         private static HeroParty heroParty;
@@ -345,8 +343,6 @@ namespace Descent.Model
                 }
             }
 
-            System.Diagnostics.Debug.WriteLine("Map loaded successfully!");
-
             LoadOther(game, reader, board);
         }
 
@@ -382,43 +378,7 @@ namespace Descent.Model
                 }
             }
 
-            System.Diagnostics.Debug.WriteLine("Markers loaded successfully!");
-
-            LoadChests(game, reader);
-
             FullModel.board = board;
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="game">
-        /// The game object
-        /// </param>
-        /// <param name="reader">
-        /// The reader instance, loading the map file
-        /// </param>
-        private static void LoadChests(Game game, StreamReader reader)
-        {
-            chests = new List<Chest>();
-            int n = int.Parse(reader.ReadLine());
-
-            for (int i = 0; i < n; i++)
-            {
-                string line = reader.ReadLine();
-                string[] data = line.Split(',');
-                //System.Diagnostics.Debug.Assert(data.Length == 5, "Error when loading chests at line: " + (i + 1));
-
-                EquipmentRarity rarity;
-                EquipmentRarity.TryParse(data[0], true, out rarity);
-                int tokens = int.Parse(data[1]);
-                int coins = int.Parse(data[2]);
-                int curses = int.Parse(data[3]);
-                int treasures = int.Parse(data[4]);
-
-                chests.Add(new Chest(rarity, tokens, coins, curses, treasures));
-            }
-
-            System.Diagnostics.Debug.WriteLine("Chests loaded successfully!");
         }
 
         #endregion
@@ -467,6 +427,27 @@ namespace Descent.Model
 
             FullModel.heroes = heroes;
         }
+
+				public static void LoadChests(Game game, Streamreader reader)
+				{
+						int n = int.Parse(reader.ReadLine());
+						
+						for(int i = 0; i < n; i++)
+						{
+								string line = reader.ReadLine();
+								string[] data = line.Split(',');
+								//System.Diagnostics.Debug.Assert(data.Length == 5, "Error when loading chests at line: " + (i + 1));
+								
+								string name = data[0];
+								int tokens = int.Parse(data[1]);
+								int coins = int.Parse(data[2]);
+								int curses = int.Parse(data[3]);
+								int treasures = int.Parse(data[4]);
+								
+								
+						}
+				}
+				
 
         #endregion
 
@@ -658,14 +639,6 @@ namespace Descent.Model
         public static OverlordCard[] AllOverlordCards
         {
             get { return overlordCards.ToArray(); }
-        }
-
-        public static Chest[] AllChests
-        {
-            get
-            {
-                return chests.ToArray();
-            }
         }
 
         /* TODO

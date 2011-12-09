@@ -14,38 +14,28 @@ namespace Descent.Model.Board.Marker
     using Descent.Model.Player.Figure.HeroStuff;
 
     /// <summary>
-    /// TODO: Update summary.
+    /// A chest with treasures, coins and tokens
     /// </summary>
+		/// <author>
+		/// Jonas Breindahl (jobre@itu.dk)
+		/// </author>
     public class Chest
     {
         #region Fields
 
-        private int id;
-
         private EquipmentRarity rarity;
 
-        private Equipment equipment;
-
-        private Potion potion;
+        private int tokens;
 
         private int coin;
+
+        private int curses;
 
         private int treasures;
 
         #endregion
 
         #region Properties
-
-        /// <summary>
-        /// Gets the unique ID of the treasure
-        /// </summary>
-        public int ID
-        {
-            get
-            {
-                return id;
-            }
-        }
 
         /// <summary>
         /// Gets the rarity of the treasure
@@ -59,27 +49,15 @@ namespace Descent.Model.Board.Marker
         }
 
         /// <summary>
-        /// Gets the equipment of the treasure
-        /// This is none, if there is no equipment
+        /// Gets the number of conquest tokens in the chest,
+        /// the party gets this number of tokens.
         /// </summary>
-        public Equipment Equipment
+        public int ConquestTokens
         {
             get
-            {
-                return equipment;
-            }
-        }
-
-        /// <summary>
-        /// Gets the potion from the treasure
-        /// This is none, if there is no equipment
-        /// </summary>
-        public Potion Potion
-        {
-            get
-            {
-                return potion;
-            }
+                {
+                    return tokens;
+                }
         }
 
         /// <summary>
@@ -94,17 +72,62 @@ namespace Descent.Model.Board.Marker
             }
         }
 
+        /// <summary>
+        /// Gets the number of curses in the chest,
+        /// the overlord gets a threat token for each hero
+        /// </summary>
+        public int Curses
+        {
+            get
+            {
+                return curses;
+            }   
+        }
+
+        /// <summary>
+        /// Gets the number of treasures in the chest,
+        /// each hero gets x number of the chests rarity
+        /// </summary>
+        public int Treasures
+        {
+            get
+            {
+                return treasures;
+            }
+        }
+
         #endregion
 
         #region Initialization
 
-        public Chest(int id, string name, EquipmentRarity rarity, Equipment equipment, Potion potion, int coin)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Chest"/> class.
+        /// </summary>
+        /// <param name="id">
+        /// The id of the chest
+        /// </param>
+        /// <param name="rarity">
+        /// The rarity of the chest (copper, silver and gold)
+        /// </param>
+        /// <param name="conquestTokens">
+        /// The conquest tokens in the chest
+        /// </param>
+        /// <param name="coin">
+        /// The coins in the chest
+        /// </param>
+        /// <param name="curses">
+        /// The curses in the chest
+        /// </param>
+        /// <param name="treasures">
+        /// The treasures in the chest
+        /// </param>
+        public Chest(EquipmentRarity rarity, int conquestTokens, int coin, int curses, int treasures)
         {
-            this.id = id;
             this.rarity = rarity;
-            this.equipment = equipment;
-            this.potion = potion;
+            this.tokens = conquestTokens;
             this.coin = coin;
+            this.curses = curses;
+            this.treasures = treasures;
         }
 
         #endregion
