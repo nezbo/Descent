@@ -31,6 +31,8 @@ namespace Descent.State
         private Hero currentHero;
         private readonly List<int> playersRemaining = new List<int>();
 
+        private int inventoryFieldMarked = -1;
+
         public StateManager(GUI gui)
         {
             this.gui = gui;
@@ -46,8 +48,6 @@ namespace Descent.State
             eventManager.RequestBuyEquipmentEvent += new RequestBuyEquipmentHandler(RequestBuyEquipment);
             eventManager.GiveEquipmentEvent += new GiveEquipmentHandler(GiveEquipment);
             eventManager.FinishedBuyEvent += new FinishedBuyHandler(FinishedBuy);
-            eventManager.UnequipEvent += new UnequipHandler(UnequipItem);
-            eventManager.EquipEvent += new EquipHandler(EquipItem);
             eventManager.FinishedReequipEvent += new FinishedReequipHandler(FinishedReequip);
             eventManager.RequestPlacementEvent += new RequestPlacementHandler(RequestPlacement);
             eventManager.PlaceHeroEvent += new PlaceHeroHandler(PlaceHero);
@@ -58,9 +58,11 @@ namespace Descent.State
             eventManager.MoveToEvent += new MoveToHandler(MoveTo);
             eventManager.OpenDoorEvent += new OpenDoorHandler(OpenDoor);
             eventManager.FinishedTurnEvent += new FinishedTurnHandler(FinishedTurn);
+            eventManager.SwitchItemsEvent += new SwitchItemsHandler(SwitchItems);
 
             // Internal events
             eventManager.SquareMarkedEvent += new SquareMarkedHandler(SquareMarked);
+            eventManager.InventoryFieldMarkedEvent += new InventoryFieldMarkedHandler(InventoryFieldMarked);
 
             // initiate start
             stateMachine = new StateMachine(new State[] { State.InLobby, State.Initiation, State.DrawOverlordCards, //TODO DrawSkillCards
@@ -281,7 +283,40 @@ namespace Descent.State
                     break;
             }
         }
+
+        private void InventoryFieldMarked(object sender, InventoryFieldEventArgs eventArgs)
+        {
+            switch(CurrentState)
+            {
+                case State.Equip:
+                    if (inventoryFieldMarked == -1)
+                    {
+                        inventoryFieldMarked = eventArgs.InventoryField;
+                    }
+                    else
+                    {
+                        Hero hero = Player.Instance.Hero;
+                        Inventory inventory = hero.Inventory;
+                        int realId1 = inventoryFieldMarked, 
+                            realId2 = eventArgs.InventoryField,
+                            parsedId1 = (realId1 > 99) ? realId1 - 100 : realId1,
+                            parsedId2 = (realId2 > 99) ? realId2 - 100 : realId2;
+                        Equipment equipment1 = (realId1 > 99) ? gameState.UnequippedEquipment(eventArgs.SenderId)[parsedId1] : hero.Inventory[parsedId1];
+                        Equipment equipment2 = (realId2 > 99) ? gameState.UnequippedEquipment(eventArgs.SenderId)[parsedId2] : hero.Inventory[parsedId2];
+                        if ((realId2 > 99 || equipment1 == null || inventory.CanEquipAtIndex(parsedId2, equipment1) &&
+                        (realId1 > 99 || equipment2 == null || inventory.CanEquipAtIndex(parsedId1, equipment2))))
+                        {
+                            eventManager.QueueEvent(EventType.SwitchItems, new SwitchItemsEventArgs(realId1, realId2));
+                        }
+
+                        inventoryFieldMarked = -1;
+                    }
+                    break;
+            }
+        }
+
         #endregion
+
         // event handlers
 
         private void PlayerJoined(object sender, PlayerJoinedEventArgs eventArgs)
@@ -325,7 +360,6 @@ namespace Descent.State
 
             if (Player.Instance.IsServer)
             {
-                OverlordCard[] overlordcards = gameState.GetOverlordCards(3);
                 eventManager.QueueEvent(EventType.GiveOverlordCards, new GiveOverlordCardsEventArgs(gameState.GetOverlordCards(3).Select(card => card.Id).ToArray()));
             }
 
@@ -336,16 +370,27 @@ namespace Descent.State
 
         private void GiveOverlordCards(object sender, GiveOverlordCardsEventArgs eventArgs)
         {
-#if !DEBUG
-            Contract.Requires(CurrentState == State.DrawOverlordCards);
-            Contract.Ensures(CurrentState == State.DrawHeroCard);
-#endif
+            Contract.Requires(CurrentState == State.DrawOverlordCards || CurrentState == State.OverlordTurn);
+            Contract.Ensures(CurrentState == (Contract.OldValue(CurrentState) == State.DrawOverlordCards ? State.DrawHeroCard : State.WaitForPlayCard));
 
             foreach (int overlordCardId in eventArgs.OverlordCardIds)
             {
                 Player.Instance.Overlord.Hand.Add(FullModel.GetOverlordCard(overlordCardId));
             }
 
+            if (CurrentState == State.DrawOverlordCards)
+            {
+                DrawHeroCards();
+            }
+
+            stateMachine.ChangeToNextState();
+        }
+
+        //Helper method
+        private void DrawHeroCards()
+        {
+            Contract.Requires(CurrentState == State.DrawOverlordCards);
+            Contract.Ensures(CurrentState == Contract.OldValue(CurrentState));
             foreach (int playerId in Player.Instance.HeroParty.Heroes.Keys)
             {
                 stateMachine.PlaceStates(State.DrawHeroCard);
@@ -358,8 +403,6 @@ namespace Descent.State
 
                 gameState.RemoveHero(heroId);
             }
-
-            stateMachine.ChangeToNextState();
         }
 
         private void AssignHero(object sender, AssignHeroEventArgs eventArgs)
@@ -423,6 +466,42 @@ namespace Descent.State
                 AllPlayersRemain();
                 stateMachine.ChangeToNextState();
             }
+            StateChanged();
+        }
+
+        private void SwitchItems(object sender, SwitchItemsEventArgs eventArgs)
+        {
+            Contract.Requires(CurrentState == State.Equip);
+            Contract.Ensures(CurrentState == Contract.OldValue(CurrentState));
+
+            Hero hero = Player.Instance.HeroParty.Heroes[eventArgs.SenderId];
+            int realId1 = eventArgs.Field1,
+                realId2 = eventArgs.Field2,
+                parsedId1 = (realId1 > 99) ? realId1 - 100 : realId1,
+                parsedId2 = (realId2 > 99) ? realId2 - 100 : realId2;
+            Equipment equipment1 = (realId1 > 99) ? gameState.UnequippedEquipment(eventArgs.SenderId)[parsedId1] : hero.Inventory[parsedId1];
+            Equipment equipment2 = (realId2 > 99) ? gameState.UnequippedEquipment(eventArgs.SenderId)[parsedId2] : hero.Inventory[parsedId2];
+
+            if (realId1 > 99)
+            {
+                gameState.RemoveFromUnequippedEquipment(eventArgs.SenderId, equipment1);
+                gameState.AddToUnequippedEquipment(eventArgs.SenderId, equipment2);
+            }
+            else
+            {
+                hero.Inventory[parsedId1] = equipment2;
+            }
+            if (realId2 > 99)
+            {
+                gameState.RemoveFromUnequippedEquipment(eventArgs.SenderId, equipment2);
+                gameState.AddToUnequippedEquipment(eventArgs.SenderId, equipment1);
+            }
+            else
+            {
+                hero.Inventory[parsedId2] = equipment1;
+            }
+
+            gui.CreateMenuGUI(DetermineRole());
             StateChanged();
         }
 
@@ -636,6 +715,7 @@ namespace Descent.State
             {
                 stateMachine.PlaceStates(State.OverlordTurn);
                 stateMachine.ChangeToNextState();
+                OverlordTurnInitiation();
             }
             else
             {
@@ -643,19 +723,24 @@ namespace Descent.State
                 stateMachine.ChangeToNextState();
             }
         }
+        
         #endregion
 
         #region Overlord methods
+        // Helper method
         private void OverlordTurnInitiation()
         {
             Contract.Requires(CurrentState == State.OverlordTurn);
-            Contract.Ensures(CurrentState == State.WaitForDiscardCard);
+            Contract.Ensures(CurrentState == Contract.OldValue(CurrentState));
+            Contract.Ensures(stateMachine.NextState == State.WaitForPlayCard);
 
-            // Receive threat tokens
-            // Draw two overlord cards
+            Player.Instance.Overlord.ThreatTokens += Player.Instance.HeroParty.NumberOfHeroes;
+            if (Player.Instance.IsServer)
+            {
+                eventManager.QueueEvent(EventType.GiveOverlordCards, new GiveOverlordCardsEventArgs(gameState.GetOverlordCards(2).Select(card => card.Id).ToArray()));
+            }
 
-            stateMachine.PlaceStates(State.WaitForDiscardCard, State.WaitForPlayCard, State.ActivateMonstersInitiation);
-            stateMachine.ChangeToNextState();
+            stateMachine.PlaceStates(State.WaitForPlayCard, State.ActivateMonstersInitiation);
         }
 
         private void OverlordDiscardCard(/* TODO OverlordCard card*/)

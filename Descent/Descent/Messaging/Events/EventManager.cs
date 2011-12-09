@@ -118,9 +118,7 @@ namespace Descent.Messaging.Events
 
     public delegate void AddMovementHandler(object sender, PointsEventArgs eventArgs);
 
-    public delegate void EquipHandler(object sender, EquipEventArgs eventArgs);
-
-    public delegate void UnequipHandler(object sender, EquipEventArgs eventArgs);
+    public delegate void SwitchItemsHandler(object sender, SwitchItemsEventArgs eventArgs);
 
     #endregion
 
@@ -290,9 +288,7 @@ namespace Descent.Messaging.Events
 
         public event AddMovementHandler AddMovementEvent;
 
-        public event EquipHandler EquipEvent;
-
-        public event UnequipHandler UnequipEvent;
+        public event SwitchItemsHandler SwitchItemsEvent;
 
         public event UseOvelordCardHandler UseOverlordCardEvent;
 
@@ -583,11 +579,8 @@ namespace Descent.Messaging.Events
                 case EventType.AddMovement:
                     if (AddMovementEvent != null) AddMovementEvent(this, (PointsEventArgs)eventArgs);
                     break;
-                case EventType.Equip:
-                    if (EquipEvent != null) EquipEvent(this, (EquipEventArgs)eventArgs);
-                    break;
-                case EventType.Unequip:
-                    if (UnequipEvent != null) UnequipEvent(this, (EquipEventArgs)eventArgs);
+                case EventType.SwitchItems:
+                    if (SwitchItemsEvent != null) SwitchItemsEvent(this, (SwitchItemsEventArgs)eventArgs);
                     break;
                 case EventType.UseOverlordCard:
                     if (UseOverlordCardEvent != null) UseOverlordCardEvent(this, (OverlordCardEventArgs)eventArgs);
@@ -776,10 +769,8 @@ namespace Descent.Messaging.Events
                     return new PointsEventArgs(args);
                 case EventType.AddMovement:
                     return new PointsEventArgs(args);
-                case EventType.Equip:
-                    return new EquipEventArgs(args);
-                case EventType.Unequip:
-                    return new EquipEventArgs(args);
+                case EventType.SwitchItems:
+                    return new SwitchItemsEventArgs(args);
                 case EventType.UseOverlordCard:
                     return new OverlordCardEventArgs(args);
                 case EventType.AddPowerOverlordCard:
