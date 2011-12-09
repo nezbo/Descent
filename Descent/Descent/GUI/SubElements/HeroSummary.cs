@@ -14,6 +14,7 @@ namespace Descent.GUI.SubElements
         public HeroSummary(Game game, int y, Hero hero)
             : base(game, "overlord summary", (int)(game.GraphicsDevice.Viewport.Width * (3 / 4.0)), y, game.GraphicsDevice.Viewport.Width / 4, Height)
         {
+            this.me = hero;
             this.SetBackground("playerbg");
         }
 
@@ -23,7 +24,7 @@ namespace Descent.GUI.SubElements
 
             draw.Draw(me.Texture, new Rectangle(Bound.X, Bound.Y, 50, 50), Color.White);
             draw.DrawString(GUI.Font, me.Name, new Vector2(Bound.X + 60, Bound.Y + 15), Color.Black);
-            draw.DrawString(GUI.Font, Player.Instance.GetPlayerNick(me.Id), new Vector2(Bound.X + 5, Bound.Y + 65), Color.White);
+            draw.DrawString(GUI.Font, Player.Instance.GetPlayerNick(Player.Instance.HeroParty.GetPlayerId(me)), new Vector2(Bound.X + 5, Bound.Y + 65), Color.White);
         }
     }
 }

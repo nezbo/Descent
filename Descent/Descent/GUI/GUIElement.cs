@@ -100,7 +100,6 @@ namespace Descent.GUI
         /// <param name="y">The y-coordinate of the click</param>
         public virtual bool HandleClick(int x, int y)
         {
-            Contract.Ensures(Contract.Result<bool>() == (HasPoint(x, y) || !DrawsBackground()));
 
             string name = Name;
             // is it within me?
