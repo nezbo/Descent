@@ -25,14 +25,26 @@ namespace Descent.Model.Event
             return new Ability(false, isTrue);
         }
 
+        private static bool GetTrigger(string trigger)
+        {
+            bool triggerFunc;
+
+            if (trigger.StartsWith("WhenAttacking"))
+            {
+                //triggerFunc = IfAttacking();
+            }
+
+            return false;
+        }
+
         private static bool isTrue()
         {
             return true;
         }
 
-        private static bool IfAttacking()
+        private static Func<bool> IfAttacking()
         {
-            return false;
+            return null;
         }
         #endregion
 
