@@ -569,6 +569,7 @@ namespace Descent.Model
         /// <returns>
         /// The monster, as a new monster
         /// </returns>
+        [Pure]
         public static Monster GetMonster(int id)
         {
             Contract.Ensures(Contract.Result<Monster>().Id == Contract.OldValue(monstersInPlay));
@@ -585,6 +586,7 @@ namespace Descent.Model
         /// <returns>
         /// An equipment with the id equals to the input
         /// </returns>
+        [Pure]
         public static Equipment GetEquipment(int id)
         {
             Contract.Ensures(Contract.Result<Equipment>().Id == id);

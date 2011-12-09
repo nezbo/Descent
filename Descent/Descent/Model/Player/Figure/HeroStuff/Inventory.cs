@@ -35,21 +35,15 @@ namespace Descent.Model.Player.Figure.HeroStuff
         private readonly Equipment[] inventory = new Equipment[11];
         private readonly Hero hero;
 
-        /*
-        private readonly Equipment[] otherItems = new Equipment[MaxOtherItems];
-        private readonly Equipment[] potions = new Equipment[MaxPotions];
-        private readonly Equipment[] backpack = new Equipment[MaxInBackpack];
-        private Equipment _armor;
-        private Equipment _weapon;
-        private Equipment _shield;
-         * */
-
         /// <summary>
         /// Gets an equipment at a 
         /// </summary>
         /// <param name="slot">
-        /// The slot.
+        /// The slot to access in the inventory
         /// </param>
+        /// <returns>
+        /// The equipment at that slot
+        /// </returns>
         public Equipment this[int slot]
         {
             get
