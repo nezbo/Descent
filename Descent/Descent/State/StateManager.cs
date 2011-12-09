@@ -24,7 +24,6 @@ namespace Descent.State
     {
         private readonly StateMachine stateMachine;
         private readonly GUI gui;
-        private readonly FullModel model;
         private EventManager eventManager = Player.Instance.EventManager;
         private GameState gameState = new GameState();
 
@@ -32,10 +31,9 @@ namespace Descent.State
         private Hero currentHero;
         private readonly List<int> playersRemaining = new List<int>();
 
-        public StateManager(GUI gui, FullModel model)
+        public StateManager(GUI gui)
         {
             this.gui = gui;
-            this.model = model;
 
             // subscribe for events
             eventManager.PlayerJoinedEvent += new PlayerJoinedHandler(PlayerJoined);
@@ -375,7 +373,7 @@ namespace Descent.State
 
             if (CurrentState == State.BuyEquipment) // TODO Should be DrawSkillCard
             {
-                gui.CreateMenuGUI(model, DetermineRole());
+                gui.CreateMenuGUI(DetermineRole());
                 AllPlayersRemain();
             }
         }

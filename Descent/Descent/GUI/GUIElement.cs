@@ -79,6 +79,11 @@
             return this.focus;
         }
 
+        public void SetFocus(bool focus)
+        {
+            this.focus = focus;
+        }
+
         protected virtual void ActOnDirectClick(int x, int y)
         {
             // can be implemented if needed
