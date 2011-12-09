@@ -25,7 +25,11 @@ namespace Descent.Model
     /// and the responsebility of loading/creating the model entities.
     /// When the game needs instances of monsters, dice or heroes,
     /// they call the FullModel which then returns a 
+    /// Holds references to all model related classes
     /// </summary>
+    /// <author>
+    /// Jonas Breindahl (jobre@itu.dk)
+    /// </author>
     public class FullModel
     {
         #region Fields
@@ -56,6 +60,10 @@ namespace Descent.Model
 
         private static HeroParty heroParty;
 
+        /// <summary>
+        /// Gets the instance of the board
+        /// Can I have the board?
+        /// </summary>
         public static Board.Board Board
         {
             get
@@ -64,17 +72,12 @@ namespace Descent.Model
             }
         }
 
-        public static HeroParty HeroParty
-        {
-            get { return heroParty; }
-        }
-
         #endregion
 
         #region Load Content
 
         /// <summary>
-        /// Loads all content.
+        /// Load all content!
         /// This includes monsters, heroes, cards, equipment, dice and the map.
         /// </summary>
         /// <param name="game">
@@ -591,7 +594,7 @@ namespace Descent.Model
         public static Equipment GetEquipment(int id)
         {
             Contract.Ensures(Contract.Result<Equipment>().Id == id);
-            return AllEquipment.First(equipment => equipment.Id == id);
+            return AllEquipment.First(equipment => equipment.Id == id).Clone();
         }
 
         /// <summary>
@@ -603,6 +606,7 @@ namespace Descent.Model
         /// <returns>
         /// The card with the given id
         /// </returns>
+        [Pure]
         public static OverlordCard GetOverlordCard(int id)
         {
             Contract.Ensures(Contract.Result<OverlordCard>().Id == id);
@@ -618,6 +622,7 @@ namespace Descent.Model
         /// <returns>
         /// A die of that color
         /// </returns>
+        [Pure]
         public static Dice GetDice(EDice dice)
         {
             Contract.Ensures(Contract.Result<Dice>().Color == dice);
@@ -633,6 +638,7 @@ namespace Descent.Model
         /// <returns>
         /// The dice of the asked color
         /// </returns>
+        [Pure]
         public static Dice GetDice(string dice)
         {
             EDice d;
@@ -646,6 +652,7 @@ namespace Descent.Model
         /// <param name="name"></param>
         /// <param name="other"></param>
         /// <returns></returns>
+        [Pure]
         public static Marker GetMarker(string name, string other)
         {
             switch (name)
@@ -671,16 +678,34 @@ namespace Descent.Model
             return null;
         }
 
+        /// <summary>
+        /// Gets a copy of a hero figure
+        /// </summary>
+        /// <param name="id">
+        /// The id of the hero
+        /// </param>
+        /// <returns>
+        /// Returns the hero with id equal to the parameter id
+        /// </returns>
+        [Pure]
         public static Hero GetHero(int id)
         {
             return heroes.First(hero => hero.Id == id);
         }
 
+        /// <summary>
+        /// Gets a list of all heroes
+        /// </summary>
+        [Pure]
         public static Hero[] AllHeroes
         {
             get { return heroes.ToArray(); }
         }
 
+        /// <summary>
+        /// Gets a list of all town equipment 
+        /// </summary>
+        [Pure]
         public static Equipment[] AllEquipment
         {
             get
@@ -689,11 +714,19 @@ namespace Descent.Model
             }
         }
 
+        /// <summary>
+        /// Gets a list of all overlord cards
+        /// </summary>
+        [Pure]
         public static OverlordCard[] AllOverlordCards
         {
             get { return overlordCards.ToArray(); }
         }
 
+        /// <summary>
+        /// Gets a list of all chests
+        /// </summary>
+        [Pure]
         public static Chest[] AllChests
         {
             get
@@ -702,6 +735,10 @@ namespace Descent.Model
             }
         }
 
+        /// <summary>
+        /// Gets a list of all treasures
+        /// </summary>
+        [Pure]
         public static Treasure[] AllTreasures
         {
             get
@@ -713,6 +750,10 @@ namespace Descent.Model
             }
         }
 
+        /// <summary>
+        /// Gets a list of all skills
+        /// </summary>
+        [Pure]
         public static Skill[] AllSkills
         {
             get

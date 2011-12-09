@@ -321,9 +321,13 @@ namespace Descent.Model.Player.Figure.HeroStuff
         }
 
         /// <summary>
-        /// 
+        /// Returns a clone of the equipment.
+        /// The data, and the index will be the same, 
+        /// but the pointer to the object itself will be different
         /// </summary>
-        /// <returns></returns>
+        /// <returns>
+        /// The clone
+        /// </returns>
         public Equipment Clone()
         {
             return new Equipment(
