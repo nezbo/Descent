@@ -177,7 +177,7 @@ namespace Descent.State
                     }
                 case State.Equip:
                     {
-                        if (role != Role.Overlord)
+                        if (role != Role.Overlord && playersRemaining.Contains(Player.Instance.Id))
                         {
 
                             root.AddClickAction("item", (n, g) =>
@@ -191,8 +191,12 @@ namespace Descent.State
                             root.AddClickAction("done", (n, g) =>
                                                             {
                                                                 n.EventManager.QueueEvent(EventType.FinishedReequip, new GameEventArgs());
-                                                                g.Disable(g.Name);
                                                             });
+                        }
+                        else
+                        {
+                            root.Disable("item");
+                            root.Disable("done");
                         }
                         break;
                     }
