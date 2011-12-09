@@ -211,7 +211,11 @@ namespace Descent.State
                                                                          n.EventManager.QueueEvent(
                                                                              EventType.RequestTurn, new GameEventArgs());
                                                                      });
-                            }//TODO: the button should not be shown (or created) when hero has taken turn
+                            }
+                            else
+                            {
+                                root.Disable("take turn");
+                            }
                         }
                         break;
                     }
@@ -237,6 +241,17 @@ namespace Descent.State
                 case State.WaitForPerformAction:
                     {
                         if (role == Role.ActiveHero)
+                        {
+                            root.AddClickAction("end", (n, g) =>
+                            {
+                                n.EventManager.QueueEvent(EventType.FinishedTurn, new GameEventArgs());
+                            });
+                        }
+                        break;
+                    }
+                case State.WaitForChooseMonster:
+                    {
+                        if (role == Role.Overlord)
                         {
                             root.AddClickAction("end", (n, g) =>
                             {
