@@ -59,6 +59,7 @@ namespace Descent.State
             eventManager.ChooseActionEvent += new ChooseActionHandler(ChooseAction);
             eventManager.MoveToEvent += new MoveToHandler(MoveTo);
             eventManager.OpenDoorEvent += new OpenDoorHandler(OpenDoor);
+            eventManager.FinishedTurnEvent += new FinishedTurnHandler(FinishedTurn);
 
             // Internal events
             eventManager.SquareMarkedEvent += new SquareMarkedHandler(SquareMarked);
@@ -195,10 +196,14 @@ namespace Descent.State
                     {
                         if (role != Role.Overlord)
                         {
-                            root.AddClickAction("take turn", (n, g) =>
-                                                                 {
-                                                                     n.EventManager.QueueEvent(EventType.RequestTurn, new GameEventArgs());
-                                                                 });
+                            if (playersRemaining.Contains(Player.Instance.Id))
+                            {
+                                root.AddClickAction("take turn", (n, g) =>
+                                                                     {
+                                                                         n.EventManager.QueueEvent(
+                                                                             EventType.RequestTurn, new GameEventArgs());
+                                                                     });
+                            }//TODO: the button should not be shown (or created) when hero has taken turn
                         }
                         break;
                     }
@@ -221,6 +226,17 @@ namespace Descent.State
                         }
                         break;
                     }
+                case State.WaitForPerformAction:
+                    {
+                        if (role == Role.ActiveHero)
+                        {
+                            root.AddClickAction("end", (n, g) =>
+                            {
+                                n.EventManager.QueueEvent(EventType.FinishedTurn, new GameEventArgs());
+                            });
+                        }
+                        break;
+                    }
             }
 
             gui.ChangeStateGUI(root); // change the GUI's state element.
@@ -236,6 +252,38 @@ namespace Descent.State
             gameState.CurrentPlayer = 0;
         }
 
+        #region Local event listeners
+        private void SquareMarked(object sender, CoordinatesEventArgs eventArgs)
+        {
+            switch (CurrentState)
+            {
+                case State.WaitForChooseSquare:
+                    if (playersRemaining.Contains(Player.Instance.Id))
+                    {
+                        eventManager.QueueEvent(EventType.RequestPlacement, new CoordinatesEventArgs(eventArgs.X, eventArgs.Y));
+                    }
+
+                    break;
+                case State.WaitForPerformAction:
+                    if (FullModel.Board.Distance(FullModel.Board.HeroesOnBoard[Player.Instance.Hero], new Point(eventArgs.X, eventArgs.Y)) == 1)
+                    {
+                        // Move to adjecent
+                        if (FullModel.Board.IsStandable(eventArgs.X, eventArgs.Y) && Player.Instance.HeroParty.Heroes[eventArgs.SenderId].MovementLeft >= 1)
+                        {
+                            eventManager.QueueEvent(EventType.MoveTo, new CoordinatesEventArgs(eventArgs.X, eventArgs.Y));
+                        }
+                        // Open door
+                        else if (FullModel.Board.CanOpenDoor(new Point(eventArgs.X, eventArgs.Y)) &&
+                            FullModel.Board.CanOpenDoor(FullModel.Board.HeroesOnBoard[Player.Instance.Hero]) && Player.Instance.HeroParty.Heroes[eventArgs.SenderId].MovementLeft >= 2)
+                        {
+                            eventManager.QueueEvent(EventType.OpenDoor, new CoordinatesEventArgs(eventArgs.X, eventArgs.Y));
+                        }
+                    }
+
+                    break;
+            }
+        }
+        #endregion
         // event handlers
 
         private void PlayerJoined(object sender, PlayerJoinedEventArgs eventArgs)
@@ -504,39 +552,6 @@ namespace Descent.State
 
         #endregion
 
-        #region Local event listeners
-        private void SquareMarked(object sender, CoordinatesEventArgs eventArgs)
-        {
-            switch (CurrentState)
-            {
-                case State.WaitForChooseSquare:
-                    if (playersRemaining.Contains(Player.Instance.Id))
-                    {
-                        eventManager.QueueEvent(EventType.RequestPlacement, new CoordinatesEventArgs(eventArgs.X, eventArgs.Y));
-                    }
-
-                    break;
-                case State.WaitForPerformAction:
-                    if (FullModel.Board.Distance(FullModel.Board.HeroesOnBoard[Player.Instance.Hero], new Point(eventArgs.X, eventArgs.Y)) == 1)
-                    {
-                        // Move to adjecent
-                        if (FullModel.Board.IsStandable(eventArgs.X, eventArgs.Y) && Player.Instance.HeroParty.Heroes[eventArgs.SenderId].MovementLeft >= 1)
-                        {
-                            eventManager.QueueEvent(EventType.MoveTo, new CoordinatesEventArgs(eventArgs.X, eventArgs.Y));
-                        }
-                        // Open door
-                        else if (FullModel.Board.CanOpenDoor(new Point(eventArgs.X, eventArgs.Y)) &&
-                            FullModel.Board.CanOpenDoor(FullModel.Board.HeroesOnBoard[Player.Instance.Hero]) && Player.Instance.HeroParty.Heroes[eventArgs.SenderId].MovementLeft >= 2)
-                        {
-                            eventManager.QueueEvent(EventType.OpenDoor, new CoordinatesEventArgs(eventArgs.X, eventArgs.Y));
-                        }
-                    }
-
-                    break;
-            }
-        }
-        #endregion
-
         #region Hero methods
 
         private void RequestTurn(object sender, GameEventArgs eventArgs)
@@ -610,20 +625,21 @@ namespace Descent.State
             stateMachine.ChangeToNextState();
         }
 
-        private void HeroTurnDone()
+        private void FinishedTurn(object sender, GameEventArgs eventArgs)
         {
             Contract.Requires(CurrentState == State.WaitForPerformAction);
+            Contract.Requires(gameState.CurrentPlayer == eventArgs.SenderId);
+            Contract.Ensures(CurrentState == (playersRemaining.Count == 0 ? State.OverlordTurn : State.WaitForHeroTurn));
 
-            //heroesYetToAct.Remove(currentHero);
-            currentHero = null;
+            playersRemaining.Remove(eventArgs.SenderId);
+            gameState.CurrentPlayer = 0;
 
-            //if (heroesYetToAct.Count == 0)
+            if (playersRemaining.Count == 0)
             {
                 stateMachine.PlaceStates(State.OverlordTurn);
                 stateMachine.ChangeToNextState();
-                OverlordTurnInitiation();
             }
-            //else
+            else
             {
                 stateMachine.PlaceStates(State.WaitForHeroTurn);
                 stateMachine.ChangeToNextState();
