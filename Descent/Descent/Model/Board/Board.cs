@@ -117,7 +117,7 @@
         /// </summary>
         public Door[] RelevantDoors
         {
-            get { return doors.Where(door => door.Areas.Any(area => revealedAreas.Contains(area))).ToArray(); }
+            get { return doors.Where(door => !door.Opened && door.Areas.Any(area => revealedAreas.Contains(area))).ToArray(); }
         }
 
         /// <summary>
@@ -125,7 +125,7 @@
         /// </summary>
         public Door[] AllDoors
         {
-            get { return doors.ToArray(); }
+            get { return doors.Where(door => !door.Opened).ToArray(); }
         }
 
         #endregion
@@ -272,7 +272,7 @@
         public bool CanOverlordSpawn(Point point)
         {
             Contract.Requires(point != null);
-            //TODO
+            //TODO Implement
             return false;
         }
 
@@ -456,7 +456,8 @@
         public void OpenDoor(Point point)
         {
             Contract.Requires(CanOpenDoor(point));
-            revealedAreas.Add(GetDoor(point).Areas.Where(area => area != this[point].Area).First());
+            revealedAreas.Add(GetDoor(point).Areas.Where(area => !revealedAreas.Contains(area)).FirstOrDefault());
+            GetDoor(point).Opened = true;
         }
 
         /// <summary>
@@ -470,7 +471,9 @@
         /// </returns>
         public bool CanOpenDoor(Point point)
         {
-            return !GetDoor(point).IsRuneDoor || FullModel.HeroParty.HasRuneKey(GetDoor(point).KeyColor);
+            Door door = GetDoor(point);
+            if (door == null) return false;
+            return !door.IsRuneDoor || FullModel.HeroParty.HasRuneKey(door.KeyColor);
         }
 
         /// <summary>
@@ -495,7 +498,7 @@
         /// </returns>
         private Door GetDoor(Point point)
         {
-            return doors.Where(door => door.IsAdjecentSquare(point)).First();
+            return doors.SingleOrDefault(door => door.IsAdjecentSquare(point));
         }
 
         public void MoveHero(Hero hero, Point point)

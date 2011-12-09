@@ -58,6 +58,7 @@ namespace Descent.State
             eventManager.TurnChangedEvent += new TurnChangedHandler(TurnChanged);
             eventManager.ChooseActionEvent += new ChooseActionHandler(ChooseAction);
             eventManager.MoveToEvent += new MoveToHandler(MoveTo);
+            eventManager.OpenDoorEvent += new OpenDoorHandler(OpenDoor);
 
             // Internal events
             eventManager.SquareMarkedEvent += new SquareMarkedHandler(SquareMarked);
@@ -459,13 +460,49 @@ namespace Descent.State
             stateMachine.ChangeToNextState();
         }
 
+        #region Movement actions
+
+        // Helper method
+        private void ActionDone()
+        {
+            Contract.Ensures(CurrentState == State.WaitForPerformAction);
+            stateMachine.PlaceStates(State.WaitForPerformAction);
+            stateMachine.ChangeToNextState();
+        }
+
         private void MoveTo(object sender, CoordinatesEventArgs eventArgs)
         {
+            Contract.Requires(CurrentState == State.WaitForPerformAction);
+            Contract.Requires(Player.Instance.HeroParty.Heroes[eventArgs.SenderId].MovementLeft >= 1);
+            Contract.Ensures(CurrentState == State.WaitForPerformAction);
+
             Hero hero = Player.Instance.HeroParty.Heroes[eventArgs.SenderId];
 
             FullModel.Board.MoveHero(hero, new Point(eventArgs.X, eventArgs.Y));
             hero.RemoveMovement(1);
+
+            stateMachine.PlaceStates(State.MoveAdjecent);
+            stateMachine.ChangeToNextState();
+            ActionDone();
         }
+
+        private void OpenDoor(object sender, CoordinatesEventArgs eventArgs)
+        {
+            Contract.Requires(CurrentState == State.WaitForPerformAction);
+            Contract.Requires(Player.Instance.HeroParty.Heroes[eventArgs.SenderId].MovementLeft >= 2);
+            Contract.Ensures(CurrentState == State.WaitForPerformAction);
+
+            Hero hero = Player.Instance.HeroParty.Heroes[eventArgs.SenderId];
+
+            FullModel.Board.OpenDoor(new Point(eventArgs.X, eventArgs.Y));
+            hero.RemoveMovement(2);
+
+            stateMachine.PlaceStates(State.OpenDoor);
+            stateMachine.ChangeToNextState();
+            ActionDone();
+        }
+
+        #endregion
 
         #region Local event listeners
         private void SquareMarked(object sender, CoordinatesEventArgs eventArgs)
@@ -482,7 +519,17 @@ namespace Descent.State
                 case State.WaitForPerformAction:
                     if (FullModel.Board.Distance(FullModel.Board.HeroesOnBoard[Player.Instance.Hero], new Point(eventArgs.X, eventArgs.Y)) == 1)
                     {
-                        eventManager.QueueEvent(EventType.MoveTo, new CoordinatesEventArgs(eventArgs.X, eventArgs.Y));
+                        // Move to adjecent
+                        if (FullModel.Board.IsStandable(eventArgs.X, eventArgs.Y) && Player.Instance.HeroParty.Heroes[eventArgs.SenderId].MovementLeft >= 1)
+                        {
+                            eventManager.QueueEvent(EventType.MoveTo, new CoordinatesEventArgs(eventArgs.X, eventArgs.Y));
+                        }
+                        // Open door
+                        else if (FullModel.Board.CanOpenDoor(new Point(eventArgs.X, eventArgs.Y)) &&
+                            FullModel.Board.CanOpenDoor(FullModel.Board.HeroesOnBoard[Player.Instance.Hero]) && Player.Instance.HeroParty.Heroes[eventArgs.SenderId].MovementLeft >= 2)
+                        {
+                            eventManager.QueueEvent(EventType.OpenDoor, new CoordinatesEventArgs(eventArgs.X, eventArgs.Y));
+                        }
                     }
 
                     break;
@@ -757,13 +804,6 @@ namespace Descent.State
 
         #region MovementMethods
 
-        private void MoveDone()
-        {
-            Contract.Ensures(CurrentState == State.WaitForPerformAction);
-            stateMachine.PlaceStates(State.MoveAdjecent, State.WaitForPerformAction);
-            stateMachine.ChangeToNextState();
-        }
-
         private void MoveToAdjecent(Square square)
         {
             Contract.Requires(CurrentState == State.WaitForPerformAction);
@@ -776,7 +816,7 @@ namespace Descent.State
 
             stateMachine.PlaceStates(State.MoveAdjecent);
             stateMachine.ChangeToNextState();
-            MoveDone();
+            ActionDone();
         }
 
         private void DrinkPotion(Potion potion)
@@ -792,7 +832,7 @@ namespace Descent.State
 
             stateMachine.PlaceStates(State.DrinkPotion);
             stateMachine.ChangeToNextState();
-            MoveDone();
+            ActionDone();
         }
 
         private void PickupToken()
@@ -808,7 +848,7 @@ namespace Descent.State
 
             stateMachine.PlaceStates(State.PickupToken);
             stateMachine.ChangeToNextState();
-            MoveDone();
+            ActionDone();
         }
 
         private void CloseDoor()// TODO Door door)
@@ -823,32 +863,7 @@ namespace Descent.State
 
             stateMachine.PlaceStates(State.CloseDoor);
             stateMachine.ChangeToNextState();
-            MoveDone();
-        }
-
-        private void OpenDoor()
-        {
-            Contract.Requires(CurrentState == State.WaitForPerformAction);
-            // TODO Contract.Requires(currentHero.MovementLeft >= 2);
-            Contract.Ensures(CurrentState == State.WaitForPerformAction);
-            // TODO Contract.Requires(IsAHeroTurn() || otherArea.IsRevealed);
-
-
-            // Remove 2 movement
-            // Mark door opened
-
-            stateMachine.PlaceStates(State.OpenDoor);
-            stateMachine.ChangeToNextState();
-
-            // TODO if (area.Unrevealed)
-            {
-                stateMachine.PlaceStates(State.RevealArea, State.WaitForPerformAction);
-                // TODO RevealArea(areaId);
-            }
-            // TODO else
-            {
-                MoveDone();
-            }
+            ActionDone();
         }
 
         private void DropItem(Equipment item)
@@ -864,7 +879,7 @@ namespace Descent.State
 
             stateMachine.PlaceStates(State.DropItem);
             stateMachine.ChangeToNextState();
-            MoveDone();
+            ActionDone();
         }
 
         private void OpenChest()
@@ -955,7 +970,7 @@ namespace Descent.State
 
             stateMachine.PlaceStates(State.GiveItem);
             stateMachine.ChangeToNextState();
-            MoveDone();
+            ActionDone();
         }
 
         private void Jump(Square targetSquare)
@@ -971,7 +986,7 @@ namespace Descent.State
 
             stateMachine.PlaceStates(State.Jump);
             stateMachine.ChangeToNextState();
-            MoveDone();
+            ActionDone();
         }
 
         #endregion
