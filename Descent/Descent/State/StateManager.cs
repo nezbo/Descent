@@ -130,7 +130,7 @@ namespace Descent.State
                         if (Player.Instance.IsServer)
                         {
                             root.AddText("players", "IP: " + Player.Instance.Connection.Ip, new Vector2(50, 50));
-                            root.AddClickAction("start", (n, g) =>
+                            root.SetClickAction("start", (n, g) =>
                                                              {
 #if DEBUG
                                                                  if (n.NumberOfPlayers >= 1) //TODO 3
@@ -153,12 +153,12 @@ namespace Descent.State
                         if (role != Role.Overlord && playersRemaining.Contains(Player.Instance.Id))
                         {
 
-                            root.AddClickAction("done", (n, g) =>
+                            root.SetClickAction("done", (n, g) =>
                                                             {
                                                                 n.EventManager.QueueEvent(EventType.FinishedBuy,
                                                                                           new GameEventArgs());
                                                             });
-                            root.AddClickAction("item", (n, g) =>
+                            root.SetClickAction("item", (n, g) =>
                                                             {
                                                                 if (g is EquipmentElement)
                                                                 {
@@ -181,7 +181,7 @@ namespace Descent.State
                         if (role != Role.Overlord && playersRemaining.Contains(Player.Instance.Id))
                         {
 
-                            root.AddClickAction("item", (n, g) =>
+                            root.SetClickAction("item", (n, g) =>
                                                             {
                                                                 if (g is EquipmentElement)
                                                                 {
@@ -189,7 +189,7 @@ namespace Descent.State
                                                                     n.EventManager.QueueEvent(EventType.InventoryFieldMarked, new InventoryFieldEventArgs(id));
                                                                 }
                                                             });
-                            root.AddClickAction("done", (n, g) =>
+                            root.SetClickAction("done", (n, g) =>
                                                             {
                                                                 n.EventManager.QueueEvent(EventType.FinishedReequip, new GameEventArgs());
                                                             });
@@ -207,7 +207,7 @@ namespace Descent.State
                         {
                             if (playersRemaining.Contains(Player.Instance.Id))
                             {
-                                root.AddClickAction("take turn", (n, g) =>
+                                root.SetClickAction("take turn", (n, g) =>
                                                                      {
                                                                          n.EventManager.QueueEvent(
                                                                              EventType.RequestTurn, new GameEventArgs());
@@ -224,15 +224,15 @@ namespace Descent.State
                     {
                         if (role == Role.ActiveHero)
                         {
-                            root.AddClickAction("advance", (n, g) =>
+                            root.SetClickAction("advance", (n, g) =>
                                                                {
                                                                    n.EventManager.QueueEvent(EventType.ChooseAction, new ChooseActionEventArgs(ActionType.Advance));
                                                                });
-                            root.AddClickAction("run", (n, g) =>
+                            root.SetClickAction("run", (n, g) =>
                             {
                                 n.EventManager.QueueEvent(EventType.ChooseAction, new ChooseActionEventArgs(ActionType.Run));
                             });
-                            root.AddClickAction("battle", (n, g) =>
+                            root.SetClickAction("battle", (n, g) =>
                             {
                                 n.EventManager.QueueEvent(EventType.ChooseAction, new ChooseActionEventArgs(ActionType.Battle));
                             });
@@ -243,7 +243,7 @@ namespace Descent.State
                     {
                         if (role == Role.ActiveHero)
                         {
-                            root.AddClickAction("end", (n, g) =>
+                            root.SetClickAction("end", (n, g) =>
                             {
                                 n.EventManager.QueueEvent(EventType.FinishedTurn, new GameEventArgs());
                             });
@@ -254,7 +254,7 @@ namespace Descent.State
                     {
                         if (role == Role.Overlord)
                         {
-                            root.AddClickAction("end", (n, g) =>
+                            root.SetClickAction("end", (n, g) =>
                             {
                                 n.EventManager.QueueEvent(EventType.FinishedTurn, new GameEventArgs());
                             });

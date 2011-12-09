@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.Contracts;
 using Descent.GUI.SubElements;
 using Descent.Messaging.Events;
 using Descent.Model.Player.Figure.HeroStuff;
@@ -45,11 +46,23 @@ namespace Descent.GUI
 
         public static GUIElement CreateBoardElement(Game game, Board board, Role role)
         {
+            Contract.Ensures(Contract.Result<GUIElement>() != null);
+            Contract.Ensures(Contract.Result<GUIElement>().Bound.X == 0);
+            Contract.Ensures(Contract.Result<GUIElement>().Bound.Y == 0);
+            Contract.Ensures(Contract.Result<GUIElement>().Bound.Width == game.GraphicsDevice.Viewport.Width);
+            Contract.Ensures(Contract.Result<GUIElement>().Bound.Height == game.GraphicsDevice.Viewport.Height);
+
             return new BoardGUIElement(game, board, role);
         }
 
         public static GUIElement CreateStateElement(Game game, State state, Role role, GameState gameState)
         {
+            Contract.Ensures(Contract.Result<GUIElement>() != null);
+            Contract.Ensures(Contract.Result<GUIElement>().Bound.X == 0);
+            Contract.Ensures(Contract.Result<GUIElement>().Bound.Y == 0);
+            Contract.Ensures(Contract.Result<GUIElement>().Bound.Width == game.GraphicsDevice.Viewport.Width);
+            Contract.Ensures(Contract.Result<GUIElement>().Bound.Height == game.GraphicsDevice.Viewport.Height);
+
             Viewport g = game.GraphicsDevice.Viewport;
 
             GUIElement root = CreateEmptyRoot(game);
@@ -226,6 +239,12 @@ namespace Descent.GUI
 
         public static GUIElement CreateMenuElement(Game game, Role role)
         {
+            Contract.Ensures(Contract.Result<GUIElement>() != null);
+            Contract.Ensures(Contract.Result<GUIElement>().Bound.X == 0);
+            Contract.Ensures(Contract.Result<GUIElement>().Bound.Y == 0);
+            Contract.Ensures(Contract.Result<GUIElement>().Bound.Width == game.GraphicsDevice.Viewport.Width);
+            Contract.Ensures(Contract.Result<GUIElement>().Bound.Height == game.GraphicsDevice.Viewport.Height);
+
             GUIElement root = CreateEmptyRoot(game);
 
             if (role == Role.Overlord)
@@ -235,7 +254,7 @@ namespace Descent.GUI
             else
             {
                 root.AddChild(new HeroElement(game, Player.Instance.Hero));
-                root.AddClickAction("item", (n, g) =>
+                root.SetClickAction("item", (n, g) =>
                 {
                     if (g is EquipmentElement)
                     {
@@ -245,7 +264,7 @@ namespace Descent.GUI
                 });
             }
 
-            root.AddChild(new PlayersElement(game, Player.Instance.HeroParty));
+            root.AddChild(new PlayersElement(game, Player.Instance.IsOverlord ? null : Player.Instance.Hero, Player.Instance.HeroParty));
             root.AddChild(new Chat(game));
 
             return root;

@@ -94,10 +94,10 @@ namespace Descent
             root.SetDrawBackground(false);
 
             root.AddText("changeName", "Name:", new Vector2(0, 0));
-            root.AddClickAction(root.Name, (n, g) => System.Diagnostics.Debug.WriteLine("Root clicked"));
+            root.SetClickAction(root.Name, (n, g) => System.Diagnostics.Debug.WriteLine("Root clicked"));
             root.AddText("doneCreate", "Create!", new Vector2(0, 0));
             root.AddText("doneJoin", "Join!", new Vector2(0, 0));
-            root.AddClickAction("doneCreate", (n, g) =>
+            root.SetClickAction("doneCreate", (n, g) =>
             {
                 // Start the game. TODO: Try/catch error handling.
                 n.StartGame(1337);
@@ -112,9 +112,9 @@ namespace Descent
                 n.StateManager = new StateManager(gui);
             });
 
-            root.AddClickAction("doneJoin", (n, g) =>
+            root.SetClickAction("doneJoin", (n, g) =>
             {
-                g.AddClickAction(g.Name, null);
+                g.SetClickAction(g.Name, null);
                 n.JoinGame(InputElement.GetInputFrom("connectInput"), 1337);
 
                 Player.Instance.EventManager.AcceptPlayerEvent += new AcceptPlayerHandler((sender, eventArgs) =>

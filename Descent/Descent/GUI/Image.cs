@@ -1,4 +1,5 @@
 ﻿
+using System.Diagnostics.Contracts;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Descent.GUI
@@ -14,7 +15,11 @@ namespace Descent.GUI
 
         public Texture2D Texture
         {
-            get { return tex; }
+            get
+            {
+                Contract.Ensures(Contract.Result<Texture2D>() != null);
+                return tex;
+            }
         }
     }
 }
