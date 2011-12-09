@@ -145,6 +145,11 @@
 
         public virtual void PlayCard(){}
 
+        public virtual bool CanPlay()
+        {
+            return true;
+        }
+
         #endregion
     }
 }

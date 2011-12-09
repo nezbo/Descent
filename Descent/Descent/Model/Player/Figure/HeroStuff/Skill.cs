@@ -13,6 +13,8 @@ namespace Descent.Model.Player.Figure.HeroStuff
     {
         #region Fields
 
+        private int id;
+
         private string name;
 
         private EAttackType type;
@@ -24,6 +26,17 @@ namespace Descent.Model.Player.Figure.HeroStuff
         #endregion
 
         #region Properties
+
+        /// <summary>
+        /// Gets the unique id of the skill
+        /// </summary>
+        public int Id
+        {
+            get
+            {
+                return id;
+            }
+        }
 
         /// <summary>
         /// Gets the name of the skill
@@ -76,6 +89,9 @@ namespace Descent.Model.Player.Figure.HeroStuff
         /// <summary>
         /// Initializes a new instance of the <see cref="Skill"/> class.
         /// </summary>
+        /// <param name="id">
+        /// The unique id of the skill
+        /// </param>
         /// <param name="name">
         /// The name of the skill
         /// </param>
@@ -88,8 +104,9 @@ namespace Descent.Model.Player.Figure.HeroStuff
         /// <param name="abilities">
         /// The abilities of the skill
         /// </param>
-        public Skill(string name, EAttackType type, string description, List<Ability> abilities)
+        public Skill(int id, string name, EAttackType type, string description, List<Ability> abilities)
         {
+            this.id = id;
             this.name = name;
             this.type = type;
             this.description = description;

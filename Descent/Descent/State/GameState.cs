@@ -13,6 +13,8 @@ namespace Descent.State
     using System.Linq;
     using System.Text;
 
+    public delegate T Bonus<T>();
+
     /// <summary>
     /// TODO: Update summary.
     /// </summary>
@@ -26,7 +28,7 @@ namespace Descent.State
         private List<Hero> heroes = new List<Hero>();
         private Dictionary<int, List<Equipment>> unequippedEquipment; 
 
-        //TODO private List<Treasure> treasures;
+        private List<Treasure> treasures;
 
         public GameState()
         {
@@ -34,11 +36,12 @@ namespace Descent.State
             overlordCards = new List<OverlordCard>();
             heroes = new List<Hero>();
             unequippedEquipment = new Dictionary<int, List<Equipment>>();
+            treasures = new List<Treasure>();
 
             currentEquipment.AddRange(FullModel.AllEquipment);
             overlordCards.AddRange(FullModel.AllOverlordCards);
             heroes.AddRange(FullModel.AllHeroes);
-            //TODO treasures.AddRange(FullModel.AllTreasures);
+            treasures.AddRange(FullModel.AllTreasures);
 
             // Listen to events
             Player.Instance.EventManager.GiveOverlordCardsEvent += GiveOverlordCards;

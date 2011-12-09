@@ -43,7 +43,13 @@ namespace Descent.Model.Player.Figure.HeroStuff
         private Equipment _weapon;
         private Equipment _shield;
          * */
-        
+
+        /// <summary>
+        /// Gets an equipment at a 
+        /// </summary>
+        /// <param name="slot">
+        /// The slot.
+        /// </param>
         public Equipment this[int slot]
         {
             get

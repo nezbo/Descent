@@ -16,7 +16,7 @@ namespace Descent.Model.Event
     using Microsoft.Xna.Framework;
 
     /// <summary>
-    /// TODO: Update summary.
+    /// An attack 
     /// </summary>
     public class Attack
     {

@@ -48,7 +48,9 @@ namespace Descent.Model
 
         private static List<Marker> markers;
 
-        private static List<Chest> chests; 
+        private static List<Chest> chests;
+
+        private static List<Skill> skills;
 
         private static Board.Board board;
 
@@ -97,6 +99,7 @@ namespace Descent.Model
             LoadMap(game);
             LoadHeroes(game);
             LoadOverlordCards(game);
+            LoadSkillCards(game);
         }
 
         #region Load Monsters
@@ -524,6 +527,34 @@ namespace Descent.Model
         }
 
         #endregion
+
+        #region Load Skill Cards
+
+        private static void LoadSkillCards(Game game)
+        {
+            StreamReader reader = new StreamReader(TitleContainer.OpenStream("skills.txt"));
+
+            skills = new List<Skill>();
+            int n = int.Parse(reader.ReadLine());
+
+            for (int i = 0; i < n; i++)
+            {
+                string line = reader.ReadLine();
+                string[] data = line.Split(new char[] { ',' }, 4);
+                int id = int.Parse(data[0]);
+
+                EAttackType attackType;
+                EAttackType.TryParse(data[1], true, out attackType);
+
+                string name = data[2];
+                string description = data[3];
+
+                skills.Add(new Skill(id, name, attackType, description, new List<Ability>()));
+            }
+        }
+
+        #endregion
+
         #endregion
 
         #region Getters
@@ -668,12 +699,25 @@ namespace Descent.Model
             }
         }
 
-        /* TODO
         public static Treasure[] AllTreasures
         {
-            return treasures.ToArray();
-        }*/
+            get
+            {
+                List<Treasure> list = new List<Treasure>();
+                foreach (Treasure t in treasures.Values)
+                    list.Add(t);
+                return list.ToArray();
+            }
+        }
 
+        public static Skill[] AllSkills
+        {
+            get
+            {
+                return skills.ToArray();
+            }
+        }
+        
         #endregion
     }
 }

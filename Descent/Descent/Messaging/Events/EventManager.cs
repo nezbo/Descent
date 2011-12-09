@@ -198,6 +198,7 @@ namespace Descent.Messaging.Events
 
         #region Event declarations
 
+        // Connect players
         public event AcceptPlayerHandler AcceptPlayerEvent;
 
         public event PlayerJoinedHandler PlayerJoinedEvent;
@@ -210,6 +211,7 @@ namespace Descent.Messaging.Events
 
         public event ReadyHandler ReadyEvent;
 
+        // Initialize the game
         public event AssignHeroHandler AssignHeroEvent;
 
         public event GiveHeroCardsHandler GiveHeroCardsEvent;
@@ -218,6 +220,7 @@ namespace Descent.Messaging.Events
 
         public event AcceptHeroCardsHandler AcceptHeroCardsEvent;
 
+        // Begin Game
         public event BeginGameHandler BeginGameEvent;
 
         public event NewRoundHandler NewRoundEvent;
@@ -228,6 +231,7 @@ namespace Descent.Messaging.Events
 
         public event ChatMessageHandler ChatMessageEvent;
 
+        // Shopping + equipment
         public event RequestBuyEquipmentHandler RequestBuyEquipmentEvent;
 
         public event GiveEquipmentHandler GiveEquipmentEvent;
@@ -246,6 +250,7 @@ namespace Descent.Messaging.Events
 
         public event GiveCoinsHandler GiveCoinsEvent;
 
+        // Overlord
         public event GiveOverlordCardsHandler GiveOverlordCardsEvent;
 
         public event RemoveOverlordCardHandler RemoveOverlordCardEvent;
@@ -256,6 +261,7 @@ namespace Descent.Messaging.Events
 
         public event GiveTreasureHandler GiveTreasureEvent;
 
+        // Hero placement
         public event StartPlacementHandler StartPlacementEvent;
 
         public event RequestPlacementHandler RequestPlacementEvent;
@@ -264,6 +270,7 @@ namespace Descent.Messaging.Events
 
         public event DenyPlacementHandler DenyPlacementEvent;
 
+        // Turn management
         public event RequestTurnHandler RequestTurnEvent;
 
         public event TurnChangedHandler TurnChangedEvent;
@@ -273,6 +280,7 @@ namespace Descent.Messaging.Events
         public event FinishedTurnHandler FinishedTurnEvent;
 
         public event FinishedReequipHandler FinishedReequipEvent;
+
 
         public event ChooseActionHandler ChooseActionEvent;
 

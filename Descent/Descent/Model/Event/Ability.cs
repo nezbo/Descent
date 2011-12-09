@@ -15,13 +15,20 @@ namespace Descent.Model.Event
     using Descent.State;
 
     /// <summary>
-    /// TODO: Update summary.
+    /// Any ability, that have an effect on figures, heroes and the overlord.
     /// </summary>
     public class Ability
     {
         #region Static
+
+        /// <summary>
+        /// Creates an ability by parsing a string
+        /// </summary>
+        /// <param name="ability"></param>
+        /// <returns></returns>
         public static Ability GetAbility(string ability)
         {
+            // TODO: I am too old for this ... stuff
             return new Ability(false, isTrue);
         }
 
