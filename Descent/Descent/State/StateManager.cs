@@ -196,10 +196,14 @@ namespace Descent.State
                     {
                         if (role != Role.Overlord)
                         {
-                            root.AddClickAction("take turn", (n, g) =>
-                                                                 {
-                                                                     n.EventManager.QueueEvent(EventType.RequestTurn, new GameEventArgs());
-                                                                 });
+                            if (playersRemaining.Contains(Player.Instance.Id))
+                            {
+                                root.AddClickAction("take turn", (n, g) =>
+                                                                     {
+                                                                         n.EventManager.QueueEvent(
+                                                                             EventType.RequestTurn, new GameEventArgs());
+                                                                     });
+                            }//TODO: the button should not be shown (or created) when hero has taken turn
                         }
                         break;
                     }
@@ -218,6 +222,17 @@ namespace Descent.State
                             root.AddClickAction("battle", (n, g) =>
                             {
                                 n.EventManager.QueueEvent(EventType.ChooseAction, new ChooseActionEventArgs(ActionType.Battle));
+                            });
+                        }
+                        break;
+                    }
+                case State.WaitForPerformAction:
+                    {
+                        if (role == Role.ActiveHero)
+                        {
+                            root.AddClickAction("end", (n, g) =>
+                            {
+                                n.EventManager.QueueEvent(EventType.FinishedTurn, new GameEventArgs());
                             });
                         }
                         break;
