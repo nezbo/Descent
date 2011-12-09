@@ -49,6 +49,7 @@ namespace Descent.State
             eventManager.RequestBuyEquipmentEvent += new RequestBuyEquipmentHandler(RequestBuyEquipment);
             eventManager.GiveEquipmentEvent += new GiveEquipmentHandler(GiveEquipment);
             eventManager.FinishedBuyEvent += new FinishedBuyHandler(FinishedBuy);
+            eventManager.SwitchItemsEvent += new SwitchItemsHandler(SwitchItems);
             eventManager.FinishedReequipEvent += new FinishedReequipHandler(FinishedReequip);
             eventManager.RequestPlacementEvent += new RequestPlacementHandler(RequestPlacement);
             eventManager.PlaceHeroEvent += new PlaceHeroHandler(PlaceHero);
@@ -59,7 +60,7 @@ namespace Descent.State
             eventManager.MoveToEvent += new MoveToHandler(MoveTo);
             eventManager.OpenDoorEvent += new OpenDoorHandler(OpenDoor);
             eventManager.FinishedTurnEvent += new FinishedTurnHandler(FinishedTurn);
-            eventManager.SwitchItemsEvent += new SwitchItemsHandler(SwitchItems);
+            eventManager.StartMonsterTurnEvent += new StartMonsterTurnHandler(StartMonsterTurn);
 
             // Internal events
             eventManager.SquareMarkedEvent += new SquareMarkedHandler(SquareMarked);
@@ -213,7 +214,11 @@ namespace Descent.State
                                                                          n.EventManager.QueueEvent(
                                                                              EventType.RequestTurn, new GameEventArgs());
                                                                      });
-                            }//TODO: the button should not be shown (or created) when hero has taken turn
+                            }
+                            else
+                            {
+                                root.Disable("take turn");
+                            }
                         }
                         break;
                     }
@@ -239,6 +244,17 @@ namespace Descent.State
                 case State.WaitForPerformAction:
                     {
                         if (role == Role.ActiveHero)
+                        {
+                            root.AddClickAction("end", (n, g) =>
+                            {
+                                n.EventManager.QueueEvent(EventType.FinishedTurn, new GameEventArgs());
+                            });
+                        }
+                        break;
+                    }
+                case State.WaitForChooseMonster:
+                    {
+                        if (role == Role.Overlord)
                         {
                             root.AddClickAction("end", (n, g) =>
                             {
@@ -290,6 +306,13 @@ namespace Descent.State
                         }
                     }
 
+                    break;
+                case State.WaitForChooseMonster:
+                    Square s = FullModel.Board[eventArgs.X, eventArgs.Y];
+                    if (s.Figure != null && s.Figure is Monster)
+                    {
+                        eventManager.QueueEvent(EventType.StartMonsterTurn, new CoordinatesEventArgs(eventArgs.X, eventArgs.Y));
+                    }
                     break;
             }
         }
@@ -776,6 +799,12 @@ namespace Descent.State
         #endregion
 
         #region Overlord methods
+
+        private void StartMonsterTurn(object sender, CoordinatesEventArgs eventArgs)
+        {
+            StateChanged(); // State changes to ActivateMonsterInitiation
+        }
+
         // Helper method
         private void OverlordTurnInitiation()
         {
@@ -789,7 +818,7 @@ namespace Descent.State
                 eventManager.QueueEvent(EventType.GiveOverlordCards, new GiveOverlordCardsEventArgs(gameState.GetOverlordCards(2).Select(card => card.Id).ToArray()));
             }
 
-            stateMachine.PlaceStates(State.WaitForPlayCard, State.ActivateMonstersInitiation);
+            stateMachine.PlaceStates(State.ActivateMonstersInitiation); // TODO Add State.WaitForPlayCard
         }
 
         private void OverlordDiscardCard(/* TODO OverlordCard card*/)
