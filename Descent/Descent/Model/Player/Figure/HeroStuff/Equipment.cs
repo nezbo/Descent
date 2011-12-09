@@ -341,6 +341,13 @@ namespace Descent.Model.Player.Figure.HeroStuff
                 hands, 
                 abilities.Select(e => e).ToList());
         }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null || !(obj is Equipment)) return false;
+            if (((Equipment)obj).Id == Id) return true;
+            return false;
+        }
         #endregion
     }
 }
