@@ -168,6 +168,7 @@
                 SetDrawBackground(false);
                 texts.Clear();
                 visuals.Clear();
+                onClick = null;
                 children.Clear();
             }
             foreach (GUIElement e in children) e.Disable(target);
