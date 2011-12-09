@@ -329,6 +329,14 @@
             this.name = name;
         }
 
+        /// <summary>
+        /// Call when the game is about to start, so the figure gets life
+        /// </summary>
+        public virtual void Initialize()
+        {
+            health = MaxHealth;
+        }
+
         #endregion
 
         #region Methods

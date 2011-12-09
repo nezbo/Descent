@@ -178,7 +178,7 @@ namespace Descent.State
                     }
                 case State.Equip:
                     {
-                        if (role != Role.Overlord)
+                        if (role != Role.Overlord && playersRemaining.Contains(Player.Instance.Id))
                         {
 
                             root.AddClickAction("item", (n, g) =>
@@ -192,8 +192,12 @@ namespace Descent.State
                             root.AddClickAction("done", (n, g) =>
                                                             {
                                                                 n.EventManager.QueueEvent(EventType.FinishedReequip, new GameEventArgs());
-                                                                g.Disable(g.Name);
                                                             });
+                        }
+                        else
+                        {
+                            root.Disable("item");
+                            root.Disable("done");
                         }
                         break;
                     }
@@ -208,7 +212,11 @@ namespace Descent.State
                                                                          n.EventManager.QueueEvent(
                                                                              EventType.RequestTurn, new GameEventArgs());
                                                                      });
-                            }//TODO: the button should not be shown (or created) when hero has taken turn
+                            }
+                            else
+                            {
+                                root.Disable("take turn");
+                            }
                         }
                         break;
                     }
@@ -234,6 +242,17 @@ namespace Descent.State
                 case State.WaitForPerformAction:
                     {
                         if (role == Role.ActiveHero)
+                        {
+                            root.AddClickAction("end", (n, g) =>
+                            {
+                                n.EventManager.QueueEvent(EventType.FinishedTurn, new GameEventArgs());
+                            });
+                        }
+                        break;
+                    }
+                case State.WaitForChooseMonster:
+                    {
+                        if (role == Role.Overlord)
                         {
                             root.AddClickAction("end", (n, g) =>
                             {
@@ -456,6 +475,11 @@ namespace Descent.State
             {
                 AllPlayersRemain();
                 gui.CreateMenuGUI(DetermineRole());
+
+                foreach (Hero hero in Player.Instance.HeroParty.Heroes.Values)
+                {
+                    hero.Initialize();
+                }
             }
 
             stateMachine.ChangeToNextState();
