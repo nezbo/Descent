@@ -151,6 +151,12 @@ namespace Descent.State
                     {
                         if (role != Role.Overlord)
                         {
+                            if (!stateMachine.IsOneMoreRecentThanOther(State.BuyEquipment, State.HeroTurn) && role != Role.ActiveHero)
+                            {
+                                root.Disable("item");
+                                root.Disable("done");
+                            }
+
                             root.AddClickAction("done", (n, g) =>
                                                             {
                                                                 n.EventManager.QueueEvent(EventType.FinishedBuy,
@@ -459,7 +465,7 @@ namespace Descent.State
 
             if (gameState.CanBuyEquipment(eventArgs.EquipmentId) && Player.Instance.HeroParty.Heroes[eventArgs.SenderId].Coins >= FullModel.GetEquipment(eventArgs.EquipmentId).BuyPrice)
             {
-                    eventManager.QueueEvent(EventType.GiveEquipment, new GiveEquipmentEventArgs(eventArgs.SenderId, eventArgs.EquipmentId, false));
+                eventManager.QueueEvent(EventType.GiveEquipment, new GiveEquipmentEventArgs(eventArgs.SenderId, eventArgs.EquipmentId, false));
             }
             else
             {
@@ -609,9 +615,9 @@ namespace Descent.State
 
             for (int i = 0; i < Player.Instance.HeroParty.Heroes.Count; i++)
             {
-                stateMachine.PlaceStates(State.WaitForHeroTurn); 
+                stateMachine.PlaceStates(State.WaitForHeroTurn);
             }
-                
+
             stateMachine.ChangeToNextState();
         }
 
