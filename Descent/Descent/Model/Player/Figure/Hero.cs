@@ -259,6 +259,22 @@ namespace Descent.Model.Player.Figure
         }
 
         /// <summary>
+        /// Untaps all skills and equipment that the hero controls
+        /// </summary>
+        public void UntapAll()
+        {
+            for (int i = 0; i < inventory.Length; i++)
+                inventory[i].UntapEquipment();
+            foreach (EAttackType attackType in skills.Keys)
+            {
+                foreach (Skill skill in skills[attackType])
+                {
+                    skill.Tapped = false;
+                }
+            }
+        }
+
+        /// <summary>
         /// A method that returns the number of black dice for the weapon type equipped.
         /// This list of black dice is empty if there is now weapon equipped.
         /// </summary>

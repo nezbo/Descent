@@ -55,9 +55,6 @@ namespace Descent
             spriteBatch = new SpriteBatch(GraphicsDevice);
             GUI.GUI.Font = Content.Load<SpriteFont>("font");
             FullModel.LoadContent(this);
-            // TODO: use this.Content to load your game content here
-
-            System.Diagnostics.Debug.WriteLine(FullModel.GetHero(2).Name);
 
             // creation of elements
             this.gui = new GUI.GUI(this);
@@ -94,7 +91,6 @@ namespace Descent
             root.SetDrawBackground(false);
 
             root.AddText("changeName", "Name:", new Vector2(0, 0));
-            root.AddClickAction(root.Name, (n, g) => System.Diagnostics.Debug.WriteLine("Root clicked"));
             root.AddText("doneCreate", "Create!", new Vector2(0, 0));
             root.AddText("doneJoin", "Join!", new Vector2(0, 0));
             root.AddClickAction("doneCreate", (n, g) =>

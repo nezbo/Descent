@@ -21,7 +21,9 @@ namespace Descent.Model.Player.Figure.HeroStuff
 
         private string description;
 
-        private List<Ability> abilities = new List<Ability>(); 
+        private List<Ability> abilities = new List<Ability>();
+
+        private bool tapped = false;
 
         #endregion
 
@@ -79,6 +81,22 @@ namespace Descent.Model.Player.Figure.HeroStuff
             get
             {
                 return abilities;
+            }
+        }
+
+        /// <summary>
+        /// Gets or Sets whether the skill is tapped.
+        /// </summary>
+        public bool Tapped
+        {
+            get
+            {
+                return tapped;
+            }
+
+            set
+            {
+                tapped = value;
             }
         }
 
