@@ -245,6 +245,7 @@ namespace Descent.GUI
                 });
             }
 
+            root.AddChild(new PlayersElement(game, Player.Instance.HeroParty));
             root.AddChild(new Chat(game));
 
             return root;
