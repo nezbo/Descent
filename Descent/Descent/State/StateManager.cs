@@ -61,6 +61,7 @@ namespace Descent.State
             eventManager.OpenDoorEvent += new OpenDoorHandler(OpenDoor);
             eventManager.FinishedTurnEvent += new FinishedTurnHandler(FinishedTurn);
             eventManager.StartMonsterTurnEvent += new StartMonsterTurnHandler(StartMonsterTurn);
+            eventManager.UseOverlordCardEvent += new UseOvelordCardHandler(OverLordPlayCard);
             
 
             // Internal events
@@ -246,7 +247,7 @@ namespace Descent.State
                         }
                         break;
                     }
-                case State.WaitForChooseMonster: 	
+                case State.WaitForOverlordChooseAction:
                  {
                      if (role == Role.Overlord)
                      {
@@ -302,10 +303,13 @@ namespace Descent.State
                     }
 
                     break;
-                case State.WaitForChooseMonster:
-                    if (Player.Instance.IsOverlord)
+                case State.WaitForOverlordChooseAction:  	
+                    
+                    // If a square with a monster is pressed in an overlord turn and we are the overlord, a monster turn should begin.
+                    Square s = FullModel.Board[eventArgs.X, eventArgs.Y];
+                    if (Player.Instance.IsOverlord && s.Figure != null && s.Figure is Monster)
                     {
-                        eventManager.QueueEvent(EventType.StartMonsterTurn, new CoordinatesEventArgs(eventArgs.X, eventArgs.Y));
+                         eventManager.QueueEvent(EventType.StartMonsterTurn, new CoordinatesEventArgs(eventArgs.X, eventArgs.Y));
                     }
                     break;
             }
@@ -425,8 +429,8 @@ namespace Descent.State
         private void GiveOverlordCards(object sender, GiveOverlordCardsEventArgs eventArgs)
         {
             Contract.Requires(CurrentState == State.DrawOverlordCards || CurrentState == State.OverlordTurn);
-            // Contract.Ensures(CurrentState == (Contract.OldValue(CurrentState) == State.DrawOverlordCards ? State.DrawHeroCard : State.WaitForPlayCard)); TODO
-            Contract.Ensures(CurrentState == (Contract.OldValue(CurrentState) == State.DrawOverlordCards ? State.DrawHeroCard : State.ActivateMonstersInitiation));
+            Contract.Ensures(CurrentState == (Contract.OldValue(CurrentState) == State.DrawOverlordCards ? State.DrawHeroCard : State.WaitForOverlordChooseAction));
+            // Contract.Ensures(CurrentState == (Contract.OldValue(CurrentState) == State.DrawOverlordCards ? State.DrawHeroCard : State.ActivateMonstersInitiation));
 
             foreach (int overlordCardId in eventArgs.OverlordCardIds)
             {
@@ -782,7 +786,8 @@ namespace Descent.State
             {
                 stateMachine.PlaceStates(State.OverlordTurn);
                 stateMachine.ChangeToNextState();
-                OverlordTurnInitiation();
+                State s = stateMachine.CurrentState;
+                OverlordTurnInitiation();  
             }
             else
             {
@@ -804,8 +809,7 @@ namespace Descent.State
         {
             Contract.Requires(CurrentState == State.OverlordTurn);
             Contract.Ensures(CurrentState == Contract.OldValue(CurrentState));
-            // Contract.Ensures(stateMachine.NextState == State.WaitForPlayCard);
-            Contract.Ensures(stateMachine.NextState == State.ActivateMonstersInitiation);
+            Contract.Ensures(stateMachine.NextState == State.WaitForOverlordChooseAction);
 
             Player.Instance.Overlord.ThreatTokens += Player.Instance.HeroParty.NumberOfHeroes;
             if (Player.Instance.IsServer)
@@ -813,9 +817,8 @@ namespace Descent.State
                 eventManager.QueueEvent(EventType.GiveOverlordCards, new GiveOverlordCardsEventArgs(gameState.GetOverlordCards(2).Select(card => card.Id).ToArray()));
             }
 
-            stateMachine.PlaceStates(State.ActivateMonstersInitiation); // TODO Add State.WaitForPlayCard
+            stateMachine.PlaceStates(State.WaitForOverlordChooseAction);
             StateChanged();
-
         }
 
         private void OverlordDiscardCard(/* TODO OverlordCard card*/)
@@ -837,7 +840,7 @@ namespace Descent.State
             stateMachine.ChangeToNextState();
         }
 
-        private void OverLordPlayCard()
+        private void OverLordPlayCard(object sender, OverlordCardEventArgs eventArgs)
         {
             Contract.Requires(CurrentState == State.WaitForPlayCard);
             Contract.Ensures(CurrentState == State.WaitForPlayCard);
@@ -846,10 +849,13 @@ namespace Descent.State
             // Play card and invoke changes
 
             /* TODO if (card.Type == OverlordCardType.Spawn) */
+            /*
             {
                 //Add monsters to spawn bag
                 stateMachine.PlaceStates(State.SpawnMonsters);
             }
+             * */
+            stateMachine.PlaceStates(State.ActivateMonsters);
         }
 
         private void OverlordPlayCardDone()
