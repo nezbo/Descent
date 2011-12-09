@@ -156,5 +156,24 @@ namespace Descent.GUI
         {
             layers[2] = GUIElementFactory.CreateMenuElement(Game, role);
         }
+
+        /// <summary>
+        /// Marks a square on the board with a transparent color.
+        /// </summary>
+        /// <param name="x">The x-coordinate of the square on the board.</param>
+        /// <param name="y">The y-coordinate of the square on the board.</param>
+        /// <param name="positive">True if the highlight should indicate a eligible. False if it should indicate inaccessibility.</param>
+        public void MarkSquare(int x, int y, bool positive)
+        {
+            ((BoardGUIElement)layers[0]).MarkSquare(x, y, positive);
+        }
+
+        /// <summary>
+        /// Clears the board for all markings.
+        /// </summary>
+        public void ClearMarks()
+        {
+            ((BoardGUIElement)layers[0]).ClearMarks();
+        }
     }
 }
