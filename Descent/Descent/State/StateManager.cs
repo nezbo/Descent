@@ -438,13 +438,21 @@ namespace Descent.State
 
             Player.Instance.HeroParty.Heroes[eventArgs.PlayerId] = FullModel.GetHero(eventArgs.HeroId);
             gameState.RemoveHero(eventArgs.HeroId);
+
+            if (stateMachine.NextState == State.BuyEquipment)
+            {
+                AllPlayersRemain();
+                gui.CreateMenuGUI(DetermineRole());
+            }
+
             stateMachine.ChangeToNextState();
 
+            /* TODO Simon -> Martin: har lavet ovenstående i stedet. Giver det mening?
             if (CurrentState == State.BuyEquipment) // TODO Should be DrawSkillCard
             {
-                gui.CreateMenuGUI(DetermineRole());
-                AllPlayersRemain();
+                
             }
+             * */
         }
 
         private void RequestBuyEquipment(object sender, RequestBuyEquipmentEventArgs eventArgs)
@@ -603,7 +611,7 @@ namespace Descent.State
             Contract.Requires(CurrentState == State.NewRound);
             Contract.Ensures(CurrentState == State.WaitForHeroTurn);
 
-            AllPlayersRemain();
+            AllPlayersRemain(); // For WaitForHeroTurn
             ResetCurrentPlayer();
 
             stateMachine.PlaceStates(State.WaitForHeroTurn); 
