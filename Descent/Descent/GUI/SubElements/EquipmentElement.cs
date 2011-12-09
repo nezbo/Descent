@@ -58,7 +58,7 @@ namespace Descent.GUI
         public override bool HandleClick(int x, int y)
         {
             bool result = base.HandleClick(x, y);
-            if (HasPoint(x, y)) SetBackground(HasFocus() ? Marked : Border); // update bg
+            SetBackground(HasFocus() ? Marked : Border); // update bg
 
             return result;
         }
