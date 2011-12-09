@@ -139,6 +139,11 @@
             return false;
         }
 
+        /// <summary>
+        /// Moves this element (and all sub-elements) by the specified amount.
+        /// </summary>
+        /// <param name="x">The number of pixels it should be moved on the x-axis.</param>
+        /// <param name="y">The number of pixels it should be moved on the y-axis.</param>
         public virtual void Move(int x, int y)
         {
             Bound = new Rectangle(Bound.X + x, Bound.Y + y, Bound.Width, Bound.Height);
