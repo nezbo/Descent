@@ -301,8 +301,35 @@ namespace Descent.State
                             realId2 = eventArgs.InventoryField,
                             parsedId1 = (realId1 > 99) ? realId1 - 100 : realId1,
                             parsedId2 = (realId2 > 99) ? realId2 - 100 : realId2;
-                        Equipment equipment1 = (realId1 > 99) ? gameState.UnequippedEquipment(eventArgs.SenderId)[parsedId1] : hero.Inventory[parsedId1];
-                        Equipment equipment2 = (realId2 > 99) ? gameState.UnequippedEquipment(eventArgs.SenderId)[parsedId2] : hero.Inventory[parsedId2];
+
+                        Equipment equipment1 = null;
+                        Equipment equipment2 = null;
+                        if (realId1 > 99)
+                        {
+                            if (gameState.UnequippedEquipment(eventArgs.SenderId).Length > 0)
+                            {
+                                equipment1 = gameState.UnequippedEquipment(eventArgs.SenderId)[parsedId1]; 
+                            }
+                            
+                        }
+                        else
+                        {
+                            equipment1 = hero.Inventory[parsedId1];
+                        }
+
+                        if (realId2 > 99)
+                        {
+                            if (gameState.UnequippedEquipment(eventArgs.SenderId).Length > 0)
+                            {
+                                equipment2 = gameState.UnequippedEquipment(eventArgs.SenderId)[parsedId2];
+                            }
+
+                        }
+                        else
+                        {
+                            equipment2 = hero.Inventory[parsedId2];
+                        }
+
                         if ((realId2 > 99 || equipment1 == null || inventory.CanEquipAtIndex(parsedId2, equipment1) &&
                         (realId1 > 99 || equipment2 == null || inventory.CanEquipAtIndex(parsedId1, equipment2))))
                         {
