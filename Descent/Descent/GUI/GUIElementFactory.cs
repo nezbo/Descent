@@ -1,5 +1,6 @@
 ﻿using System;
 using Descent.GUI.SubElements;
+using Descent.Messaging.Events;
 using Descent.Model.Player.Figure.HeroStuff;
 
 namespace Descent.GUI
@@ -223,6 +224,14 @@ namespace Descent.GUI
             else
             {
                 root.AddChild(new HeroElement(game, Player.Instance.Hero));
+                root.AddClickAction("item", (n, g) =>
+                {
+                    if (g is EquipmentElement)
+                    {
+                        int id = ((EquipmentElement)g).Id;
+                        n.EventManager.QueueEvent(EventType.InventoryFieldMarked, new InventoryFieldEventArgs(id));
+                    }
+                });
             }
 
             root.AddChild(new Chat(game));
