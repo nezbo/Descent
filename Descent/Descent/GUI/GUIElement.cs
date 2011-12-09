@@ -139,6 +139,11 @@
             return false;
         }
 
+        /// <summary>
+        /// Moves this element (and all sub-elements) by the specified amount.
+        /// </summary>
+        /// <param name="x">The number of pixels it should be moved on the x-axis.</param>
+        /// <param name="y">The number of pixels it should be moved on the y-axis.</param>
         public virtual void Move(int x, int y)
         {
             Bound = new Rectangle(Bound.X + x, Bound.Y + y, Bound.Width, Bound.Height);
@@ -149,6 +154,24 @@
                 Rectangle old = visuals[d];
                 visuals[d] = new Rectangle(old.X + x, old.Y + y, old.Width, old.Height);
             }
+        }
+
+        /// <summary>
+        /// Disables all elements below (and including) the target
+        /// element. They will not take inputs or display anything.
+        /// </summary>
+        /// <param name="target">What to disable.</param>
+        public void Disable(string target)
+        {
+            if (Name == target)
+            {
+                SetDrawBackground(false);
+                texts.Clear();
+                visuals.Clear();
+                onClick = null;
+                children.Clear();
+            }
+            foreach (GUIElement e in children) e.Disable(target);
         }
 
         /// <summary>

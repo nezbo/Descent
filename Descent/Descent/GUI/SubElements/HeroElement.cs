@@ -23,7 +23,7 @@ namespace Descent.GUI.SubElements
             this.hero = hero;
             this.SetDrawBackground(false);
 
-            //this.AddDrawable(this.Name, new Image(hero.BigTexture), new Vector2(0, this.Bound.Height - hero.BigTexture.Height));
+            this.AddDrawable(this.Name, new Image(hero.BigTexture), new Vector2(0, this.Bound.Height - hero.BigTexture.Height));
             health = game.Content.Load<Texture2D>("Images/Other/health-small");
             fatigue = game.Content.Load<Texture2D>("Images/Other/fatigue-small");
             movement = game.Content.Load<Texture2D>("Images/Other/movement-small");

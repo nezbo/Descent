@@ -52,7 +52,7 @@ namespace Descent.Model.Player.Figure
 
         private readonly Inventory inventory;
 
-
+        private Texture2D bigTexture;
 
         #endregion
 
@@ -114,6 +114,14 @@ namespace Descent.Model.Player.Figure
             }
         }
 
+        public Texture2D BigTexture
+        {
+            get
+            {
+                return bigTexture;
+            }
+        }
+
         #endregion
 
         #region Initialization
@@ -154,7 +162,13 @@ namespace Descent.Model.Player.Figure
         /// <param name="text">
         /// The text of the hero ability
         /// </param>
-        public Hero(int id, string name, int conquest, int health, int fatigue, int armor, int speed, Dictionary<EAttackType, int> blackDice, Dictionary<EAttackType, int> numberOfSkills, int hands, string text, Texture2D texture)
+        /// <param name="texture">
+        /// The texture.
+        /// </param>
+        /// <param name="largeTexture">
+        /// The large Texture.
+        /// </param>
+        public Hero(int id, string name, int conquest, int health, int fatigue, int armor, int speed, Dictionary<EAttackType, int> blackDice, Dictionary<EAttackType, int> numberOfSkills, int hands, string text, Texture2D texture, Texture2D bigTexture)
             : base(id, name)
         {
             this.cost = conquest;
@@ -167,6 +181,7 @@ namespace Descent.Model.Player.Figure
             this.hands = hands;
             abilityText = text;
             this.Texture = texture;
+            this.bigTexture = bigTexture;
             inventory = new Inventory(this);
 
             Coins += 300;
