@@ -293,7 +293,7 @@
             {
                 for (int y = point.Y - 1; y <= point.Y + 1; y++)
                 {
-                    if (IsSquareWithinBoard(x, y) && IsStandable(x, y) && this[x, y].Marker != null && this[x, y].Marker.Name.Equals("glyph-open")) return true;
+                    if (IsSquareWithinBoard(x, y) && this[x, y].Marker != null && this[x, y].Marker.Name.Equals("glyph-open")) return true;
                 }
             }
 

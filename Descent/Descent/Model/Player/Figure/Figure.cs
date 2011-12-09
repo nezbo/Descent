@@ -365,6 +365,7 @@
             health = (int)MathHelper.Clamp(health - amount, 0, MaxHealth);
         }
 
+
         public void SetMovement(int amount)
         {
             Contract.Requires(amount >= 0);
@@ -405,7 +406,7 @@
         public void SetAttacks(int amount)
         {
             Contract.Requires(amount >= 0);
-            Contract.Ensures(AttacksLeft == amount);
+            Contract.Ensures(AttacksLeft >= amount);
             attacksLeft = amount;
         }
 
