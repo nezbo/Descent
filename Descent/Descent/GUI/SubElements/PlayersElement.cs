@@ -25,7 +25,7 @@ namespace Descent.GUI.SubElements
             int startY = (yourself == null) ? 0 : 100;
             for (int i = 0; i < heroes.Count; i++)
             {
-                AddChild(new PlayerSummary(game, startY + i * 100, heroes[i]));
+                AddChild(new HeroSummary(game, startY + i * 100, heroes[i]));
             }
         }
     }
