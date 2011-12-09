@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using Descent.Model.Board;
 using Descent.Model.Player;
 using Microsoft.Xna.Framework.Input;
@@ -69,6 +70,11 @@ namespace Descent.GUI
         /// <param name="y">The y-coordinate of the click</param>
         private void HandleClick(int x, int y)
         {
+            Contract.Requires(x >= 0);
+            Contract.Requires(y > 0);
+            Contract.Requires(x < Game.GraphicsDevice.Viewport.Width);
+            Contract.Requires(y < Game.GraphicsDevice.Viewport.Height);
+
             for (int i = layers.Length - 1; i >= 0; i--)
             {
                 if (layers[i] != null)
@@ -80,6 +86,8 @@ namespace Descent.GUI
 
         private void HandleKeyPress(Keys key)
         {
+            Contract.Requires(Keyboard.GetState().IsKeyDown(key));
+
             foreach (GUIElement e in layers)
             {
                 if (e != null)

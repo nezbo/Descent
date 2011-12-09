@@ -116,7 +116,9 @@
     <Compile Include="GUI\SubElements\EquipmentPanel.cs" />
     <Compile Include="GUI\SubElements\HeroElement.cs" />
     <Compile Include="GUI\SubElements\InputElement.cs" />
+    <Compile Include="GUI\SubElements\OverlordSummary.cs" />
     <Compile Include="GUI\SubElements\PlayersElement.cs" />
+    <Compile Include="GUI\SubElements\PlayerSummary.cs" />
     <Compile Include="GUI\Text.cs" />
     <Compile Include="Messaging\AsyncSockets\AsyncSocketsClient.cs" />
     <Compile Include="Messaging\AsyncSockets\AsyncSocketsServer.cs" />
