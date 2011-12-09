@@ -157,6 +157,22 @@
         }
 
         /// <summary>
+        /// Disables all elements below (and including) the target
+        /// element. They will not take inputs or display anything.
+        /// </summary>
+        /// <param name="target">What to disable.</param>
+        public void Disable(string target)
+        {
+            if (Name == target)
+            {
+                SetDrawBackground(false);
+                texts.Clear();
+                visuals.Clear();
+                children.Clear();
+            }
+        }
+
+        /// <summary>
         /// Reacts to the given key type if this GUIElement
         /// is focused.
         /// </summary>
