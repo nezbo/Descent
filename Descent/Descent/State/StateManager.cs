@@ -50,6 +50,7 @@ namespace Descent.State
             eventManager.GiveEquipmentEvent += new GiveEquipmentHandler(GiveEquipment);
             eventManager.FinishedBuyEvent += new FinishedBuyHandler(FinishedBuy);
             eventManager.FinishedReequipEvent += new FinishedReequipHandler(FinishedReequip);
+            eventManager.SwitchItemsEvent += new SwitchItemsHandler(SwitchItems);
             eventManager.RequestPlacementEvent += new RequestPlacementHandler(RequestPlacement);
             eventManager.PlaceHeroEvent += new PlaceHeroHandler(PlaceHero);
             eventManager.NewRoundEvent += new NewRoundHandler(NewRound);
@@ -59,7 +60,8 @@ namespace Descent.State
             eventManager.MoveToEvent += new MoveToHandler(MoveTo);
             eventManager.OpenDoorEvent += new OpenDoorHandler(OpenDoor);
             eventManager.FinishedTurnEvent += new FinishedTurnHandler(FinishedTurn);
-            eventManager.SwitchItemsEvent += new SwitchItemsHandler(SwitchItems);
+            eventManager.StartMonsterTurnEvent += new StartMonsterTurnHandler(StartMonsterTurn);
+            
 
             // Internal events
             eventManager.SquareMarkedEvent += new SquareMarkedHandler(SquareMarked);
@@ -190,10 +192,7 @@ namespace Descent.State
                                                                     n.EventManager.QueueEvent(EventType.InventoryFieldMarked, new InventoryFieldEventArgs(id));
                                                                 }
                                                             });
-                            root.AddClickAction("done", (n, g) =>
-                                                            {
-                                                                n.EventManager.QueueEvent(EventType.FinishedReequip, new GameEventArgs());
-                                                            });
+                            root.AddClickAction("done", (n, g) => n.EventManager.QueueEvent(EventType.FinishedReequip, new GameEventArgs()));
                         }
                         else
                         {
@@ -208,12 +207,12 @@ namespace Descent.State
                         {
                             if (playersRemaining.Contains(Player.Instance.Id))
                             {
-                                root.AddClickAction("take turn", (n, g) =>
-                                                                     {
-                                                                         n.EventManager.QueueEvent(
-                                                                             EventType.RequestTurn, new GameEventArgs());
-                                                                     });
-                            }//TODO: the button should not be shown (or created) when hero has taken turn
+                                root.AddClickAction("take turn", (n, g) => n.EventManager.QueueEvent(EventType.RequestTurn, new GameEventArgs()));
+                            }
+                            else
+                            {
+                                root.Disable("take turn");
+                            }
                         }
                         break;
                     }
@@ -247,6 +246,18 @@ namespace Descent.State
                         }
                         break;
                     }
+                case State.WaitForChooseMonster: 	
+                 {
+                     if (role == Role.Overlord)
+                     {
+                            root.AddClickAction("end", (n, g) =>
+                              {
+                                 n.EventManager.QueueEvent(EventType.FinishedTurn, new GameEventArgs());
+                           });                        
+                     }
+    
+                     break;
+                   }
             }
 
             gui.ChangeStateGUI(root); // change the GUI's state element.
@@ -290,6 +301,12 @@ namespace Descent.State
                         }
                     }
 
+                    break;
+                case State.WaitForChooseMonster:
+                    if (Player.Instance.IsOverlord)
+                    {
+                        eventManager.QueueEvent(EventType.StartMonsterTurn, new CoordinatesEventArgs(eventArgs.X, eventArgs.Y));
+                    }
                     break;
             }
         }
@@ -777,6 +794,11 @@ namespace Descent.State
         #endregion
 
         #region Overlord methods
+        private void StartMonsterTurn(object sender, CoordinatesEventArgs eventArgs)
+        {
+            StateChanged(); // State changes to ActivateMonsterInitiation
+        }
+
         // Helper method
         private void OverlordTurnInitiation()
         {
