@@ -30,6 +30,8 @@ namespace Descent.State
         private Hero currentHero;
         private readonly List<int> playersRemaining = new List<int>();
 
+        private List<Monster> monstersRemaining = new List<Monster>();
+
         private int inventoryFieldMarked = -1;
 
         public StateManager(GUI gui)
@@ -885,7 +887,7 @@ namespace Descent.State
             Contract.Requires(CurrentState == State.ActivateMonsters);
             Contract.Ensures(CurrentState == State.WaitForChooseMonster);
 
-            // Add all monsters to monster bag
+            monstersRemaining = FullModel.Board.MonstersOnBoard;
 
             stateMachine.PlaceStates(State.WaitForChooseMonster);
             stateMachine.ChangeToNextState();
