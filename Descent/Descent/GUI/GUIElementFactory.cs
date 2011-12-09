@@ -156,6 +156,17 @@ namespace Descent.GUI
                         }
                         break;
                     }
+                case State.WaitForChooseSquare: // hero placement
+                    {
+                        if (role != Role.Overlord)
+                        {
+                            GUIElement help = new GUIElement(game, "help", RelW(g, 3), RelW(g, 3), RelW(g, 33), RelH(g, 5));
+
+                            root.AddChild(help);
+                            root.AddText(help.Name, "Select a square to place your hero", new Vector2(5, 5));
+                        }
+                        break;
+                    }
                 case State.WaitForHeroTurn:
                     {
                         if (role != Role.Overlord)
@@ -170,9 +181,9 @@ namespace Descent.GUI
                     {
                         if (role == Role.ActiveHero)
                         {
-                            GUIElement advance = new GUIElement(game, "advance", RelW(g, 45), RelH(g, 40), RelW(g, 10), RelH(g, 5));
-                            GUIElement run = new GUIElement(game, "run", RelW(g, 45), RelH(g, 47), RelW(g, 10), RelH(g, 5));
-                            GUIElement battle = new GUIElement(game, "battle", RelW(g, 45), RelH(g, 54), RelW(g, 10), RelH(g, 5));
+                            GUIElement advance = new GUIElement(game, "advance", RelW(g, 3), RelH(g, 3), RelW(g, 10), RelH(g, 5));
+                            GUIElement run = new GUIElement(game, "run", RelW(g, 3), RelH(g, 10), RelW(g, 10), RelH(g, 5));
+                            GUIElement battle = new GUIElement(game, "battle", RelW(g, 3), RelH(g, 17), RelW(g, 10), RelH(g, 5));
 
                             Vector2 v = new Vector2(5, 5);
                             advance.AddText(advance.Name, "Advance", v);
