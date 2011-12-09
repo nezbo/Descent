@@ -149,13 +149,13 @@ namespace Descent.State
                     }
                 case State.BuyEquipment:
                     {
-                        if (role != Role.Overlord)
+                        if (role != Role.Overlord && playersRemaining.Contains(Player.Instance.Id))
                         {
+
                             root.AddClickAction("done", (n, g) =>
                                                             {
                                                                 n.EventManager.QueueEvent(EventType.FinishedBuy,
                                                                                           new GameEventArgs());
-                                                                g.Disable("done");
                                                             });
                             root.AddClickAction("item", (n, g) =>
                                                             {
@@ -169,12 +169,17 @@ namespace Descent.State
                                                             });
 
                         }
+                        else
+                        {
+                            root.Disable(root.Name);
+                        }
                         break;
                     }
                 case State.Equip:
                     {
                         if (role != Role.Overlord)
                         {
+
                             root.AddClickAction("item", (n, g) =>
                                                             {
                                                                 if (g is EquipmentElement)
@@ -186,7 +191,7 @@ namespace Descent.State
                             root.AddClickAction("done", (n, g) =>
                                                             {
                                                                 n.EventManager.QueueEvent(EventType.FinishedReequip, new GameEventArgs());
-                                                                g.Disable("done");
+                                                                g.Disable(g.Name);
                                                             });
                         }
                         break;
@@ -467,7 +472,7 @@ namespace Descent.State
 
             if (gameState.CanBuyEquipment(eventArgs.EquipmentId) && Player.Instance.HeroParty.Heroes[eventArgs.SenderId].Coins >= FullModel.GetEquipment(eventArgs.EquipmentId).BuyPrice)
             {
-                    eventManager.QueueEvent(EventType.GiveEquipment, new GiveEquipmentEventArgs(eventArgs.SenderId, eventArgs.EquipmentId, false));
+                eventManager.QueueEvent(EventType.GiveEquipment, new GiveEquipmentEventArgs(eventArgs.SenderId, eventArgs.EquipmentId, false));
             }
             else
             {
@@ -614,8 +619,7 @@ namespace Descent.State
             AllPlayersRemain(); // For WaitForHeroTurn
             ResetCurrentPlayer();
 
-            stateMachine.PlaceStates(State.WaitForHeroTurn); 
-                
+            stateMachine.PlaceStates(State.WaitForHeroTurn);
             stateMachine.ChangeToNextState();
         }
 
