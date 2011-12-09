@@ -12,7 +12,6 @@ namespace Descent.State
     using Descent.Model.Player;
     using Descent.Model.Player.Figure;
     using Descent.Model.Player.Figure.HeroStuff;
-    using Descent.Model.Player.Overlord;
 
     using Microsoft.Xna.Framework;
 
@@ -156,8 +155,7 @@ namespace Descent.State
                                                             {
                                                                 n.EventManager.QueueEvent(EventType.FinishedBuy,
                                                                                           new GameEventArgs());
-                                                                g.AddClickAction(g.Name, null);
-                                                                g.SetDrawBackground(false);
+                                                                g.Disable("done");
                                                             });
                             root.AddClickAction("item", (n, g) =>
                                                             {
@@ -188,6 +186,7 @@ namespace Descent.State
                             root.AddClickAction("done", (n, g) =>
                                                             {
                                                                 n.EventManager.QueueEvent(EventType.FinishedReequip, new GameEventArgs());
+                                                                g.Disable("done");
                                                             });
                         }
                         break;
@@ -286,7 +285,7 @@ namespace Descent.State
 
         private void InventoryFieldMarked(object sender, InventoryFieldEventArgs eventArgs)
         {
-            switch(CurrentState)
+            switch (CurrentState)
             {
                 case State.Equip:
                     if (inventoryFieldMarked == -1)
@@ -297,7 +296,7 @@ namespace Descent.State
                     {
                         Hero hero = Player.Instance.Hero;
                         Inventory inventory = hero.Inventory;
-                        int realId1 = inventoryFieldMarked, 
+                        int realId1 = inventoryFieldMarked,
                             realId2 = eventArgs.InventoryField,
                             parsedId1 = (realId1 > 99) ? realId1 - 100 : realId1,
                             parsedId2 = (realId2 > 99) ? realId2 - 100 : realId2;
@@ -308,9 +307,9 @@ namespace Descent.State
                         {
                             if (gameState.UnequippedEquipment(eventArgs.SenderId).Length > 0)
                             {
-                                equipment1 = gameState.UnequippedEquipment(eventArgs.SenderId)[parsedId1]; 
+                                equipment1 = gameState.UnequippedEquipment(eventArgs.SenderId)[parsedId1];
                             }
-                            
+
                         }
                         else
                         {
@@ -754,7 +753,7 @@ namespace Descent.State
                 stateMachine.ChangeToNextState();
             }
         }
-        
+
         #endregion
 
         #region Overlord methods
