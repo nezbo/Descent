@@ -452,6 +452,11 @@ namespace Descent.State
             {
                 AllPlayersRemain();
                 gui.CreateMenuGUI(DetermineRole());
+
+                foreach (Hero hero in Player.Instance.HeroParty.Heroes.Values)
+                {
+                    hero.Initialize();
+                }
             }
 
             stateMachine.ChangeToNextState();

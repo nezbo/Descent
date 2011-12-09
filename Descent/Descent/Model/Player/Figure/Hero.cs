@@ -188,6 +188,15 @@ namespace Descent.Model.Player.Figure
             DiceContribution += this.BlackDice;
         }
 
+        /// <summary>
+        /// Call when the game is about to start, so the figure gets life and fatigue
+        /// </summary>
+        public virtual void Initialize()
+        {
+            base.Initialize();
+            fatigue = MaxFatigue;
+        }
+
         #endregion
 
         #region Public Methods
