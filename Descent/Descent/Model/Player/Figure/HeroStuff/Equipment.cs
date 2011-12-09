@@ -320,6 +320,23 @@ namespace Descent.Model.Player.Figure.HeroStuff
             equipped = false;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public Equipment Clone()
+        {
+            return new Equipment(
+                id, 
+                name, 
+                type, 
+                attackType, 
+                rarity, 
+                buyPrice, 
+                surgeAbilities.Select(e => e).ToList(), 
+                hands, 
+                abilities.Select(e => e).ToList());
+        }
         #endregion
     }
 }

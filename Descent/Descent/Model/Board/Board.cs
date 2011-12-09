@@ -469,6 +469,7 @@
         /// <returns>
         /// Whether a door next to the point is a runedoor, and if you have the key
         /// </returns>
+        [Pure]
         public bool CanOpenDoor(Point point)
         {
             Door door = GetDoor(point);

@@ -125,7 +125,6 @@ namespace Descent.State
         public void AddToUnequippedEquipment(int playerId, Equipment equipment)
         {
             Contract.Requires(playerId > 0);
-            Contract.Requires(equipment != null);
             Contract.Ensures(UnequippedEquipment(playerId).Contains(equipment));
 
             if (!unequippedEquipment.ContainsKey(playerId))
@@ -138,7 +137,6 @@ namespace Descent.State
         public void RemoveFromUnequippedEquipment(int playerId, Equipment equipment)
         {
             Contract.Requires(playerId > 0);
-            Contract.Requires(equipment != null);
             Contract.Ensures(!UnequippedEquipment(playerId).Contains(equipment));
 
             unequippedEquipment[playerId].Remove(equipment);

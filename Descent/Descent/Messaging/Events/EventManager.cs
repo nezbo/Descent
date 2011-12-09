@@ -118,9 +118,7 @@ namespace Descent.Messaging.Events
 
     public delegate void AddMovementHandler(object sender, PointsEventArgs eventArgs);
 
-    public delegate void EquipHandler(object sender, EquipEventArgs eventArgs);
-
-    public delegate void UnequipHandler(object sender, EquipEventArgs eventArgs);
+    public delegate void SwitchItemsHandler(object sender, SwitchItemsEventArgs eventArgs);
 
     #endregion
 
@@ -290,9 +288,7 @@ namespace Descent.Messaging.Events
 
         public event AddMovementHandler AddMovementEvent;
 
-        public event EquipHandler EquipEvent;
-
-        public event UnequipHandler UnequipEvent;
+        public event SwitchItemsHandler SwitchItemsEvent;
 
         public event UseOvelordCardHandler UseOverlordCardEvent;
 
@@ -583,11 +579,8 @@ namespace Descent.Messaging.Events
                 case EventType.AddMovement:
                     if (AddMovementEvent != null) AddMovementEvent(this, (PointsEventArgs)eventArgs);
                     break;
-                case EventType.Equip:
-                    if (EquipEvent != null) EquipEvent(this, (EquipEventArgs)eventArgs);
-                    break;
-                case EventType.Unequip:
-                    if (UnequipEvent != null) UnequipEvent(this, (EquipEventArgs)eventArgs);
+                case EventType.SwitchItems:
+                    if (SwitchItemsEvent != null) SwitchItemsEvent(this, (SwitchItemsEventArgs)eventArgs);
                     break;
                 case EventType.UseOverlordCard:
                     if (UseOverlordCardEvent != null) UseOverlordCardEvent(this, (OverlordCardEventArgs)eventArgs);
@@ -718,148 +711,98 @@ namespace Descent.Messaging.Events
             {
                 case EventType.AcceptPlayer:
                     return new PlayerEventArgs(args);
-                    break;
                 case EventType.PlayerJoined:
                     return new PlayerJoinedEventArgs(args);
-                    break;
                 case EventType.PlayersInGame:
                     return new PlayersInGameEventArgs(args);
-                    break;
                 case EventType.OverlordIs:
                     return new OverlordIsEventArgs(args);
-                    break;
                 case EventType.AssignHero:
                     return new AssignHeroEventArgs(args);
-                    break;
                 case EventType.GiveHeroCards:
                     return new GiveHeroCardsEventArgs(args);
-                    break;
                 case EventType.TradeHeroCard:
                     return new TradeHeroCardEventArgs(args);
-                    break;
                 case EventType.ChatMessage:
                     return new ChatMessageEventArgs(args);
-                    break;
                 case EventType.RequestBuyEquipment:
                     return new RequestBuyEquipmentEventArgs(args);
-                    break;
                 case EventType.GiveEquipment:
                     return new GiveEquipmentEventArgs(args);
-                    break;
                 case EventType.RequestBuyPotion:
                     return new GiveEquipmentEventArgs(args);
-                    break;
                 case EventType.GivePotion:
                     return new GivePotionEventArgs(args);
-                    break;
                 case EventType.DenyBuy:
                     return new PlayerEventArgs(args);
-                    break;
                 case EventType.GiveConquestTokens:
                     return new TokenEventArgs(args);
-                    break;
                 case EventType.RemoveConquestTokens:
                     return new TokenEventArgs(args);
-                    break;
                 case EventType.GiveCoins:
                     return new GiveCoinsEventArgs(args);
-                    break;
                 case EventType.GiveOverlordCards:
                     return new GiveOverlordCardsEventArgs(args);
-                    break;
                 case EventType.RemoveOverlordCard:
                     return new OverlordCardEventArgs(args);
-                    break;
                 case EventType.GiveThreatTokens:
                     return new TokenEventArgs(args);
-                    break;
                 case EventType.RemoveThreatTokens:
                     return new TokenEventArgs(args);
-                    break;
                 case EventType.GiveTreasure:
                     return new TreasureEventArgs(args);
-                    break;
                 case EventType.RequestPlacement:
                     return new CoordinatesEventArgs(args);
-                    break;
                 case EventType.PlaceHero:
                     return new PlaceHeroEventArgs(args);
-                    break;
                 case EventType.DenyPlacement:
                     return new PlayerEventArgs(args);
-                    break;
                 case EventType.TurnChanged:
                     return new PlayerEventArgs(args);
-                    break;
                 case EventType.DenyTurnRequest:
                     return new PlayerEventArgs(args);
-                    break;
                 case EventType.ChooseAction:
                     return new ChooseActionEventArgs(args);
-                    break;
                 case EventType.AddFatigue:
                     return new PointsEventArgs(args);
-                    break;
                 case EventType.RemoveFatigue:
                     return new PointsEventArgs(args);
-                    break;
                 case EventType.AddMovement:
                     return new PointsEventArgs(args);
-                    break;
-                case EventType.Equip:
-                    return new EquipEventArgs(args);
-                    break;
-                case EventType.Unequip:
-                    return new EquipEventArgs(args);
-                    break;
+                case EventType.SwitchItems:
+                    return new SwitchItemsEventArgs(args);
                 case EventType.UseOverlordCard:
                     return new OverlordCardEventArgs(args);
-                    break;
                 case EventType.AddPowerOverlordCard:
                     return new OverlordCardEventArgs(args);
-                    break;
                 case EventType.SpawnMonster:
                     return new SpawnMonsterEventArgs(args);
-                    break;
                 case EventType.StartMonsterTurn:
                     return new CoordinatesEventArgs(args);
-                    break;
                 case EventType.MoveTo:
                     return new CoordinatesEventArgs(args);
-                    break;
                 case EventType.OpenChest:
                     return new ChestEventArgs(args);
-                    break;
                 case EventType.OpenDoor:
                     return new CoordinatesEventArgs(args);
-                    break;
                 case EventType.AttackSquare:
                     return new CoordinatesEventArgs(args);
-                    break;
                 case EventType.RolledDices:
                     return new RolledDicesEventArgs(args);
-                    break;
                 case EventType.SendDamage:
                     return new DamageEventArgs(args);
-                    break;
                 case EventType.RerollDices:
                     return new RerollDicesEventArgs(args);
-                    break;
                 case EventType.KilledFigure:
                     return new CoordinatesEventArgs(args);
-                    break;
                 case EventType.DamageTaken:
                     return new DamageEventArgs(args);
-                    break;
                 case EventType.MissedAttack:
                     return new PlayerEventArgs(args);
-                    break;
                 case EventType.SquareMarked:
                     return new CoordinatesEventArgs(args);
-                    break;
                 case EventType.InventoryFieldMarked:
                     return new InventoryFieldEventArgs(args);
-                    break;
                 default:
                     return new GameEventArgs();
             }

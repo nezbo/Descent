@@ -35,21 +35,15 @@ namespace Descent.Model.Player.Figure.HeroStuff
         private readonly Equipment[] inventory = new Equipment[11];
         private readonly Hero hero;
 
-        /*
-        private readonly Equipment[] otherItems = new Equipment[MaxOtherItems];
-        private readonly Equipment[] potions = new Equipment[MaxPotions];
-        private readonly Equipment[] backpack = new Equipment[MaxInBackpack];
-        private Equipment _armor;
-        private Equipment _weapon;
-        private Equipment _shield;
-         * */
-
         /// <summary>
         /// Gets an equipment at a 
         /// </summary>
         /// <param name="slot">
-        /// The slot.
+        /// The slot to access in the inventory
         /// </param>
+        /// <returns>
+        /// The equipment at that slot
+        /// </returns>
         public Equipment this[int slot]
         {
             get
@@ -61,9 +55,8 @@ namespace Descent.Model.Player.Figure.HeroStuff
 
             set
             {
-                Contract.Requires(this[slot] == null);
                 Contract.Requires(this.CanEquipAtIndex(slot, value));
-                Contract.Requires(this[slot] == value);
+                Contract.Ensures(this[slot] == value);
 
                 inventory[slot] = value;
             }
@@ -343,6 +336,7 @@ namespace Descent.Model.Player.Figure.HeroStuff
         [Pure]
         public bool CanEquipAtIndex(int slot, Equipment equipment)
         {
+            Contract.Requires(equipment != null);
             return equipment.Type == EquipmentType.Weapon ?
                     slot == (int)EquipmentSlot.Weapon :
                         equipment.Type == EquipmentType.Shield ?
@@ -363,7 +357,7 @@ namespace Descent.Model.Player.Figure.HeroStuff
             Contract.Invariant(Enumerable.Range((int)EquipmentSlot.Other, 2).Select(i => inventory[i]).All(e => e == null || e.Type == EquipmentType.Other));
             Contract.Invariant(Enumerable.Range((int)EquipmentSlot.Potion, 3).Select(i => inventory[i]).All(e => e == null || e.Type == EquipmentType.Potion));
 
-            Contract.Invariant(0 < FreeHands && FreeHands <= MaxHands);
+            Contract.Invariant(0 <= FreeHands && FreeHands <= MaxHands);
         }
     }
 }

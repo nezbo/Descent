@@ -1,4 +1,7 @@
-﻿namespace Descent.State
+﻿using Descent.Messaging.Events;
+using Descent.Model.Player;
+
+namespace Descent.State
 {
     using System;
     using System.Collections.Generic;
@@ -40,6 +43,10 @@
         {
             Contract.Ensures(currentIndex < _states.Count);
             currentIndex++;
+            if (Player.Instance.IsServer)
+            {
+                Player.Instance.EventManager.QueueEvent(EventType.ChatMessage, new ChatMessageEventArgs("Changed state: "+CurrentState.ToString()));
+            }
             StateChanged();
         }
 
