@@ -912,6 +912,18 @@ namespace Descent.State
         {
             gui.ClearMarks();
 
+            for (int x = 0; x < FullModel.Board.Width; x++)
+            {
+                for (int y = 0; y < FullModel.Board.Height; y++)
+                {
+                    if (FullModel.Board.CanOverlordSpawn(new Point(x, y)))
+                    {
+                        gui.MarkSquare(x, y, true);
+                    }
+                }
+            }
+            return;
+
             if (currentMonster == null)
             {
                 if (Player.Instance.IsOverlord)
