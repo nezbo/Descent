@@ -746,16 +746,17 @@ namespace Descent.State
             Contract.Requires(CurrentState == State.WaitForHeroTurn);
             Contract.Ensures(CurrentState == Contract.OldValue(CurrentState));
 
-            if (Player.Instance.IsServer && gameState.CurrentPlayer == 0 && playersRemaining.Contains(eventArgs.SenderId))
+            if (Player.Instance.IsServer && gameState.CurrentPlayer == 0 && gameState.CurrentPlayer == 0 && playersRemaining.Contains(eventArgs.SenderId))
             {
                 eventManager.QueueEvent(EventType.TurnChanged, new PlayerEventArgs(eventArgs.SenderId));
+                gameState.CurrentPlayer = eventArgs.SenderId;
             }
         }
 
         private void TurnChanged(object sender, PlayerEventArgs eventArgs)
         {
             Contract.Requires(CurrentState == State.WaitForHeroTurn);
-            Contract.Requires(gameState.CurrentPlayer == 0);
+            Contract.Requires(gameState.CurrentPlayer == 0 || Player.Instance.IsServer);
             Contract.Requires(playersRemaining.Contains(eventArgs.PlayerId));
             Contract.Ensures(CurrentState == State.Equip);
 
@@ -907,7 +908,7 @@ namespace Descent.State
         {
             gui.ClearMarks();
 
-            if (currentMonster != null)
+            if (currentMonster == null)
             {
                 // If we're not in a monster turn, all monsters should be marked to indicate all monsters can be chosen.
                 foreach (Point point in FullModel.Board.FiguresOnBoard.Where(pair => monstersRemaining.Contains(pair.Key)).Select(pair => pair.Value))
