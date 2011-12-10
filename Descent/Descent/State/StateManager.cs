@@ -9,6 +9,7 @@ namespace Descent.State
     using Descent.GUI;
     using Descent.Messaging.Events;
     using Descent.Model;
+    using Descent.Model.Event;
     using Descent.Model.Player;
     using Descent.Model.Player.Figure;
     using Descent.Model.Player.Figure.HeroStuff;
@@ -64,6 +65,8 @@ namespace Descent.State
             eventManager.StartMonsterTurnEvent += new StartMonsterTurnHandler(StartMonsterTurn);
             eventManager.UseOverlordCardEvent += new UseOvelordCardHandler(OverLordPlayCard);
             eventManager.EndMonsterTurnEvent += new EndMonsterTurnHandler(EndMonsterTurn);
+            eventManager.AttackSquareEvent += new AttackSquareHandler(AttackSquare);
+            eventManager.RolledDicesEvent += new RolledDicesHandler(RolledDices);
 
 
             // Internal events
@@ -348,6 +351,12 @@ namespace Descent.State
                         {
                             eventManager.QueueEvent(EventType.OpenDoor, new CoordinatesEventArgs(eventArgs.X, eventArgs.Y));
                         }
+                    }
+
+                    if (FullModel.Board.Distance(standingPoint, new Point(eventArgs.X, eventArgs.Y)) >= 1 && (FullModel.Board[eventArgs.X , eventArgs.Y] != null && (FullModel.Board[eventArgs.X, eventArgs.Y].Figure != null && FullModel.Board.IsThereLineOfSight(figure, FullModel.Board[eventArgs.X, eventArgs.Y].Figure, false))))
+                    {
+                            // A figure is trying to attack another figure.
+                            eventManager.QueueEvent(EventType.AttackSquare, new CoordinatesEventArgs(eventArgs.X, eventArgs.Y));
                     }
 
                     break;
@@ -1087,6 +1096,27 @@ namespace Descent.State
             }
         }
 
+        #endregion
+
+        #region Attack
+        private void AttackSquare(object sender, CoordinatesEventArgs eventArgs)
+        {
+            Contract.Requires(eventArgs.SenderId == gameState.CurrentPlayer);
+            Contract.Requires(CurrentState == State.WaitForPerformAction);
+            Contract.Ensures(CurrentState == State.WaitForRollDice);
+
+            stateMachine.PlaceStates(State.WaitForRollDice, State.WaitForDiceChoice);
+            stateMachine.ChangeToNextState();
+        }
+
+        private void RolledDices(object sender, RolledDicesEventArgs eventArgs)
+        {
+            Contract.Requires(CurrentState == State.WaitForRollDice);
+            Contract.Ensures(CurrentState == State.WaitForDiceChoice);
+
+            derp.
+            stateMachine.ChangeToNextState();
+        }
         #endregion
 
         #region MovementMethods
