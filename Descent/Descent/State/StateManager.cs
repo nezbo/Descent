@@ -823,7 +823,7 @@ namespace Descent.State
             gameState.CurrentPlayer = 0;
 
             // If the player ending the game was a hero, reset his movement.
-            if (Player.Instance.HeroParty.Heroes[eventArgs.SenderId] != null)
+            if (Player.Instance.HeroParty.Heroes.ContainsKey(eventArgs.SenderId))
             {
                 Player.Instance.HeroParty.Heroes[eventArgs.SenderId].EndTurn();
             }
