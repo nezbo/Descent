@@ -21,7 +21,7 @@ namespace Descent.GUI.SubElements
             this.AddDrawable(this.Name, new Image(game.Content.Load<Texture2D>("Images/Other/overlorddeck")), new Vector2(Bound.X, Bound.Y));
             this.AddDrawable(this.Name, new Image(game.Content.Load<Texture2D>("Images/Other/overlorddiscard")), new Vector2(Bound.X + Bound.Width / 3, Bound.Y));
             this.AddDrawable(this.Name, new Image(game.Content.Load<Texture2D>("Images/Other/overlordhand")), new Vector2(Bound.X + (float)(Bound.Width * (2 / 3.0)), Bound.Y));
-            this.AddDrawable(this.Name, new Image(game.Content.Load<Texture2D>("Images/Other/threat1")), new Rectangle(Bound.X + Bound.Width / 2 + 10, Bound.Y + 60, 30, 30));
+            this.AddDrawable(this.Name, new Image(game.Content.Load<Texture2D>("Images/Other/threat1")), new Rectangle(Bound.X + Bound.Width / 3 + 10, Bound.Y + 60, 30, 30));
         }
 
         public override void Draw(SpriteBatch draw)
@@ -30,7 +30,7 @@ namespace Descent.GUI.SubElements
 
             draw.DrawString(GUI.Font, "" + Player.Instance.GetPlayerNick(Player.Instance.OverlordId), new Vector2(Bound.X + 10, Bound.Y + 65), Color.White);
             draw.DrawString(GUI.Font, "" + Player.Instance.Overlord.Hand.Count, new Vector2(Bound.X + 2 * (Bound.Width / 3) + 60, Bound.Y + 15), Color.White);
-            draw.DrawString(GUI.Font, "" + Player.Instance.Overlord.ThreatTokens, new Vector2(Bound.X + Bound.Width / 2 + 60, Bound.Y + 65), Color.White);
+            draw.DrawString(GUI.Font, "" + Player.Instance.Overlord.ThreatTokens, new Vector2(Bound.X + Bound.Width / 3 + 60, Bound.Y + 65), Color.White);
         }
     }
 }
