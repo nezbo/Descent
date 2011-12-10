@@ -26,6 +26,11 @@ namespace Descent.GUI
     {
         private static GUIElement CreateEmptyRoot(Game game)
         {
+            Contract.Ensures(Contract.Result<GUIElement>().Bound.X == 0);
+            Contract.Ensures(Contract.Result<GUIElement>().Bound.Y == 0);
+            Contract.Ensures(Contract.Result<GUIElement>().Bound.Width == game.GraphicsDevice.Viewport.Width);
+            Contract.Ensures(Contract.Result<GUIElement>().Bound.Height == game.GraphicsDevice.Viewport.Height);
+
             GUIElement result = new GUIElement(game, "root", 0, 0, game.GraphicsDevice.Viewport.Width, game.GraphicsDevice.Viewport.Height);
             result.SetDrawBackground(false);
 

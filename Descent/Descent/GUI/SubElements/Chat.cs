@@ -21,6 +21,9 @@ namespace Descent.GUI
 
             messages = new LinkedList<string>();
 
+            AddDrawable(this.Name, new Image(game.Content.Load<Texture2D>("chatbg")),
+                        new Rectangle(Bound.X, Bound.Y + Bound.Height - 50, Bound.Width, 50));
+
             // external events
             manager.ChatMessageEvent += new ChatMessageHandler(GetMessage);
             manager.GiveEquipmentEvent += new GiveEquipmentHandler(GiveEquipment);
