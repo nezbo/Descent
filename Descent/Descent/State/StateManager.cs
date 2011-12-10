@@ -342,7 +342,7 @@ namespace Descent.State
                 case State.WaitForOverlordChooseAction:
                     // If a square with a monster is pressed in an overlord turn and we are the overlord, a monster turn should begin.
                     Square s = FullModel.Board[eventArgs.X, eventArgs.Y];
-                    if (Player.Instance.IsOverlord && s.Figure != null && s.Figure is Monster && FullModel.Board.SquareVisibleByPlayers(eventArgs.X, eventArgs.Y))
+                    if (Player.Instance.IsOverlord && s.Figure != null && s.Figure is Monster && FullModel.Board.SquareVisibleByPlayers(eventArgs.X, eventArgs.Y) && monstersRemaining.Contains(s.Figure))
                     {
                         eventManager.QueueEvent(EventType.StartMonsterTurn, new CoordinatesEventArgs(eventArgs.X, eventArgs.Y));
                     }
