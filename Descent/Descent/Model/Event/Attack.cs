@@ -47,6 +47,16 @@ namespace Descent.Model.Event
 
         public int PierceBonus { get; set; }
 
+        public int Damage { get; set; }
+
+        public int Range { get; set; }
+
+        public int Surge { get; set; }
+
+        public int Pierce { get; set; }
+
+        public int UsedSurges { get; set; }
+
         public List<Dice> DiceForAttack { get; set; }
 
         /// <summary>
@@ -78,6 +88,7 @@ namespace Descent.Model.Event
             }
         }
 
+
         public void RollDice()
         {
             foreach (Dice dice in DiceForAttack)
@@ -99,7 +110,7 @@ namespace Descent.Model.Event
         [ContractInvariantMethod]
         private void ObjectInvariant()
         {
-            Contract.Invariant(DiceForAttack.All(d1 => DiceForAttack.All(d1.Equals)));
+            //Contract.Invariant(DiceForAttack == null ? true : DiceForAttack.Count == DiceForAttack.Count && DiceF);
         }
     }
 }

@@ -291,7 +291,7 @@ namespace Descent.State
                             root.SetClickAction("roll", (n, g) =>
                                                             {
                                                                 gameState.CurrentAttack.RollDice();
-                                                                n.EventManager.QueueEvent(EventType.RolledDices, new RolledDicesEventArgs(gameState.CurrentAttack.GetRolledSides()));
+                                                                n.EventManager.QueueEvent(EventType.RolledDices, new RolledDicesEventArgs(gameState.CurrentAttack.DiceForAttack.Select(d => d.SideIndex).ToArray()));
                                                             });
                         }
                         break;
@@ -1116,7 +1116,6 @@ namespace Descent.State
             Contract.Requires(CurrentState == State.WaitForRollDice);
             Contract.Ensures(CurrentState == State.WaitForDiceChoice);
 
-            derp.
             stateMachine.ChangeToNextState();
         }
         #endregion

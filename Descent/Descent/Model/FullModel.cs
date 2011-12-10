@@ -194,8 +194,8 @@ namespace Descent.Model
                 EDice eDice;
                 Enum.TryParse(data[0], false, out eDice);
 
-                Texture2D[] textures = new Texture2D[6];
-                int[][] sides = new int[6][];
+                Texture2D[] textures = new Texture2D[8];
+                int[][] sides = new int[8][];
                 for (int side = 0; side < 6; side++)
                 {
                     sides[side] = new int[4];
@@ -207,6 +207,14 @@ namespace Descent.Model
                     {
                         sides[side][value] = int.Parse(sideArray[value] + string.Empty);
                     }
+                }
+
+                if (eDice == EDice.B)
+                {
+                    textures[6] = game.Content.Load<Texture2D>("Images/Dice/B1000");
+                    textures[7] = game.Content.Load<Texture2D>("Images/Dice/B0100");
+                    sides[6] = new int[4] { 1, 0, 0, 0 };
+                    sides[7] = new int[4] { 0, 1, 0, 0 };
                 }
 
                 dice[eDice] = new Dice(eDice, sides, textures);

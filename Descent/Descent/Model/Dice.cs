@@ -2,6 +2,7 @@
 namespace Descent.Model
 {
     using System;
+    using System.Diagnostics.Contracts;
 
     using Descent.GUI;
 
@@ -95,6 +96,7 @@ namespace Descent.Model
 
             set
             {
+                Contract.Requires(value > 5 ? Color == EDice.B : true);
                 activeSideIndex = value;
             }
         }
@@ -156,7 +158,6 @@ namespace Descent.Model
             activeSideIndex = r.Next(6);
         }
 
-        #endregion
 
         /// <summary>
         /// Returns a copy of the Dice
@@ -166,5 +167,15 @@ namespace Descent.Model
         {
             return new Dice(color, sides, textures);
         }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null || !(obj is Dice)) return false;
+            Dice d = (Dice)obj;
+            if (d.ActiveSide == ActiveSide && d.Color == Color && d.SideIndex == SideIndex) return true;
+            return false;
+        }
+
+        #endregion
     }
 }
