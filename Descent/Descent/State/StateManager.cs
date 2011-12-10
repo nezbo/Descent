@@ -253,6 +253,13 @@ namespace Descent.State
                                 n.EventManager.QueueEvent(EventType.FinishedTurn, new GameEventArgs());
                             });
                         }
+                        else if (role == Role.Overlord)
+                        {
+                            root.SetClickAction("end", (n, g) =>
+                                                           {
+                                                               n.EventManager.QueueEvent(EventType.EndMonsterTurn, new GameEventArgs());
+                                                           });
+                        }
                         break;
                     }
                 case State.WaitForOverlordChooseAction:
@@ -299,9 +306,9 @@ namespace Descent.State
                     if (Player.Instance.IsOverlord)
                     {
                         figure = currentMonster;
-                    } 
-                    else 
-                    { 
+                    }
+                    else
+                    {
                         figure = Player.Instance.Hero;
                     }
                     Point standingPoint = FullModel.Board.FiguresOnBoard[figure];
@@ -833,7 +840,7 @@ namespace Descent.State
             Contract.Ensures(CurrentState == State.WaitForPerformAction);
 
             // Record monsterId
-            currentMonster = (Monster) FullModel.Board.FiguresOnBoard.Single(pair => pair.Value.X == eventArgs.X && pair.Value.Y == eventArgs.Y).Key;
+            currentMonster = (Monster)FullModel.Board.FiguresOnBoard.Single(pair => pair.Value.X == eventArgs.X && pair.Value.Y == eventArgs.Y).Key;
 
             stateMachine.PlaceStates(State.MonsterTurn);
             stateMachine.ChangeToNextState();
@@ -869,7 +876,7 @@ namespace Descent.State
             {
                 // Mark monsters that the overlord can select in the WaitForOverlordChooseAction
 
-                monstersRemaining = FullModel.Board.FiguresOnBoard.Where(pair => pair.Key is Monster).Select(pair => (Monster) pair.Key).ToList();
+                monstersRemaining = FullModel.Board.FiguresOnBoard.Where(pair => pair.Key is Monster).Select(pair => (Monster)pair.Key).ToList();
                 foreach (Point point in FullModel.Board.FiguresOnBoard.Where(pair => pair.Key is Monster).Select(pair => pair.Value))
                 {
                     gui.MarkSquare(point.X, point.Y, true);
