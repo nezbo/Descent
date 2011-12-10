@@ -291,7 +291,7 @@ namespace Descent.State
                             root.SetClickAction("roll", (n, g) =>
                                                             {
                                                                 gameState.CurrentAttack.RollDice();
-                                                                n.EventManager.QueueEvent(EventType.RolledDices, new RolledDicesEventArgs(gameState.CurrentAttack.GetRolledSides()));
+                                                                n.EventManager.QueueEvent(EventType.RolledDices, new RolledDicesEventArgs(gameState.CurrentAttack.DiceForAttack.Select(n => n.SideIndex).ToArray()));
                                                             });
                         }
                         break;
@@ -350,7 +350,7 @@ namespace Descent.State
                             eventManager.QueueEvent(EventType.OpenDoor, new CoordinatesEventArgs(eventArgs.X, eventArgs.Y));
                         }
                     }
-                    else if(FullModel.Board.Distance(standingPoint, new Point(eventArgs.X, eventArgs.Y)) == 0)
+                    else if (FullModel.Board.Distance(standingPoint, new Point(eventArgs.X, eventArgs.Y)) == 0)
                     {
                         //TODO Pickuptoken/marker, if there is any
                     }
