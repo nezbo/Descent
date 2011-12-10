@@ -493,7 +493,6 @@
                     RangeBonus = RangeContribution == null ? 0 : RangeContribution.GetInvocationList().Cast<Bonus<int>>().Sum(bonus => bonus.Invoke()),
                     PierceBonus = PierceContribution == null ? 0 : PierceContribution.GetInvocationList().Cast<Bonus<int>>().Sum(bonus => bonus.Invoke()),
                     SurgeBonus = SurgeContribution == null ? 0 : SurgeContribution.GetInvocationList().Cast<Bonus<int>>().Sum(bonus => bonus.Invoke()),
-                    DiceForAttack = this.DiceForAttack
                 };
         }
 

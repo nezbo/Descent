@@ -57,7 +57,13 @@ namespace Descent.Model.Event
 
         public int UsedSurges { get; set; }
 
-        public List<Dice> DiceForAttack { get; set; }
+        public List<Dice> DiceForAttack
+        {
+            get
+            {
+                return figure.DiceForAttack;
+            }
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Attack"/> class.
