@@ -26,6 +26,11 @@ namespace Descent.GUI
     {
         private static GUIElement CreateEmptyRoot(Game game)
         {
+            Contract.Ensures(Contract.Result<GUIElement>().Bound.X == 0);
+            Contract.Ensures(Contract.Result<GUIElement>().Bound.Y == 0);
+            Contract.Ensures(Contract.Result<GUIElement>().Bound.Width == game.GraphicsDevice.Viewport.Width);
+            Contract.Ensures(Contract.Result<GUIElement>().Bound.Height == game.GraphicsDevice.Viewport.Height);
+
             GUIElement result = new GUIElement(game, "root", 0, 0, game.GraphicsDevice.Viewport.Width, game.GraphicsDevice.Viewport.Height);
             result.SetDrawBackground(false);
 
@@ -219,16 +224,22 @@ namespace Descent.GUI
                             root.AddChild(end);
                             root.AddText(end.Name, "End Turn", new Vector2(5, 5));
                         }
+                        else if (role == Role.Overlord)
+                        {
+                            GUIElement end = new GUIElement(game, "end", RelW(g, 3), RelW(g, 3), RelW(g, 15), RelH(g, 10));
+                            root.AddChild(end);
+                            root.AddText(end.Name, "End Monster Turn", new Vector2(5, 5));
+                        }
                         break;
                     }
-                case State.WaitForChooseMonster:
+                case State.WaitForOverlordChooseAction:
                     {
                         if (role == Role.Overlord)
                         {
-                            GUIElement end = new GUIElement(game, "end", RelW(g, 3), RelW(g, 3), RelW(g, 15), RelH(g, 5));
+                            GUIElement end = new GUIElement(game, "end", RelW(g, 3), RelW(g, 3), RelW(g, 15), RelH(g, 10));
 
                             root.AddChild(end);
-                            root.AddText(end.Name, "End Turn", new Vector2(5, 5));
+                            root.AddText(end.Name, "End Overlord Turn", new Vector2(5, 5));
                         }
                         break;
                     }
