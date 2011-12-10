@@ -218,6 +218,9 @@ namespace Descent.GUI
         /// <param name="child">The new child</param>
         public void AddChild(GUIElement child)
         {
+            Contract.Requires(child.Bound.X >= Bound.X);
+            Contract.Requires(child.Bound.Y >= Bound.Y);
+
             children.Add(child);
         }
 
@@ -241,12 +244,34 @@ namespace Descent.GUI
             Contract.Requires(target != "");
             Contract.Requires(visual != null);
             Contract.Requires(visual.Texture != null);
+            AddDrawable(target, visual, new Rectangle((int)position.X, (int)position.Y, visual.Texture.Width, visual.Texture.Height));
+        }
+
+        /// <summary>
+        /// Add the drawable to be displayed on the screen bounding the given rectangle.
+        /// </summary>
+        /// <param name="target">The target GUIElement for the action</param>
+        /// <param name="visual">The drawable to display</param>
+        /// <param name="rectangle">The drawable should be stretched to be drawn at the rectangle</param>
+        public void AddDrawable(string target, Drawable visual, Rectangle rectangle)
+        {
+            Contract.Requires(target != "");
+            Contract.Requires(visual != null);
+            Contract.Requires(visual.Texture != null);
+
+            Contract.Requires(rectangle.X >= Bound.X);
+            Contract.Requires(rectangle.Y >= Bound.Y);
+            Contract.Requires(rectangle.X + rectangle.Width <= Bound.X + Bound.Width);
+            Contract.Requires(rectangle.Y + rectangle.Height <= Bound.Y + Bound.Height);
 
             if (Name == target)
             {
-                visuals.Add(visual, new Rectangle((int)position.X, (int)position.Y, visual.Texture.Width, visual.Texture.Height));
+                visuals.Add(visual, rectangle);
             }
-            foreach (GUIElement e in children) e.AddDrawable(target, visual, position);
+            foreach (GUIElement e in children)
+            {
+                if (e.Bound.Contains(rectangle)) e.AddDrawable(target, visual, rectangle);
+            };
         }
 
         /// <summary>

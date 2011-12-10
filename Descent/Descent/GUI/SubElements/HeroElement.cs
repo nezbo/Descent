@@ -10,11 +10,8 @@ namespace Descent.GUI.SubElements
     {
         private Hero hero;
 
-        private Texture2D health;
         private Rectangle healthRect;
-        private Texture2D fatigue;
         private Rectangle fatigueRect;
-        private Texture2D movement;
         private Rectangle movementRect;
 
         public HeroElement(Game game, Hero hero)
@@ -23,14 +20,21 @@ namespace Descent.GUI.SubElements
             this.hero = hero;
             this.SetDrawBackground(false);
 
-            this.AddDrawable(this.Name, new Image(hero.BigTexture), new Vector2(0, this.Bound.Height - hero.BigTexture.Height));
-            health = game.Content.Load<Texture2D>("Images/Other/health-small");
-            fatigue = game.Content.Load<Texture2D>("Images/Other/fatigue-small");
-            movement = game.Content.Load<Texture2D>("Images/Other/movement-small");
-
             healthRect = new Rectangle(210, this.Bound.Height - 200, 66, 66);
             fatigueRect = new Rectangle(210, this.Bound.Height - 200 + 66, 66, 66);
             movementRect = new Rectangle(210, this.Bound.Height - 200 + 132, 66, 66);
+
+            this.AddDrawable(this.Name, new Image(hero.BigTexture), new Vector2(0, this.Bound.Height - hero.BigTexture.Height));
+            this.AddDrawable(this.Name, new Image(game.Content.Load<Texture2D>("Images/Other/health-small")), healthRect);
+            this.AddDrawable(this.Name, new Image(game.Content.Load<Texture2D>("Images/Other/fatigue-small")), fatigueRect);
+            this.AddDrawable(this.Name, new Image(game.Content.Load<Texture2D>("Images/Other/movement-small")), movementRect);
+
+            Vector2 nameV = GUI.Font.MeasureString(hero.Name);
+            int nameX = (int)((200 - nameV.X) / 2);
+            int nameY = Bound.Height - 30;
+
+            this.AddDrawable(this.Name, new Image(game.Content.Load<Texture2D>("heroheader")), new Rectangle(nameX - 10, nameY - 5, (int)nameV.X + 20, (int)nameV.Y + 10));
+            this.AddText(this.Name, hero.Name, new Vector2(nameX, nameY));
 
             // the equipment panels
 
@@ -50,10 +54,6 @@ namespace Descent.GUI.SubElements
         public override void Draw(SpriteBatch draw)
         {
             base.Draw(draw);
-
-            draw.Draw(health, healthRect, Color.White);
-            draw.Draw(fatigue, fatigueRect, Color.White);
-            draw.Draw(movement, movementRect, Color.White);
 
             draw.DrawString(GUI.Font, hero.Health + "/" + hero.MaxHealth, new Vector2(healthRect.X + 15, healthRect.Y + 20), Color.White);
             draw.DrawString(GUI.Font, hero.Fatigue + "/" + hero.MaxFatigue, new Vector2(fatigueRect.X + 20, fatigueRect.Y + 35), Color.White);

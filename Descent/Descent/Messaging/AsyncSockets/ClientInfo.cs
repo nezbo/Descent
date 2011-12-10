@@ -79,8 +79,6 @@ namespace Descent.Messaging.AsyncSockets
 
                 string content = str.ToString();
 
-                //Console.WriteLine("String content: " + content);
-
                 // Check for end of message
                 if (content.IndexOf("<EOF>") > -1)
                 {
@@ -89,7 +87,6 @@ namespace Descent.Messaging.AsyncSockets
                     {
                         string newMessage = content.Substring(0, content.IndexOf("<EOF>"));
                         content = content.Substring(newMessage.Length + 5, content.Length - newMessage.Length - 5);
-                        //content = content.Substring(content.IndexOf("<EOF>"), content.Length - 5);
 
                         System.Console.WriteLine("Message: " + newMessage);
 

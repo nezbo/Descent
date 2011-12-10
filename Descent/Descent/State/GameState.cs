@@ -13,6 +13,8 @@ namespace Descent.State
     using System.Linq;
     using System.Text;
 
+    using Descent.Model.Board.Marker;
+
     public delegate T Bonus<T>();
 
     /// <summary>
@@ -26,6 +28,7 @@ namespace Descent.State
         private List<Equipment> currentEquipment = new List<Equipment>();
         private List<OverlordCard> overlordCards = new List<OverlordCard>();
         private List<Hero> heroes = new List<Hero>();
+        private List<Monster> monstersLeftToAct = new List<Monster>();
         private Dictionary<int, List<Equipment>> unequippedEquipment; 
 
         private List<Treasure> treasures;
@@ -86,8 +89,9 @@ namespace Descent.State
         /// <returns>{conquest tokens, coins, curses, treasures}</returns>
         public int[] getChestContents(int chestId)
         {
-            //TODO
-            return null;
+            // TODO: This should just return the chest itself?
+            Chest c = FullModel.AllChests.Single(i => i.Id == chestId);
+            return new int[]{c.ConquestTokens, c.Coin, c.Curses, c.Treasures};
         }
 
         public Treasure getTreasure(int treasureId)

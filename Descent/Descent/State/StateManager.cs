@@ -864,9 +864,9 @@ namespace Descent.State
                 foreach (Point point in FullModel.Board.FiguresOnBoard.Where(pair => pair.Key is Monster).Select(pair => pair.Value))
                 {
                     gui.MarkSquare(point.X, point.Y, true);
-                }  
+                }
             }
-           
+
             stateMachine.PlaceStates(State.WaitForOverlordChooseAction);
             StateChanged();
         }
@@ -938,7 +938,7 @@ namespace Descent.State
         {
             Contract.Requires(CurrentState == State.WaitForPlayCard);
             Contract.Ensures(CurrentState == State.WaitForChooseMonster || CurrentState == State.WaitForPlaceMonster);
-            
+
             stateMachine.ChangeToNextState();
             if (CurrentState == State.SpawnMonsters)
             {
@@ -988,7 +988,6 @@ namespace Descent.State
             stateMachine.PlaceStates(State.ActivateMonsters);
             stateMachine.ChangeToNextState();
         }
-
 
         // TODO NOT USED ATM
         private void ChooseMonster(Monster monster)
