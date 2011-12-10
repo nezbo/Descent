@@ -28,6 +28,7 @@ namespace Descent.State
 
         // fields for different game logic variables
         private Hero currentHero;
+        private Monster currentMonster;
         private readonly List<int> playersRemaining = new List<int>();
 
         private List<Monster> monstersRemaining = new List<Monster>();
@@ -294,16 +295,27 @@ namespace Descent.State
 
                     break;
                 case State.WaitForPerformAction:
-                    if (FullModel.Board.Distance(FullModel.Board.HeroesOnBoard[Player.Instance.Hero], new Point(eventArgs.X, eventArgs.Y)) == 1)
+                    Figure figure;
+                    if (Player.Instance.IsOverlord)
+                    {
+                        figure = currentMonster;
+                    } 
+                    else 
+                    { 
+                        figure = Player.Instance.Hero;
+                    }
+                    Point standingPoint = FullModel.Board.FiguresOnBoard[figure];
+
+                    if (FullModel.Board.Distance(standingPoint, new Point(eventArgs.X, eventArgs.Y)) == 1)
                     {
                         // Move to adjecent
-                        if (FullModel.Board.IsStandable(eventArgs.X, eventArgs.Y) && Player.Instance.HeroParty.Heroes[eventArgs.SenderId].MovementLeft >= 1)
+                        if (FullModel.Board.IsStandable(eventArgs.X, eventArgs.Y) && figure.MovementLeft >= 1)
                         {
                             eventManager.QueueEvent(EventType.MoveTo, new CoordinatesEventArgs(eventArgs.X, eventArgs.Y));
                         }
                         // Open door
                         else if (FullModel.Board.CanOpenDoor(new Point(eventArgs.X, eventArgs.Y)) &&
-                            FullModel.Board.CanOpenDoor(FullModel.Board.HeroesOnBoard[Player.Instance.Hero]) && Player.Instance.HeroParty.Heroes[eventArgs.SenderId].MovementLeft >= 2)
+                            FullModel.Board.CanOpenDoor(standingPoint) && figure.MovementLeft >= 2)
                         {
                             eventManager.QueueEvent(EventType.OpenDoor, new CoordinatesEventArgs(eventArgs.X, eventArgs.Y));
                         }
@@ -637,7 +649,7 @@ namespace Descent.State
             Contract.Requires(CurrentState == State.WaitForChooseSquare);
             Contract.Ensures(CurrentState == ((playersRemaining.Count == 0) ? State.NewRound : State.WaitForChooseSquare));
 
-            FullModel.Board.PlaceHero(Player.Instance.HeroParty.Heroes[eventArgs.PlayerId], new Point(eventArgs.X, eventArgs.Y));
+            FullModel.Board.PlaceFigure(Player.Instance.HeroParty.Heroes[eventArgs.PlayerId], new Point(eventArgs.X, eventArgs.Y));
 
             playersRemaining.Remove(eventArgs.PlayerId);
 
@@ -676,13 +688,21 @@ namespace Descent.State
         private void MoveTo(object sender, CoordinatesEventArgs eventArgs)
         {
             Contract.Requires(CurrentState == State.WaitForPerformAction);
-            Contract.Requires(Player.Instance.HeroParty.Heroes[eventArgs.SenderId].MovementLeft >= 1);
+            //TODO Contract.Requires(Player.Instance.HeroParty.Heroes[eventArgs.SenderId].MovementLeft >= 1);
             Contract.Ensures(CurrentState == State.WaitForPerformAction);
 
-            Hero hero = Player.Instance.HeroParty.Heroes[eventArgs.SenderId];
+            Figure figure;
+            if (Player.Instance.HeroParty.Heroes.ContainsKey(eventArgs.SenderId))
+            {
+                figure = Player.Instance.HeroParty.Heroes[eventArgs.SenderId];
+            }
+            else
+            {
+                figure = currentMonster;
+            }
 
-            FullModel.Board.MoveHero(hero, new Point(eventArgs.X, eventArgs.Y));
-            hero.RemoveMovement(1);
+            FullModel.Board.MoveFigure(figure, new Point(eventArgs.X, eventArgs.Y));
+            figure.RemoveMovement(1);
 
             stateMachine.PlaceStates(State.MoveAdjecent);
             stateMachine.ChangeToNextState();
@@ -813,10 +833,23 @@ namespace Descent.State
             Contract.Ensures(CurrentState == State.WaitForPerformAction);
 
             // Record monsterId
+            currentMonster = (Monster) FullModel.Board.FiguresOnBoard.Single(pair => pair.Value.X == eventArgs.X && pair.Value.Y == eventArgs.Y).Key;
 
             stateMachine.PlaceStates(State.MonsterTurn);
             stateMachine.ChangeToNextState();
             MonsterTurnInitiation();
+        }
+
+        private void MonsterTurnInitiation()
+        {
+            Contract.Requires(CurrentState == State.MonsterTurn);
+            Contract.Ensures(CurrentState == State.WaitForPerformAction);
+
+            currentMonster.SetAttacks(1);
+            currentMonster.SetMovement(currentMonster.Speed);
+
+            stateMachine.PlaceStates(State.WaitForPerformAction);
+            stateMachine.ChangeToNextState();
         }
 
         // Helper method
@@ -835,10 +868,9 @@ namespace Descent.State
             if (Player.Instance.IsOverlord)
             {
                 // Mark monsters that the overlord can select in the WaitForOverlordChooseAction
-                Dictionary<Monster, Point> dictionary = FullModel.Board.MonstersOnBoard;
 
-                monstersRemaining = dictionary.Keys.ToList();
-                foreach (Point point in dictionary.Values)
+                monstersRemaining = FullModel.Board.FiguresOnBoard.Where(pair => pair.Key is Monster).Select(pair => (Monster) pair.Key).ToList();
+                foreach (Point point in FullModel.Board.FiguresOnBoard.Where(pair => pair.Key is Monster).Select(pair => pair.Value))
                 {
                     gui.MarkSquare(point.X, point.Y, true);
                 }  
@@ -897,7 +929,7 @@ namespace Descent.State
             }
             else if (CurrentState == State.ActivateMonsters)
             {
-                ActivateMonstersInitiation();
+                //ActivateMonstersInitiation();
             }
         }
 
@@ -938,26 +970,8 @@ namespace Descent.State
 
             stateMachine.PlaceStates(State.ActivateMonsters);
             stateMachine.ChangeToNextState();
-            ActivateMonstersInitiation();
         }
 
-        // TODO Is not used ATM - going directly from WaitForOverlordChooseAction
-        private void ActivateMonstersInitiation()
-        {
-            Contract.Requires(CurrentState == State.ActivateMonsters);
-            Contract.Ensures(CurrentState == State.WaitForChooseMonster);
-
-            Dictionary<Monster, Point> dictionary = FullModel.Board.MonstersOnBoard;
-
-            monstersRemaining = dictionary.Keys.ToList();
-            foreach (Point point in dictionary.Values)
-            {
-                gui.MarkSquare(point.X, point.Y, true);
-            }
-
-            stateMachine.PlaceStates(State.WaitForChooseMonster);
-            stateMachine.ChangeToNextState();
-        }
 
         // TODO NOT USED ATM
         private void ChooseMonster(Monster monster)
@@ -977,17 +991,6 @@ namespace Descent.State
         {
             Contract.Requires(CurrentState == State.WaitForChooseMonster);
 
-        }
-
-        private void MonsterTurnInitiation()
-        {
-            Contract.Requires(CurrentState == State.MonsterTurn);
-            Contract.Ensures(CurrentState == State.WaitForPerformAction);
-
-            // Add movement and 1 attack
-
-            stateMachine.PlaceStates(State.WaitForPerformAction);
-            stateMachine.ChangeToNextState();
         }
 
         private void MonsterTurnDone()
