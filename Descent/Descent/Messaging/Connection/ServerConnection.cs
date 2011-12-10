@@ -10,6 +10,7 @@ namespace Descent.Messaging.Connection
     using AsyncSockets;
 
     using Descent.Model.Player;
+    using Descent.State;
 
     /// <summary>
     /// TODO: Update summary.
@@ -65,7 +66,6 @@ namespace Descent.Messaging.Connection
         /// <param name="message">The message string.</param>
         private void MessageReceived(ClientInfo fromClient, string message)
         {
-            //Console.WriteLine("SERVER RECEIVED [{0}]: {1}", fromClient.Id, message);
             Player.Instance.EventManager.ParseAndFire(message, false);
             SendString(message);
         }
@@ -77,9 +77,9 @@ namespace Descent.Messaging.Connection
         /// <returns>True to accept the client (leave him connected), false to disconnect him again.</returns>
         private bool AcceptProcedure(ClientInfo newClient)
         {
-            if (Player.Instance.NumberOfPlayers < 5)
+            // Only accept the player if we're not full and we're still in the lobby, waiting for the game to start.
+            if (Player.Instance.NumberOfPlayers < 5 && Player.Instance.StateManager.CurrentState == State.InLobby)
             {
-                // TODO: Check that the game state is open for joining
                 newClient.Send("ASSIGNID," + newClient.Id); // Send back the ID to the player.
                 return true;
             }

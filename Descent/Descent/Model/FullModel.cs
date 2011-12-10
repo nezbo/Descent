@@ -152,7 +152,9 @@ namespace Descent.Model
 
                 Texture2D texture = game.Content.Load<Texture2D>("Images/Monsters/" + id);
 
-                monsters.Add(new Monster(id, name, master, speed, health, armor, type, attackDice, size, texture));
+                Monster m = new Monster(id, name, master, speed, health, armor, type, attackDice, size, texture);
+                m.Initialize();
+                monsters.Add(m);
             }
 
             FullModel.monsters = monsters;
@@ -208,7 +210,7 @@ namespace Descent.Model
             System.Diagnostics.Debug.WriteLine("Dice loaded successfully!");
         }
 
-        #endregion
+        #endregion  
 
         #region Load Equipement
 
@@ -373,7 +375,7 @@ namespace Descent.Model
                         Orientation.TryParse(data[4], true, out o);
                         Monster monster = GetMonster(int.Parse(data[3]));
                         monster.Orientation = o;
-                        board[x, y].Figure = monster;
+                        board.PlaceFigure(monster, new Point(x, y));
                         break;
                     case "door":
                         RuneKey color;
@@ -414,14 +416,15 @@ namespace Descent.Model
                 string[] data = line.Split(',');
                 //System.Diagnostics.Debug.Assert(data.Length == 5, "Error when loading chests at line: " + (i + 1));
 
+                int id = int.Parse(data[0]);
                 EquipmentRarity rarity;
-                EquipmentRarity.TryParse(data[0], true, out rarity);
-                int tokens = int.Parse(data[1]);
-                int coins = int.Parse(data[2]);
-                int curses = int.Parse(data[3]);
-                int treasures = int.Parse(data[4]);
+                EquipmentRarity.TryParse(data[1], true, out rarity);
+                int tokens = int.Parse(data[2]);
+                int coins = int.Parse(data[3]);
+                int curses = int.Parse(data[4]);
+                int treasures = int.Parse(data[5]);
 
-                chests.Add(new Chest(rarity, tokens, coins, curses, treasures));
+                chests.Add(new Chest(id, rarity, tokens, coins, curses, treasures));
             }
 
             System.Diagnostics.Debug.WriteLine("Chests loaded successfully!");

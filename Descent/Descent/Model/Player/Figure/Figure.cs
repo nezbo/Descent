@@ -60,6 +60,26 @@
         public event Bonus<List<Dice>> DiceContribution;
 
         /// <summary>
+        /// This event contributes to damage when making attacks
+        /// </summary>
+        public event Bonus<int> DamageContribution;
+
+        /// <summary>
+        /// This event contributes to range when making attacks
+        /// </summary>
+        public event Bonus<int> RangeContribution;
+
+        /// <summary>
+        /// This event contributes to surges when making attacks
+        /// </summary>
+        public event Bonus<int> SurgeContribution;
+
+        /// <summary>
+        /// This event contributes to pierce, when making attacks
+        /// </summary>
+        public event Bonus<int> PierceContribution;
+
+        /// <summary>
         /// This event contributes lists of abilities to the figure
         /// </summary>
         public event Bonus<List<Ability>> AbilityContribution;
@@ -444,6 +464,23 @@
         public void AddAbility(Ability ability)
         {
             abilities.Add(ability);
+        }
+
+        /// <summary>
+        /// Gets an attack instance with the attacking figure, 
+        /// different bonuses, and the dice attacking
+        /// </summary>
+        /// <returns></returns>
+        public Attack GetAttack()
+        {
+            return new Attack(this)
+                {
+                    DamageBonus = DamageContribution == null ? 0 : DamageContribution.GetInvocationList().Cast<Bonus<int>>().Sum(bonus => bonus.Invoke()),
+                    RangeBonus = RangeContribution == null ? 0 : RangeContribution.GetInvocationList().Cast<Bonus<int>>().Sum(bonus => bonus.Invoke()),
+                    PierceBonus = PierceContribution == null ? 0 : PierceContribution.GetInvocationList().Cast<Bonus<int>>().Sum(bonus => bonus.Invoke()),
+                    SurgeBonus = SurgeContribution == null ? 0 : SurgeContribution.GetInvocationList().Cast<Bonus<int>>().Sum(bonus => bonus.Invoke()),
+                    DiceForAttack = this.DiceForAttack
+                };
         }
 
         /// <summary>

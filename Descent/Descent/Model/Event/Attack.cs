@@ -20,51 +20,33 @@ namespace Descent.Model.Event
     /// </summary>
     public class Attack
     {
-        public delegate T Bonus<T>();
-
-        public event Bonus<int> DamageContribution;
-
-        public event Bonus<int> RangeContribution;
-
-        public event Bonus<int> SurgeContribution;
-
-        public event Bonus<int> PierceContribution;
-
-        private Hero hero;
-
-        private Point attackingSquare;
+        private Figure figure;
 
         /// <summary>
         /// Gets or sets the hero that is attacking
         /// </summary>
-        public Hero AttackingHero
+        public Figure AttackingFigure
         {
             get
             {
-                return hero;
+                return figure;
             }
 
             set
             {
-                hero = value;
+                figure = value;
             }
         }
 
-        /// <summary>
-        /// Gets or sets the point to the square the hero is attacking
-        /// </summary>
-        public Point AttackingSquare
-        {
-            get
-            {
-                return attackingSquare;
-            }
+        public int DamageBonus { get; set; }
 
-            set
-            {
-                attackingSquare = value;
-            }
-        }
+        public int RangeBonus { get; set; }
+
+        public int SurgeBonus { get; set; }
+
+        public int PierceBonus { get; set; }
+
+        public List<Dice> DiceForAttack { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Attack"/> class.
@@ -75,10 +57,9 @@ namespace Descent.Model.Event
         /// <param name="attackingSquare">
         /// The point to the square the hero is attacking
         /// </param>
-        public Attack(Hero attackingHero, Point attackingSquare)
+        public Attack(Figure attackingFigure)
         {
-            this.hero = attackingHero;
-            this.attackingSquare = attackingSquare;
+            this.figure = attackingFigure;
         }
     }
 }
