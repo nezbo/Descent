@@ -319,7 +319,7 @@ namespace Descent.State
         #region Local event listeners
         private void SquareMarked(object sender, CoordinatesEventArgs eventArgs)
         {
-            if (!HasTurn() || CurrentState != State.WaitForChooseSquare)
+            if (!HasTurn() && CurrentState != State.WaitForChooseSquare)
             {
                 return;
             }
