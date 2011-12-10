@@ -32,8 +32,6 @@ namespace Descent.Model.Player.Figure
 
         private EAttackType attackType;
 
-        private Rectangle size;
-
         #endregion
 
         #region Properties
@@ -48,16 +46,6 @@ namespace Descent.Model.Player.Figure
                 return isMaster;
             }
         }
-
-        public Rectangle Size
-        {
-            get
-            {
-                return size;
-            }
-        }
-
-        public Orientation Orientation { get; set; }
 
         #endregion
 
@@ -92,7 +80,7 @@ namespace Descent.Model.Player.Figure
         /// The dice.
         /// </param>
         public Monster(int id, string name, bool master, int speed, int health, int armor, EAttackType type, List<Dice> dice, Rectangle size, Texture2D texture)
-            : base(id, name)
+            : base(id, name, size)
         {
             isMaster = master;
             Speed = speed;
@@ -109,7 +97,7 @@ namespace Descent.Model.Player.Figure
 
         public Monster Clone(int newID)
         {
-            return new Monster(newID, Name, isMaster, Speed, MaxHealth, Armor, attackType, new List<Dice>(DiceForAttack), size, Texture);
+            return new Monster(newID, Name, isMaster, Speed, MaxHealth, Armor, attackType, new List<Dice>(DiceForAttack), Size, Texture);
         }
 
         #endregion

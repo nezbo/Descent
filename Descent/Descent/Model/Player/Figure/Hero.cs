@@ -169,7 +169,7 @@ namespace Descent.Model.Player.Figure
         /// The big texture for a hero
         /// </param>
         public Hero(int id, string name, int conquest, int health, int fatigue, int armor, int speed, Dictionary<EAttackType, int> blackDice, Dictionary<EAttackType, int> numberOfSkills, int hands, string text, Texture2D texture, Texture2D bigTexture)
-            : base(id, name)
+            : base(id, name, new Rectangle(0, 0, 1, 1))
         {
             this.cost = conquest;
             this.MaxHealth = health;
