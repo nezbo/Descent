@@ -59,12 +59,12 @@ namespace Descent
             // creation of elements
             this.gui = new GUI.GUI(this);
             GUIElement root = GUIElementFactory.CreateStateElement(this, Descent.State.State.ActivateMonsters, Descent.Model.Player.Role.Overlord, null);
-            GUIElement createGame = new GUIElement(this, "create", 100, 250, 300, 100);
-            GUIElement joinGame = new GUIElement(this, "join", 100, 550, 300, 100);
-            GUIElement changeName = new GUIElement(this, "changeName", 500, 250, 200, 100);
-            InputElement nameInput = new InputElement(this, "nameInput", changeName.Bound.X + 10, changeName.Bound.Y + (changeName.Bound.Height - 30) / 2, 150, 30);
+            GUIElement createGame = new GUIElement(this, "create", (GraphicsDevice.Viewport.Width - 300) / 2, 400, 300, 100);
+            GUIElement joinGame = new GUIElement(this, "join", (GraphicsDevice.Viewport.Width - 300) / 2, 550, 300, 100);
+            GUIElement changeName = new GUIElement(this, "changeName", (GraphicsDevice.Viewport.Width - 200) / 2, 250, 200, 100);
+            InputElement nameInput = new InputElement(this, "nameInput", changeName.Bound.X + 10, changeName.Bound.Y + (changeName.Bound.Height - 30) / 2, changeName.Bound.Width - 20, 30);
             InputElement connectInput = new InputElement(this, "connectInput", joinGame.Bound.X + 10, joinGame.Bound.Y + (joinGame.Bound.Height - 30) / 2, 150, 30);
-            GUIElement buttonCreateGame = new GUIElement(this, "doneCreate", createGame.Bound.X + 200, createGame.Bound.Y + (createGame.Bound.Height - 30) / 2, 80, 30);
+            GUIElement buttonCreateGame = new GUIElement(this, "doneCreate", createGame.Bound.X + (createGame.Bound.Width - 100) / 2, createGame.Bound.Y + (createGame.Bound.Height - 30) / 2, 120, 30);
             GUIElement buttonJoinGame = new GUIElement(this, "doneJoin", joinGame.Bound.X + 200, joinGame.Bound.Y + (joinGame.Bound.Height - 30) / 2, 80, 30);
 
             // assembling tree
@@ -90,9 +90,9 @@ namespace Descent
             // adding logic to tree
             root.SetDrawBackground(false);
 
-            root.AddText("changeName", "Name:", new Vector2(0, 0));
-            root.AddText("doneCreate", "Create!", new Vector2(0, 0));
-            root.AddText("doneJoin", "Join!", new Vector2(0, 0));
+            root.AddText("changeName", "Name:", new Vector2(5, 0));
+            root.AddText("doneCreate", "New Game!", new Vector2(5, 0));
+            root.AddText("doneJoin", "Join!", new Vector2(25, 0));
             root.SetClickAction("doneCreate", (n, g) =>
             {
                 // Start the game. TODO: Try/catch error handling.
@@ -186,7 +186,9 @@ namespace Descent
             gui.Draw(spriteBatch);
 
             numOfFrames++;
-            Window.Title = "Descent - " + FPS + " FPS";
+            string header = "Descent - FPS = " + FPS + " - ";
+            //header += Player.Instance.Nickname ?? "Main Menu";
+            Window.Title = header;
 
             base.Draw(gameTime);
         }
