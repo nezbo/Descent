@@ -41,6 +41,7 @@ namespace Descent.GUI
             xDisp = -2 * TileSize;
             yDisp = 17 * TileSize;
             this.role = role;
+            this.SetDrawBackground(false);
 
             // marked
             this.markedSquares = new Dictionary<Vector2, bool>();
@@ -50,21 +51,29 @@ namespace Descent.GUI
 
         public override bool HandleClick(int x, int y)
         {
-            int xClick = (int)Math.Floor((xDisp + x) / (double)TileSize);
-            int yClick = (int)Math.Floor((yDisp + y) / (double)TileSize);
+            Point boardCoords = CalcBoardSquare(x, y);
 
-            Player.Instance.EventManager.QueueEvent(EventType.SquareMarked, new CoordinatesEventArgs(xClick, yClick));
+            Player.Instance.EventManager.QueueEvent(EventType.SquareMarked, new CoordinatesEventArgs(boardCoords.X, boardCoords.Y));
 
             return true;
         }
 
-        private Vector2 CalcVector(int x, int y)
+        private Point CalcBoardSquare(int mouseX, int mouseY)
         {
-            return new Vector2(x * TileSize - xDisp, y * TileSize - yDisp);
+            int xClick = (int)Math.Floor((xDisp + mouseX) / (double)TileSize);
+            int yClick = (int)Math.Floor((yDisp + mouseY) / (double)TileSize);
+
+            return new Point(xClick, yClick);
+        }
+
+        private Vector2 CalcScreenVector(int boardX, int boardY)
+        {
+            return new Vector2(boardX * TileSize - xDisp, boardY * TileSize - yDisp);
         }
 
         public override void Draw(SpriteBatch draw)
         {
+
             Vector2 v;
             // Draw floor
             for (int x = 0; x < board.Width; x++)
@@ -73,7 +82,7 @@ namespace Descent.GUI
                 {
                     if (board.SquareVisibleByPlayers(x, y) || (role == Role.Overlord && board.IsSquareWithinBoard(x, y)))
                     {
-                        if (board[x, y] != null) draw.Draw(board.FloorTexture, CalcVector(x, y), Color.White);
+                        if (board[x, y] != null) draw.Draw(board.FloorTexture, CalcScreenVector(x, y), Color.White);
                     }
                 }
             }
@@ -89,7 +98,7 @@ namespace Descent.GUI
                     {
                         s = board[x, y];
                         if (s == null) continue;
-                        v = CalcVector(x, y);
+                        v = CalcScreenVector(x, y);
                         if (s.Marker != null) draw.Draw(s.Marker.Texture, v, Color.White);
                     }
                 }
@@ -103,7 +112,7 @@ namespace Descent.GUI
                     {
                         s = board[x, y];
                         if (s == null) continue;
-                        v = CalcVector(x, y);
+                        v = CalcScreenVector(x, y);
                         if (s.Figure != null && s.Figure is Monster && ((Monster)s.Figure).Orientation == Orientation.V)
                             draw.Draw(
                                 s.Figure.Texture,
@@ -148,7 +157,7 @@ namespace Descent.GUI
                 float rotation = d.Orientation == Orientation.H ? MathHelper.Pi * 0.5f : 0.0f;
                 Point position = d.TopLeftCorner;
                 draw.Draw(d.Texture,
-                    CalcVector(d.TopLeftCorner.X + 1, d.TopLeftCorner.Y + 1),
+                    CalcScreenVector(d.TopLeftCorner.X + 1, d.TopLeftCorner.Y + 1),
                     null,
                     Color.White,
                     rotation,
@@ -157,11 +166,14 @@ namespace Descent.GUI
                     SpriteEffects.None,
                     0f);
             }
+
+            // mouseovers and stuff
+            base.Draw(draw);
         }
 
         private void DrawMark(SpriteBatch draw, int boardX, int boardY, bool positiveMark)
         {
-            Vector2 screenPoint = CalcVector(boardX, boardY);
+            Vector2 screenPoint = CalcScreenVector(boardX, boardY);
             Rectangle r = new Rectangle((int)screenPoint.X, (int)screenPoint.Y, TileSize, TileSize);
             if (positiveMark)
             {
@@ -199,12 +211,28 @@ namespace Descent.GUI
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
+            texts.Clear();
 
             KeyboardState keyState = Keyboard.GetState();
             if (keyState.IsKeyDown(Keys.Left) && xDisp > -BorderTiles * TileSize) xDisp -= 10;
             if (keyState.IsKeyDown(Keys.Right) && xDisp < (board.Width + BorderTiles - 1) * TileSize - Bound.Width) xDisp += 10;
             if (keyState.IsKeyDown(Keys.Up) && yDisp > -BorderTiles * TileSize) yDisp -= 10;
             if (keyState.IsKeyDown(Keys.Down) && yDisp < (board.Height + BorderTiles) * TileSize - Bound.Height) yDisp += 10;
+
+            // mouseover
+            MouseState ms = Mouse.GetState();
+            Point p = CalcBoardSquare(ms.X, ms.Y);
+
+
+            if (board.IsSquareWithinBoard(p.X, p.Y))
+            {
+                Square s = board[p.X, p.Y];
+                if (s.Figure != null && s.Figure is Hero)
+                {
+                    Hero h = (Hero)s.Figure;
+                    AddText(this.Name, h.Name, new Vector2(ms.X, ms.Y));
+                }
+            }
         }
     }
 }

@@ -305,13 +305,16 @@ namespace Descent.GUI
         protected string WordWrap(string text, Vector2 position)
         {
             Contract.Requires(text != null);
-            Contract.Requires((Bound.Width - position.X) > GUI.Font.MeasureString("m").X);
+            Contract.Requires((Bound.Width - position.X) > GUI.Font.MeasureString("mm").X);
 
             int wordsIndex = 0;
             string[] words = text.Split();
             StringBuilder builder = new StringBuilder();
 
             int totalSpace = Bound.Width - (int)position.X;
+
+            if (totalSpace < GUI.Font.MeasureString("mmm").X) return "";
+
             string currentLine = "";
             string nextWord;
             while (wordsIndex < words.Length)
