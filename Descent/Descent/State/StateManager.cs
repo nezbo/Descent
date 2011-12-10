@@ -12,6 +12,7 @@ namespace Descent.State
     using Descent.Model.Player;
     using Descent.Model.Player.Figure;
     using Descent.Model.Player.Figure.HeroStuff;
+    using Descent.Model.Player.Overlord;
 
     using Microsoft.Xna.Framework;
 
@@ -72,7 +73,7 @@ namespace Descent.State
 
             // initiate start
             stateMachine = new StateMachine(new State[] { State.InLobby, State.Initiation, State.DrawOverlordCards, //TODO DrawSkillCards
-                State.BuyEquipment, State.Equip, State.WaitForChooseSquare, State.NewRound, State.NewRound });
+                State.AllBuyEquipment, State.AllEquip, State.WaitForChooseSquare, State.NewRound, State.NewRound });
             stateMachine.StateChanged += StateChanged;
 
             StateChanged();
@@ -94,6 +95,11 @@ namespace Descent.State
         }
 
         // Helper methods for the game
+
+        public bool HasTurn()
+        {
+            return gameState.CurrentPlayer == Player.Instance.Id;
+        }
 
         public bool IsAHeroTurn()
         {
@@ -154,9 +160,10 @@ namespace Descent.State
 
                         break;
                     }
+                case State.AllBuyEquipment:
                 case State.BuyEquipment:
                     {
-                        if (role != Role.Overlord && playersRemaining.Contains(Player.Instance.Id))
+                        if (role != Role.Overlord && ((CurrentState == State.AllBuyEquipment && playersRemaining.Contains(Player.Instance.Id)) || (CurrentState == State.BuyEquipment && HasTurn())))
                         {
 
                             root.SetClickAction("done", (n, g) =>
@@ -182,9 +189,10 @@ namespace Descent.State
                         }
                         break;
                     }
+                case State.AllEquip:
                 case State.Equip:
                     {
-                        if (role != Role.Overlord && playersRemaining.Contains(Player.Instance.Id))
+                        if (role != Role.Overlord && ((CurrentState == State.AllEquip && playersRemaining.Contains(Player.Instance.Id)) || (CurrentState == State.Equip && HasTurn())))
                         {
 
                             root.SetClickAction("item", (n, g) =>
@@ -254,13 +262,14 @@ namespace Descent.State
                                 n.EventManager.QueueEvent(EventType.FinishedTurn, new GameEventArgs());
                             });
                         }
-                        else if (role == Role.Overlord)
+                        else if (role == Role.Overlord && HasTurn())
                         {
                             root.SetClickAction("end", (n, g) =>
                                                            {
                                                                n.EventManager.QueueEvent(EventType.EndMonsterTurn, new GameEventArgs());
                                                            });
                         }
+
                         break;
                     }
                 case State.WaitForOverlordChooseAction:
@@ -331,7 +340,7 @@ namespace Descent.State
 
                     break;
                 case State.WaitForOverlordChooseAction:
-
+                    // Check for x/y coordinates
                     // If a square with a monster is pressed in an overlord turn and we are the overlord, a monster turn should begin.
                     Square s = FullModel.Board[eventArgs.X, eventArgs.Y];
                     if (Player.Instance.IsOverlord && s.Figure != null && s.Figure is Monster)
@@ -347,6 +356,11 @@ namespace Descent.State
             switch (CurrentState)
             {
                 case State.Equip:
+                case State.AllEquip:
+                    if (CurrentState == State.Equip && !HasTurn())
+                    {
+                        break;
+                    }
                     if (inventoryFieldMarked == -1)
                     {
                         inventoryFieldMarked = eventArgs.InventoryField;
@@ -464,9 +478,16 @@ namespace Descent.State
                 Player.Instance.Overlord.Hand.Add(FullModel.GetOverlordCard(overlordCardId));
             }
 
+            // Remove overlord cards from state
+            gameState.RemoveOverlordCards(eventArgs.OverlordCardIds);
+
             if (CurrentState == State.DrawOverlordCards)
             {
                 DrawHeroCards();
+            }
+            else
+            {
+                stateMachine.PlaceStates(State.WaitForOverlordChooseAction);
             }
 
             stateMachine.ChangeToNextState();
@@ -494,12 +515,12 @@ namespace Descent.State
         private void AssignHero(object sender, AssignHeroEventArgs eventArgs)
         {
             Contract.Requires(CurrentState == State.DrawHeroCard);
-            Contract.Ensures(CurrentState == State.DrawHeroCard || CurrentState == State.BuyEquipment);
+            Contract.Ensures(CurrentState == State.DrawHeroCard || CurrentState == State.AllBuyEquipment);
 
             Player.Instance.HeroParty.Heroes[eventArgs.PlayerId] = FullModel.GetHero(eventArgs.HeroId);
             gameState.RemoveHero(eventArgs.HeroId);
 
-            if (stateMachine.NextState == State.BuyEquipment)
+            if (stateMachine.NextState == State.AllBuyEquipment)
             {
                 AllPlayersRemain();
                 gui.CreateMenuGUI(DetermineRole());
@@ -512,18 +533,12 @@ namespace Descent.State
 
             stateMachine.ChangeToNextState();
 
-            /* TODO Simon -> Martin: har lavet ovenstående i stedet. Giver det mening?
-            if (CurrentState == State.BuyEquipment) // TODO Should be DrawSkillCard
-            {
-                
-            }
-             * */
         }
 
         private void RequestBuyEquipment(object sender, RequestBuyEquipmentEventArgs eventArgs)
         {
-            Contract.Requires(CurrentState == State.BuyEquipment);
-            Contract.Ensures(CurrentState == State.BuyEquipment);
+            Contract.Requires(CurrentState == State.BuyEquipment || CurrentState == State.AllBuyEquipment);
+            Contract.Ensures(CurrentState == Contract.OldValue(CurrentState));
 
             if (!Player.Instance.IsServer)
             {
@@ -543,7 +558,7 @@ namespace Descent.State
 
         private void GiveEquipment(object sender, GiveEquipmentEventArgs eventArgs)
         {
-            Contract.Requires(CurrentState == State.BuyEquipment);
+            Contract.Requires(CurrentState == State.BuyEquipment || CurrentState == State.AllBuyEquipment);
             Contract.Ensures(CurrentState == Contract.OldValue(CurrentState));
 
             Equipment equipment = FullModel.GetEquipment(eventArgs.EquipmentId);
@@ -555,8 +570,9 @@ namespace Descent.State
 
         private void FinishedBuy(object sender, GameEventArgs eventArgs)
         {
-            Contract.Requires(CurrentState == State.BuyEquipment);
-            Contract.Ensures(CurrentState == ((playersRemaining.Count == Player.Instance.HeroParty.NumberOfHeroes) ? State.Equip : State.BuyEquipment));
+            Contract.Requires(CurrentState == State.BuyEquipment || CurrentState == State.AllBuyEquipment);
+            Contract.Ensures(CurrentState == ((Contract.OldValue(CurrentState) == State.BuyEquipment) ? State.Equip :
+                (playersRemaining.Count == Player.Instance.HeroParty.NumberOfHeroes) ? State.AllEquip : State.AllBuyEquipment));
 
             playersRemaining.Remove(eventArgs.SenderId);
 
@@ -570,7 +586,7 @@ namespace Descent.State
 
         private void SwitchItems(object sender, SwitchItemsEventArgs eventArgs)
         {
-            Contract.Requires(CurrentState == State.Equip);
+            Contract.Requires(CurrentState == State.Equip || CurrentState == State.AllEquip);
             Contract.Ensures(CurrentState == Contract.OldValue(CurrentState));
 
             Hero hero = Player.Instance.HeroParty.Heroes[eventArgs.SenderId];
@@ -603,28 +619,11 @@ namespace Descent.State
             StateChanged();
         }
 
-        private void UnequipItem(object sender, EquipEventArgs eventArgs)
-        {
-            Contract.Requires(CurrentState == State.Equip);
-            Contract.Ensures(CurrentState == Contract.OldValue(CurrentState));
-
-            Player.Instance.HeroParty.Heroes[eventArgs.SenderId].Inventory[eventArgs.InventoryField] = null;
-            StateChanged();
-        }
-
-        private void EquipItem(object sender, EquipEventArgs eventArgs)
-        {
-            Contract.Requires(CurrentState == State.Equip);
-            Contract.Ensures(CurrentState == Contract.OldValue(CurrentState));
-
-            Player.Instance.HeroParty.Heroes[eventArgs.SenderId].Inventory[eventArgs.InventoryField] = FullModel.GetEquipment(eventArgs.EquipmentId);
-            StateChanged();
-        }
-
         private void FinishedReequip(object sender, GameEventArgs eventArgs)
         {
-            Contract.Requires(CurrentState == State.Equip);
-            Contract.Ensures(CurrentState == (gameState.CurrentPlayer != 0 ? State.WaitForChooseAction : (playersRemaining.Count == Player.Instance.HeroParty.NumberOfHeroes) ? State.WaitForChooseSquare : State.Equip));
+            Contract.Requires(CurrentState == State.Equip || CurrentState == State.AllEquip);
+            Contract.Ensures(CurrentState == (Contract.OldValue(CurrentState) == State.Equip ? State.WaitForChooseAction :
+                (playersRemaining.Count == Player.Instance.HeroParty.NumberOfHeroes) ? State.WaitForChooseSquare : State.AllEquip));
 
             gameState.RemoveAllUnequippedEquipment(eventArgs.SenderId);
             playersRemaining.Remove(eventArgs.SenderId);
@@ -715,7 +714,7 @@ namespace Descent.State
             // IF we are overlord and have a monster selected, we have moved a monster. Update monster markings.
             if (Player.Instance.IsOverlord && currentMonster != null)
             {
-                MarkMonstersRemaining();
+                this.MarkMonsters();
             }
 
             stateMachine.PlaceStates(State.MoveAdjecent);
@@ -893,26 +892,37 @@ namespace Descent.State
                 eventManager.QueueEvent(EventType.GiveOverlordCards, new GiveOverlordCardsEventArgs(gameState.GetOverlordCards(2).Select(card => card.Id).ToArray()));
             }
 
-            monstersRemaining = FullModel.Board.FiguresOnBoard.Where(pair => pair.Key is Monster).Select(pair => (Monster)pair.Key).ToList();
+            monstersRemaining = FullModel.Board.FiguresOnBoard.Where(pair => pair.Key is Monster && FullModel.Board.SquareVisibleByPlayers(pair.Value.X, pair.Value.Y)).Select(pair => (Monster)pair.Key).ToList();
 
             if (Player.Instance.IsOverlord)
             {
                 // Mark monsters that the overlord can select in the WaitForOverlordChooseAction
-                MarkMonstersRemaining();
+                this.MarkMonsters();
             }
 
             stateMachine.PlaceStates(State.WaitForOverlordChooseAction);
             StateChanged();
         }
 
-        private void MarkMonstersRemaining()
+        private void MarkMonsters()
         {
             gui.ClearMarks();
 
-            foreach (Point point in FullModel.Board.FiguresOnBoard.Where(pair => monstersRemaining.Contains(pair.Key)).Select(pair => pair.Value))
+            if (currentMonster != null)
             {
-                gui.MarkSquare(point.X, point.Y, true);
+                // If we're not in a monster turn, all monsters should be marked to indicate all monsters can be chosen.
+                foreach (Point point in FullModel.Board.FiguresOnBoard.Where(pair => monstersRemaining.Contains(pair.Key)).Select(pair => pair.Value))
+                {
+                    gui.MarkSquare(point.X, point.Y, true);
+                } 
             }
+            else
+            {
+                // We have a current monster, mark only this monster indicate that the overlord can only perform actions with this monster.
+                Point monsterpoint = FullModel.Board.FiguresOnBoard[currentMonster];
+                gui.MarkSquare(monsterpoint.X, monsterpoint.Y, true);
+            }
+
         }
 
         private void OverlordDiscardCard(/* TODO OverlordCard card*/)
@@ -1034,6 +1044,8 @@ namespace Descent.State
 
             monstersRemaining.Remove(currentMonster);
             currentMonster = null;
+
+            if (Player.Instance.IsOverlord) this.MarkMonsters();
 
             stateMachine.PlaceStates(State.WaitForOverlordChooseAction);
             stateMachine.ChangeToNextState();

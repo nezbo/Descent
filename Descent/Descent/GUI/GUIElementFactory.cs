@@ -107,6 +107,7 @@ namespace Descent.GUI
 
                         break;
                     }
+                case State.AllBuyEquipment:
                 case State.BuyEquipment:
                     {
                         GUIElement box = new GUIElement(game, "shop", RelW(g, 10), RelH(g, 10), RelW(g, 80), RelH(g, 80));
@@ -149,6 +150,7 @@ namespace Descent.GUI
                         root.AddChild(box);
                         break;
                     }
+                case State.AllEquip:
                 case State.Equip:
                     {
 
@@ -224,7 +226,7 @@ namespace Descent.GUI
                             root.AddChild(end);
                             root.AddText(end.Name, "End Turn", new Vector2(5, 5));
                         }
-                        else if (role == Role.Overlord)
+                        else if (role == Role.Overlord && Player.Instance.StateManager.HasTurn())
                         {
                             GUIElement end = new GUIElement(game, "end", RelW(g, 3), RelW(g, 3), RelW(g, 15), RelH(g, 10));
                             root.AddChild(end);
