@@ -485,6 +485,10 @@ namespace Descent.State
             {
                 DrawHeroCards();
             }
+            else
+            {
+                stateMachine.PlaceStates(State.WaitForOverlordChooseAction);
+            }
 
             stateMachine.ChangeToNextState();
         }
