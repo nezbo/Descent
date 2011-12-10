@@ -900,7 +900,7 @@ namespace Descent.State
             Player.Instance.Overlord.ThreatTokens += Player.Instance.HeroParty.NumberOfHeroes;
             if (Player.Instance.IsServer)
             {
-                eventManager.QueueEvent(EventType.GiveOverlordCards, new GiveOverlordCardsEventArgs(gameState.GetOverlordCards(2).Select(card => card.Id).ToArray();));
+                eventManager.QueueEvent(EventType.GiveOverlordCards, new GiveOverlordCardsEventArgs(gameState.GetOverlordCards(2).Select(card => card.Id).ToArray()));
             }
 
             monstersRemaining = FullModel.Board.FiguresOnBoard.Where(pair => pair.Key is Monster).Select(pair => (Monster)pair.Key).ToList();
