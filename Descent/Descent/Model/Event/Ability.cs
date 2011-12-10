@@ -7,6 +7,7 @@ namespace Descent.Model.Event
     using System.Text;
 
     using Descent.Messaging.Events;
+    using Descent.Model.Player;
     using Descent.Model.Player.Figure;
     using Descent.State;
 
@@ -16,6 +17,7 @@ namespace Descent.Model.Event
         Range,
         Pierce,
         Surge,
+        QuickShot,
         None
     }
 
@@ -45,6 +47,14 @@ namespace Descent.Model.Event
 
             switch (data[0])
             {
+                case "WhenAttacking":
+                    ability.trigger += ability.WhenAttacking;
+                    ability.triggered = true;
+                    break;
+                case "IfType":
+                    EAttackType.TryParse(data[1], true, out ability.type);
+                    ability.trigger += ability.IfType;
+                    break;
                 case "Damage":
                     ability.bonus = AbilityBonus.Damage;
                     ability.amount = int.Parse(data[1]);
@@ -61,10 +71,14 @@ namespace Descent.Model.Event
                     ability.bonus = AbilityBonus.Surge;
                     ability.amount = int.Parse(data[1]);
                     break;
+                case "QuickShot":
+                    ability.bonus = AbilityBonus.QuickShot;
+                    break;
             }
 
             return ability;
         }
+
 
         private static Func<bool> GetTrigger(string trigger, Ability ability)
         {
@@ -87,6 +101,8 @@ namespace Descent.Model.Event
 
         #region Fields
 
+        private Figure figure = null;
+
         private bool triggered = false;
 
         private Func<bool> trigger;
@@ -94,6 +110,8 @@ namespace Descent.Model.Event
         private AbilityBonus bonus;
 
         private int amount;
+
+        private EAttackType type;
 
         #endregion
 
@@ -125,32 +143,26 @@ namespace Descent.Model.Event
 
         public void Apply(Figure figure)
         {
-            switch (bonus)
+            figure = figure;
+            if (!triggered || trigger.Invoke())
             {
-                case AbilityBonus.Damage:
-                    if (!triggered || trigger.Invoke())
-                    {
-                        figure.DamageContribution += new Player.Figure.Bonus<int>(IntBonus);
-                    }
-                    break;
-                case AbilityBonus.Pierce:
-                    if (!triggered || trigger.Invoke())
-                    {
+                switch (bonus)
+                {
+                    case AbilityBonus.Damage:
+                        figure.DamageContribution += new Model.Player.Figure.Bonus<int>(IntBonus);
+                        break;
+                    case AbilityBonus.Pierce:
                         figure.PierceContribution += IntBonus;
-                    }
-                    break;
-                case AbilityBonus.Range:
-                    if (!triggered || trigger.Invoke())
-                    {
+                        break;
+                    case AbilityBonus.Range:
                         figure.RangeContribution += IntBonus;
-                    }
-                    break;
-                case AbilityBonus.Surge:
-                    if (!triggered || trigger.Invoke())
-                    {
+                        break;
+                    case AbilityBonus.Surge:
                         figure.SurgeContribution += IntBonus;
-                    }
-                    break;
+                        break;
+                    case AbilityBonus.QuickShot:
+                        break;
+                }
             }
         }
 
@@ -159,10 +171,22 @@ namespace Descent.Model.Event
             return amount;
         }
 
+        void QuickShot()
+        {
+            // TODO: After calculating number of attacks, double it
+        }
+
         bool WhenAttacking()
         {
             return true;
         }
+
+        bool IfType()
+        {
+            return figure.AttackType().Equals(type);
+        }
+
+
         #endregion
     }
 }

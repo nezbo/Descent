@@ -103,10 +103,6 @@ namespace Descent.Model
             LoadHeroes(game);
             LoadOverlordCards(game);
             LoadSkillCards(game);
-
-            Ability ability = Ability.GetAbility("Damage 2");
-            ability.Apply(GetHero(1));
-            System.Diagnostics.Debug.WriteLine("Hero Damage: " + GetHero(1).GetAttack().DamageBonus + " - Hero Range: " + GetHero(1).GetAttack().RangeBonus);
         }
 
         #region Load Monsters
@@ -213,14 +209,14 @@ namespace Descent.Model
                     }
                 }
 
-                dice[eDice] = new Dice(eDice, sides, null);
+                dice[eDice] = new Dice(eDice, sides, textures);
             }
 
             diceDictionary = dice;
             System.Diagnostics.Debug.WriteLine("Dice loaded successfully!");
         }
 
-        #endregion  
+        #endregion
 
         #region Load Equipement
 
@@ -240,7 +236,7 @@ namespace Descent.Model
 
                 string[] data = line.Split(',');
                 System.Diagnostics.Debug.Assert(data.Length == 12, "Error when loading equipment, at line " + (i + 2));
-                
+
                 Equipment eq = LoadEquipment(data);
 
                 for (int j = 0; j < int.Parse(data[8]); j++)
@@ -313,14 +309,14 @@ namespace Descent.Model
             List<SurgeAbility> surgeAbilities = data[11].Split('/').Select(SurgeAbility.GetSurgeAbility).ToList();
 
             return new Equipment(
-                id: id, 
-                name: name, 
-                type: type, 
-                attackType: attackType, 
-                rarity: rarity, 
-                buyPrice: buyPrice, 
-                surgeAbilities: surgeAbilities, 
-                hands: hands, 
+                id: id,
+                name: name,
+                type: type,
+                attackType: attackType,
+                rarity: rarity,
+                buyPrice: buyPrice,
+                surgeAbilities: surgeAbilities,
+                hands: hands,
                 abilities: abilities);
         }
 
@@ -512,7 +508,7 @@ namespace Descent.Model
                 if (line.StartsWith("//")) continue;
                 OverlordCard card = null;
 
-                string[] data = line.Split(new char[]{','}, 9);
+                string[] data = line.Split(new char[] { ',' }, 9);
 
                 int id = int.Parse(data[0]);
                 string type = data[1];
@@ -546,7 +542,7 @@ namespace Descent.Model
                         card = new EventCard(id, name, description, cost, sell);
                         break;
                 }
-                if(card != null)
+                if (card != null)
                     overlordCards.Add(card);
             }
         }
@@ -783,7 +779,7 @@ namespace Descent.Model
                 return skills.ToArray();
             }
         }
-        
+
         #endregion
     }
 }

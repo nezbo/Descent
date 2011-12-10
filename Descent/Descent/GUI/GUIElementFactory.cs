@@ -54,7 +54,7 @@ namespace Descent.GUI
             Contract.Ensures(Contract.Result<GUIElement>() != null);
             Contract.Ensures(Contract.Result<GUIElement>().Bound.X == 0);
             Contract.Ensures(Contract.Result<GUIElement>().Bound.Y == 0);
-            Contract.Ensures(Contract.Result<GUIElement>().Bound.Width == game.GraphicsDevice.Viewport.Width);
+            Contract.Ensures(Contract.Result<GUIElement>().Bound.Width == (int)(game.GraphicsDevice.Viewport.Width * (3 / 4.0)));
             Contract.Ensures(Contract.Result<GUIElement>().Bound.Height == game.GraphicsDevice.Viewport.Height);
 
             return new BoardGUIElement(game, board, role);

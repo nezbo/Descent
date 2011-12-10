@@ -362,7 +362,7 @@ namespace Descent.Model.Player.Figure.HeroStuff
                                equipment.Type == EquipmentType.Armor :
                                     slot >= (int)EquipmentSlot.Other && slot < (int)EquipmentSlot.Potion ?
                                     equipment.Type == EquipmentType.Other :
-                                        slot >= (int)EquipmentSlot.Potion && slot < (int)EquipmentSlot.Backpack?
+                                        slot >= (int)EquipmentSlot.Potion && slot < (int)EquipmentSlot.Backpack ?
                                         equipment.Type == EquipmentType.Potion :
                                             slot >= (int)EquipmentSlot.Backpack && slot < this.Length;
         }
