@@ -26,6 +26,9 @@ namespace Descent.Model.Player.Figure.HeroStuff
     /// <summary>
     /// TODO: Update summary.
     /// </summary>
+    /// <author>
+    /// Jonas Breindahl (jobre@itu.dk)
+    /// </author>
     public class Inventory
     {
         public const int MaxPotions = 3;
@@ -134,7 +137,16 @@ namespace Descent.Model.Player.Figure.HeroStuff
             }
         }
 
-        public bool CanEquip(Equipment equipment)
+        /// <summary>
+        /// Do you have enough hands left to equip this weapon?
+        /// </summary>
+        /// <param name="equipment">
+        /// A piece of equipment.
+        /// </param>
+        /// <returns>
+        /// Whether there are enough hands to equip this weapon
+        /// </returns>
+        public bool CanEquipWeapon(Equipment equipment)
         {
             return equipment.Hands <= FreeHands;
         }
@@ -343,7 +355,7 @@ namespace Descent.Model.Player.Figure.HeroStuff
         {
             if (equipment == null) return true;
             return  slot == (int)EquipmentSlot.Weapon ? 
-                equipment.Type == EquipmentType.Weapon :
+                equipment.Type == EquipmentType.Weapon && this.CanEquipWeapon(equipment) :
                         slot == (int)EquipmentSlot.Shield ? 
                         equipment.Type == EquipmentType.Shield :
                                slot == (int)EquipmentSlot.Armor ? 

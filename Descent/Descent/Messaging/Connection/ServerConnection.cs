@@ -66,7 +66,6 @@ namespace Descent.Messaging.Connection
         /// <param name="message">The message string.</param>
         private void MessageReceived(ClientInfo fromClient, string message)
         {
-            //Console.WriteLine("SERVER RECEIVED [{0}]: {1}", fromClient.Id, message);
             Player.Instance.EventManager.ParseAndFire(message, false);
             SendString(message);
         }

@@ -839,7 +839,6 @@ namespace Descent.Messaging.Events
             string ip = Player.Instance.Connection.Ip;
             string id = Player.Instance.Id.ToString();
 
-            //Console.WriteLine("Generating MD5 from {0} {1} {2}", time, ip, id);
             return MD5String(time + ip + id);
         }
 

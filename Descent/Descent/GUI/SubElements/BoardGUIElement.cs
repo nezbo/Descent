@@ -46,9 +46,6 @@ namespace Descent.GUI
             this.markedSquares = new Dictionary<Vector2, bool>();
             this.markTexture = new Texture2D(Game.GraphicsDevice, 1, 1);
             this.markTexture.SetData(new Color[] { Color.White });
-
-            // event on click
-            this.SetClickAction("board", (n, g) => System.Diagnostics.Debug.WriteLine("TODO: board clicks")); //TODO
         }
 
         public override bool HandleClick(int x, int y)
