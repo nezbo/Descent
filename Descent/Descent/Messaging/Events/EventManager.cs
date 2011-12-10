@@ -182,6 +182,10 @@ namespace Descent.Messaging.Events
 
     public delegate void MissedAttackHandler(object sender, PlayerEventArgs eventArgs);
 
+    public delegate void BoughtDiceHandler(object sender, GameEventArgs eventArgs);
+
+    public delegate void ChangedBlackDiceSideHandler(object sender, DiceEventArgs eventArgs);
+
     #endregion
 
     #region Internal only
@@ -339,6 +343,12 @@ namespace Descent.Messaging.Events
         public event DamageTakenHandler DamageTakenEvent;
 
         public event MissedAttackHandler MissedAttackEvent;
+
+        public event BoughtDiceHandler BoughtDiceEvent;
+
+        public event ChangedBlackDiceSideHandler ChangedBlackDiceSideEvent;
+
+        // Other
 
         public event AllRespondedNoActionHandler AllRespondedNoActionEvent;
 
@@ -648,6 +658,12 @@ namespace Descent.Messaging.Events
                 case EventType.MissedAttack:
                     if (MissedAttackEvent != null) MissedAttackEvent(this, (PlayerEventArgs)eventArgs);
                     break;
+                case EventType.BoughtDice:
+                    if (BoughtDiceEvent != null) BoughtDiceEvent(this, eventArgs);
+                    break;
+                case EventType.ChangedBlackDiceSide:
+                    if (ChangedBlackDiceSideEvent != null) ChangedBlackDiceSideEvent(this, (DiceEventArgs)eventArgs);
+                    break;
                 case EventType.SquareMarked:
                     if (SquareMarkedEvent != null) SquareMarkedEvent(this, (CoordinatesEventArgs)eventArgs);
                     break;
@@ -817,6 +833,8 @@ namespace Descent.Messaging.Events
                     return new DamageEventArgs(args);
                 case EventType.MissedAttack:
                     return new PlayerEventArgs(args);
+                case EventType.ChangedBlackDiceSide:
+                    return new DiceEventArgs(args);
                 case EventType.SquareMarked:
                     return new CoordinatesEventArgs(args);
                 case EventType.InventoryFieldMarked:

@@ -76,6 +76,8 @@ namespace Descent.Messaging.Events
         GiveTreasure = 62,
         SwitchItems = 63,
         SquareMarked = 65,
-        InventoryFieldMarked = 66
+        InventoryFieldMarked = 66,
+        BoughtDice = 67,
+        ChangedBlackDiceSide = 68
     }
 }
