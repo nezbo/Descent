@@ -326,7 +326,9 @@ namespace Descent.State
                     if (FullModel.Board.Distance(standingPoint, new Point(eventArgs.X, eventArgs.Y)) == 1)
                     {
                         // Move to adjecent
-                        if (FullModel.Board.IsStandable(eventArgs.X, eventArgs.Y) && figure.MovementLeft >= 1)
+                        // If it is possible to stand on the square, or the figure standing is the same as "me", and there is atleast 1 movement left
+                        
+                        if (FullModel.Board.CanFigureMoveToPoint(figure, new Point(eventArgs.X, eventArgs.Y)) && figure.MovementLeft >= 1)
                         {
                             eventManager.QueueEvent(EventType.MoveTo, new CoordinatesEventArgs(eventArgs.X, eventArgs.Y));
                         }

@@ -6,11 +6,9 @@
 
 namespace Descent.Model.Player.Figure
 {
-    using System;
     using System.Collections.Generic;
     using System.Diagnostics.Contracts;
     using System.Linq;
-    using System.Text;
 
     using Descent.Model.Player.Figure.HeroStuff;
 
@@ -30,7 +28,7 @@ namespace Descent.Model.Player.Figure
         /// <summary>
         /// This event contributes to the Max Fatigue of this hero
         /// </summary>
-        public event Bonus<int> MaxFatigueContribution; 
+        public event Bonus<int> MaxFatigueContribution;
 
         #endregion
 
@@ -41,10 +39,10 @@ namespace Descent.Model.Player.Figure
         private int maxFatigue;
         private int fatigue = 0;
 
-        private Dictionary<EAttackType, int> blackDice; 
+        private Dictionary<EAttackType, int> blackDice;
 
-        private Dictionary<EAttackType, int> numberOfSkills = new Dictionary<EAttackType, int>(); 
-        private Dictionary<EAttackType, List<Skill>>  skills = new Dictionary<EAttackType, List<Skill>>();
+        private Dictionary<EAttackType, int> numberOfSkills = new Dictionary<EAttackType, int>();
+        private Dictionary<EAttackType, List<Skill>> skills = new Dictionary<EAttackType, List<Skill>>();
 
         private string abilityText;
 
@@ -85,6 +83,11 @@ namespace Descent.Model.Player.Figure
             {
                 return fatigue;
             }
+        }
+
+        public int Cost
+        {
+            get { return cost; }
         }
 
         /// <summary>
@@ -169,7 +172,7 @@ namespace Descent.Model.Player.Figure
         /// The big texture for a hero
         /// </param>
         public Hero(int id, string name, int conquest, int health, int fatigue, int armor, int speed, Dictionary<EAttackType, int> blackDice, Dictionary<EAttackType, int> numberOfSkills, int hands, string text, Texture2D texture, Texture2D bigTexture)
-            : base(id, name)
+            : base(id, name, new Rectangle(0, 0, 1, 1))
         {
             this.cost = conquest;
             this.MaxHealth = health;
@@ -301,7 +304,7 @@ namespace Descent.Model.Player.Figure
             return dice;
         }
 
-            /// <summary>
+        /// <summary>
         /// The invariant of the Hero class
         /// </summary>
         [ContractInvariantMethod]

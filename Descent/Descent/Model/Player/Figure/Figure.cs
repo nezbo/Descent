@@ -6,6 +6,7 @@
     using System.Linq;
 
     using Descent.GUI;
+    using Descent.Model.Board;
     using Descent.Model.Event;
 
     using Microsoft.Xna.Framework;
@@ -117,6 +118,8 @@
 
         protected Texture2D texture;
 
+        private readonly Rectangle size;
+
         #endregion
 
         #region Properties
@@ -142,6 +145,16 @@
                 return name;
             }
         }
+
+        public Rectangle Size
+        {
+            get
+            {
+                return size;
+            }
+        }
+
+        public Orientation Orientation { get; set; }
 
         /// <summary>
         /// Gets the max health, including all contributors
@@ -343,10 +356,11 @@
         /// <param name="name">
         /// The name of the figure
         /// </param>
-        public Figure(int id, string name)
+        public Figure(int id, string name, Rectangle size)
         {
             this.uniqueID = id;
             this.name = name;
+            this.size = size;
         }
 
         /// <summary>

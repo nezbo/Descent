@@ -249,6 +249,17 @@
         }
 
         /// <summary>
+        /// Determines whether a series of points are with
+        /// the board, and if there is a square on that point.
+        /// </summary>
+        /// <param name="points"></param>
+        /// <returns></returns>
+        public bool IsSquareWithinBoard(Point[] points)
+        {
+            return points.All(IsSquareWithinBoard);
+        }
+
+        /// <summary>
         /// Is the square inside the dungeon, and is there no figure?
         /// </summary>
         /// <param name="x">
@@ -263,6 +274,16 @@
         public bool IsStandable(int x, int y)
         {
             return IsSquareWithinBoard(x, y) && SquareVisibleByPlayers(x, y) && board[x, y].Figure == null;
+        }
+
+        /// <summary>
+        /// Is all points in the array standable?
+        /// </summary>
+        /// <param name="points"></param>
+        /// <returns></returns>
+        public bool IsStandable(Point[] points)
+        {
+            return points.All(p => IsStandable(p.X, p.Y));
         }
 
         /// <summary>
@@ -509,8 +530,27 @@
 
         public void MoveFigure(Figure figure, Point point)
         {
-            this[FiguresOnBoard[figure]].Figure = null;
-            this[point].Figure = figure;
+            // Remove monsters from old position
+            Point p = FiguresOnBoard[figure];
+            for (int x = p.X; x < p.X + (figure.Orientation.Equals(Orientation.V) ? figure.Size.Width : figure.Size.Height); x++)
+            {
+                for (int y = p.Y; y < p.Y + (figure.Orientation.Equals(Orientation.V) ? figure.Size.Height : figure.Size.Width); y++)
+                {
+                    board[x, y].Figure = null;
+                }
+            }
+            
+            //this[FiguresOnBoard[figure]].Figure = null;
+
+            for (int x = point.X; x < point.X + (figure.Orientation.Equals(Orientation.V) ? figure.Size.Width : figure.Size.Height); x++)
+            {
+                for (int y = point.Y; y < point.Y + (figure.Orientation.Equals(Orientation.V) ? figure.Size.Height : figure.Size.Width); y++)
+                {
+                    board[x, y].Figure = figure;
+                }
+            }
+            //this[point].Figure = figure;
+
             figuresOnBoard[figure] = point;
 
         }
@@ -521,6 +561,40 @@
             figuresOnBoard[figure] = point;
         }
 
+        /// <summary>
+        /// Creates an array of all points a figure is on
+        /// </summary>
+        public Point[] FigureSquares(Figure figure)
+        {
+            List<Point> list = new List<Point>();
+            Point point = this.FiguresOnBoard[figure];
+            for (int x = point.X; x < point.X + (figure.Orientation.Equals(Orientation.V) ? figure.Size.Width : figure.Size.Height); x++)
+            {
+                for (int y = point.Y; y < point.Y + (figure.Orientation.Equals(Orientation.V) ? figure.Size.Height : figure.Size.Width); y++)
+                {
+                    list.Add(new Point(x, y));
+                }
+            }
+            return list.ToArray();
+        }
+
+        public bool CanFigureMoveToPoint(Figure figure, Point point)
+        {
+            if (figure.Size.Width == 1 && figure.Size.Height == 1) return IsStandable(point.X, point.Y);
+
+            bool canMove = true;
+
+            List<Point> list = new List<Point>();
+            for (int x = point.X; x < point.X + (figure.Orientation.Equals(Orientation.V) ? figure.Size.Width : figure.Size.Height); x++)
+            {
+                for (int y = point.Y; y < point.Y + (figure.Orientation.Equals(Orientation.V) ? figure.Size.Height : figure.Size.Width); y++)
+                {
+                    canMove &= (IsStandable(x, y) || (IsSquareWithinBoard(x, y) && this[x, y].Figure == figure));
+                }
+            }
+
+            return canMove;
+        }
         #endregion
     }
 }
