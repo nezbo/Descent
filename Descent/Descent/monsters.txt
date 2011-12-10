@@ -20,6 +20,6 @@
 19,'Razorwing',false,6,3/3/4/5,3,MELEE,R Y,Fly,1,1
 20,'Razorwing',true,8,4/4/5/6,4,MELEE,R Y B,Fly/Stun,1,1
 21,'Skeleton',false,5,2/2/3/4,0,RANGED,U G,Pierce 1/Range 1,1,1
-22,'Skeleton',true,5,3/3/4/5,1,RANGED,U G B,Pierce 1/Range 1,1,1
+22,'Skeleton',true,5,3/3/4/5,1,RANGED,U G B,Pierce 2/Range 2,1,1
 23,'Sorcerer',false,4,3/3/4/5,2,MAGIC,W Y,Sorcery 3,1,1
 24,'Sorcerer',false,4,4/4/5/6,3,MAGIC,W Y B,Sorcery 4/Undying,1,1

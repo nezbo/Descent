@@ -103,6 +103,10 @@ namespace Descent.Model
             LoadHeroes(game);
             LoadOverlordCards(game);
             LoadSkillCards(game);
+
+            Ability ability = Ability.GetAbility("Damage 2");
+            ability.Apply(GetHero(1));
+            System.Diagnostics.Debug.WriteLine("Hero Damage: " + GetHero(1).GetAttack().DamageBonus + " - Hero Range: " + GetHero(1).GetAttack().RangeBonus);
         }
 
         #region Load Monsters
@@ -153,7 +157,13 @@ namespace Descent.Model
                 Texture2D texture = game.Content.Load<Texture2D>("Images/Monsters/" + id);
 
                 Monster m = new Monster(id, name, master, speed, health, armor, type, attackDice, size, texture);
+                foreach (Ability ability in abilities)
+                {
+                    ability.Apply(m);
+                }
+
                 m.Initialize();
+                System.Diagnostics.Debug.WriteLine(m.GetAttack().ToString());
                 monsters.Add(m);
             }
 

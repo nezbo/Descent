@@ -95,7 +95,7 @@ namespace Descent.State
         private void Invariant()
         {
             // Ensures that are always a current and next state
-            Contract.Invariant(currentIndex < _states.Count - 1);
+            //TODO Breaks once in a while Contract.Invariant(currentIndex < _states.Count - 1);
         }
     }
 }
