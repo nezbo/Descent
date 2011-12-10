@@ -64,6 +64,8 @@ namespace Descent.State
             eventManager.StartMonsterTurnEvent += new StartMonsterTurnHandler(StartMonsterTurn);
             eventManager.UseOverlordCardEvent += new UseOvelordCardHandler(OverLordPlayCard);
             eventManager.EndMonsterTurnEvent += new EndMonsterTurnHandler(EndMonsterTurn);
+            eventManager.AttackSquareEvent += new AttackSquareHandler(AttackSquare);
+            eventManager.RolledDicesEvent += new RolledDicesHandler(RolledDices);
 
 
             // Internal events
@@ -282,6 +284,18 @@ namespace Descent.State
 
                         break;
                     }
+                case State.WaitForRollDice:
+                    {
+                        if (gameState.CurrentPlayer == Player.Instance.Id)
+                        {
+                            root.SetClickAction("roll", (n, g) =>
+                                                            {
+                                                                gameState.CurrentAttack.RollDice();
+                                                                n.EventManager.QueueEvent(EventType.RolledDices, new RolledDicesEventArgs(gameState.CurrentAttack.GetRolledSides()));
+                                                            });
+                        }
+                        break;
+                    }
             }
 
             gui.ChangeStateGUI(root); // change the GUI's state element.
@@ -324,7 +338,7 @@ namespace Descent.State
                     if (FullModel.Board.Distance(standingPoint, new Point(eventArgs.X, eventArgs.Y)) == 1)
                     {
                         // Move to adjecent
-                        // If a an entire figure can move 
+                        // If a an entire figure can move to the square
                         if (FullModel.Board.CanFigureMoveToPoint(figure, new Point(eventArgs.X, eventArgs.Y)) && figure.MovementLeft >= 1)
                         {
                             eventManager.QueueEvent(EventType.MoveTo, new CoordinatesEventArgs(eventArgs.X, eventArgs.Y));
@@ -339,6 +353,12 @@ namespace Descent.State
                     else if(FullModel.Board.Distance(standingPoint, new Point(eventArgs.X, eventArgs.Y)) == 0)
                     {
                         //TODO Pickuptoken/marker, if there is any
+                    }
+
+                    if (FullModel.Board.Distance(standingPoint, new Point(eventArgs.X, eventArgs.Y)) >= 1 && (FullModel.Board[eventArgs.X, eventArgs.Y] != null && (FullModel.Board[eventArgs.X, eventArgs.Y].Figure != null && FullModel.Board.IsThereLineOfSight(figure, FullModel.Board[eventArgs.X, eventArgs.Y].Figure, false))))
+                    {
+                        // A figure is trying to attack another figure.
+                        eventManager.QueueEvent(EventType.AttackSquare, new CoordinatesEventArgs(eventArgs.X, eventArgs.Y));
                     }
 
                     break;
@@ -877,7 +897,7 @@ namespace Descent.State
 
             currentMonster.SetAttacks(1);
             currentMonster.SetMovement(currentMonster.Speed);
-            
+
             MarkMonsters();
 
             stateMachine.PlaceStates(State.WaitForPerformAction);
@@ -936,7 +956,7 @@ namespace Descent.State
                     {
                         gui.MarkSquare(point.X, point.Y, true);
                     }
-                }  
+                }
             }
             else
             {
@@ -1078,6 +1098,27 @@ namespace Descent.State
             }
         }
 
+        #endregion
+
+        #region Attack
+        private void AttackSquare(object sender, CoordinatesEventArgs eventArgs)
+        {
+            Contract.Requires(eventArgs.SenderId == gameState.CurrentPlayer);
+            Contract.Requires(CurrentState == State.WaitForPerformAction);
+            Contract.Ensures(CurrentState == State.WaitForRollDice);
+
+            stateMachine.PlaceStates(State.WaitForRollDice, State.WaitForDiceChoice);
+            stateMachine.ChangeToNextState();
+        }
+
+        private void RolledDices(object sender, RolledDicesEventArgs eventArgs)
+        {
+            Contract.Requires(CurrentState == State.WaitForRollDice);
+            Contract.Ensures(CurrentState == State.WaitForDiceChoice);
+
+            derp.
+            stateMachine.ChangeToNextState();
+        }
         #endregion
 
         #region MovementMethods

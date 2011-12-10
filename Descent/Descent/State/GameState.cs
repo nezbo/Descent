@@ -14,6 +14,7 @@ namespace Descent.State
     using System.Text;
 
     using Descent.Model.Board.Marker;
+    using Descent.Model.Event;
 
     public delegate T Bonus<T>();
 
@@ -52,6 +53,8 @@ namespace Descent.State
         }
 
         public int CurrentPlayer { get; set; }
+
+        public Attack CurrentAttack { get; set; }
 
         public Equipment[] CurrentEquipment
         {

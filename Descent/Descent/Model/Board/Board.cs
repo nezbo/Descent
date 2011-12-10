@@ -389,6 +389,29 @@
         }
 
         /// <summary>
+        /// Indicates whethere there's nothing in the way from one figure to another.
+        /// Can ignore monsters.
+        /// </summary>
+        /// <param name="from">"From" figure.</param>
+        /// <param name="to">"To" figure.</param>
+        /// <param name="ignoreMonsters">Will ignore monsters if true.</param>
+        /// <returns></returns>
+        public bool IsThereLineOfSight(Figure from, Figure to, bool ignoreMonsters)
+        {
+            Point[] fromPoints = FullModel.Board.FigureSquares(from);
+            Point[] toPoints = FullModel.Board.FigureSquares(to);
+            foreach (Point fromPoint in fromPoints)
+            {
+                foreach (Point toPoint in toPoints)
+                {
+                    if (IsThereLineOfSight(fromPoint, toPoint, ignoreMonsters)) return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// Get a (non-sorted) array of squares between two squares.
         /// </summary>
         /// <param name="from"></param>
@@ -666,6 +689,7 @@
 
             return canMove;
         }
+
         #endregion
 
         /// <summary>
