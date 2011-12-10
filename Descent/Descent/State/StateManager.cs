@@ -712,6 +712,12 @@ namespace Descent.State
             FullModel.Board.MoveFigure(figure, new Point(eventArgs.X, eventArgs.Y));
             figure.RemoveMovement(1);
 
+            // IF we are overlord and have a monster selected, we have moved a monster. Update monster markings.
+            if (Player.Instance.IsOverlord && currentMonster != null)
+            {
+                MarkMonstersRemaining();
+            }
+
             stateMachine.PlaceStates(State.MoveAdjecent);
             stateMachine.ChangeToNextState();
             ActionDone();
@@ -887,20 +893,26 @@ namespace Descent.State
                 eventManager.QueueEvent(EventType.GiveOverlordCards, new GiveOverlordCardsEventArgs(gameState.GetOverlordCards(2).Select(card => card.Id).ToArray()));
             }
 
-            // Mark monsters that the overlord can select in the WaitForOverlordChooseAction
-
             monstersRemaining = FullModel.Board.FiguresOnBoard.Where(pair => pair.Key is Monster).Select(pair => (Monster)pair.Key).ToList();
 
             if (Player.Instance.IsOverlord)
             {
-                foreach (Point point in FullModel.Board.FiguresOnBoard.Where(pair => pair.Key is Monster).Select(pair => pair.Value))
-                {
-                    gui.MarkSquare(point.X, point.Y, true);
-                }
+                // Mark monsters that the overlord can select in the WaitForOverlordChooseAction
+                MarkMonstersRemaining();
             }
 
             stateMachine.PlaceStates(State.WaitForOverlordChooseAction);
             StateChanged();
+        }
+
+        private void MarkMonstersRemaining()
+        {
+            gui.ClearMarks();
+
+            foreach (Point point in FullModel.Board.FiguresOnBoard.Where(pair => monstersRemaining.Contains(pair.Key)).Select(pair => pair.Value))
+            {
+                gui.MarkSquare(point.X, point.Y, true);
+            }
         }
 
         private void OverlordDiscardCard(/* TODO OverlordCard card*/)
