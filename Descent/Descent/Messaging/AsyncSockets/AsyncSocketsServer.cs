@@ -48,7 +48,16 @@ namespace Descent.Messaging.AsyncSockets
         /// </summary>
         public event ClientConnectedHandler ClientConnectedEvent;
 
-        public string Ip { get { return ((IPEndPoint)socket.LocalEndPoint).Address.ToString(); } }
+        public string[] Ips
+        {
+            get
+            {
+                return
+                    Dns.GetHostEntry(Dns.GetHostName()).AddressList.Where(
+                        ipAdr => ipAdr.AddressFamily.ToString() == "InterNetwork").Select(ipAdr => ipAdr.ToString()).
+                        ToArray();
+            }
+        }
 
         /// <summary>
         /// Start listening and accepting clients.

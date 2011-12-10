@@ -854,7 +854,7 @@ namespace Descent.Messaging.Events
         private string GenerateEventId()
         {
             string time = DateTime.Now.Ticks.ToString();
-            string ip = Player.Instance.Connection.Ip;
+            string ip = Player.Instance.Connection.Ips[0];
             string id = Player.Instance.Id.ToString();
 
             return MD5String(time + ip + id);
