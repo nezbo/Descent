@@ -54,6 +54,10 @@
 
         private Texture2D floorTexture;
 
+        private bool boardChanged = true;
+
+        private bool[,] canSpawn;
+
         #endregion
 
         #region Properties
@@ -204,6 +208,7 @@
         {
             bounds = new Rectangle(0, 0, width, height);
             board = new Square[width, height];
+            canSpawn = new bool[width, height];
             this.floorTexture = floorTexture;
             revealedAreas.Add(0);
         }
@@ -297,9 +302,35 @@
         /// </returns>
         public bool CanOverlordSpawn(Point point)
         {
-            Contract.Requires(point != null);
-            //TODO Implement
-            return false;
+            if (boardChanged)
+            {
+                UpdateCanSpawn();
+            }
+            return canSpawn[point.X, point.Y];
+        }
+
+        private void UpdateCanSpawn()
+        {
+            for (int x = 0; x < Width; x++)
+            {
+                for (int y = 0; y < Height; y++)
+                {
+                    canSpawn[x, y] = true;
+                }
+            }
+            
+            foreach (Point point in FiguresOnBoard.Where(pair => pair.Key is Hero).Select(pair => pair.Value))
+            {
+                for (int x = 0; x < Width; x++)
+                {
+                    for (int y = 0; y < Height; y++)
+                    {
+                        canSpawn[x, y] = canSpawn[x, y] && IsStandable(x, y) &&
+                                         !IsThereLineOfSight(point, new Point(x, y), true);
+                    }
+                }
+            }
+            boardChanged = false;
         }
 
         /// <summary>
@@ -344,10 +375,16 @@
         /// </returns>
         public bool IsThereLineOfSight(Point from, Point to, bool ignoreMonsters)
         {
-            return SquaresBetweenPoints(from, to).Count(
-                point =>
-                !(IsStandable(point.X, point.Y) || (ignoreMonsters && (board[point.X, point.Y].Figure is Monster))))
-                   == 0;
+            foreach (var point in SquaresBetweenPoints(from, to))
+            {
+                if (to.X == 0 && to.Y == 21)
+                {
+                    
+                }
+                if (!(IsStandable(point.X, point.Y) || (ignoreMonsters && board[point.X, point.Y] != null && board[point.X, point.Y].Figure is Monster)))
+                    return false;
+            }
+            return true;
         }
 
         /// <summary>
@@ -360,10 +397,15 @@
         {
             var points = new HashSet<Point>();
 
-            // if the lines are completely vertical
-            if (from.X == to.X) 
+            if (from == to)
             {
-                for (int y = from.Y; y <= to.Y; y++)
+                return new Point[]{from};
+            }
+            // if the lines are completely vertical
+            if (from.X == to.X)
+            {
+                int step = (to.Y - from.Y)/Math.Abs(to.Y - from.Y);
+                for (int y = from.Y; y != to.Y; y += step)
                 {
                     points.Add(new Point(from.X, y));
                 }
@@ -372,7 +414,8 @@
             // if the lines are completely horizontal
             else if (from.Y == to.Y)
             {
-                for (int x = from.X; x <= to.X; x++)
+                int step = (to.X - from.X) / Math.Abs(to.X - from.X);
+                for (int x = from.X; x != to.X; x += step)
                 {
                     points.Add(new Point(x, from.Y));
                 }
@@ -399,9 +442,17 @@
                     double yn = (xn - from.X) * a + from.Y;
                     if (Math.Abs(yn - Math.Truncate(yn) - .5) < .0000001)
                     {
-                        int plus = (a > 0) ? 1 : -1;
-                        points.Add(new Point((int)Math.Truncate(xn), (int)Math.Truncate(yn)));
-                        points.Add(new Point((int)Math.Truncate(xn) + 1, (int)Math.Truncate(yn) + plus));
+                        if (a < 0)
+                        {
+                            points.Add(new Point((int)Math.Truncate(xn), (int)Math.Ceiling(yn)));
+                            points.Add(new Point((int)Math.Ceiling(xn), (int)Math.Truncate(yn)));
+                        }
+                        else
+                        {
+                            points.Add(new Point((int)Math.Truncate(xn), (int)Math.Truncate(yn)));
+                            points.Add(new Point((int)Math.Ceiling(xn), (int)Math.Ceiling(yn)));
+                            
+                        }
                     }
                     else
                     {
@@ -410,6 +461,12 @@
                     }
                 }
 
+                if (from.Y > to.Y)
+                {
+                    var temp = from;
+                    from = to;
+                    to = temp;
+                }
                 // step by 0.5 from the from y-coordinate to the to y-coordinate
                 for (double yn = from.Y + .5; yn < to.Y; yn++)
                 {
@@ -417,9 +474,17 @@
                     double xn = (yn - from.Y) / a + from.X;
                     if (Math.Abs(xn - Math.Truncate(xn) - .5) < .000001)
                     {
-                        int plus = (a > 0) ? 1 : -1;
-                        points.Add(new Point((int)Math.Truncate(xn), (int)Math.Truncate(yn)));
-                        points.Add(new Point((int)Math.Truncate(xn) + 1, (int)Math.Truncate(yn) + plus));
+                        if (a < 0)
+                        {
+                            points.Add(new Point((int)Math.Truncate(xn), (int)Math.Ceiling(yn)));
+                            points.Add(new Point((int)Math.Ceiling(xn), (int)Math.Truncate(yn)));
+                        }
+                        else
+                        {
+                            points.Add(new Point((int)Math.Truncate(xn), (int)Math.Truncate(yn)));
+                            points.Add(new Point((int)Math.Ceiling(xn), (int)Math.Ceiling(yn)));
+
+                        }
                     }
                     else
                     {
@@ -428,6 +493,9 @@
                     }
                 }
             }
+
+            points.Remove(from);
+            points.Remove(to);
 
             return points.ToArray();
         }
@@ -484,6 +552,7 @@
             Contract.Requires(CanOpenDoor(point));
             revealedAreas.Add(GetDoor(point).Areas.Where(area => !revealedAreas.Contains(area)).FirstOrDefault());
             GetDoor(point).Opened = true;
+            boardChanged = true;
         }
 
         /// <summary>
@@ -552,13 +621,14 @@
             //this[point].Figure = figure;
 
             figuresOnBoard[figure] = point;
-
+            boardChanged = true;
         }
 
         public void PlaceFigure(Figure figure, Point point)
         {
             this[point].Figure = figure;
             figuresOnBoard[figure] = point;
+            boardChanged = true;
         }
 
         /// <summary>
@@ -596,5 +666,24 @@
             return canMove;
         }
         #endregion
+
+        /// <summary>
+        /// Testing line of sight algorithm.
+        /// </summary>
+        /// <param name="args"></param>
+        public static void Main(string[] args)
+        {
+            int w = 10, h = 10;
+            var b = new Board(w, h, null);
+            var p = b.SquaresBetweenPoints(new Point(0, 0), new Point(1, 3));
+            for (int x = 0; x < w; x++)
+            {
+                for (int y = 0; y < h; y++)
+                {
+                    System.Diagnostics.Debug.Write(p.Contains(new Point(y,x))?1:0);
+                }
+                System.Diagnostics.Debug.WriteLine("");
+            }
+        }
     }
 }
