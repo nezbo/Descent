@@ -16,7 +16,7 @@ namespace Descent.GUI.SubElements
             {
                 int diceWidth = dices[0].Texture.Width + Spacing;
                 int perLine = 1;
-                int widthLeft = Bound.Width - dices[0].Texture.Width;
+                int widthLeft = Bound.Width - dices[0].Texture.Width - 2 * Spacing;
 
                 while (widthLeft > diceWidth)
                 {
@@ -33,7 +33,7 @@ namespace Descent.GUI.SubElements
                     {
                         if (die.Color == diceType)
                         {
-                            this.AddDrawable(this.Name, die, new Vector2(Bound.X + number * die.Texture.Width + number * Spacing, Bound.Y + line * die.Texture.Height + line * Spacing));
+                            this.AddDrawable(this.Name, die, new Vector2(Bound.X + Spacing + number * die.Texture.Width + number * Spacing, Bound.Y + Spacing + line * die.Texture.Height + line * Spacing));
                             number++;
 
                             if (number >= perLine)
