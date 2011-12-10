@@ -336,6 +336,10 @@ namespace Descent.State
                             eventManager.QueueEvent(EventType.OpenDoor, new CoordinatesEventArgs(eventArgs.X, eventArgs.Y));
                         }
                     }
+                    else if(FullModel.Board.Distance(standingPoint, new Point(eventArgs.X, eventArgs.Y)) == 0)
+                    {
+                        //TODO Pickuptoken/marker, if there is any
+                    }
 
                     break;
                 case State.WaitForOverlordChooseAction:
