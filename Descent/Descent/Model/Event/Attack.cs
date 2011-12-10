@@ -8,6 +8,7 @@ namespace Descent.Model.Event
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Text;
 
@@ -62,10 +63,43 @@ namespace Descent.Model.Event
             this.figure = attackingFigure;
         }
 
-        public string ToString()
+        /// <summary>
+        /// Sets all dice to the side of the array given
+        /// </summary>
+        /// <param name="diceSides"></param>
+        public void SetDiceSides(int[] diceSides)
+        {
+            Contract.Requires(diceSides.Length == DiceForAttack.Count);
+
+            List<Dice> list = DiceForAttack;
+            for (int i = 0; i < diceSides.Length; i++)
+            {
+                list[i].SideIndex = diceSides[i];
+            }
+        }
+
+        public void RollDice()
+        {
+            foreach (Dice dice in DiceForAttack)
+            {
+                dice.RollDice();
+            }
+        }
+
+        public override string ToString()
         {
             return figure.Name + "\n\tDamage: " + DamageBonus + "\n\tRange: " + RangeBonus + "\n\tPierce: "
                    + PierceBonus + "\n\tSurge: " + SurgeBonus;
+        }
+
+
+        /// <summary>
+        /// Checks if a list from DiceForAttack is alike every time you call it
+        /// </summary>
+        [ContractInvariantMethod]
+        private void ObjectInvariant()
+        {
+            Contract.Invariant(DiceForAttack.All(d1 => DiceForAttack.All(d1.Equals)));
         }
     }
 }

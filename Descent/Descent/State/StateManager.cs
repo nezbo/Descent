@@ -338,8 +338,7 @@ namespace Descent.State
                     if (FullModel.Board.Distance(standingPoint, new Point(eventArgs.X, eventArgs.Y)) == 1)
                     {
                         // Move to adjecent
-                        // If it is possible to stand on the square, or the figure standing is the same as "me", and there is atleast 1 movement left
-
+                        // If a an entire figure can move to the square
                         if (FullModel.Board.CanFigureMoveToPoint(figure, new Point(eventArgs.X, eventArgs.Y)) && figure.MovementLeft >= 1)
                         {
                             eventManager.QueueEvent(EventType.MoveTo, new CoordinatesEventArgs(eventArgs.X, eventArgs.Y));
@@ -350,6 +349,10 @@ namespace Descent.State
                         {
                             eventManager.QueueEvent(EventType.OpenDoor, new CoordinatesEventArgs(eventArgs.X, eventArgs.Y));
                         }
+                    }
+                    else if(FullModel.Board.Distance(standingPoint, new Point(eventArgs.X, eventArgs.Y)) == 0)
+                    {
+                        //TODO Pickuptoken/marker, if there is any
                     }
 
                     if (FullModel.Board.Distance(standingPoint, new Point(eventArgs.X, eventArgs.Y)) >= 1 && (FullModel.Board[eventArgs.X, eventArgs.Y] != null && (FullModel.Board[eventArgs.X, eventArgs.Y].Figure != null && FullModel.Board.IsThereLineOfSight(figure, FullModel.Board[eventArgs.X, eventArgs.Y].Figure, false))))

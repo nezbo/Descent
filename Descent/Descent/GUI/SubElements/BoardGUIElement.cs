@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Descent.GUI
 {
+    using Descent.Model;
     using Descent.Model.Player.Figure;
 
     using Microsoft.Xna.Framework;
