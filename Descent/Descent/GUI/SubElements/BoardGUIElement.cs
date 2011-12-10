@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using System.Linq;
 using Descent.Messaging.Events;
 using Descent.Model.Board;
 using Descent.Model.Player;
@@ -132,7 +133,7 @@ namespace Descent.GUI
 
             // Marks (if any)
             Rectangle r;
-            foreach (Vector2 pos in markedSquares.Keys)
+            foreach (Vector2 pos in markedSquares.Keys.ToArray())
             {
                 DrawMark(draw, (int)pos.X, (int)pos.Y, markedSquares[pos]);
             }
