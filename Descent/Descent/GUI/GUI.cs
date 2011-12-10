@@ -70,11 +70,6 @@ namespace Descent.GUI
         /// <param name="y">The y-coordinate of the click</param>
         private void HandleClick(int x, int y)
         {
-            Contract.Requires(x >= 0);
-            Contract.Requires(y > 0);
-            Contract.Requires(x < Game.GraphicsDevice.Viewport.Width);
-            Contract.Requires(y < Game.GraphicsDevice.Viewport.Height);
-
             for (int i = layers.Length - 1; i >= 0; i--)
             {
                 if (layers[i] != null)

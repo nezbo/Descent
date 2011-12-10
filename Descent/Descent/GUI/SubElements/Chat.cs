@@ -70,7 +70,7 @@ namespace Descent.GUI
             base.Draw(draw);
 
             int textHeight = (int)GUI.Font.MeasureString("A").Y;
-            int yPos = Bound.Height * 2 - 80;
+            int yPos = Bound.Y + Bound.Height - 80;
 
             LinkedListNode<string> currentNode = messages.First;
             while (yPos > Bound.Y && currentNode != null)
