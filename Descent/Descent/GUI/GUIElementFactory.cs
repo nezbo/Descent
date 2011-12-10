@@ -100,7 +100,7 @@ namespace Descent.GUI
 
                         if (Player.Instance.IsServer)
                         {
-                            GUIElement start = new GUIElement(game, "start", RelW(g, 84), RelH(g, 90), RelW(g, 12), RelH(g, 5));
+                            GUIElement start = new GUIElement(game, "start", RelW(g, 84), RelH(g, 90), RelW(g, 12), RelH(g, 4));
                             root.AddChild(start);
                             root.AddText("start", "Start Game", new Vector2(0, 0));
 
