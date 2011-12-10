@@ -63,6 +63,7 @@ namespace Descent.State
             eventManager.FinishedTurnEvent += new FinishedTurnHandler(FinishedTurn);
             eventManager.StartMonsterTurnEvent += new StartMonsterTurnHandler(StartMonsterTurn);
             eventManager.UseOverlordCardEvent += new UseOvelordCardHandler(OverLordPlayCard);
+            eventManager.EndMonsterTurnEvent += new EndMonsterTurnHandler(EndMonsterTurn);
 
 
             // Internal events
@@ -802,30 +803,74 @@ namespace Descent.State
 
         private void FinishedTurn(object sender, GameEventArgs eventArgs)
         {
-            Contract.Requires(CurrentState == State.WaitForPerformAction);
+            Contract.Requires(CurrentState == (IsAHeroTurn() ? State.WaitForPerformAction : State.WaitForOverlordChooseAction));
             Contract.Requires(gameState.CurrentPlayer == eventArgs.SenderId);
-            Contract.Ensures(CurrentState == (playersRemaining.Count == 0 ? State.OverlordTurn : State.WaitForHeroTurn));
+            Contract.Ensures(CurrentState == (playersRemaining.Count == 0 ? ((eventArgs.SenderId == Player.Instance.OverlordId) ? State.NewRound : State.OverlordTurn) : State.WaitForHeroTurn));
 
             playersRemaining.Remove(eventArgs.SenderId);
             gameState.CurrentPlayer = 0;
 
-            if (playersRemaining.Count == 0)
+            if (CurrentState == State.WaitForOverlordChooseAction)
             {
-                stateMachine.PlaceStates(State.OverlordTurn);
+                stateMachine.PlaceStates(State.NewRound);
                 stateMachine.ChangeToNextState();
-                State s = stateMachine.CurrentState;
-                OverlordTurnInitiation();
+                if (Player.Instance.IsServer)
+                {
+                    eventManager.QueueEvent(EventType.NewRound, new GameEventArgs());
+                }
             }
             else
             {
-                stateMachine.PlaceStates(State.WaitForHeroTurn);
-                stateMachine.ChangeToNextState();
+                if (playersRemaining.Count == 0)
+                {
+                    stateMachine.PlaceStates(State.OverlordTurn);
+                    stateMachine.ChangeToNextState();
+                    State s = stateMachine.CurrentState;
+                    OverlordTurnInitiation();
+                }
+                else
+                {
+                    stateMachine.PlaceStates(State.WaitForHeroTurn);
+                    stateMachine.ChangeToNextState();
+                }
             }
         }
 
         #endregion
 
         #region Overlord methods
+
+        // Helper method
+        private void OverlordTurnInitiation()
+        {
+            Contract.Requires(CurrentState == State.OverlordTurn);
+            Contract.Ensures(CurrentState == Contract.OldValue(CurrentState));
+            Contract.Ensures(stateMachine.NextState == State.WaitForOverlordChooseAction);
+
+            gameState.CurrentPlayer = Player.Instance.OverlordId;
+
+            Player.Instance.Overlord.ThreatTokens += Player.Instance.HeroParty.NumberOfHeroes;
+            if (Player.Instance.IsServer)
+            {
+                eventManager.QueueEvent(EventType.GiveOverlordCards, new GiveOverlordCardsEventArgs(gameState.GetOverlordCards(2).Select(card => card.Id).ToArray()));
+            }
+
+            // Mark monsters that the overlord can select in the WaitForOverlordChooseAction
+
+            monstersRemaining = FullModel.Board.FiguresOnBoard.Where(pair => pair.Key is Monster).Select(pair => (Monster) pair.Key).ToList();
+
+            if (Player.Instance.IsOverlord)
+            {
+                foreach (Point point in FullModel.Board.FiguresOnBoard.Where(pair => pair.Key is Monster).Select(pair => pair.Value))
+                {
+                    gui.MarkSquare(point.X, point.Y, true);
+                }  
+            }
+           
+            stateMachine.PlaceStates(State.WaitForOverlordChooseAction);
+            StateChanged();
+        }
+
         private void StartMonsterTurn(object sender, CoordinatesEventArgs eventArgs)
         {
             Contract.Requires(CurrentState == State.WaitForOverlordChooseAction);
@@ -833,7 +878,7 @@ namespace Descent.State
             Contract.Ensures(CurrentState == State.WaitForPerformAction);
 
             // Record monsterId
-            currentMonster = (Monster) FullModel.Board.FiguresOnBoard.Single(pair => pair.Value.X == eventArgs.X && pair.Value.Y == eventArgs.Y).Key;
+            currentMonster = (Monster)FullModel.Board.FiguresOnBoard.Single(pair => pair.Value.X == eventArgs.X && pair.Value.Y == eventArgs.Y).Key;
 
             stateMachine.PlaceStates(State.MonsterTurn);
             stateMachine.ChangeToNextState();
@@ -850,34 +895,6 @@ namespace Descent.State
 
             stateMachine.PlaceStates(State.WaitForPerformAction);
             stateMachine.ChangeToNextState();
-        }
-
-        // Helper method
-        private void OverlordTurnInitiation()
-        {
-            Contract.Requires(CurrentState == State.OverlordTurn);
-            Contract.Ensures(CurrentState == Contract.OldValue(CurrentState));
-            Contract.Ensures(stateMachine.NextState == State.WaitForOverlordChooseAction);
-
-            Player.Instance.Overlord.ThreatTokens += Player.Instance.HeroParty.NumberOfHeroes;
-            if (Player.Instance.IsServer)
-            {
-                eventManager.QueueEvent(EventType.GiveOverlordCards, new GiveOverlordCardsEventArgs(gameState.GetOverlordCards(2).Select(card => card.Id).ToArray()));
-            }
-
-            if (Player.Instance.IsOverlord)
-            {
-                // Mark monsters that the overlord can select in the WaitForOverlordChooseAction
-
-                monstersRemaining = FullModel.Board.FiguresOnBoard.Where(pair => pair.Key is Monster).Select(pair => (Monster) pair.Key).ToList();
-                foreach (Point point in FullModel.Board.FiguresOnBoard.Where(pair => pair.Key is Monster).Select(pair => pair.Value))
-                {
-                    gui.MarkSquare(point.X, point.Y, true);
-                }  
-            }
-           
-            stateMachine.PlaceStates(State.WaitForOverlordChooseAction);
-            StateChanged();
         }
 
         private void OverlordDiscardCard(/* TODO OverlordCard card*/)
@@ -993,32 +1010,24 @@ namespace Descent.State
 
         }
 
-        private void MonsterTurnDone()
+        private void EndMonsterTurn(object sender, GameEventArgs eventArgs)
         {
             Contract.Requires(CurrentState == State.WaitForPerformAction);
+            Contract.Ensures(CurrentState == State.WaitForOverlordChooseAction);
 
-            // Delete monster from monsterBag
-            // Remove monsterId
+            monstersRemaining.Remove(currentMonster);
+            currentMonster = null;
 
-            stateMachine.PlaceStates(State.WaitForChooseMonster);
+            stateMachine.PlaceStates(State.WaitForOverlordChooseAction);
             stateMachine.ChangeToNextState();
 
-            // TODO if (monsterBag.Empty)
+            if (monstersRemaining.Count == 0)
             {
-                ActivateMonstersDone();
+                FinishedTurn(sender, eventArgs);
             }
         }
+
         #endregion
-
-        private void RevealArea(int areaId)
-        {
-            Contract.Requires(CurrentState == State.RevealArea);
-            Contract.Ensures(CurrentState != State.RevealArea);
-
-            // Reveal area
-
-            stateMachine.ChangeToNextState();
-        }
 
         #region MovementMethods
 
