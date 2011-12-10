@@ -12,7 +12,6 @@ namespace Descent.State
     using Descent.Model.Player;
     using Descent.Model.Player.Figure;
     using Descent.Model.Player.Figure.HeroStuff;
-    using Descent.Model.Player.Overlord;
 
     using Microsoft.Xna.Framework;
 
@@ -141,7 +140,6 @@ namespace Descent.State
                         }
                         if (Player.Instance.IsServer)
                         {
-                            root.AddText("players", "IP: " + Player.Instance.Connection.Ips, new Vector2(50, 50));
                             root.SetClickAction("start", (n, g) =>
                                                              {
 #if DEBUG
@@ -921,7 +919,7 @@ namespace Descent.State
                 foreach (Point point in FullModel.Board.FiguresOnBoard.Where(pair => monstersRemaining.Contains(pair.Key)).Select(pair => pair.Value))
                 {
                     gui.MarkSquare(point.X, point.Y, true);
-                } 
+                }
             }
             else
             {
