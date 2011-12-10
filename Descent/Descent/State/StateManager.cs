@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 
 using Descent.Model.Board;
+using Descent.Model.Event;
 
 namespace Descent.State
 {
@@ -66,11 +67,15 @@ namespace Descent.State
             eventManager.EndMonsterTurnEvent += new EndMonsterTurnHandler(EndMonsterTurn);
             eventManager.AttackSquareEvent += new AttackSquareHandler(AttackSquare);
             eventManager.RolledDicesEvent += new RolledDicesHandler(RolledDices);
-
+            eventManager.BoughtDiceEvent += new BoughtDiceHandler(BoughtDice);
+            eventManager.BoughtMovementEvent += new BoughtMovementHandler(BoughtMovement);
+            eventManager.ChangedBlackDiceSideEvent += new ChangedBlackDiceSideHandler(ChangedBlackDiceSide);
 
             // Internal events
             eventManager.SquareMarkedEvent += new SquareMarkedHandler(SquareMarked);
             eventManager.InventoryFieldMarkedEvent += new InventoryFieldMarkedHandler(InventoryFieldMarked);
+            eventManager.FatigueClickedEvent += new FatigueClickedHandler(FatiqueClicked);
+            eventManager.DiceClickedEvent += new DiceClickedHandler(DiceClicked);
 
             // initiate start
             stateMachine = new StateMachine(new State[] { State.InLobby, State.Initiation, State.DrawOverlordCards, //TODO DrawSkillCards
@@ -350,7 +355,7 @@ namespace Descent.State
                             eventManager.QueueEvent(EventType.OpenDoor, new CoordinatesEventArgs(eventArgs.X, eventArgs.Y));
                         }
                     }
-                    else if(FullModel.Board.Distance(standingPoint, new Point(eventArgs.X, eventArgs.Y)) == 0)
+                    else if (FullModel.Board.Distance(standingPoint, new Point(eventArgs.X, eventArgs.Y)) == 0)
                     {
                         //TODO Pickuptoken/marker, if there is any
                     }
@@ -433,6 +438,48 @@ namespace Descent.State
                         inventoryFieldMarked = -1;
                     }
                     break;
+            }
+        }
+
+        private void FatiqueClicked(object sender, GameEventArgs eventArgs)
+        {
+            if (Player.Instance.Hero.Fatigue == 0)
+            {
+                return;
+            }
+
+            switch (CurrentState)
+            {
+                case State.WaitForPerformAction:
+                    eventManager.QueueEvent(EventType.BoughtMovement, new GameEventArgs());
+                    break;
+
+                case State.WaitForDiceChoice:
+                    eventManager.QueueEvent(EventType.BoughtDice, new GameEventArgs());
+                    break;
+            }
+        }
+
+        private void DiceClicked(object sender, DiceEventArgs eventArgs)
+        {
+            Contract.Requires(CurrentState == State.WaitForDiceChoice);
+            Contract.Ensures(CurrentState == Contract.OldValue(CurrentState));
+
+            Dice dice = gameState.CurrentAttack.DiceForAttack[eventArgs.DiceId];
+            if (dice.Color == EDice.B)
+            {
+                switch (dice.SideIndex)
+                {
+                    case 1:
+                    case 2:
+                    case 3:
+                    case 6:
+                        eventManager.QueueEvent(EventType.ChangedBlackDiceSide, new DiceEventArgs(eventArgs.DiceId, 7));
+                        break;
+                    case 7:
+                        eventManager.QueueEvent(EventType.ChangedBlackDiceSide, new DiceEventArgs(eventArgs.DiceId, 6));
+                        break;
+                }
             }
         }
 
@@ -819,14 +866,15 @@ namespace Descent.State
             stateMachine.ChangeToNextState();
         }
 
-        private void BuyMovement()
+        private void BoughtMovement(object sender, GameEventArgs eventArgs)
         {
             Contract.Requires(CurrentState == State.WaitForPerformAction);
-            /* TODO Contract.Requires(currentHero.Fatique > 0);*/
-            Contract.Ensures(CurrentState == State.WaitForPerformAction);
+            Contract.Requires(Player.Instance.HeroParty.Heroes[eventArgs.SenderId].Fatigue > 0);
+            Contract.Ensures(CurrentState == Contract.OldValue(CurrentState));
 
-            // Remove one fatique from hero
-            // Add one movement to hero
+            Hero hero = Player.Instance.HeroParty.Heroes[eventArgs.SenderId];
+            hero.AddMovement(1);
+            hero.RemoveFatigue(1);
 
             stateMachine.PlaceStates(State.BuyMovement, State.WaitForPerformAction);
             stateMachine.ChangeToNextState();
@@ -1107,6 +1155,18 @@ namespace Descent.State
             Contract.Requires(CurrentState == State.WaitForPerformAction);
             Contract.Ensures(CurrentState == State.WaitForRollDice);
 
+            Figure attacker;
+            if (IsAHeroTurn())
+            {
+                attacker = Player.Instance.HeroParty.Heroes[gameState.CurrentPlayer];
+            }
+            else
+            {
+                attacker = currentMonster;
+            }
+
+            gameState.CurrentAttack = new Attack(attacker);
+
             stateMachine.PlaceStates(State.WaitForRollDice, State.WaitForDiceChoice);
             stateMachine.ChangeToNextState();
         }
@@ -1116,8 +1176,33 @@ namespace Descent.State
             Contract.Requires(CurrentState == State.WaitForRollDice);
             Contract.Ensures(CurrentState == State.WaitForDiceChoice);
 
+            gameState.CurrentAttack.SetDiceSides(eventArgs.RolledSides);
             stateMachine.ChangeToNextState();
         }
+
+        private void BoughtDice(object sender, GameEventArgs eventArgs)
+        {
+            Contract.Requires(CurrentState == State.WaitForDiceChoice);
+            Contract.Ensures(CurrentState == Contract.OldValue(CurrentState));
+
+
+            stateMachine.PlaceStates(State.BuyExtraDice, State.WaitForDiceChoice);
+            stateMachine.ChangeToNextState();
+            stateMachine.ChangeToNextState();
+        }
+
+        private void ChangedBlackDiceSide(object sender, DiceEventArgs eventArgs)
+        {
+            Contract.Requires(CurrentState == State.WaitForDiceChoice);
+            Contract.Requires(gameState.CurrentAttack.DiceForAttack[eventArgs.DiceId].Color == EDice.B);
+            Contract.Requires(gameState.CurrentPlayer == eventArgs.SenderId);
+            Contract.Ensures(CurrentState == Contract.OldValue(CurrentState));
+
+            gameState.CurrentAttack.DiceForAttack[eventArgs.DiceId].SideIndex = eventArgs.SideId;
+            StateChanged();
+        }
+
+
         #endregion
 
         #region MovementMethods

@@ -138,6 +138,8 @@ namespace Descent.Messaging.Events
 
     public delegate void SwitchItemsHandler(object sender, SwitchItemsEventArgs eventArgs);
 
+    public delegate void BoughtMovementHandler(object sender, GameEventArgs eventArgs);
+
     #endregion
 
     #region Overlord turn
@@ -182,6 +184,10 @@ namespace Descent.Messaging.Events
 
     public delegate void MissedAttackHandler(object sender, PlayerEventArgs eventArgs);
 
+    public delegate void BoughtDiceHandler(object sender, GameEventArgs eventArgs);
+
+    public delegate void ChangedBlackDiceSideHandler(object sender, DiceEventArgs eventArgs);
+
     #endregion
 
     #region Internal only
@@ -189,6 +195,10 @@ namespace Descent.Messaging.Events
     public delegate void SquareMarkedHandler(object sender, CoordinatesEventArgs eventArgs);
 
     public delegate void InventoryFieldMarkedHandler(object sender, InventoryFieldEventArgs eventArgs);
+
+    public delegate void FatigueClickedHandler(object sender, GameEventArgs eventArgs);
+
+    public delegate void DiceClickedHandler(object sender, DiceEventArgs eventArgs);
 
     #endregion
 
@@ -200,7 +210,7 @@ namespace Descent.Messaging.Events
     /// </summary>
     public class EventManager
     {
-        private readonly EventType[] localOnly = new EventType[] { EventType.SquareMarked, EventType.InventoryFieldMarked };
+        private readonly EventType[] localOnly = new EventType[] { EventType.SquareMarked, EventType.InventoryFieldMarked, EventType.FatigueClicked };
         private readonly EventType[] needResponses = new EventType[] { };
 
         private Queue<QueuedEvent> queue = new Queue<QueuedEvent>();
@@ -340,6 +350,14 @@ namespace Descent.Messaging.Events
 
         public event MissedAttackHandler MissedAttackEvent;
 
+        public event BoughtDiceHandler BoughtDiceEvent;
+
+        public event ChangedBlackDiceSideHandler ChangedBlackDiceSideEvent;
+
+        public event BoughtMovementHandler BoughtMovementEvent;
+
+        // Other
+
         public event AllRespondedNoActionHandler AllRespondedNoActionEvent;
 
         #region Internal only
@@ -347,6 +365,10 @@ namespace Descent.Messaging.Events
         public event SquareMarkedHandler SquareMarkedEvent;
 
         public event InventoryFieldMarkedHandler InventoryFieldMarkedEvent;
+
+        public event FatigueClickedHandler FatigueClickedEvent;
+
+        public event DiceClickedHandler DiceClickedEvent;
 
         #endregion
 
@@ -648,11 +670,26 @@ namespace Descent.Messaging.Events
                 case EventType.MissedAttack:
                     if (MissedAttackEvent != null) MissedAttackEvent(this, (PlayerEventArgs)eventArgs);
                     break;
+                case EventType.BoughtDice:
+                    if (BoughtDiceEvent != null) BoughtDiceEvent(this, eventArgs);
+                    break;
+                case EventType.ChangedBlackDiceSide:
+                    if (ChangedBlackDiceSideEvent != null) ChangedBlackDiceSideEvent(this, (DiceEventArgs)eventArgs);
+                    break;
+                case EventType.BoughtMovement:
+                    if (BoughtMovementEvent != null) BoughtMovementEvent(this, eventArgs);
+                    break;
                 case EventType.SquareMarked:
                     if (SquareMarkedEvent != null) SquareMarkedEvent(this, (CoordinatesEventArgs)eventArgs);
                     break;
                 case EventType.InventoryFieldMarked:
                     if (InventoryFieldMarkedEvent != null) InventoryFieldMarkedEvent(this, (InventoryFieldEventArgs)eventArgs);
+                    break;
+                case EventType.FatigueClicked:
+                    if (FatigueClickedEvent != null) FatigueClickedEvent(this, eventArgs);
+                    break;
+                case EventType.DiceClicked:
+                    if (DiceClickedEvent != null) DiceClickedEvent(this, (DiceEventArgs) eventArgs);
                     break;
             }
 
@@ -817,10 +854,14 @@ namespace Descent.Messaging.Events
                     return new DamageEventArgs(args);
                 case EventType.MissedAttack:
                     return new PlayerEventArgs(args);
+                case EventType.ChangedBlackDiceSide:
+                    return new DiceEventArgs(args);
                 case EventType.SquareMarked:
                     return new CoordinatesEventArgs(args);
                 case EventType.InventoryFieldMarked:
                     return new InventoryFieldEventArgs(args);
+                case EventType.DiceClicked:
+                    return new DiceEventArgs(args);
                 default:
                     return new GameEventArgs();
             }

@@ -105,6 +105,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Game1.cs" />
+    <Compile Include="GUI\SubElements\AttackElement.cs" />
     <Compile Include="GUI\SubElements\BoardGUIElement.cs" />
     <Compile Include="GUI\SubElements\Chat.cs" />
     <Compile Include="GUI\Drawable.cs" />
@@ -132,6 +133,7 @@
     <Compile Include="Messaging\Events\EventArgs\CoordinatesEventArgs.cs" />
     <Compile Include="Messaging\Events\EventArgs\ChooseActionEventArgs.cs" />
     <Compile Include="Messaging\Events\EventArgs\ChestEventArgs.cs" />
+    <Compile Include="Messaging\Events\EventArgs\DiceEventArgs.cs" />
     <Compile Include="Messaging\Events\EventArgs\InventoryFieldEventArgs.cs" />
     <Compile Include="Messaging\Events\EventArgs\DamageEventArgs.cs" />
     <Compile Include="Messaging\Events\EventArgs\RerollDicesEventArgs.cs" />
