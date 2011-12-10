@@ -318,7 +318,6 @@ namespace Descent.GUI
         protected string WordWrap(string text, Vector2 position)
         {
             Contract.Requires(text != null);
-            Contract.Requires((Bound.Width - position.X) > GUI.Font.MeasureString("mm").X);
 
             int wordsIndex = 0;
             string[] words = text.Split();
