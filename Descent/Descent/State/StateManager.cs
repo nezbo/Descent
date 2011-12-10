@@ -1040,7 +1040,7 @@ namespace Descent.State
         private void EndMonsterTurn(object sender, GameEventArgs eventArgs)
         {
             Contract.Requires(CurrentState == State.WaitForPerformAction);
-            Contract.Ensures(CurrentState == State.WaitForOverlordChooseAction);
+            Contract.Ensures(CurrentState == (monstersRemaining.Count == 0 ? State.NewRound : State.WaitForOverlordChooseAction));
 
             monstersRemaining.Remove(currentMonster);
             currentMonster = null;
