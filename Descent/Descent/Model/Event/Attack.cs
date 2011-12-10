@@ -61,5 +61,11 @@ namespace Descent.Model.Event
         {
             this.figure = attackingFigure;
         }
+
+        public string ToString()
+        {
+            return figure.Name + "\n\tDamage: " + DamageBonus + "\n\tRange: " + RangeBonus + "\n\tPierce: "
+                   + PierceBonus + "\n\tSurge: " + SurgeBonus;
+        }
     }
 }
