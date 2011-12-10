@@ -113,18 +113,19 @@ namespace Descent.GUI
                         s = board[x, y];
                         if (s == null) continue;
                         v = CalcScreenVector(x, y);
-                        if (s.Figure != null && s.Figure is Monster && ((Monster)s.Figure).Orientation == Orientation.V)
+                        if (s.Figure != null && RightPosition(s.Figure, new Point(x, y)))
+                        {
                             draw.Draw(
                                 s.Figure.Texture,
                                 v,
                                 null,
                                 Color.White,
-                                (float)(MathHelper.Pi * 0.5),
-                                new Vector2(0, s.Figure.Texture.Height),
+                                s.Figure.Orientation == Orientation.V ? (float)(MathHelper.Pi * 0.5) : 0.0f,
+                                s.Figure.Orientation == Orientation.V ? new Vector2(0, s.Figure.Texture.Height) : Vector2.Zero,
                                 1.0f,
                                 SpriteEffects.None,
                                 0f);
-                        else if (s.Figure != null) draw.Draw(s.Figure.Texture, v, Color.White);
+                        }
                     }
                 }
             }
@@ -169,6 +170,11 @@ namespace Descent.GUI
 
             // mouseovers and stuff
             base.Draw(draw);
+        }
+
+        private bool RightPosition(Figure f, Point toTest)
+        {
+            return board.FiguresOnBoard[f].Equals(toTest);
         }
 
         private void DrawMark(SpriteBatch draw, int boardX, int boardY, bool positiveMark)
