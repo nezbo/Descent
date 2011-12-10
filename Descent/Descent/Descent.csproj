@@ -108,6 +108,7 @@
     <Compile Include="GUI\SubElements\BoardGUIElement.cs" />
     <Compile Include="GUI\SubElements\Chat.cs" />
     <Compile Include="GUI\Drawable.cs" />
+    <Compile Include="GUI\SubElements\DicesElement.cs" />
     <Compile Include="GUI\SubElements\EquipmentElement.cs" />
     <Compile Include="GUI\GUI.cs" />
     <Compile Include="GUI\GUIElement.cs" />
