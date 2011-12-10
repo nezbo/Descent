@@ -107,6 +107,7 @@ namespace Descent.GUI
 
                         break;
                     }
+                case State.AllBuyEquipment:
                 case State.BuyEquipment:
                     {
                         GUIElement box = new GUIElement(game, "shop", RelW(g, 10), RelH(g, 10), RelW(g, 80), RelH(g, 80));
@@ -149,6 +150,7 @@ namespace Descent.GUI
                         root.AddChild(box);
                         break;
                     }
+                case State.AllEquip:
                 case State.Equip:
                     {
 
