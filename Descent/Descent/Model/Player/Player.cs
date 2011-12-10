@@ -173,6 +173,7 @@ namespace Descent.Model.Player
             }
         }
 
+
         /// <summary>
         /// Gets or sets the StateManager.
         /// </summary>

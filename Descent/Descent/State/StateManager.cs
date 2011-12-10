@@ -12,6 +12,7 @@ namespace Descent.State
     using Descent.Model.Player;
     using Descent.Model.Player.Figure;
     using Descent.Model.Player.Figure.HeroStuff;
+    using Descent.Model.Player.Overlord;
 
     using Microsoft.Xna.Framework;
 
@@ -94,6 +95,11 @@ namespace Descent.State
         }
 
         // Helper methods for the game
+
+        public bool HasTurn()
+        {
+            return gameState.CurrentPlayer == Player.Instance.Id;
+        }
 
         public bool IsAHeroTurn()
         {
@@ -254,13 +260,14 @@ namespace Descent.State
                                 n.EventManager.QueueEvent(EventType.FinishedTurn, new GameEventArgs());
                             });
                         }
-                        else if (role == Role.Overlord)
+                        else if (role == Role.Overlord && HasTurn())
                         {
                             root.SetClickAction("end", (n, g) =>
                                                            {
                                                                n.EventManager.QueueEvent(EventType.EndMonsterTurn, new GameEventArgs());
                                                            });
                         }
+
                         break;
                     }
                 case State.WaitForOverlordChooseAction:
@@ -463,6 +470,9 @@ namespace Descent.State
             {
                 Player.Instance.Overlord.Hand.Add(FullModel.GetOverlordCard(overlordCardId));
             }
+
+            // Remove overlord cards from state
+            gameState.RemoveOverlordCards(eventArgs.OverlordCardIds);
 
             if (CurrentState == State.DrawOverlordCards)
             {
@@ -890,7 +900,7 @@ namespace Descent.State
             Player.Instance.Overlord.ThreatTokens += Player.Instance.HeroParty.NumberOfHeroes;
             if (Player.Instance.IsServer)
             {
-                eventManager.QueueEvent(EventType.GiveOverlordCards, new GiveOverlordCardsEventArgs(gameState.GetOverlordCards(2).Select(card => card.Id).ToArray()));
+                eventManager.QueueEvent(EventType.GiveOverlordCards, new GiveOverlordCardsEventArgs(gameState.GetOverlordCards(2).Select(card => card.Id).ToArray();));
             }
 
             monstersRemaining = FullModel.Board.FiguresOnBoard.Where(pair => pair.Key is Monster).Select(pair => (Monster)pair.Key).ToList();
@@ -1034,6 +1044,8 @@ namespace Descent.State
 
             monstersRemaining.Remove(currentMonster);
             currentMonster = null;
+
+            if (Player.Instance.IsOverlord) MarkMonstersRemaining();
 
             stateMachine.PlaceStates(State.WaitForOverlordChooseAction);
             stateMachine.ChangeToNextState();

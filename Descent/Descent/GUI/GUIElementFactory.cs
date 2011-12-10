@@ -224,7 +224,7 @@ namespace Descent.GUI
                             root.AddChild(end);
                             root.AddText(end.Name, "End Turn", new Vector2(5, 5));
                         }
-                        else if (role == Role.Overlord)
+                        else if (role == Role.Overlord && Player.Instance.StateManager.HasTurn())
                         {
                             GUIElement end = new GUIElement(game, "end", RelW(g, 3), RelW(g, 3), RelW(g, 15), RelH(g, 10));
                             root.AddChild(end);
