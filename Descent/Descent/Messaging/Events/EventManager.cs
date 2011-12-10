@@ -14,6 +14,24 @@ namespace Descent.Messaging.Events
 
     using Descent.Model.Player;
 
+    public struct QueuedEvent
+    {
+        public string EventString;
+
+        public bool Broadcast;
+
+        public QueuedEvent(string eventString, bool broadcast = false)
+        {
+            EventString = eventString;
+            Broadcast = broadcast;
+        }
+
+        public new string ToString()
+        {
+            return EventString;
+        }
+    }
+
     #region Delegate declarations
 
     #region Initialization of game
@@ -185,7 +203,7 @@ namespace Descent.Messaging.Events
         private readonly EventType[] localOnly = new EventType[] { EventType.SquareMarked, EventType.InventoryFieldMarked };
         private readonly EventType[] needResponses = new EventType[] { };
 
-        private Queue<string> queue = new Queue<string>();
+        private Queue<QueuedEvent> queue = new Queue<QueuedEvent>();
 
         private Dictionary<string, int> responses = new Dictionary<string, int>(); // Key is eventid and int is number of players who responded.
 
@@ -338,11 +356,11 @@ namespace Descent.Messaging.Events
         /// Take an event string and puts it on the event queue.
         /// </summary>
         /// <param name="eventString">Event string to queue.</param>
-        public void QueueStringEvent(string eventString)
+        public void QueueStringEvent(string eventString, bool broadcast = true)
         {
             lock (queue)
             {
-                queue.Enqueue(eventString);
+                queue.Enqueue(new QueuedEvent(eventString, broadcast));
             }
         }
 
@@ -351,13 +369,13 @@ namespace Descent.Messaging.Events
         /// </summary>
         /// <param name="eventType">The type of event to queue.</param>
         /// <param name="eventArgs">The event arguments.</param>
-        public void QueueEvent(EventType eventType, GameEventArgs eventArgs)
+        public void QueueEvent(EventType eventType, GameEventArgs eventArgs, bool broadcast = true)
         {
             AddRequiredEventArgs(eventType, eventArgs);
 
             lock (queue)
             {
-                queue.Enqueue(EncodeMessage(eventType, eventArgs));
+                queue.Enqueue(new QueuedEvent(EncodeMessage(eventType, eventArgs), broadcast));
             }
         }
 
@@ -371,8 +389,8 @@ namespace Descent.Messaging.Events
             {
                 while (queue.Count > 0)
                 {
-                    string evtStr = queue.Dequeue();
-                    ParseAndFire(evtStr, true);
+                    QueuedEvent queuedEvent = queue.Dequeue();
+                    ParseAndFire(queuedEvent.EventString, queuedEvent.Broadcast);
                 }
             }
         }
