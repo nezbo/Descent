@@ -273,6 +273,15 @@ namespace Descent.Model.Player.Figure
                 }
             }
         }
+        
+        /// <summary>
+        /// Called when a hero has ended his turn. Removes movement and attacks.
+        /// </summary>
+        public void EndTurn()
+        {
+            movementLeft = 0;
+            attacksLeft = 0;
+        }
 
         /// <summary>
         /// A method that returns the number of black dice for the weapon type equipped.

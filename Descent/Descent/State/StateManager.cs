@@ -822,6 +822,12 @@ namespace Descent.State
             playersRemaining.Remove(eventArgs.SenderId);
             gameState.CurrentPlayer = 0;
 
+            // If the player ending the game was a hero, reset his movement.
+            if (Player.Instance.HeroParty.Heroes[eventArgs.SenderId] != null)
+            {
+                Player.Instance.HeroParty.Heroes[eventArgs.SenderId].EndTurn();
+            }
+
             if (CurrentState == State.WaitForOverlordChooseAction)
             {
                 stateMachine.PlaceStates(State.NewRound);
@@ -837,7 +843,6 @@ namespace Descent.State
                 {
                     stateMachine.PlaceStates(State.OverlordTurn);
                     stateMachine.ChangeToNextState();
-                    State s = stateMachine.CurrentState;
                     OverlordTurnInitiation();
                 }
                 else
