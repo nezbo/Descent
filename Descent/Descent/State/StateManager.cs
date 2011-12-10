@@ -714,7 +714,7 @@ namespace Descent.State
             // IF we are overlord and have a monster selected, we have moved a monster. Update monster markings.
             if (Player.Instance.IsOverlord && currentMonster != null)
             {
-                MarkMonstersRemaining();
+                this.MarkMonsters();
             }
 
             stateMachine.PlaceStates(State.MoveAdjecent);
@@ -897,21 +897,32 @@ namespace Descent.State
             if (Player.Instance.IsOverlord)
             {
                 // Mark monsters that the overlord can select in the WaitForOverlordChooseAction
-                MarkMonstersRemaining();
+                this.MarkMonsters();
             }
 
             stateMachine.PlaceStates(State.WaitForOverlordChooseAction);
             StateChanged();
         }
 
-        private void MarkMonstersRemaining()
+        private void MarkMonsters()
         {
             gui.ClearMarks();
 
-            foreach (Point point in FullModel.Board.FiguresOnBoard.Where(pair => monstersRemaining.Contains(pair.Key)).Select(pair => pair.Value))
+            if (currentMonster != null)
             {
-                gui.MarkSquare(point.X, point.Y, true);
+                // If we're not in a monster turn, all monsters should be marked to indicate all monsters can be chosen.
+                foreach (Point point in FullModel.Board.FiguresOnBoard.Where(pair => monstersRemaining.Contains(pair.Key)).Select(pair => pair.Value))
+                {
+                    gui.MarkSquare(point.X, point.Y, true);
+                } 
             }
+            else
+            {
+                // We have a current monster, mark only this monster indicate that the overlord can only perform actions with this monster.
+                Point monsterpoint = FullModel.Board.FiguresOnBoard[currentMonster];
+                gui.MarkSquare(monsterpoint.X, monsterpoint.Y, true);
+            }
+
         }
 
         private void OverlordDiscardCard(/* TODO OverlordCard card*/)
@@ -1034,7 +1045,7 @@ namespace Descent.State
             monstersRemaining.Remove(currentMonster);
             currentMonster = null;
 
-            if (Player.Instance.IsOverlord) MarkMonstersRemaining();
+            if (Player.Instance.IsOverlord) this.MarkMonsters();
 
             stateMachine.PlaceStates(State.WaitForOverlordChooseAction);
             stateMachine.ChangeToNextState();
