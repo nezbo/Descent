@@ -35,7 +35,7 @@ namespace Descent.GUI
         private Dictionary<Vector2, bool> markedSquares;
 
         public BoardGUIElement(Game game, Board board, Role role)
-            : base(game, "board", 0, 0, game.GraphicsDevice.Viewport.Width, game.GraphicsDevice.Viewport.Height)
+            : base(game, "board", 0, 0, (int)(game.GraphicsDevice.Viewport.Width * (3 / 4.0)), game.GraphicsDevice.Viewport.Height)
         {
             this.board = board;
             xDisp = -2 * TileSize;
@@ -202,9 +202,9 @@ namespace Descent.GUI
 
             KeyboardState keyState = Keyboard.GetState();
             if (keyState.IsKeyDown(Keys.Left) && xDisp > -BorderTiles * TileSize) xDisp -= 10;
-            if (keyState.IsKeyDown(Keys.Right) && xDisp < (board.Width + BorderTiles - 1) * TileSize - Game.GraphicsDevice.Viewport.Width) xDisp += 10;
+            if (keyState.IsKeyDown(Keys.Right) && xDisp < (board.Width + BorderTiles - 1) * TileSize - Bound.Width) xDisp += 10;
             if (keyState.IsKeyDown(Keys.Up) && yDisp > -BorderTiles * TileSize) yDisp -= 10;
-            if (keyState.IsKeyDown(Keys.Down) && yDisp < (board.Height + BorderTiles) * TileSize - Game.GraphicsDevice.Viewport.Height) yDisp += 10;
+            if (keyState.IsKeyDown(Keys.Down) && yDisp < (board.Height + BorderTiles) * TileSize - Bound.Height) yDisp += 10;
         }
     }
 }
