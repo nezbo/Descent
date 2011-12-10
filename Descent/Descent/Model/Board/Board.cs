@@ -278,7 +278,7 @@
         /// </returns>
         public bool IsStandable(int x, int y)
         {
-            return IsSquareWithinBoard(x, y) && SquareVisibleByPlayers(x, y) && board[x, y].Figure == null;
+            return IsSquareWithinBoard(x, y) && SquareVisibleByPlayers(x, y) && board[x, y].Figure == null && (board[x, y].Marker == null || !board[x, y].Marker.Name.Equals("rock"));
         }
 
         /// <summary>
@@ -375,12 +375,13 @@
         /// </returns>
         public bool IsThereLineOfSight(Point from, Point to, bool ignoreMonsters)
         {
+            Contract.Requires(IsSquareWithinBoard(from));
+            if (this[from.X, from.Y].Marker != null && this[from.X, from.Y].Marker.Name.Equals("pit"))
+            {
+                return false;
+            }
             foreach (var point in SquaresBetweenPoints(from, to))
             {
-                if (to.X == 0 && to.Y == 21)
-                {
-                    
-                }
                 if (!(IsStandable(point.X, point.Y) || (ignoreMonsters && board[point.X, point.Y] != null && board[point.X, point.Y].Figure is Monster)))
                     return false;
             }
