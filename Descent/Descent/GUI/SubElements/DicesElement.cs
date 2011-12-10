@@ -12,36 +12,40 @@ namespace Descent.GUI.SubElements
             : base(game, "dice", x, y, width, height)
         {
             // determine how many can be displayed on a line
-            int diceWidth = dices[0].Texture.Width + Spacing;
-            int perLine = 1;
-            int widthLeft = Bound.Width - dices[0].Texture.Width;
-
-            while (widthLeft > diceWidth)
+            if (dices.Length > 0)
             {
-                perLine++;
-                widthLeft -= diceWidth;
-            }
+                int diceWidth = dices[0].Texture.Width + Spacing;
+                int perLine = 1;
+                int widthLeft = Bound.Width - dices[0].Texture.Width;
 
-            // make the dice displayed in sorted order
-            int line = 0;
-            int number = 0;
-            foreach (EDice diceType in Enum.GetValues(typeof(EDice)))
-            {
-                foreach (Dice die in dices)
+                while (widthLeft > diceWidth)
                 {
-                    if (die.Color == diceType)
-                    {
-                        this.AddDrawable(this.Name, die, new Vector2(Bound.X + number * die.Texture.Width + number * Spacing, Bound.Y + line * die.Texture.Height + line * Spacing));
-                        number++;
+                    perLine++;
+                    widthLeft -= diceWidth;
+                }
 
-                        if (number >= perLine)
+                // make the dice displayed in sorted order
+                int line = 0;
+                int number = 0;
+                foreach (EDice diceType in Enum.GetValues(typeof(EDice)))
+                {
+                    foreach (Dice die in dices)
+                    {
+                        if (die.Color == diceType)
                         {
-                            number = 0;
-                            line++;
+                            this.AddDrawable(this.Name, die, new Vector2(Bound.X + number * die.Texture.Width + number * Spacing, Bound.Y + line * die.Texture.Height + line * Spacing));
+                            number++;
+
+                            if (number >= perLine)
+                            {
+                                number = 0;
+                                line++;
+                            }
                         }
                     }
                 }
             }
+
         }
     }
 }
