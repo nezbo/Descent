@@ -249,6 +249,17 @@ namespace Descent.GUI
                         }
                         break;
                     }
+                case State.WaitForRollDice:
+                    {
+                        GUIElement box = new GUIElement(game, "box", RelW(g, 20), RelH(g, 10), RelW(g, 60), RelH(g, 60));
+                        GUIElement roll = new GUIElement(game, "roll", RelW(g, 75), RelH(g, 70), RelW(g, 10), RelH(g, 6));
+
+                        root.AddChild(box);
+                        root.AddChild(roll);
+
+                        root.AddText(roll.Name, "Roll", new Vector2(5, 5));
+                        break;
+                    }
             }
 
             return root;

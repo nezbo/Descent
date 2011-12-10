@@ -282,6 +282,18 @@ namespace Descent.State
 
                         break;
                     }
+                case State.WaitForRollDice:
+                    {
+                        if (gameState.CurrentPlayer == Player.Instance.Id)
+                        {
+                            root.SetClickAction("roll", (n,g) =>
+                                                            {
+                                                                gameState.RollDice();
+                                                                n.EventManager.QueueEvent(EventType.RolledDices, new RolledDicesEventArgs(gameState.GetRolledSides()));
+                                                            });
+                        }
+                        break;
+                    }
             }
 
             gui.ChangeStateGUI(root); // change the GUI's state element.
