@@ -283,12 +283,25 @@ namespace Descent.GUI
         /// <param name="position">Where the upper-left corner of the text should be</param>
         public void AddText(string target, string text, Vector2 position)
         {
+            AddText(target, text, position, Color.Black);
+        }
+
+        /// <summary>
+        /// Adds the given string to be drawn on the screen on all children (or this)
+        /// with the target name.
+        /// </summary>
+        /// <param name="target">Only GUIElements with this name should display the text.</param>
+        /// <param name="text">The text to be drawn to the screen.</param>
+        /// <param name="position">Where the upper-left corner of the text should be</param>
+        /// <param name="color">The color that the text should be drawn in</param>
+        public void AddText(string target, string text, Vector2 position, Color color)
+        {
             Contract.Requires(target != null);
             Contract.Requires(text != null);
 
             if (Name == target)
             {
-                texts.Add(new Text(WordWrap(text, position), new Vector2(position.X + Bound.X, position.Y + Bound.Y)));
+                texts.Add(new Text(WordWrap(text, position), new Vector2(position.X + Bound.X, position.Y + Bound.Y), color));
             }
             foreach (GUIElement e in children) e.AddText(target, text, position);
         }
@@ -400,7 +413,7 @@ namespace Descent.GUI
             // draw my own text
             foreach (Text t in texts)
             {
-                draw.DrawString(GUI.Font, t.Line, t.Position, Color.Black);
+                draw.DrawString(GUI.Font, t.Line, t.Position, t.Color);
             }
 
             // draw the children on top

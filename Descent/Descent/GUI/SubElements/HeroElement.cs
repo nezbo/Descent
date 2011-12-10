@@ -41,7 +41,7 @@ namespace Descent.GUI.SubElements
 
             string cost = "" + hero.Cost;
             Vector2 size = GUI.Font.MeasureString(cost);
-            this.AddText(this.Name, cost, new Vector2((40 - size.X) / 2, Bound.Height - 70 + (40 - size.Y) / 2));
+            this.AddText(this.Name, cost, new Vector2((40 - size.X) / 2, Bound.Height - 70 + (40 - size.Y) / 2), Color.White);
 
 
             this.AddDrawable(this.Name, new Image(game.Content.Load<Texture2D>("heroheader")), new Rectangle(nameX - 10, nameY - 5, (int)nameV.X + 20, (int)nameV.Y + 10));
