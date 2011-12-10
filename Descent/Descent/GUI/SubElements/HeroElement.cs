@@ -13,6 +13,7 @@ namespace Descent.GUI.SubElements
         private Rectangle healthRect;
         private Rectangle fatigueRect;
         private Rectangle movementRect;
+        private Rectangle attacksRect;
 
         public HeroElement(Game game, Hero hero)
             : base(game, "hero", 0, 0, (int)(game.GraphicsDevice.Viewport.Width * (3 / 4.0)), game.GraphicsDevice.Viewport.Height)
@@ -20,18 +21,28 @@ namespace Descent.GUI.SubElements
             this.hero = hero;
             this.SetDrawBackground(false);
 
-            healthRect = new Rectangle(210, this.Bound.Height - 200, 66, 66);
-            fatigueRect = new Rectangle(210, this.Bound.Height - 200 + 66, 66, 66);
-            movementRect = new Rectangle(210, this.Bound.Height - 200 + 132, 66, 66);
+            healthRect = new Rectangle(210, this.Bound.Height - 200, 50, 50);
+            fatigueRect = new Rectangle(210, this.Bound.Height - 150, 50, 50);
+            movementRect = new Rectangle(210, this.Bound.Height - 100, 50, 50);
+            attacksRect = new Rectangle(210, this.Bound.Height - 50, 50, 50);
 
             this.AddDrawable(this.Name, new Image(hero.BigTexture), new Vector2(0, this.Bound.Height - hero.BigTexture.Height));
             this.AddDrawable(this.Name, new Image(game.Content.Load<Texture2D>("Images/Other/health-small")), healthRect);
             this.AddDrawable(this.Name, new Image(game.Content.Load<Texture2D>("Images/Other/fatigue-small")), fatigueRect);
             this.AddDrawable(this.Name, new Image(game.Content.Load<Texture2D>("Images/Other/movement-small")), movementRect);
+            this.AddDrawable(this.Name, new Image(game.Content.Load<Texture2D>("Images/Other/attacks-small")), attacksRect);
 
             Vector2 nameV = GUI.Font.MeasureString(hero.Name);
             int nameX = (int)((200 - nameV.X) / 2);
             int nameY = Bound.Height - 30;
+
+            // cost stuff
+            this.AddDrawable(this.Name, new Image(game.Content.Load<Texture2D>("Images/Other/cost-small")), new Rectangle(0, Bound.Height - 70, 40, 40));
+
+            string cost = "" + hero.Cost;
+            Vector2 size = GUI.Font.MeasureString(cost);
+            this.AddText(this.Name, cost, new Vector2((40 - size.X) / 2, Bound.Height - 70 + (40 - size.Y) / 2));
+
 
             this.AddDrawable(this.Name, new Image(game.Content.Load<Texture2D>("heroheader")), new Rectangle(nameX - 10, nameY - 5, (int)nameV.X + 20, (int)nameV.Y + 10));
             this.AddText(this.Name, hero.Name, new Vector2(nameX, nameY));
@@ -55,9 +66,10 @@ namespace Descent.GUI.SubElements
         {
             base.Draw(draw);
 
-            draw.DrawString(GUI.Font, hero.Health + "/" + hero.MaxHealth, new Vector2(healthRect.X + 15, healthRect.Y + 20), Color.White);
-            draw.DrawString(GUI.Font, hero.Fatigue + "/" + hero.MaxFatigue, new Vector2(fatigueRect.X + 20, fatigueRect.Y + 35), Color.White);
-            draw.DrawString(GUI.Font, hero.MovementLeft + "/" + hero.Speed, new Vector2(movementRect.X + 20, movementRect.Y + 30), Color.White);
+            draw.DrawString(GUI.Font, hero.Health + "/" + hero.MaxHealth, new Vector2(healthRect.X + 8, healthRect.Y + 16), Color.White);
+            draw.DrawString(GUI.Font, hero.Fatigue + "/" + hero.MaxFatigue, new Vector2(fatigueRect.X + 12, fatigueRect.Y + 25), Color.White);
+            draw.DrawString(GUI.Font, hero.MovementLeft + "/" + hero.Speed, new Vector2(movementRect.X + 15, movementRect.Y + 20), Color.White);
+            draw.DrawString(GUI.Font, "" + hero.AttacksLeft, new Vector2(attacksRect.X + 35, attacksRect.Y + 28), Color.White);
         }
     }
 }
