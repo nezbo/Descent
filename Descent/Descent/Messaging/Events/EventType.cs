@@ -79,6 +79,7 @@ namespace Descent.Messaging.Events
         InventoryFieldMarked = 66,
         BoughtDice = 67,
         ChangedBlackDiceSide = 68,
-        FatigueClicked = 69
+        FatigueClicked = 69,
+        BoughtMovement = 70
     }
 }

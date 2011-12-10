@@ -138,6 +138,8 @@ namespace Descent.Messaging.Events
 
     public delegate void SwitchItemsHandler(object sender, SwitchItemsEventArgs eventArgs);
 
+    public delegate void BoughtMovementHandler(object sender, GameEventArgs eventArgs);
+
     #endregion
 
     #region Overlord turn
@@ -349,6 +351,8 @@ namespace Descent.Messaging.Events
         public event BoughtDiceHandler BoughtDiceEvent;
 
         public event ChangedBlackDiceSideHandler ChangedBlackDiceSideEvent;
+
+        public event BoughtMovementHandler BoughtMovementEvent;
 
         // Other
 
@@ -668,6 +672,9 @@ namespace Descent.Messaging.Events
                 case EventType.ChangedBlackDiceSide:
                     if (ChangedBlackDiceSideEvent != null) ChangedBlackDiceSideEvent(this, (DiceEventArgs)eventArgs);
                     break;
+                case EventType.BoughtMovement:
+                    if (BoughtMovementEvent != null) BoughtMovementEvent(this, eventArgs);
+                    break;
                 case EventType.SquareMarked:
                     if (SquareMarkedEvent != null) SquareMarkedEvent(this, (CoordinatesEventArgs)eventArgs);
                     break;
@@ -676,6 +683,7 @@ namespace Descent.Messaging.Events
                     break;
                 case EventType.FatigueClicked:
                     if (FatigueClickedEvent != null) FatigueClickedEvent(this, eventArgs);
+                    break;
             }
 
             if (sendOnNetwork && !localOnly.Contains(eventType))
