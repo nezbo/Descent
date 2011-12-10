@@ -24,7 +24,7 @@ namespace Descent.Messaging.Connection
         /// <summary>
         /// Gets the ip of the connection. See <see cref="Descent.Messaging.AsyncSockets.ClientInfo"/>.
         /// </summary>
-        public abstract string Ip { get; }
+        public abstract string[] Ips { get; }
 
         /// <summary>
         /// Initiate connection and start receiving data.

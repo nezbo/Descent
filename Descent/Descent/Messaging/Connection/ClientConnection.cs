@@ -21,7 +21,7 @@ namespace Descent.Messaging.Connection
         /// <summary>
         /// Initializes a new instance of the <see cref="ClientConnection"/> class. 
         /// </summary>
-        /// <param name="ip">Ip of server.</param>
+        /// <param name="ip">Ips of server.</param>
         /// <param name="port">Port of server.</param>
         public ClientConnection(string ip, int port)
         {
@@ -31,7 +31,7 @@ namespace Descent.Messaging.Connection
 
         public override int Id { get { return client.Id; } }
 
-        public override string Ip { get { return client.Ip; } }
+        public override string[] Ips { get { return new string[] { client.Ip }; } }
 
         private string RemoteIp { get; set; }
 

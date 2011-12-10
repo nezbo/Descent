@@ -230,7 +230,7 @@ namespace Descent.GUI
                 if (s.Figure != null && s.Figure is Hero)
                 {
                     Hero h = (Hero)s.Figure;
-                    AddText(this.Name, h.Name, new Vector2(ms.X, ms.Y));
+                    //AddText(this.Name, h.Name, new Vector2(ms.X, ms.Y)); //TODO:
                 }
             }
         }
