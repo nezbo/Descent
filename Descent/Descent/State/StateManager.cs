@@ -141,7 +141,7 @@ namespace Descent.State
                         }
                         if (Player.Instance.IsServer)
                         {
-                            root.AddText("players", "IP: " + Player.Instance.Connection.Ip, new Vector2(50, 50));
+                            root.AddText("players", "IP: " + Player.Instance.Connection.Ips, new Vector2(50, 50));
                             root.SetClickAction("start", (n, g) =>
                                                              {
 #if DEBUG

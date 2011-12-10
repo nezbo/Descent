@@ -26,7 +26,7 @@ namespace Descent.Messaging.Connection
 
         public override int Id { get { return 1; } } // Server is always ID 1
 
-        public override string Ip { get { return mServer.Ip; } }
+        public override string[] Ips { get { return mServer.Ips; } }
 
         private int ServerPort { get; set; }
 
