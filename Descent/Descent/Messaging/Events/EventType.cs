@@ -80,6 +80,7 @@ namespace Descent.Messaging.Events
         BoughtDice = 67,
         ChangedBlackDiceSide = 68,
         FatigueClicked = 69,
-        BoughtMovement = 70
+        BoughtMovement = 70,
+        DiceClicked = 71
     }
 }

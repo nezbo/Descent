@@ -198,6 +198,8 @@ namespace Descent.Messaging.Events
 
     public delegate void FatigueClickedHandler(object sender, GameEventArgs eventArgs);
 
+    public delegate void DiceClickedHandler(object sender, DiceEventArgs eventArgs);
+
     #endregion
 
     public delegate void AllRespondedNoActionHandler(object sender, EventArgs eventArgs); // Special delegate, contains no eventArgs info.
@@ -365,6 +367,8 @@ namespace Descent.Messaging.Events
         public event InventoryFieldMarkedHandler InventoryFieldMarkedEvent;
 
         public event FatigueClickedHandler FatigueClickedEvent;
+
+        public event DiceClickedHandler DiceClickedEvent;
 
         #endregion
 
@@ -684,6 +688,9 @@ namespace Descent.Messaging.Events
                 case EventType.FatigueClicked:
                     if (FatigueClickedEvent != null) FatigueClickedEvent(this, eventArgs);
                     break;
+                case EventType.DiceClicked:
+                    if (DiceClickedEvent != null) DiceClickedEvent(this, (DiceEventArgs) eventArgs);
+                    break;
             }
 
             if (sendOnNetwork && !localOnly.Contains(eventType))
@@ -853,6 +860,8 @@ namespace Descent.Messaging.Events
                     return new CoordinatesEventArgs(args);
                 case EventType.InventoryFieldMarked:
                     return new InventoryFieldEventArgs(args);
+                case EventType.DiceClicked:
+                    return new DiceEventArgs(args);
                 default:
                     return new GameEventArgs();
             }
