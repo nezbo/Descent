@@ -814,10 +814,10 @@ namespace Descent.State
 
         private void RequestTurn(object sender, GameEventArgs eventArgs)
         {
-            Contract.Requires(CurrentState == State.WaitForHeroTurn);
+            Contract.Requires(CurrentState == State.WaitForHeroTurn || CurrentState == State.Equip);
             Contract.Ensures(CurrentState == Contract.OldValue(CurrentState));
 
-            if (Player.Instance.IsServer && gameState.CurrentPlayer == 0 && gameState.CurrentPlayer == 0 && playersRemaining.Contains(eventArgs.SenderId))
+            if (Player.Instance.IsServer && gameState.CurrentPlayer == 0 && playersRemaining.Contains(eventArgs.SenderId))
             {
                 eventManager.QueueEvent(EventType.TurnChanged, new PlayerEventArgs(eventArgs.SenderId));
                 gameState.CurrentPlayer = eventArgs.SenderId;
