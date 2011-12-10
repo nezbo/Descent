@@ -9,7 +9,6 @@ namespace Descent.State
     using Descent.GUI;
     using Descent.Messaging.Events;
     using Descent.Model;
-    using Descent.Model.Event;
     using Descent.Model.Player;
     using Descent.Model.Player.Figure;
     using Descent.Model.Player.Figure.HeroStuff;
@@ -289,10 +288,10 @@ namespace Descent.State
                     {
                         if (gameState.CurrentPlayer == Player.Instance.Id)
                         {
-                            root.SetClickAction("roll", (n,g) =>
+                            root.SetClickAction("roll", (n, g) =>
                                                             {
-                                                                gameState.RollDice();
-                                                                n.EventManager.QueueEvent(EventType.RolledDices, new RolledDicesEventArgs(gameState.GetRolledSides()));
+                                                                gameState.CurrentAttack.RollDice();
+                                                                n.EventManager.QueueEvent(EventType.RolledDices, new RolledDicesEventArgs(gameState.CurrentAttack.GetRolledSides()));
                                                             });
                         }
                         break;
@@ -340,7 +339,7 @@ namespace Descent.State
                     {
                         // Move to adjecent
                         // If it is possible to stand on the square, or the figure standing is the same as "me", and there is atleast 1 movement left
-                        
+
                         if (FullModel.Board.CanFigureMoveToPoint(figure, new Point(eventArgs.X, eventArgs.Y)) && figure.MovementLeft >= 1)
                         {
                             eventManager.QueueEvent(EventType.MoveTo, new CoordinatesEventArgs(eventArgs.X, eventArgs.Y));
@@ -353,10 +352,10 @@ namespace Descent.State
                         }
                     }
 
-                    if (FullModel.Board.Distance(standingPoint, new Point(eventArgs.X, eventArgs.Y)) >= 1 && (FullModel.Board[eventArgs.X , eventArgs.Y] != null && (FullModel.Board[eventArgs.X, eventArgs.Y].Figure != null && FullModel.Board.IsThereLineOfSight(figure, FullModel.Board[eventArgs.X, eventArgs.Y].Figure, false))))
+                    if (FullModel.Board.Distance(standingPoint, new Point(eventArgs.X, eventArgs.Y)) >= 1 && (FullModel.Board[eventArgs.X, eventArgs.Y] != null && (FullModel.Board[eventArgs.X, eventArgs.Y].Figure != null && FullModel.Board.IsThereLineOfSight(figure, FullModel.Board[eventArgs.X, eventArgs.Y].Figure, false))))
                     {
-                            // A figure is trying to attack another figure.
-                            eventManager.QueueEvent(EventType.AttackSquare, new CoordinatesEventArgs(eventArgs.X, eventArgs.Y));
+                        // A figure is trying to attack another figure.
+                        eventManager.QueueEvent(EventType.AttackSquare, new CoordinatesEventArgs(eventArgs.X, eventArgs.Y));
                     }
 
                     break;
@@ -895,7 +894,7 @@ namespace Descent.State
 
             currentMonster.SetAttacks(1);
             currentMonster.SetMovement(currentMonster.Speed);
-            
+
             MarkMonsters();
 
             stateMachine.PlaceStates(State.WaitForPerformAction);
@@ -954,7 +953,7 @@ namespace Descent.State
                     {
                         gui.MarkSquare(point.X, point.Y, true);
                     }
-                }  
+                }
             }
             else
             {
