@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using System.Linq;
 using Descent.Messaging.Events;
 using Descent.Model.Board;
 using Descent.Model.Player;
@@ -9,7 +8,6 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Descent.GUI
 {
-    using Descent.Model;
     using Descent.Model.Player.Figure;
 
     using Microsoft.Xna.Framework;
@@ -133,10 +131,13 @@ namespace Descent.GUI
             }
 
             // Marks (if any)
-            Rectangle r;
-            foreach (Vector2 pos in markedSquares.Keys.ToArray())
+            lock (markedSquares)
             {
-                DrawMark(draw, (int)pos.X, (int)pos.Y, markedSquares[pos]);
+                Rectangle r;
+                foreach (Vector2 pos in markedSquares.Keys)
+                {
+                    DrawMark(draw, (int)pos.X, (int)pos.Y, markedSquares[pos]);
+                }
             }
 
             // overlord fog
@@ -204,8 +205,10 @@ namespace Descent.GUI
             Contract.Requires(x >= 0);
             Contract.Requires(y >= 0);
 
-            markedSquares[new Vector2(x, y)] = positive;
-
+            lock (markedSquares)
+            {
+                markedSquares[new Vector2(x, y)] = positive;
+            }
         }
 
         /// <summary>
@@ -213,7 +216,10 @@ namespace Descent.GUI
         /// </summary>
         public void ClearMarks()
         {
-            markedSquares.Clear();
+            lock (markedSquares)
+            {
+                markedSquares.Clear();
+            }
         }
 
         public override void Update(GameTime gameTime)
