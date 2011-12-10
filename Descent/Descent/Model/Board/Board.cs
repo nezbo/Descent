@@ -50,11 +50,9 @@
 
         private Collection<Hero> heroesInTown = new Collection<Hero>();
 
-        private Dictionary<Hero, Point> heroesOnBoard = new Dictionary<Hero, Point>();
+        private Dictionary<Figure, Point> figuresOnBoard = new Dictionary<Figure, Point>();
 
         private Texture2D floorTexture;
-
-        private Dictionary<Monster, Point> monstersOnBoard = new Dictionary<Monster, Point>(); 
 
         #endregion
 
@@ -96,34 +94,17 @@
         }
 
         /// <summary>
-        /// Gets the points where all heroes are standing
+        /// Gets the points where all figures are standing
+        /// 
         /// </summary>
-        public Dictionary<Hero, Point> HeroesOnBoard
-        {
-            get { return heroesOnBoard; }
-        }
-
-        /// <summary>
-        /// Gets the points where all monsters are standing
-        /// </summary>
-        public Dictionary<Monster, Point> MonstersOnBoard
+        public Dictionary<Figure,Point> FiguresOnBoard
         {
             get
             {
-                Dictionary<Monster, Point> dic = new Dictionary<Monster, Point>();
-                for (int x = 0; x < this.Width; x++)
-                {
-                    for (int y = 0; y < this.Height; y++)
-                    {
-                        if (SquareVisibleByPlayers(x, y) && this[x, y].Figure != null && this[x, y].Figure is Monster)
-                        {
-                            dic[(Monster)this[x, y].Figure] = new Point(x, y);
-                        }
-                    }
-                }
-                return dic;
+                return figuresOnBoard;
+
             }
-        } 
+        }
 
         /// <summary>
         /// Gets the texture for the floor of the dungeon
@@ -526,17 +507,18 @@
             return doors.SingleOrDefault(door => door.IsAdjecentSquare(point));
         }
 
-        public void MoveHero(Hero hero, Point point)
+        public void MoveFigure(Figure figure, Point point)
         {
-            this[heroesOnBoard[hero]].Figure = null;
-            this[point].Figure = hero;
-            heroesOnBoard[hero] = point;
+            this[FiguresOnBoard[figure]].Figure = null;
+            this[point].Figure = figure;
+            figuresOnBoard[figure] = point;
+
         }
 
-        public void PlaceHero(Hero hero, Point point)
+        public void PlaceFigure(Figure figure, Point point)
         {
-            this[point].Figure = hero;
-            heroesOnBoard[hero] = point;
+            this[point].Figure = figure;
+            figuresOnBoard[figure] = point;
         }
 
         #endregion

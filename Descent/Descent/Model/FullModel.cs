@@ -375,7 +375,7 @@ namespace Descent.Model
                         Orientation.TryParse(data[4], true, out o);
                         Monster monster = GetMonster(int.Parse(data[3]));
                         monster.Orientation = o;
-                        board[x, y].Figure = monster;
+                        board.PlaceFigure(monster, new Point(x, y));
                         break;
                     case "door":
                         RuneKey color;
