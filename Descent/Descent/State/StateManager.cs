@@ -296,7 +296,7 @@ namespace Descent.State
                             root.SetClickAction("roll", (n, g) =>
                                                             {
                                                                 gameState.CurrentAttack.RollDice();
-                                                                n.EventManager.QueueEvent(EventType.RolledDices, new RolledDicesEventArgs(gameState.CurrentAttack.DiceForAttack.Select(n => n.SideIndex).ToArray()));
+                                                                n.EventManager.QueueEvent(EventType.RolledDices, new RolledDicesEventArgs(gameState.CurrentAttack.DiceForAttack.Select(d => d.SideIndex).ToArray()));
                                                             });
                         }
                         break;
