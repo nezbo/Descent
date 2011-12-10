@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="Ability.cs" company="">
-// TODO: Update copyright text.
-// </copyright>
-// -----------------------------------------------------------------------
-
+﻿
 namespace Descent.Model.Event
 {
     using System;
@@ -12,7 +7,17 @@ namespace Descent.Model.Event
     using System.Text;
 
     using Descent.Messaging.Events;
+    using Descent.Model.Player.Figure;
     using Descent.State;
+
+    public enum AbilityBonus
+    {
+        Damage,
+        Range,
+        Pierce,
+        Surge,
+        None
+    }
 
     /// <summary>
     /// Any ability, that have an effect on figures, heroes and the overlord.
@@ -26,35 +31,69 @@ namespace Descent.Model.Event
         /// </summary>
         /// <param name="ability"></param>
         /// <returns></returns>
-        public static Ability GetAbility(string ability)
+        public static Ability GetAbility(string abilityString)
         {
             // TODO: I am too old for this ... stuff
-            return new Ability(false, isTrue);
+            string[] data = abilityString.Split(' ');
+            Ability ability = new Ability();
+
+            if (abilityString.StartsWith("When"))
+            {
+                ability.trigger = GetTrigger(abilityString, ability);
+                ability.triggered = true;
+            }
+
+            switch (data[0])
+            {
+                case "Damage":
+                    ability.bonus = AbilityBonus.Damage;
+                    ability.amount = int.Parse(data[1]);
+                    break;
+                case "Pierce":
+                    ability.bonus = AbilityBonus.Pierce;
+                    ability.amount = int.Parse(data[1]);
+                    break;
+                case "Range":
+                    ability.bonus = AbilityBonus.Range;
+                    ability.amount = int.Parse(data[1]);
+                    break;
+                case "Surge":
+                    ability.bonus = AbilityBonus.Surge;
+                    ability.amount = int.Parse(data[1]);
+                    break;
+            }
+
+            return ability;
         }
 
-        private static bool GetTrigger(string trigger)
+        private static Func<bool> GetTrigger(string trigger, Ability ability)
         {
             bool triggerFunc;
 
             if (trigger.StartsWith("WhenAttacking"))
             {
-                //triggerFunc = IfAttacking();
+                return ability.WhenAttacking;
             }
 
-            return false;
+            return isTrue;
         }
 
         private static bool isTrue()
         {
             return true;
         }
+
         #endregion
 
         #region Fields
 
-        private bool triggered;
+        private bool triggered = false;
 
-        private Func<bool> trigger; 
+        private Func<bool> trigger;
+
+        private AbilityBonus bonus;
+
+        private int amount;
 
         #endregion
 
@@ -83,10 +122,46 @@ namespace Descent.Model.Event
         #endregion
 
         #region Initialization
-        public Ability(bool isTriggered, Func<bool> trigger)
+
+        public void Apply(Figure figure)
         {
-            this.triggered = isTriggered;
-            this.trigger = trigger;
+            switch (bonus)
+            {
+                case AbilityBonus.Damage:
+                    if (!triggered || trigger.Invoke())
+                    {
+                        figure.DamageContribution += new Player.Figure.Bonus<int>(IntBonus);
+                    }
+                    break;
+                case AbilityBonus.Pierce:
+                    if (!triggered || trigger.Invoke())
+                    {
+                        figure.PierceContribution += IntBonus;
+                    }
+                    break;
+                case AbilityBonus.Range:
+                    if (!triggered || trigger.Invoke())
+                    {
+                        figure.RangeContribution += IntBonus;
+                    }
+                    break;
+                case AbilityBonus.Surge:
+                    if (!triggered || trigger.Invoke())
+                    {
+                        figure.SurgeContribution += IntBonus;
+                    }
+                    break;
+            }
+        }
+
+        int IntBonus()
+        {
+            return amount;
+        }
+
+        bool WhenAttacking()
+        {
+            return true;
         }
         #endregion
     }
