@@ -69,12 +69,13 @@ namespace Descent.State
             eventManager.RolledDicesEvent += new RolledDicesHandler(RolledDices);
             eventManager.BoughtDiceEvent += new BoughtDiceHandler(BoughtDice);
             eventManager.BoughtMovementEvent += new BoughtMovementHandler(BoughtMovement);
-
+            eventManager.ChangedBlackDiceSideEvent += new ChangedBlackDiceSideHandler(ChangedBlackDiceSide);
 
             // Internal events
             eventManager.SquareMarkedEvent += new SquareMarkedHandler(SquareMarked);
             eventManager.InventoryFieldMarkedEvent += new InventoryFieldMarkedHandler(InventoryFieldMarked);
             eventManager.FatigueClickedEvent += new FatigueClickedHandler(FatiqueClicked);
+            eventManager.DiceClickedEvent += new DiceClickedHandler(DiceClicked);
 
             // initiate start
             stateMachine = new StateMachine(new State[] { State.InLobby, State.Initiation, State.DrawOverlordCards, //TODO DrawSkillCards
@@ -456,6 +457,29 @@ namespace Descent.State
                 case State.WaitForDiceChoice:
                     eventManager.QueueEvent(EventType.BoughtDice, new GameEventArgs());
                     break;
+            }
+        }
+
+        private void DiceClicked(object sender, DiceEventArgs eventArgs)
+        {
+            Contract.Requires(CurrentState == State.WaitForDiceChoice);
+            Contract.Ensures(CurrentState == Contract.OldValue(CurrentState));
+
+            Dice dice = gameState.CurrentAttack.DiceForAttack[eventArgs.DiceId];
+            if (dice.Color == EDice.B)
+            {
+                switch (dice.SideIndex)
+                {
+                    case 1:
+                    case 2:
+                    case 3:
+                    case 6:
+                        eventManager.QueueEvent(EventType.ChangedBlackDiceSide, new DiceEventArgs(eventArgs.DiceId, 7));
+                        break;
+                    case 7:
+                        eventManager.QueueEvent(EventType.ChangedBlackDiceSide, new DiceEventArgs(eventArgs.DiceId, 6));
+                        break;
+                }
             }
         }
 
@@ -1166,6 +1190,17 @@ namespace Descent.State
             stateMachine.PlaceStates(State.BuyExtraDice, State.WaitForDiceChoice);
             stateMachine.ChangeToNextState();
             stateMachine.ChangeToNextState();
+        }
+
+        private void ChangedBlackDiceSide(object sender, DiceEventArgs eventArgs)
+        {
+            Contract.Requires(CurrentState == State.WaitForDiceChoice);
+            Contract.Requires(gameState.CurrentAttack.DiceForAttack[eventArgs.DiceId].Color == EDice.B);
+            Contract.Requires(gameState.CurrentPlayer == eventArgs.SenderId);
+            Contract.Ensures(CurrentState == Contract.OldValue(CurrentState));
+
+            gameState.CurrentAttack.DiceForAttack[eventArgs.DiceId].SideIndex = eventArgs.SideId;
+            StateChanged();
         }
 
 
