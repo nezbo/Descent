@@ -194,6 +194,8 @@ namespace Descent.Messaging.Events
 
     public delegate void InventoryFieldMarkedHandler(object sender, InventoryFieldEventArgs eventArgs);
 
+    public delegate void FatigueClickedHandler(object sender, GameEventArgs eventArgs);
+
     #endregion
 
     public delegate void AllRespondedNoActionHandler(object sender, EventArgs eventArgs); // Special delegate, contains no eventArgs info.
@@ -204,7 +206,7 @@ namespace Descent.Messaging.Events
     /// </summary>
     public class EventManager
     {
-        private readonly EventType[] localOnly = new EventType[] { EventType.SquareMarked, EventType.InventoryFieldMarked };
+        private readonly EventType[] localOnly = new EventType[] { EventType.SquareMarked, EventType.InventoryFieldMarked, EventType.FatigueClicked };
         private readonly EventType[] needResponses = new EventType[] { };
 
         private Queue<QueuedEvent> queue = new Queue<QueuedEvent>();
@@ -357,6 +359,8 @@ namespace Descent.Messaging.Events
         public event SquareMarkedHandler SquareMarkedEvent;
 
         public event InventoryFieldMarkedHandler InventoryFieldMarkedEvent;
+
+        public event FatigueClickedHandler FatigueClickedEvent;
 
         #endregion
 
@@ -670,6 +674,8 @@ namespace Descent.Messaging.Events
                 case EventType.InventoryFieldMarked:
                     if (InventoryFieldMarkedEvent != null) InventoryFieldMarkedEvent(this, (InventoryFieldEventArgs)eventArgs);
                     break;
+                case EventType.FatigueClicked:
+                    if (FatigueClickedEvent != null) FatigueClickedEvent(this, eventArgs);
             }
 
             if (sendOnNetwork && !localOnly.Contains(eventType))
