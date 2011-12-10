@@ -710,11 +710,8 @@ namespace Descent.State
             FullModel.Board.MoveFigure(figure, new Point(eventArgs.X, eventArgs.Y));
             figure.RemoveMovement(1);
 
-            // IF we are overlord and have a monster selected, we have moved a monster. Update monster markings.
-            if (Player.Instance.IsOverlord && currentMonster != null)
-            {
-                this.MarkMonsters();
-            }
+            // The current monster should be marked both for overlord and player.
+            MarkMonsters();
 
             stateMachine.PlaceStates(State.MoveAdjecent);
             stateMachine.ChangeToNextState();
@@ -822,6 +819,12 @@ namespace Descent.State
             playersRemaining.Remove(eventArgs.SenderId);
             gameState.CurrentPlayer = 0;
 
+            // If the player ending the game was a hero, reset his movement.
+            if (Player.Instance.HeroParty.Heroes.ContainsKey(eventArgs.SenderId))
+            {
+                Player.Instance.HeroParty.Heroes[eventArgs.SenderId].EndTurn();
+            }
+
             if (CurrentState == State.WaitForOverlordChooseAction)
             {
                 stateMachine.PlaceStates(State.NewRound);
@@ -837,7 +840,6 @@ namespace Descent.State
                 {
                     stateMachine.PlaceStates(State.OverlordTurn);
                     stateMachine.ChangeToNextState();
-                    State s = stateMachine.CurrentState;
                     OverlordTurnInitiation();
                 }
                 else
@@ -872,6 +874,8 @@ namespace Descent.State
 
             currentMonster.SetAttacks(1);
             currentMonster.SetMovement(currentMonster.Speed);
+            
+            MarkMonsters();
 
             stateMachine.PlaceStates(State.WaitForPerformAction);
             stateMachine.ChangeToNextState();
@@ -897,7 +901,7 @@ namespace Descent.State
             if (Player.Instance.IsOverlord)
             {
                 // Mark monsters that the overlord can select in the WaitForOverlordChooseAction
-                this.MarkMonsters();
+                MarkMonsters();
             }
 
             stateMachine.PlaceStates(State.WaitForOverlordChooseAction);
@@ -910,11 +914,14 @@ namespace Descent.State
 
             if (currentMonster == null)
             {
-                // If we're not in a monster turn, all monsters should be marked to indicate all monsters can be chosen.
-                foreach (Point point in FullModel.Board.FiguresOnBoard.Where(pair => monstersRemaining.Contains(pair.Key)).Select(pair => pair.Value))
+                if (Player.Instance.IsOverlord)
                 {
-                    gui.MarkSquare(point.X, point.Y, true);
-                }
+                    // If we're not in a monster turn, all monsters should be marked to indicate all monsters can be chosen, but only for the overlord.
+                    foreach (Point point in FullModel.Board.FiguresOnBoard.Where(pair => monstersRemaining.Contains(pair.Key)).Select(pair => pair.Value))
+                    {
+                        gui.MarkSquare(point.X, point.Y, true);
+                    }
+                }  
             }
             else
             {
@@ -1045,7 +1052,7 @@ namespace Descent.State
             monstersRemaining.Remove(currentMonster);
             currentMonster = null;
 
-            if (Player.Instance.IsOverlord) this.MarkMonsters();
+            MarkMonsters();
 
             stateMachine.PlaceStates(State.WaitForOverlordChooseAction);
             stateMachine.ChangeToNextState();
