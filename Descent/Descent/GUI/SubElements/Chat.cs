@@ -14,7 +14,7 @@ namespace Descent.GUI
         private LinkedList<string> messages;
 
         public Chat(Game game)
-            : base(game, "chat", (int)(game.GraphicsDevice.Viewport.Width * (3 / 4.0)), game.GraphicsDevice.Viewport.Height / 2, game.GraphicsDevice.Viewport.Width / 4, game.GraphicsDevice.Viewport.Height / 2)
+            : base(game, "chat", (int)(game.GraphicsDevice.Viewport.Width * (3 / 4.0)), (Player.Instance.NumberOfPlayers - 1) * 100, game.GraphicsDevice.Viewport.Width / 4, game.GraphicsDevice.Viewport.Height - (Player.Instance.NumberOfPlayers - 1) * 100)
         {
             InputElement input = new InputElement(game, "chatInput", Bound.X + 10, Bound.Y + Bound.Height - 40, Bound.Width - 18, 30);
             AddChild(input);
@@ -32,17 +32,17 @@ namespace Descent.GUI
         private void SendMessage(string text)
         {
 
-            #if DEBUG
+#if DEBUG
             // Allow for sending events directly through the chat if we're in debug.
             if (text.IndexOf("evt: ") == 0)
             {
                 manager.QueueStringEvent(text.Substring(5));
                 return;
             }
-            #endif
+#endif
 
             string message = Player.Instance.Nickname + ": " + text;
-            manager.QueueEvent(EventType.ChatMessage, new ChatMessageEventArgs(message)); 
+            manager.QueueEvent(EventType.ChatMessage, new ChatMessageEventArgs(message));
         }
 
         private void FormatAndAdd(string text)
@@ -70,7 +70,7 @@ namespace Descent.GUI
             base.Draw(draw);
 
             int textHeight = (int)GUI.Font.MeasureString("A").Y;
-            int yPos = Bound.Height * 2 - 80;
+            int yPos = Bound.Y + Bound.Height - 80;
 
             LinkedListNode<string> currentNode = messages.First;
             while (yPos > Bound.Y && currentNode != null)
@@ -98,7 +98,7 @@ namespace Descent.GUI
             }
             else
             {
-                FormatAndAdd(playerName + " bought " + equipmentName + "."); 
+                FormatAndAdd(playerName + " bought " + equipmentName + ".");
             }
         }
     }

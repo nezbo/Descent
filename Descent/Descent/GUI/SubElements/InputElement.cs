@@ -43,7 +43,6 @@ namespace Descent.GUI
                 bool isShift = Keyboard.GetState().IsKeyDown(Keys.LeftShift) || Keyboard.GetState().IsKeyDown(Keys.RightShift);
                 switch (key)
                 {
-                    //case Keys.Enter: { if (soFar.Length > 0) { SendMessage(soFar); soFar = ""; } break; }
                     case Keys.Back: { if (soFar.Length > 0) { soFar = soFar.Substring(0, soFar.Length - 1); } break; }
                     case Keys.Space: { soFar += " "; break; }
                     case Keys.OemPeriod: { soFar += isShift ? ":" : "."; break; }

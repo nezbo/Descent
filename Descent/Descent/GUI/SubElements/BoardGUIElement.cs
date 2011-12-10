@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using Descent.Messaging.Events;
 using Descent.Model.Board;
 using Descent.Model.Player;
@@ -64,7 +65,6 @@ namespace Descent.GUI
 
         public override void Draw(SpriteBatch draw)
         {
-            //TODO: Guessed interface from BON
             Vector2 v;
             // Draw floor
             for (int x = 0; x < board.Width; x++)
@@ -181,6 +181,9 @@ namespace Descent.GUI
         /// <param name="positive">True if the highlight should indicate a eligible. False if it should indicate inaccessibility.</param>
         public void MarkSquare(int x, int y, bool positive)
         {
+            Contract.Requires(x >= 0);
+            Contract.Requires(y >= 0);
+
             markedSquares[new Vector2(x, y)] = positive;
 
         }

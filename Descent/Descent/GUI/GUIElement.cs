@@ -1,4 +1,6 @@
-﻿namespace Descent.GUI
+﻿using System.Diagnostics.Contracts;
+
+namespace Descent.GUI
 {
     using System;
     using System.Collections.Generic;
@@ -81,6 +83,7 @@
 
         public void SetFocus(bool focus)
         {
+            Contract.Requires(HasFocus() == focus);
             this.focus = focus;
         }
 
@@ -97,6 +100,7 @@
         /// <param name="y">The y-coordinate of the click</param>
         public virtual bool HandleClick(int x, int y)
         {
+
             string name = Name;
             // is it within me?
             if (this.HasPoint(x, y))
@@ -146,6 +150,9 @@
         /// <param name="y">The number of pixels it should be moved on the y-axis.</param>
         public virtual void Move(int x, int y)
         {
+            Contract.Ensures(Bound.X == Contract.OldValue<int>(Bound.X) + x);
+            Contract.Ensures(Bound.Y == Contract.OldValue<int>(Bound.Y) + y);
+
             Bound = new Rectangle(Bound.X + x, Bound.Y + y, Bound.Width, Bound.Height);
             foreach (GUIElement e in children) e.Move(x, y);
             foreach (Text t in texts) t.Position = new Vector2(t.Position.X + x, t.Position.Y + y);
@@ -181,6 +188,8 @@
         /// <param name="key">The key that has been pressed and wasn't pressed before</param>
         public virtual void HandleKeyPress(Keys key)
         {
+            Contract.Requires(Keyboard.GetState().IsKeyDown(key));
+
             foreach (GUIElement e in children) e.HandleKeyPress(key);
             // this method can be overwritten if a GUIElement wants to react to keypresses.
         }
@@ -191,13 +200,15 @@
         /// </summary>
         /// <param name="target">The target GUIElement for the action</param>
         /// <param name="action">The new On Click action</param>
-        public void AddClickAction(string target, Action<Player, GUIElement> action)
+        public void SetClickAction(string target, Action<Player, GUIElement> action)
         {
+            Contract.Requires(target != "");
+
             if (this.Name == target)
             {
                 this.onClick = action;
             }
-            foreach (GUIElement e in children) e.AddClickAction(target, action);
+            foreach (GUIElement e in children) e.SetClickAction(target, action);
         }
 
         /// <summary>
@@ -227,6 +238,10 @@
         /// <param name="position">Where the upper-left corner of the drawable should be</param>
         public void AddDrawable(string target, Drawable visual, Vector2 position)
         {
+            Contract.Requires(target != "");
+            Contract.Requires(visual != null);
+            Contract.Requires(visual.Texture != null);
+
             if (Name == target)
             {
                 visuals.Add(visual, new Rectangle((int)position.X, (int)position.Y, visual.Texture.Width, visual.Texture.Height));
@@ -243,6 +258,9 @@
         /// <param name="position">Where the upper-left corner of the text should be</param>
         public void AddText(string target, string text, Vector2 position)
         {
+            Contract.Requires(target != null);
+            Contract.Requires(text != null);
+
             if (Name == target)
             {
                 texts.Add(new Text(WordWrap(text, position), new Vector2(position.X + Bound.X, position.Y + Bound.Y)));
@@ -261,6 +279,9 @@
         /// <returns>A string with linebreaks so the text will be drawn correctly.</returns>
         protected string WordWrap(string text, Vector2 position)
         {
+            Contract.Requires(text != null);
+            Contract.Requires((Bound.Width - position.X) > GUI.Font.MeasureString("m").X);
+
             int wordsIndex = 0;
             string[] words = text.Split();
             StringBuilder builder = new StringBuilder();
@@ -306,7 +327,18 @@
         /// <param name="toDraw">True if the current GUIElement should draw background</param>
         public void SetDrawBackground(bool toDraw)
         {
+            Contract.Ensures(DrawsBackground() == toDraw);
+
             drawBg = toDraw;
+        }
+
+        /// <summary>
+        /// Does the element draw a background behind it.
+        /// </summary>
+        /// <returns>True if it draws background behind it, else false.</returns>
+        public bool DrawsBackground()
+        {
+            return drawBg;
         }
 
         /// <summary>
@@ -316,6 +348,8 @@
         /// <param name="assetName">The name of the asset in the Content project.</param>
         public void SetBackground(string assetName)
         {
+            Contract.Ensures(DrawsBackground());
+
             background = Game.Content.Load<Texture2D>(assetName);
             SetDrawBackground(true);
         }

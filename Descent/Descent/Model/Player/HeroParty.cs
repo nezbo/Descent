@@ -3,11 +3,9 @@ using Descent.Model.Board;
 
 namespace Descent.Model.Player
 {
-    using System;
     using System.Collections.Generic;
     using System.Diagnostics.Contracts;
     using System.Linq;
-    using System.Text;
 
     using Descent.Model.Player.Figure;
 
@@ -49,7 +47,7 @@ namespace Descent.Model.Player
         /// Gets the runekeys of the hero party.
         /// Can I have a list of all rune keys the heroes have?
         /// </summary>
-        public HashSet<RuneKey> RuneKeys { get; private set; } 
+        public HashSet<RuneKey> RuneKeys { get; private set; }
 
         /// <summary>
         /// Gets numberOfHeroes.
@@ -166,6 +164,21 @@ namespace Descent.Model.Player
         }
 
         /// <summary>
+        /// Fetches the player id for a given Hero if it is
+        /// in the party.
+        /// </summary>
+        /// <param name="hero">The hero we want the player id for.</param>
+        /// <returns>The player id that controls the given hero, if it isn't found -1.</returns>
+        public int GetPlayerId(Hero hero)
+        {
+            foreach (KeyValuePair<int, Hero> kv in Heroes)
+            {
+                if (kv.Value.Equals(hero)) return kv.Key;
+            }
+            return -1;
+        }
+
+        /// <summary>
         /// The invariant of the HeroParty class
         /// </summary>
         [ContractInvariantMethod]
@@ -174,6 +187,6 @@ namespace Descent.Model.Player
             Contract.Invariant(ConquestTokens >= 0);
             Contract.Invariant(NumberOfHeroes >= 0 && NumberOfHeroes <= 4);
         }
-        #endregion 
+        #endregion
     }
 }

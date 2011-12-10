@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using Descent.Model.Board;
 using Descent.Model.Player;
 using Microsoft.Xna.Framework.Input;
@@ -80,6 +81,8 @@ namespace Descent.GUI
 
         private void HandleKeyPress(Keys key)
         {
+            Contract.Requires(Keyboard.GetState().IsKeyDown(key));
+
             foreach (GUIElement e in layers)
             {
                 if (e != null)
