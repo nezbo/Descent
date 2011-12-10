@@ -11,8 +11,8 @@
 10,'Giant',true,4,10/10/11/12,6,MELEE,R G G Y B,Reach/Stun/Sweep,2,2
 11,'Hell Hound',false,4,3/3/4/5,1,RANGED,B Y,Breath/Pierce 3,1,2
 12,'Hell Hound',true,4,4/4/5/6,2,RANGED,B Y B,Breath/Pierce 4/Aura,1,2
-13,'Manticore',false,4,5/5/6/7,2,RANGED,U G Y,Quick Shot/Pierce 2,2,2
-14,'Manticore',true,4,6/6/7/8,3,RANGED,U G Y B,Quick Shot/Pierce 3/Poison,2,2
+13,'Manticore',false,4,5/5/6/7,2,RANGED,U G Y,QuickShot/Pierce 2,2,2
+14,'Manticore',true,4,6/6/7/8,3,RANGED,U G Y B,QuickShot/Pierce 3/Poison,2,2
 //15,'Naga',false,3,5/5/6/7,3,MAGIC,W G Y,Grapple/Sorcery 1,2,2
 //16,'Naga',true,3,6/6/7/8,4,MAGIC,W G Y B,Grapple/Sorcery 2/Command,2,2
 17,'Ogre',false,3,5/5/6/7,4,MELEE,R G G,Knockback,2,2

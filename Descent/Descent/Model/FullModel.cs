@@ -103,10 +103,6 @@ namespace Descent.Model
             LoadHeroes(game);
             LoadOverlordCards(game);
             LoadSkillCards(game);
-
-            Ability ability = Ability.GetAbility("Damage 2");
-            ability.Apply(GetHero(1));
-            System.Diagnostics.Debug.WriteLine("Hero Damage: " + GetHero(1).GetAttack().DamageBonus + " - Hero Range: " + GetHero(1).GetAttack().RangeBonus);
         }
 
         #region Load Monsters
