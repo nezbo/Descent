@@ -266,7 +266,14 @@ namespace Descent.Model
         {
             int n = int.Parse(reader.ReadLine());
 
+            // Instantiating all lists
             Dictionary<EquipmentRarity, List<Treasure>> treasures = new Dictionary<EquipmentRarity, List<Treasure>>();
+            foreach (EquipmentRarity rarity in Enum.GetValues(typeof(EquipmentRarity)))
+            {
+                treasures[rarity] = new List<Treasure>();
+            }
+
+            // running over all treasures
             for (int i = 0; i < n; i++)
             {
                 string line = reader.ReadLine();
@@ -276,7 +283,6 @@ namespace Descent.Model
 
                 EquipmentRarity rarity;
                 EquipmentRarity.TryParse(data[2], out rarity);
-                if (!treasures.ContainsKey(rarity)) treasures[rarity] = new List<Treasure>();
 
                 if (data[1].Equals("Treasure Cache"))
                 {
