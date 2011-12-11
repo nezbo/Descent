@@ -64,6 +64,8 @@ namespace Descent.Model
 
         private static HeroParty heroParty;
 
+        private static List<Monster> legendaryMonsters = new List<Monster>();
+
         /// <summary>
         /// Gets the instance of the board
         /// Can I have the board?
@@ -467,7 +469,44 @@ namespace Descent.Model
 
         private static void LoadLegendaryMonsters(Game game, StreamReader reader)
         {
-            
+            int n = int.Parse(reader.ReadLine());
+
+            for (int i = 0; i < n; i++)
+            {
+                string line = reader.ReadLine();
+                string[] data = line.Split(',');
+
+                int id = int.Parse(data[0]);
+                Monster m = GetMonster(int.Parse(data[1]));
+                string name = data[2];
+
+                int bonusSpeed = int.Parse(data[3]);
+                int bonusHealth = int.Parse(data[4]);
+                int bonusArmor = int.Parse(data[5]);
+
+                List<Dice> attackDice = (
+                    from string dice
+                        in data[7].Split(' ')
+                    select GetDice(dice)).ToList<Dice>();
+                attackDice.AddRange(m.DiceForAttack);
+
+                List<Ability> abilities = data[8].Split('/').Select(Ability.GetAbility).ToList();
+                abilities.AddRange(m.Abilities);
+
+                Monster Legendary = new Monster(
+                    id, 
+                    name, 
+                    m.IsMaster, 
+                    m.Speed + bonusSpeed, 
+                    m.MaxHealth + bonusHealth, 
+                    m.Armor + bonusArmor, 
+                    m.AttackType, 
+                    attackDice, 
+                    m.Size, 
+                    m.Texture);
+
+
+            }
         }
 
         #endregion
@@ -727,7 +766,7 @@ namespace Descent.Model
                 case "pit":
                     return new OtherMarkers(markersOnBoard++, name, game.Content.Load<Texture2D>("Images/Board/pit1"), 0);
                 case "potion":
-                    return new PotionMarker(markersOnBoard++, name + "-" + other, game.Content.Load<Texture2D>("Images/Board/" + name + "-" + other), 0, GetEquipment(1));
+                    return new PotionMarker(markersOnBoard++, name + "-" + other, game.Content.Load<Texture2D>("Images/Board/" + name + "-" + other), 0, other.Contains("health") ? GetEquipment(11) : GetEquipment(12));
                 case "rune":
                     RuneKey color;
                     RuneKey.TryParse(other, true, out color);
