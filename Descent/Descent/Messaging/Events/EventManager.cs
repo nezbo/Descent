@@ -883,6 +883,8 @@ namespace Descent.Messaging.Events
                     return new DiceEventArgs(args);
                 case EventType.SurgeAbilityClicked:
                     return new SurgeAbilityEventArgs(args);
+                case EventType.BoughtDice:
+                    return new DiceEventArgs(args);
                 default:
                     return new GameEventArgs();
             }

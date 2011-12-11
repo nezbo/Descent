@@ -60,7 +60,8 @@ namespace Descent.Model.Player.Figure.HeroStuff
 
                 if(this[slot] != null)
                     this[slot].UnequipFromHero(hero);
-                value.EquipToHero(hero);
+                if(value != null)
+                    value.EquipToHero(hero);
 
                 inventory[slot] = value;
             }
