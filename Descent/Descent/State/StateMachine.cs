@@ -45,7 +45,7 @@ namespace Descent.State
             currentIndex++;
             if (Player.Instance.IsServer)
             {
-                Player.Instance.EventManager.QueueEvent(EventType.ChatMessage, new ChatMessageEventArgs("Changed state: "+CurrentState.ToString()));
+                //Player.Instance.EventManager.QueueEvent(EventType.ChatMessage, new ChatMessageEventArgs("Changed state: "+CurrentState.ToString()));
             }
             StateChanged();
         }
@@ -95,7 +95,7 @@ namespace Descent.State
         private void Invariant()
         {
             // Ensures that are always a current and next state
-            //TODO Breaks once in a while Contract.Invariant(currentIndex < _states.Count - 1);
+            Contract.Invariant(currentIndex < _states.Count - 1);
         }
     }
 }

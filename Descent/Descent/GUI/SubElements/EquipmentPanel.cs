@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Descent.Messaging.Events;
 using Descent.Model.Player.Figure.HeroStuff;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -65,6 +66,16 @@ namespace Descent.GUI.SubElements
                     EquipmentElement e = GUIElementFactory.CreateEquipmentElement(Game, Bound.X + 10,
                                                               Bound.Y + 50 + i * height + i * space,
                                                               GetSlotType(slots[i]), inventory[slots[i]], slots[i]);
+
+                    e.SetClickAction("item", (n, g) =>
+                    {
+                        if (g is EquipmentElement)
+                        {
+                            int id = ((EquipmentElement)g).Id;
+                            n.EventManager.QueueEvent(EventType.InventoryFieldMarked, new InventoryFieldEventArgs(id));
+                        }
+                    });
+
                     equipments[slots[i]] = e;
                     changed = true;
                 }

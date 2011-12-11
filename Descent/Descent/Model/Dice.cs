@@ -59,6 +59,8 @@ namespace Descent.Model
     public class Dice : Drawable
     {
         #region Fields
+        private static Random random = new Random(DateTime.Now.Millisecond);
+
         private int[][] sides;
 
         private EDice color;
@@ -154,8 +156,7 @@ namespace Descent.Model
         /// </summary>
         public void RollDice()
         {
-            Random r = new Random();
-            activeSideIndex = r.Next(6);
+            activeSideIndex = random.Next(6);
         }
 
 

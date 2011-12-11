@@ -1,21 +1,19 @@
-using System;
-using System.Collections.Generic;
-
-using Descent.Model.Board;
-using Descent.Model.Event;
-
 namespace Descent.State
 {
+    using System;
+    using System.Collections.Generic;
     using System.Diagnostics.Contracts;
     using System.Linq;
-    using Descent.GUI;
-    using Descent.Messaging.Events;
-    using Descent.Model;
-    using Descent.Model.Player;
-    using Descent.Model.Player.Figure;
-    using Descent.Model.Player.Figure.HeroStuff;
+    using GUI;
+    using Messaging.Events;
 
     using Microsoft.Xna.Framework;
+    using Model;
+    using Model.Board;
+    using Model.Event;
+    using Model.Player;
+    using Model.Player.Figure;
+    using Model.Player.Figure.HeroStuff;
 
     /// <summary>
     /// The handler of all states. Knows about the current state and what to do next.
@@ -29,7 +27,6 @@ namespace Descent.State
         private GameState gameState = new GameState();
 
         // fields for different game logic variables
-        private Hero currentHero;
         private Monster currentMonster;
         private readonly List<int> playersRemaining = new List<int>();
         private readonly List<Point> damageTargetsRemaining = new List<Point>();
@@ -163,9 +160,9 @@ namespace Descent.State
                             root.SetClickAction("start", (n, g) =>
                                                              {
 #if DEBUG
-                                                                 if (n.NumberOfPlayers >= 1) //TODO 3
+                                                                 if (n.NumberOfPlayers >= 1)
 #else 
-                                                                     if (n.NumberOfPlayers >= 3) //TODO 3
+                                                                     if (n.NumberOfPlayers >= 3)
 #endif
                                                                  {
                                                                      n.EventManager.QueueEvent(
@@ -535,7 +532,9 @@ namespace Descent.State
                 case State.WaitForDiceChoice:
                     if (gameState.CurrentAttack.DiceForAttack.Count(dice => dice.Color == EDice.B) < 5)
                     {
-                        eventManager.QueueEvent(EventType.BoughtDice, new GameEventArgs());
+                        Dice dice = FullModel.GetDice(EDice.B);
+                        dice.RollDice();
+                        eventManager.QueueEvent(EventType.BoughtDice, new DiceEventArgs(100000, dice.SideIndex)); // Dice Id is not used
                     }
                     break;
             }
@@ -580,6 +579,7 @@ namespace Descent.State
             if (attack.MissedAttack || FullModel.Board.Distance(FullModel.Board.FiguresOnBoard[attack.AttackingFigure], targetSquare) > attack.Range)
             {
                 eventManager.QueueEvent(EventType.MissedAttack, new GameEventArgs());
+                eventManager.QueueEvent(EventType.ChatMessage, new ChatMessageEventArgs(attack.AttackingFigure.Name + " missed the attack!"));
                 return;
             }
 
@@ -870,7 +870,8 @@ namespace Descent.State
         private void MoveTo(object sender, CoordinatesEventArgs eventArgs)
         {
             Contract.Requires(CurrentState == State.WaitForPerformAction);
-            //TODO Contract.Requires(Player.Instance.HeroParty.Heroes[eventArgs.SenderId].MovementLeft >= 1);
+            Contract.Requires(IsAHeroTurn() ? Player.Instance.HeroParty.Heroes[eventArgs.SenderId].MovementLeft >= 1 : 
+                              currentMonster.MovementLeft >= 1);
             Contract.Ensures(CurrentState == State.WaitForPerformAction);
 
             Figure figure;
@@ -1123,25 +1124,6 @@ namespace Descent.State
 
         }
 
-        private void OverlordDiscardCard(/* TODO OverlordCard card*/)
-        {
-            Contract.Requires(CurrentState == State.WaitForDiscardCard);
-            Contract.Ensures(CurrentState == State.WaitForDiscardCard);
-
-            // Remove card from hand
-
-            stateMachine.PlaceStates(State.WaitForDiscardCard);
-            stateMachine.ChangeToNextState();
-        }
-
-        private void OverlordDiscardCardDone()
-        {
-            Contract.Requires(CurrentState == State.WaitForDiscardCard);
-            Contract.Ensures(CurrentState == State.WaitForPlayCard);
-
-            stateMachine.ChangeToNextState();
-        }
-
         private void OverLordPlayCard(object sender, OverlordCardEventArgs eventArgs)
         {
             Contract.Requires(CurrentState == State.WaitForPlayCard);
@@ -1158,81 +1140,6 @@ namespace Descent.State
             }
              * */
             stateMachine.PlaceStates(State.ActivateMonsters);
-        }
-
-        private void OverlordPlayCardDone()
-        {
-            Contract.Requires(CurrentState == State.WaitForPlayCard);
-            Contract.Ensures(CurrentState == State.WaitForChooseMonster || CurrentState == State.WaitForPlaceMonster);
-
-            stateMachine.ChangeToNextState();
-            if (CurrentState == State.SpawnMonsters)
-            {
-                SpawnMonstersInitiation();
-            }
-            else if (CurrentState == State.ActivateMonsters)
-            {
-                //ActivateMonstersInitiation();
-            }
-        }
-
-        private void SpawnMonstersInitiation()
-        {
-            Contract.Requires(CurrentState == State.SpawnMonsters);
-            Contract.Ensures(CurrentState == State.WaitForPlaceMonster);
-
-            stateMachine.PlaceStates(State.WaitForPlaceMonster);
-            stateMachine.ChangeToNextState();
-        }
-
-        private void SpawnMonster(Monster monster, Square square)
-        {
-            Contract.Requires(CurrentState == State.WaitForPlaceMonster);
-            Contract.Requires(monster != null);
-            Contract.Requires(square != null);
-            /* TODO Contract.Requires(square.canSpawn);*/
-            Contract.Ensures(CurrentState == State.WaitForPlaceMonster || CurrentState == State.WaitForChooseMonster);
-
-            // Place monster on the square
-            // Remove monster from spawn bag
-
-            // TODO if (spawnBag.Empty)
-            {
-                SpawnMonstersDone();
-            }
-            // TODO else
-            {
-                stateMachine.PlaceStates(State.WaitForPlaceMonster);
-                stateMachine.ChangeToNextState();
-            }
-        }
-
-        private void SpawnMonstersDone()
-        {
-            Contract.Requires(CurrentState == State.WaitForPlaceMonster);
-
-            stateMachine.PlaceStates(State.ActivateMonsters);
-            stateMachine.ChangeToNextState();
-        }
-
-        // TODO NOT USED ATM
-        private void ChooseMonster(Monster monster)
-        {
-            Contract.Requires(CurrentState == State.WaitForChooseMonster);
-            // TODO Contract.Requires(monsterBag.contains(monster));
-            Contract.Ensures(CurrentState == State.WaitForPerformAction);
-
-            // Record monsterId
-
-            stateMachine.PlaceStates(State.MonsterTurn);
-            stateMachine.ChangeToNextState();
-            MonsterTurnInitiation();
-        }
-
-        private void ActivateMonstersDone()
-        {
-            Contract.Requires(CurrentState == State.WaitForChooseMonster);
-
         }
 
         private void EndMonsterTurn(object sender, GameEventArgs eventArgs)
@@ -1291,14 +1198,14 @@ namespace Descent.State
             stateMachine.ChangeToNextState();
         }
 
-        private void BoughtDice(object sender, GameEventArgs eventArgs)
+        private void BoughtDice(object sender, DiceEventArgs eventArgs)
         {
             Contract.Requires(CurrentState == State.WaitForDiceChoice);
             Contract.Requires(gameState.CurrentAttack.DiceForAttack.Count(d => d.Color == EDice.B) < 5);
             Contract.Ensures(CurrentState == Contract.OldValue(CurrentState));
 
             Dice dice = FullModel.GetDice(EDice.B);
-            dice.RollDice();
+            dice.SideIndex = eventArgs.SideId;
             gameState.CurrentAttack.DiceForAttack.Add(dice);
             Player.Instance.HeroParty.Heroes[gameState.CurrentPlayer].RemoveFatigue(1);
 
@@ -1354,14 +1261,19 @@ namespace Descent.State
                 damage -= 1; // TODO get real armor value
             }
             Contract.Assert(damage >= 0);
+
+            string status =  figure.Name + " ";
             if (damage >= figure.Health)
             {
                 eventManager.QueueEvent(EventType.WasKilled, new CoordinatesEventArgs(eventArgs.X, eventArgs.Y));
+                status += "was killed!";
             }
             else
             {
                 eventManager.QueueEvent(EventType.DamageTaken, new DamageTakenEventArgs(eventArgs.X, eventArgs.Y, damage));
+                status += "lost " + damage + " health!";
             }
+            eventManager.QueueEvent(EventType.ChatMessage, new ChatMessageEventArgs(status));
         }
 
         private void DamageTaken(object sender, DamageTakenEventArgs eventArgs)
@@ -1450,21 +1362,6 @@ namespace Descent.State
 
         #region MovementMethods
 
-        private void MoveToAdjecent(Square square)
-        {
-            Contract.Requires(CurrentState == State.WaitForPerformAction);
-            // TODO Contract.Requires(currentHero.MovementLeft >= 1);
-            // TODO Contract.Requires(Board.isAdjecent(square, heroSquare));
-            Contract.Ensures(CurrentState == State.WaitForPerformAction);
-
-            // Remove 1 movement
-            // Move Hero to square
-
-            stateMachine.PlaceStates(State.MoveAdjecent);
-            stateMachine.ChangeToNextState();
-            ActionDone();
-        }
-
         private void DrinkPotion(Potion potion)
         {
             Contract.Requires(CurrentState == State.WaitForPerformAction);
@@ -1493,37 +1390,6 @@ namespace Descent.State
             // Remove token from board
 
             stateMachine.PlaceStates(State.PickupToken);
-            stateMachine.ChangeToNextState();
-            ActionDone();
-        }
-
-        private void CloseDoor()// TODO Door door)
-        {
-            Contract.Requires(CurrentState == State.WaitForPerformAction);
-            // TODO Contract.Requires(currentHero.MovementLeft >= 2);
-            // TODO Contract.Requires(door.IsAdjecent);
-            Contract.Ensures(CurrentState == State.WaitForPerformAction);
-
-            // Remove 2 movement
-            // Mark door closed
-
-            stateMachine.PlaceStates(State.CloseDoor);
-            stateMachine.ChangeToNextState();
-            ActionDone();
-        }
-
-        private void DropItem(Equipment item)
-        {
-            Contract.Requires(CurrentState == State.WaitForPerformAction);
-            Contract.Requires(IsAHeroTurn());
-            Contract.Requires(item != null);
-            Contract.Ensures(CurrentState == State.WaitForPerformAction);
-
-            // Remove 0 movement
-            // Remove item from inventory
-            // Place item on square
-
-            stateMachine.PlaceStates(State.DropItem);
             stateMachine.ChangeToNextState();
             ActionDone();
         }
@@ -1561,79 +1427,7 @@ namespace Descent.State
             stateMachine.ChangeToNextState();
         }
 
-        private void ChestSwitchItems(Equipment item1, Equipment item2)
-        {
-            Contract.Requires(CurrentState == State.WaitForAllPlayersEquip);
-            Contract.Requires(item1 != null);
-            Contract.Requires(item2 != null);
-            Contract.Ensures(CurrentState == State.WaitForAllPlayersEquip);
-
-            // Switch the two items
-        }
-
-        private void ChestEquipDone(Hero hero)
-        {
-            Contract.Requires(CurrentState == State.WaitForAllPlayersEquip);
-            Contract.Requires(hero != null);
-
-            // Remove hero from reequipBag
-
-            // TODO if (reequipBag.Empty)
-            {
-                stateMachine.ChangeToNextState();
-            }
-        }
-
         #endregion
-
-        private void ReEquip()
-        {
-            Contract.Requires(CurrentState == State.WaitForPerformAction);
-            Contract.Requires(IsAHeroTurn());
-            // TODO Contract.Requires(currentHero.MovementLeft >= 2);
-            Contract.Ensures(CurrentState == State.WaitForPerformAction);
-
-            // Remove 2 movement
-
-            stateMachine.PlaceStates(State.Equip, State.WaitForItemSwitch, State.WaitForPerformAction);
-            stateMachine.ChangeToNextState();
-            stateMachine.ChangeToNextState();
-        }
-
-        private void GiveItem(Hero receiver, Equipment item)
-        {
-            Contract.Requires(CurrentState == State.WaitForPerformAction);
-            Contract.Requires(IsAHeroTurn());
-            // TODO Contract.Requires(currentHero.MovementLeft >= 1);
-            Contract.Requires(receiver != null);
-            Contract.Requires(item != null);
-            // TODO Contract.Requires(receiver.IsAdjecent);
-            Contract.Ensures(CurrentState == State.WaitForPerformAction);
-
-            // Remove 1 movement
-            // Remove item from currentHero's inventory
-            // Add item to receiver's inventory
-
-            stateMachine.PlaceStates(State.GiveItem);
-            stateMachine.ChangeToNextState();
-            ActionDone();
-        }
-
-        private void Jump(Square targetSquare)
-        {
-            Contract.Requires(CurrentState == State.WaitForPerformAction);
-            // TODO Contract.Requires(currentHero.MovementLeft >= 3);
-            Contract.Requires(targetSquare != null);
-            // TODO Contract.Requires(HasPit);
-            Contract.Ensures(CurrentState == State.WaitForPerformAction);
-
-            // Remove 3 movement
-            // Move hero to targetSquare
-
-            stateMachine.PlaceStates(State.Jump);
-            stateMachine.ChangeToNextState();
-            ActionDone();
-        }
 
         #endregion
     }
