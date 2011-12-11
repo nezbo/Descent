@@ -38,7 +38,7 @@ namespace Descent.Model
 
         private static List<Monster> monsters;
 
-        private static List<Monster> legendaryMonsters; 
+        private static List<Monster> legendaryMonsters = new List<Monster>();
 
         private static int monstersInPlay;
 
