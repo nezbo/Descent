@@ -50,7 +50,7 @@ namespace Descent.Model
 
         private static List<Equipment> townEquipment;
 
-        private static Dictionary<EquipmentRarity, Treasure> treasures = new Dictionary<EquipmentRarity, Treasure>();
+        private static Dictionary<EquipmentRarity, List<Treasure>> treasures = new Dictionary<EquipmentRarity, List<Treasure>>();
 
         private static List<Marker> markers;
 
@@ -447,6 +447,11 @@ namespace Descent.Model
             System.Diagnostics.Debug.WriteLine("Chests loaded successfully!");
         }
 
+        private static void LoadLegendaryMonsters(Game game, StreamReader reader)
+        {
+            
+        }
+
         #endregion
 
         #region Load Heroes
@@ -626,6 +631,11 @@ namespace Descent.Model
             return AllEquipment.First(equipment => equipment.Id == id).Clone();
         }
 
+        public static Treasure GetTreasure(int id)
+        {
+            return AllTreasures.Single(t => t.ID == id);
+        }
+
         /// <summary>
         /// Gets an overlord card by id
         /// </summary>
@@ -777,8 +787,8 @@ namespace Descent.Model
             get
             {
                 List<Treasure> list = new List<Treasure>();
-                foreach (Treasure t in treasures.Values)
-                    list.Add(t);
+                foreach (EquipmentRarity r in Enum.GetValues(typeof(EquipmentRarity)))
+                    list.AddRange(treasures[r]);
                 return list.ToArray();
             }
         }
