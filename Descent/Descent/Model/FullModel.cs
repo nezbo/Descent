@@ -38,6 +38,8 @@ namespace Descent.Model
 
         private static List<Monster> monsters;
 
+        private static List<Monster> legendaryMonsters; 
+
         private static int monstersInPlay;
 
         private static int markersOnBoard = 0;
@@ -759,6 +761,12 @@ namespace Descent.Model
         public static Hero[] AllHeroes
         {
             get { return heroes.ToArray(); }
+        }
+
+        [Pure]
+        public static Monster[] AllLengendaryMonsters
+        {
+            get { return legendaryMonsters.ToArray(); }
         }
 
         /// <summary>
