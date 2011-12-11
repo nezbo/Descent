@@ -873,8 +873,6 @@ namespace Descent.Messaging.Events
                     return new DamageTakenEventArgs(args); 
                 case EventType.WasKilled:
                     return new CoordinatesEventArgs(args);
-                case EventType.MissedAttack:
-                    return new GameEventArgs(args);
                 case EventType.ChangedBlackDiceSide:
                     return new DiceEventArgs(args);
                 case EventType.SquareMarked:
