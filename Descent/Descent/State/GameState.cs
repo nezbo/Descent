@@ -34,7 +34,8 @@ namespace Descent.State
         private List<Monster> monstersLeftToAct = new List<Monster>();
         private Dictionary<int, List<Equipment>> unequippedEquipment;
 
-        private List<Chest> chestsLeft = new List<Chest>(); 
+        private List<Chest> chestsLeft = new List<Chest>();
+        public List<Monster> LegendaryMonsters { get; set; } 
 
         private List<Treasure> treasures;
 

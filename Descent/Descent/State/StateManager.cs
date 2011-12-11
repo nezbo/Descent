@@ -630,6 +630,10 @@ namespace Descent.State
         {
             Contract.Requires(CurrentState == State.InLobby);
             Contract.Ensures(CurrentState == State.Initiation);
+
+            Player.Instance.HeroParty.AddConquestTokens(5);
+            gameState.LegendaryMonsters = FullModel.AllLengendaryMonsters.ToList();
+
             stateMachine.ChangeToNextState();
         }
 
@@ -1377,7 +1381,7 @@ namespace Descent.State
         {
             Contract.Requires(CurrentState == State.InflictWounds);
             Contract.Requires(FullModel.Board[eventArgs.X, eventArgs.Y].Figure != null);
-            Contract.Ensures(CurrentState == Contract.OldValue(CurrentState));
+            Contract.Ensures(CurrentState == Contract.OldValue(CurrentState) || CurrentState == State.EndGameHeroParty || CurrentState == State.EndGameOverlord);
 
             Figure figure = FullModel.Board[eventArgs.X, eventArgs.Y].Figure;
 
@@ -1396,7 +1400,11 @@ namespace Descent.State
             }
             else
             {
-                // TODO: Check if monster was final monster
+                gameState.LegendaryMonsters.Remove((Monster)figure);
+                if (gameState.LegendaryMonsters.Count == 0)
+                {
+                    GameWon(true);
+                }
             }
 
             if (HasTurn())
@@ -1441,7 +1449,11 @@ namespace Descent.State
 
         private void GameWon(bool HeroPartyWon)
         {
-            // TODO What to do??
+            Contract.Requires(CurrentState == State.InflictWounds);
+            Contract.Ensures(CurrentState == State.EndGameHeroParty || CurrentState == State.EndGameOverlord);
+
+            stateMachine.PlaceStates(HeroPartyWon ? State.EndGameHeroParty : State.EndGameOverlord);
+            stateMachine.ChangeToNextState();
         }
 
         #region MovementMethods

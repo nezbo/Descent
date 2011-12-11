@@ -38,6 +38,8 @@ namespace Descent.Model
 
         private static List<Monster> monsters;
 
+        private static List<Monster> legendaryMonsters; 
+
         private static int monstersInPlay;
 
         private static int markersOnBoard = 0;
@@ -266,7 +268,14 @@ namespace Descent.Model
         {
             int n = int.Parse(reader.ReadLine());
 
-            Dictionary<EquipmentRarity, List<Treasure>> treasures = new Dictionary<EquipmentRarity, List<Treasure>>();
+            // Instantiating all lists
+            treasures = new Dictionary<EquipmentRarity, List<Treasure>>();
+            foreach (EquipmentRarity rarity in Enum.GetValues(typeof(EquipmentRarity)))
+            {
+                treasures[rarity] = new List<Treasure>();
+            }
+
+            // running over all treasures
             for (int i = 0; i < n; i++)
             {
                 string line = reader.ReadLine();
@@ -276,7 +285,6 @@ namespace Descent.Model
 
                 EquipmentRarity rarity;
                 EquipmentRarity.TryParse(data[2], out rarity);
-                if (!treasures.ContainsKey(rarity)) treasures[rarity] = new List<Treasure>();
 
                 if (data[1].Equals("Treasure Cache"))
                 {
@@ -753,6 +761,12 @@ namespace Descent.Model
         public static Hero[] AllHeroes
         {
             get { return heroes.ToArray(); }
+        }
+
+        [Pure]
+        public static Monster[] AllLengendaryMonsters
+        {
+            get { return legendaryMonsters.ToArray(); }
         }
 
         /// <summary>
