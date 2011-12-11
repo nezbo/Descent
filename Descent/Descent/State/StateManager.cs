@@ -160,7 +160,7 @@ namespace Descent.State
                             root.SetClickAction("start", (n, g) =>
                                                              {
 #if DEBUG
-                                                                 if (n.NumberOfPlayers >= 1)
+                                                                 if (n.NumberOfPlayers > 1)
 #else 
                                                                      if (n.NumberOfPlayers >= 3)
 #endif
@@ -1275,7 +1275,7 @@ namespace Descent.State
             {
                 damage -= 1; // TODO get real armor value
             }
-            Contract.Assert(damage >= 0);
+            damage = damage < 0 ? 0 : damage;
 
             string status =  figure.Name + " ";
             if (damage >= figure.Health)
@@ -1323,6 +1323,7 @@ namespace Descent.State
                 if (Player.Instance.HeroParty.IsConquestPoolEmpty)
                 {
                     GameWon(false);
+                    return;
                 }
             }
             else
@@ -1331,6 +1332,7 @@ namespace Descent.State
                 if (gameState.LegendaryMonsters.Count == 0)
                 {
                     GameWon(true);
+                    return;
                 }
             }
 
@@ -1378,6 +1380,11 @@ namespace Descent.State
         {
             Contract.Requires(CurrentState == State.InflictWounds);
             Contract.Ensures(CurrentState == State.EndGameHeroParty || CurrentState == State.EndGameOverlord);
+
+            if (Player.Instance.IsServer)
+            {
+                eventManager.QueueEvent(EventType.ChatMessage, new ChatMessageEventArgs("The " + (HeroPartyWon ? "hero party" : "overlord") + " wins!!!"));
+            }
 
             stateMachine.PlaceStates(HeroPartyWon ? State.EndGameHeroParty : State.EndGameOverlord);
             stateMachine.ChangeToNextState();
