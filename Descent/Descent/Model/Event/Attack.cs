@@ -6,15 +6,10 @@
 
 namespace Descent.Model.Event
 {
-    using System;
     using System.Collections.Generic;
     using System.Diagnostics.Contracts;
-    using System.Linq;
-    using System.Text;
 
     using Descent.Model.Player.Figure;
-
-    using Microsoft.Xna.Framework;
 
     /// <summary>
     /// An attack 

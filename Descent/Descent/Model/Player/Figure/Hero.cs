@@ -85,6 +85,9 @@ namespace Descent.Model.Player.Figure
             }
         }
 
+        /// <summary>
+        /// Gets the conquest token cost of the hero
+        /// </summary>
         public int Cost
         {
             get { return cost; }
@@ -117,6 +120,9 @@ namespace Descent.Model.Player.Figure
             }
         }
 
+        /// <summary>
+        /// Gets the big texture, used for a heroes own gui
+        /// </summary>
         public Texture2D BigTexture
         {
             get
@@ -194,7 +200,7 @@ namespace Descent.Model.Player.Figure
         /// <summary>
         /// Call when the game is about to start, so the figure gets life and fatigue
         /// </summary>
-        public virtual void Initialize()
+        public override void Initialize()
         {
             base.Initialize();
             fatigue = MaxFatigue;
