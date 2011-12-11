@@ -23,6 +23,8 @@ namespace Descent.Model.Event
     {
         private Figure figure;
 
+        private List<Dice> diceForAttack; 
+
         /// <summary>
         /// Gets or sets the hero that is attacking
         /// </summary>
@@ -59,10 +61,7 @@ namespace Descent.Model.Event
 
         public List<Dice> DiceForAttack
         {
-            get
-            {
-                return figure.DiceForAttack;
-            }
+            get { return diceForAttack; }
         }
 
         /// <summary>
@@ -77,6 +76,7 @@ namespace Descent.Model.Event
         public Attack(Figure attackingFigure)
         {
             this.figure = attackingFigure;
+            diceForAttack = figure.DiceForAttack;
         }
 
         /// <summary>
