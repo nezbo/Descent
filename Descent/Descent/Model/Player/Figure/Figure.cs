@@ -407,7 +407,6 @@
             health = (int)MathHelper.Clamp(health - amount, 0, MaxHealth);
         }
 
-
         public void SetMovement(int amount)
         {
             Contract.Requires(amount >= 0);

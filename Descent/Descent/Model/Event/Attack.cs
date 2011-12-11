@@ -11,7 +11,6 @@ namespace Descent.Model.Event
 
     using Descent.Model.Player.Figure;
 
-
     /// <summary>
     /// An attack 
     /// </summary>
