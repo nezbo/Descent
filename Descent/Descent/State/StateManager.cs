@@ -426,13 +426,19 @@ namespace Descent.State
 
                     break;
                 case State.WaitForOverlordChooseAction:
-                    // If a square with a monster is pressed in an overlord turn and we are the overlord, a monster turn should begin.
-                    Square s = FullModel.Board[eventArgs.X, eventArgs.Y];
-                    if (Player.Instance.IsOverlord && s.Figure != null && s.Figure is Monster && FullModel.Board.SquareVisibleByPlayers(eventArgs.X, eventArgs.Y) && monstersRemaining.Contains(s.Figure))
+
+                    if (FullModel.Board.IsSquareWithinBoard(eventArgs.X, eventArgs.Y))
                     {
-                        eventManager.QueueEvent(EventType.StartMonsterTurn, new CoordinatesEventArgs(eventArgs.X, eventArgs.Y));
+                        Square s = FullModel.Board[eventArgs.X, eventArgs.Y];
+
+                        // If a square with a monster is pressed in an overlord turn and we are the overlord, a monster turn should begin.
+                        if (Player.Instance.IsOverlord && s.Figure != null && s.Figure is Monster && FullModel.Board.SquareVisibleByPlayers(eventArgs.X, eventArgs.Y) && monstersRemaining.Contains(s.Figure))
+                        {
+                            eventManager.QueueEvent(EventType.StartMonsterTurn, new CoordinatesEventArgs(eventArgs.X, eventArgs.Y));
+                        }
                     }
-                    break;
+
+                    break; 
             }
         }
 
@@ -525,6 +531,9 @@ namespace Descent.State
         {
             Contract.Requires(CurrentState == State.WaitForDiceChoice);
             Contract.Ensures(CurrentState == Contract.OldValue(CurrentState));
+
+            // Do not act on dice click if it's not the players turn.
+            if (!HasTurn()) return;
 
             Dice dice = gameState.CurrentAttack.DiceForAttack[eventArgs.DiceId];
             if (dice.Color == EDice.B)
@@ -1055,6 +1064,7 @@ namespace Descent.State
         {
             gui.ClearMarks();
 
+            /* TODO Remove this - debug only
             for (int x = 0; x < FullModel.Board.Width; x++)
             {
                 for (int y = 0; y < FullModel.Board.Height; y++)
@@ -1066,6 +1076,7 @@ namespace Descent.State
                 }
             }
             return;
+            */
 
             if (currentMonster == null)
             {

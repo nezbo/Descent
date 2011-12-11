@@ -188,6 +188,8 @@ namespace Descent.Messaging.Events
 
     public delegate void WasKilledHandler(object sender, CoordinatesEventArgs eventArgs);
 
+    public delegate void FinishedAttackHandler(object sender, GameEventArgs eventArgs);
+
     #endregion
 
     #region Internal only
@@ -360,6 +362,8 @@ namespace Descent.Messaging.Events
 
         public event BoughtMovementHandler BoughtMovementEvent;
 
+        public event FinishedAttackHandler FinishedAttackEvent;
+
         // Other
 
         public event AllRespondedNoActionHandler AllRespondedNoActionEvent;
@@ -375,6 +379,8 @@ namespace Descent.Messaging.Events
         public event DiceClickedHandler DiceClickedEvent;
 
         public event SurgeAbilityClickedHandler SurgeAbilityClickedEvent;
+
+        public event DoAttackHandler DoAttackEvent;
 
         #endregion
 
@@ -685,6 +691,8 @@ namespace Descent.Messaging.Events
                 case EventType.BoughtMovement:
                     if (BoughtMovementEvent != null) BoughtMovementEvent(this, eventArgs);
                     break;
+                case EventType.FinishedAttack:
+                    if (FinishedAttackEvent != null) FinishedAttackEvent(this, eventArgs);
                 case EventType.SquareMarked:
                     if (SquareMarkedEvent != null) SquareMarkedEvent(this, (CoordinatesEventArgs)eventArgs);
                     break;
@@ -699,6 +707,9 @@ namespace Descent.Messaging.Events
                     break;
                 case EventType.SurgeAbilityClicked:
                     if (SurgeAbilityClickedEvent != null) SurgeAbilityClickedEvent(this, (SurgeAbilityEventArgs)eventArgs);
+                    break;
+                case EventType.DoAttack:
+                    if (DoAttackEvent != null) DoAttackEvent(this, eventArgs);
                     break;
             }
 
