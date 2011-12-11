@@ -159,7 +159,6 @@ namespace Descent.Model
                 }
 
                 m.Initialize();
-                System.Diagnostics.Debug.WriteLine(m.GetAttack().ToString());
                 monsters.Add(m);
             }
 
@@ -325,7 +324,8 @@ namespace Descent.Model
                 buyPrice: buyPrice,
                 surgeAbilities: surgeAbilities,
                 hands: hands,
-                abilities: abilities);
+                abilities: abilities,
+                dice: dice);
         }
 
         #endregion
