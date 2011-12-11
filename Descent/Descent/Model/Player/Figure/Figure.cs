@@ -434,7 +434,6 @@
         /// </param>
         public void RemoveHealth(int amount)
         {
-            Contract.Requires(amount > 0);
             Contract.Ensures(
                 Contract.OldValue(Health) - amount < 0 ?
                 health == 0 : 

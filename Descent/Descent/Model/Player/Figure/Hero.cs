@@ -286,7 +286,12 @@ namespace Descent.Model.Player.Figure
         public void UntapAll()
         {
             for (int i = 0; i < inventory.Length; i++)
-                inventory[i].UntapEquipment();
+            {
+                if (inventory[i] != null)
+                {
+                    inventory[i].UntapEquipment();
+                }
+            }
             foreach (EAttackType attackType in skills.Keys)
             {
                 foreach (Skill skill in skills[attackType])

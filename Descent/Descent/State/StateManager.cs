@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 
 using Descent.Model.Board;
+using Descent.Model.Event;
 
 namespace Descent.State
 {
@@ -31,6 +32,7 @@ namespace Descent.State
         private Hero currentHero;
         private Monster currentMonster;
         private readonly List<int> playersRemaining = new List<int>();
+        private readonly List<Point> damageTargetsRemaining = new List<Point>();
 
         private List<Monster> monstersRemaining = new List<Monster>();
 
@@ -71,12 +73,17 @@ namespace Descent.State
             eventManager.BoughtMovementEvent += BoughtMovement;
             eventManager.ChangedBlackDiceSideEvent += ChangedBlackDiceSide;
             eventManager.InflictWoundsEvent += InflictWounds;
+            eventManager.DamageTakenEvent += DamageTaken;
+            eventManager.WasKilledEvent += WasKilled;
+            eventManager.MissedAttackEvent += MissedAttack;
+            eventManager.FinishedAttackEvent += FinishedAttack;
 
             // Internal events
             eventManager.SquareMarkedEvent += new SquareMarkedHandler(SquareMarked);
             eventManager.InventoryFieldMarkedEvent += new InventoryFieldMarkedHandler(InventoryFieldMarked);
             eventManager.FatigueClickedEvent += new FatigueClickedHandler(FatiqueClicked);
             eventManager.DiceClickedEvent += new DiceClickedHandler(DiceClicked);
+            eventManager.DoAttackEvent += DoAttack;
 
             // initiate start
             stateMachine = new StateMachine(new State[] { State.InLobby, State.Initiation, State.DrawOverlordCards, //TODO DrawSkillCards
@@ -88,6 +95,11 @@ namespace Descent.State
 
 
         // stuff?
+
+        public GameState GameState
+        {
+            get { return gameState; }
+        }
 
         public State CurrentState
         {
@@ -558,13 +570,22 @@ namespace Descent.State
         private void DoAttack(object sender, GameEventArgs eventArgs)
         {
             Contract.Requires(CurrentState == State.WaitForDiceChoice);
-            Contract.Ensures(CurrentState == State.WaitForDiceChoice);//TODO
+            Contract.Ensures(CurrentState == State.WaitForDiceChoice);
 
-            Point targetSquare = gameState.CurrentAttack.TargetSquare;
+            damageTargetsRemaining.Clear();
 
-            // TODO Save information about target(s)
+            Attack attack = gameState.CurrentAttack;
+            Point targetSquare = attack.TargetSquare;
 
-            eventManager.QueueEvent(EventType.InflictWounds, new CoordinatesEventArgs(targetSquare.X, targetSquare.Y));
+            if (attack.MissedAttack || FullModel.Board.Distance(FullModel.Board.FiguresOnBoard[attack.AttackingFigure], targetSquare) > attack.Range)
+            {
+                eventManager.QueueEvent(EventType.MissedAttack, new GameEventArgs());
+                return;
+            }
+
+            damageTargetsRemaining.Add(targetSquare);
+
+            eventManager.QueueEvent(EventType.InflictWounds, new InflictWoundsEventArgs(targetSquare.X, targetSquare.Y, attack.Damage, attack.Pierce));
         }
 
 
@@ -914,7 +935,7 @@ namespace Descent.State
 
             gameState.CurrentPlayer = eventArgs.PlayerId;
 
-            //TODO Refresh Hero's cards
+            Player.Instance.HeroParty.Heroes[gameState.CurrentPlayer].UntapAll();
 
             stateMachine.PlaceStates(State.HeroTurn, State.Equip, State.WaitForChooseAction, State.WaitForPerformAction);
             stateMachine.ChangeToNextState();
@@ -1254,7 +1275,10 @@ namespace Descent.State
 
             gameState.CurrentAttack = attacker.GetAttack(new Point(eventArgs.X, eventArgs.Y));
 
-            stateMachine.PlaceStates(State.WaitForRollDice, State.WaitForDiceChoice);
+            attacker.RemoveAttack();
+
+            stateMachine.PlaceStates(State.Attack, State.WaitForRollDice, State.WaitForDiceChoice, State.InflictWounds, State.WaitForPerformAction);
+            stateMachine.ChangeToNextState();
             stateMachine.ChangeToNextState();
         }
 
@@ -1301,14 +1325,27 @@ namespace Descent.State
 
         private void InflictWounds(object sender, InflictWoundsEventArgs eventArgs)
         {
-            Contract.Requires(CurrentState == State.InflictWounds);
-            Contract.Requires(gameState.CurrentPlayer == eventArgs.SenderId);
-            Contract.Ensures(CurrentState == Contract.OldValue(CurrentState));
+            Contract.Requires(CurrentState == State.InflictWounds || CurrentState == State.WaitForDiceChoice);
+            Contract.Requires(FullModel.Board[eventArgs.X, eventArgs.Y].Figure != null);
+            Contract.Ensures(CurrentState == State.InflictWounds);
+
+            if (CurrentState == State.WaitForDiceChoice)
+            {
+                stateMachine.ChangeToNextState();
+            }
 
             Figure figure = FullModel.Board[eventArgs.X, eventArgs.Y].Figure;
 
+            // Check only on own figure
+            if ((Player.Instance.IsOverlord && !(figure is Monster)) ||
+               (!Player.Instance.IsOverlord && figure != Player.Instance.Hero))
+            {
+                return;
+            }
+
             int damage = eventArgs.Damage - (int)MathHelper.Clamp(figure.Armor - eventArgs.Pierce, 0, figure.Armor);
 
+            // Check if hero has untapped shield
             if (!Player.Instance.IsOverlord &&
                 Player.Instance.Hero.Inventory.Shield != null &&
                 !Player.Instance.Hero.Inventory.Shield.Tapped &&
@@ -1316,7 +1353,7 @@ namespace Descent.State
             {
                 damage -= 1; // TODO get real armor value
             }
-
+            Contract.Assert(damage >= 0);
             if (damage >= figure.Health)
             {
                 eventManager.QueueEvent(EventType.WasKilled, new CoordinatesEventArgs(eventArgs.X, eventArgs.Y));
@@ -1327,7 +1364,89 @@ namespace Descent.State
             }
         }
 
+        private void DamageTaken(object sender, DamageTakenEventArgs eventArgs)
+        {
+            Contract.Requires(CurrentState == State.InflictWounds);
+            Contract.Requires(FullModel.Board[eventArgs.X, eventArgs.Y].Figure != null);
+            Contract.Ensures(CurrentState == Contract.OldValue(CurrentState));
+
+            FullModel.Board[eventArgs.X, eventArgs.Y].Figure.RemoveHealth(eventArgs.Damage);
+            if (HasTurn())
+            {
+                DamageDone(new Point(eventArgs.X, eventArgs.Y));
+            }
+        }
+
+        private void WasKilled(object sender, CoordinatesEventArgs eventArgs)
+        {
+            Contract.Requires(CurrentState == State.InflictWounds);
+            Contract.Requires(FullModel.Board[eventArgs.X, eventArgs.Y].Figure != null);
+            Contract.Ensures(CurrentState == Contract.OldValue(CurrentState));
+
+            Figure figure = FullModel.Board[eventArgs.X, eventArgs.Y].Figure;
+
+            FullModel.Board.RemoveFigure(new Point(eventArgs.X, eventArgs.Y));
+
+            if (figure is Hero)
+            {
+                Hero hero = (Hero)figure;
+                hero.Initialize();
+                hero.Coins = (int)Math.Floor((double)hero.Coins / 2 / 25) * 25; // Floor to nearest % 25;
+                Player.Instance.HeroParty.RemoveConquestTokens(hero.Cost);
+                if (Player.Instance.HeroParty.IsConquestPoolEmpty)
+                {
+                    GameWon(false);
+                }
+            }
+            else
+            {
+                // TODO: Check if monster was final monster
+            }
+
+            if (HasTurn())
+            {
+                DamageDone(new Point(eventArgs.X, eventArgs.Y));
+            }
+        }
+
+        private void DamageDone(Point point)
+        {
+            Contract.Requires(CurrentState == State.InflictWounds);
+            Contract.Requires(HasTurn());
+            Contract.Ensures(CurrentState == Contract.OldValue(CurrentState));
+
+            damageTargetsRemaining.Remove(point);
+            if (damageTargetsRemaining.Count == 0)
+            {
+                eventManager.QueueEvent(EventType.FinishedAttack, new GameEventArgs());
+            }
+        }
+
+        private void MissedAttack(object sender, GameEventArgs eventArgs)
+        {
+            Contract.Requires(CurrentState == State.WaitForDiceChoice);
+            Contract.Requires(eventArgs.SenderId == gameState.CurrentPlayer);
+            Contract.Ensures(CurrentState == State.WaitForPerformAction);
+            stateMachine.ChangeToNextState();
+            stateMachine.ChangeToNextState();
+        }
+
+        private void FinishedAttack(object sender, GameEventArgs eventArgs)
+        {
+            Contract.Requires(CurrentState == State.InflictWounds);
+            Contract.Requires(eventArgs.SenderId == gameState.CurrentPlayer);
+            Contract.Ensures(CurrentState == State.WaitForPerformAction);
+
+            gameState.CurrentAttack = null;
+            stateMachine.ChangeToNextState();
+        }
+
         #endregion
+
+        private void GameWon(bool HeroPartyWon)
+        {
+            // TODO What to do??
+        }
 
         #region MovementMethods
 

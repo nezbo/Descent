@@ -710,5 +710,26 @@
                 System.Diagnostics.Debug.WriteLine("");
             }
         }
+
+        internal void RemoveFigure(Point point)
+        {
+            Contract.Requires(IsSquareWithinBoard(point.X, point.Y));
+            Contract.Requires(this[point] != null);
+            Contract.Ensures(this[point].Figure == null);
+
+            Figure figure = this[point].Figure;
+            if (figure is Hero)
+            {
+                heroesInTown.Add((Hero)figure);
+            }
+            for (int x = point.X; x < point.X + (figure.Orientation.Equals(Orientation.V) ? figure.Size.Width : figure.Size.Height); x++)
+            {
+                for (int y = point.Y; y < point.Y + (figure.Orientation.Equals(Orientation.V) ? figure.Size.Height : figure.Size.Width); y++)
+                {
+                    this[x, y].Figure = null;
+                }
+            }
+            figuresOnBoard.Remove(figure);
+        }
     }
 }

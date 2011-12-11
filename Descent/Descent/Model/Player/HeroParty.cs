@@ -184,7 +184,6 @@ namespace Descent.Model.Player
         [ContractInvariantMethod]
         private void ObjectInvariant()
         {
-            Contract.Invariant(ConquestTokens >= 0);
             Contract.Invariant(NumberOfHeroes >= 0 && NumberOfHeroes <= 4);
         }
         #endregion
