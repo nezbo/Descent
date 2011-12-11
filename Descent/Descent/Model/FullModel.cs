@@ -324,7 +324,8 @@ namespace Descent.Model
                 buyPrice: buyPrice,
                 surgeAbilities: surgeAbilities,
                 hands: hands,
-                abilities: abilities);
+                abilities: abilities,
+                dice: dice);
         }
 
         #endregion

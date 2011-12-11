@@ -379,7 +379,42 @@ namespace Descent.State
                     if (figure.AttacksLeft > 0 && FullModel.Board.Distance(standingPoint, new Point(eventArgs.X, eventArgs.Y)) >= 1 && (FullModel.Board[eventArgs.X, eventArgs.Y] != null && (FullModel.Board[eventArgs.X, eventArgs.Y].Figure != null && FullModel.Board.IsThereLineOfSight(figure, FullModel.Board[eventArgs.X, eventArgs.Y].Figure, false))))
                     {
                         // A figure is trying to attack another figure.
-                        eventManager.QueueEvent(EventType.AttackSquare, new CoordinatesEventArgs(eventArgs.X, eventArgs.Y));
+
+                        if (Player.Instance.HeroParty.Heroes[eventArgs.SenderId] != null)
+                        {
+                            // A player is attacking
+                            Hero hero = Player.Instance.HeroParty.Heroes[eventArgs.SenderId];
+                            Figure target = FullModel.Board[eventArgs.X, eventArgs.Y].Figure;
+
+                            if (hero.Inventory.Weapon == null)
+                            {
+                                return; // Do not allow attack if hero does not have weapon
+                            }
+
+                            if (hero.Inventory.Weapon.AttackType == EAttackType.MELEE)
+                            {
+                                // If the player has a melee weapon, he should be adjacent to the figure he is attacking.
+                                if (FullModel.Board.Distance(FullModel.Board.FiguresOnBoard[hero], FullModel.Board.FiguresOnBoard[target]) == 1)
+                                {
+                                    // Hero is adjacent to target figure, carry on with attack.
+                                    eventManager.QueueEvent(EventType.AttackSquare, new CoordinatesEventArgs(eventArgs.X, eventArgs.Y));
+                                }
+                            }
+                            else if (hero.Inventory.Weapon.AttackType == EAttackType.MAGIC || hero.Inventory.Weapon.AttackType == EAttackType.RANGED)
+                            {
+                                // If attack type is magic or ranged, always allow attack.
+                                eventManager.QueueEvent(EventType.AttackSquare, new CoordinatesEventArgs(eventArgs.X, eventArgs.Y));
+                            } 
+                            else
+                            {
+                                // Attack type is not melee, magic or ranged - do not perform attack.
+                            }
+                        }
+                        else
+                        {
+                            // A monster is attacking
+                            eventManager.QueueEvent(EventType.AttackSquare, new CoordinatesEventArgs(eventArgs.X, eventArgs.Y));
+                        }
                     }
 
                     break;
