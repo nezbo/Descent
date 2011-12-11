@@ -18,9 +18,19 @@ namespace Descent.Model.Player.Figure.HeroStuff
     /// </summary>
     public class SurgeAbility
     {
+        /// <summary>
+        /// Takes a string and returns an SurgeAbility instance
+        /// </summary>
+        /// <param name="surgeAbility">
+        /// The surge ability in raw text format
+        /// </param>
+        /// <returns>
+        /// An instance of SurgeAbility
+        /// </returns>
         public static SurgeAbility GetSurgeAbility(string surgeAbility)
         {
-            return new SurgeAbility(2, Ability.GetAbility("Damage 1"));
+            string[] data = surgeAbility.Split(new char[] { ' ' }, 2);
+            return new SurgeAbility(int.Parse(data[0]), Ability.GetAbility(data[1]));
         }
 
         #region Fields

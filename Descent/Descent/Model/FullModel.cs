@@ -313,7 +313,8 @@ namespace Descent.Model
             int amount = data[8].Equals(string.Empty) ? 0 : int.Parse(data[8]);
             List<Dice> dice = data[9].Split(' ').Select(GetDice).ToList();
             List<Ability> abilities = data[10].Split('/').Select(Ability.GetAbility).ToList();
-            List<SurgeAbility> surgeAbilities = data[11].Split('/').Select(SurgeAbility.GetSurgeAbility).ToList();
+            System.Diagnostics.Debug.WriteLine(name + " - " + data[11]);
+            List<SurgeAbility> surgeAbilities = data[11].Equals(string.Empty) ? new List<SurgeAbility>() : data[11].Split('/').Select(SurgeAbility.GetSurgeAbility).ToList();
 
             return new Equipment(
                 id: id,
