@@ -79,6 +79,7 @@ namespace Descent.Model.Player.Figure.HeroStuff
         private List<SurgeAbility> surgeAbilities;
         private int hands;
         private List<Ability> abilities;
+        private List<Dice> dice; 
         private bool equipped = false;
 
         #endregion
@@ -243,7 +244,7 @@ namespace Descent.Model.Player.Figure.HeroStuff
         /// <param name="abilities">
         /// The abilities.
         /// </param>
-        public Equipment(int id, string name, EquipmentType type, EAttackType attackType, EquipmentRarity rarity, int buyPrice, List<SurgeAbility> surgeAbilities, int hands, List<Ability> abilities)
+        public Equipment(int id, string name, EquipmentType type, EAttackType attackType, EquipmentRarity rarity, int buyPrice, List<SurgeAbility> surgeAbilities, int hands, List<Ability> abilities, List<Dice> dice)
         {
             Contract.Requires(surgeAbilities != null);
             Contract.Requires(abilities != null);
@@ -256,6 +257,7 @@ namespace Descent.Model.Player.Figure.HeroStuff
             this.surgeAbilities = surgeAbilities;
             this.hands = hands;
             this.abilities = abilities;
+            this.dice = dice ?? new List<Dice>();
             tapped = false;
         }
 
@@ -292,6 +294,7 @@ namespace Descent.Model.Player.Figure.HeroStuff
         {
             Contract.Requires(!Equipped);
             Contract.Ensures(Equipped);
+            /*
             Contract.Ensures(
                 this.type == EquipmentType.Weapon ? 
                 hero.Inventory.Weapon.Equals(this) :
@@ -299,10 +302,10 @@ namespace Descent.Model.Player.Figure.HeroStuff
                     hero.Inventory.Armor.Equals(this) :
                         this.type == EquipmentType.Other ?
                         hero.Inventory.OtherItems.Contains(this) :
-                            this.type == EquipmentType.Potion ?
-                            hero.Inventory.Potions.Contains(this) : 
-                            false);
+                            this.type == EquipmentType.Potion && hero.Inventory.Potions.Contains(this));
+             * */
             //TODO: Code to pass abilities on?
+            hero.DiceContribution += diceContribution;
             equipped = true;
         }
 
@@ -339,7 +342,8 @@ namespace Descent.Model.Player.Figure.HeroStuff
                 buyPrice, 
                 surgeAbilities.Select(e => e).ToList(), 
                 hands, 
-                abilities.Select(e => e).ToList());
+                abilities.Select(e => e).ToList(),
+                dice.Select(d => d).ToList());
         }
 
         public override bool Equals(object obj)
@@ -347,6 +351,11 @@ namespace Descent.Model.Player.Figure.HeroStuff
             if (obj == null || !(obj is Equipment)) return false;
             if (((Equipment)obj).Id == Id) return true;
             return false;
+        }
+
+        private List<Dice> diceContribution()
+        {
+            return dice;
         }
         #endregion
     }
