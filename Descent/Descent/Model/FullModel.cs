@@ -282,11 +282,21 @@ namespace Descent.Model
 
                 if (data[1].Equals("Treasure Cache"))
                 {
-                    treasures[rarity].Add(new Treasure(int.Parse(data[0]), rarity, null));
+                    treasures[rarity].Add(
+                        new Treasure(
+                            int.Parse(data[0]), 
+                            data[1], 
+                            rarity, 
+                            data[10].Contains("Potion Vitality") ? 
+                                GetEquipment(12) : 
+                                data[10].Contains("Potion Healing") ? 
+                                    GetEquipment(11) : 
+                                    null, 
+                            data[10].Contains("Coins") ? int.Parse(data[10].Split(' ').Last()) : 0));
                 }
                 else
                 {
-                    treasures[rarity].Add(new Treasure(int.Parse(data[0]), rarity, LoadEquipment(data)));
+                    treasures[rarity].Add(new Treasure(int.Parse(data[0]), data[1] , rarity, LoadEquipment(data), 0));
                 }
             }
 
