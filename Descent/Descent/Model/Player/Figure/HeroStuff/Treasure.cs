@@ -80,6 +80,14 @@ namespace Descent.Model.Player.Figure.HeroStuff
             }
         }
 
+        public bool IsTreasureCache
+        {
+            get
+            {
+                return Name.Equals("Treasure Cache");
+            }
+        }
+
         #endregion
 
         #region Initialization

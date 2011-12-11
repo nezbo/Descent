@@ -52,6 +52,7 @@ namespace Descent.State
             eventManager.AssignHeroEvent += AssignHero;
             eventManager.RequestBuyEquipmentEvent += RequestBuyEquipment;
             eventManager.GiveEquipmentEvent += GiveEquipment;
+            eventManager.GiveCoinsEvent += GiveCoins;
             eventManager.FinishedBuyEvent += FinishedBuy;
             eventManager.FinishedReequipEvent += FinishedReequip;
             eventManager.SwitchItemsEvent += SwitchItems;
@@ -390,6 +391,10 @@ namespace Descent.State
 
                         if (figure.MovementLeft >= marker.MovementPoints)
                         {
+                            if (marker is PotionMarker)
+                            {
+                                if (!Player.Instance.Hero.Inventory.CanEquipPotion) return;
+                            }
                             eventManager.QueueEvent(EventType.PickupMarker, new CoordinatesEventArgs(eventArgs.X, eventArgs.Y));
                         }
                     }
@@ -1064,6 +1069,9 @@ namespace Descent.State
 
         private void OpenChest(object sender, ChestEventArgs eventArgs)
         {
+            Contract.Requires(CurrentState == State.WaitForPerformAction);
+            Contract.Ensures(CurrentState == State.AllEquip);
+
             Chest chest = gameState.getChest(eventArgs.ChestId);
 
             // Give conquest tokens to the hero party
@@ -1101,19 +1109,26 @@ namespace Descent.State
         
         private void GiveTreasure(int playerId, Treasure treasure)
         {
+            // Treasure may have coins
             if (treasure.Coins > 0) eventManager.QueueEvent(EventType.GiveCoins, new GiveCoinsEventArgs(playerId, treasure.Coins));
-            if (treasure.Potion != null) eventManager.QueueEvent(EventType.GiveEquipment, new GiveEquipmentEventArgs(playerId, treasure.Potion.Id));
 
-            if (treasure.Equipment != null)
+            // Treasure may have equipment
+            if (treasure.Equipment != null) eventManager.QueueEvent(EventType.GiveEquipment, new GiveEquipmentEventArgs(playerId, treasure.Equipment.Id));
+
+            if(treasure.IsTreasureCache)
             {
-                // If we have an equipment on this treasure, give that equipment to the player.
-                eventManager.QueueEvent(EventType.GiveEquipment, new GiveEquipmentEventArgs(playerId, treasure.Equipment.Id));
+                // If treasure is a cache
+                GiveTreasure(playerId, gameState.getTreasures(1, treasure.Rarity).First());
             }
             else
             {
-                // If we do not have an equipment, we need to get a new treasure and go over again.
-                GiveTreasure(playerId, gameState.getTreasures(1, treasure.Rarity).First());
+                return; // We are done here!
             }
+        }
+
+        private void GiveCoins(object sender, GiveCoinsEventArgs eventArgs)
+        {
+            Player.Instance.HeroParty.Heroes[eventArgs.PlayerId].Coins += eventArgs.NumberOfCoins;
         }
 
         #endregion
