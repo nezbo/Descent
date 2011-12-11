@@ -154,7 +154,7 @@ namespace Descent.Model
         /// </summary>
         public void RollDice()
         {
-            Random r = new Random();
+            Random r = new Random(DateTime.Now.Millisecond);
             activeSideIndex = r.Next(6);
         }
 
