@@ -61,6 +61,7 @@ namespace Descent.Model.Event
         {
             get
             {
+                System.Diagnostics.Debug.WriteLine("Hero # of dice: " + figure.DiceForAttack);
                 return figure.DiceForAttack;
             }
         }
