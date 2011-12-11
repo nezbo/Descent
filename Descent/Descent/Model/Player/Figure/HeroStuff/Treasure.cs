@@ -21,6 +21,8 @@ namespace Descent.Model.Player.Figure.HeroStuff
 
         private Equipment equipment;
 
+        private int coins;
+
         #endregion
 
         #region Properties
@@ -70,6 +72,14 @@ namespace Descent.Model.Player.Figure.HeroStuff
             }
         }
 
+        public int Coins
+        {
+            get
+            {
+                return coins;
+            }
+        }
+
         #endregion
 
         #region Initialization
@@ -86,12 +96,13 @@ namespace Descent.Model.Player.Figure.HeroStuff
         /// <param name="equipment">
         /// The equipment equipment in the treasure
         /// </param>
-        public Treasure(int id, EquipmentRarity rarity, Equipment equipment)
+        public Treasure(int id, string name, EquipmentRarity rarity, Equipment equipment, int coins)
         {
             this.id = id;
-            this.name = equipment == null ? "Treasure Cache" : equipment.Name;
+            this.name = name;
             this.rarity = rarity;
             this.equipment = equipment;
+            this.coins = coins;
         }
 
         #endregion

@@ -50,7 +50,7 @@ namespace Descent.Model
 
         private static List<Equipment> townEquipment;
 
-        private static Dictionary<EquipmentRarity, Treasure> treasures = new Dictionary<EquipmentRarity, Treasure>();
+        private static Dictionary<EquipmentRarity, List<Treasure>> treasures = new Dictionary<EquipmentRarity, List<Treasure>>();
 
         private static List<Marker> markers;
 
@@ -280,11 +280,21 @@ namespace Descent.Model
 
                 if (data[1].Equals("Treasure Cache"))
                 {
-                    treasures[rarity].Add(new Treasure(int.Parse(data[0]), rarity, null));
+                    treasures[rarity].Add(
+                        new Treasure(
+                            int.Parse(data[0]), 
+                            data[1], 
+                            rarity, 
+                            data[10].Contains("Potion Vitality") ? 
+                                GetEquipment(12) : 
+                                data[10].Contains("Potion Healing") ? 
+                                    GetEquipment(11) : 
+                                    null, 
+                            data[10].Contains("Coins") ? int.Parse(data[10].Split(' ').Last()) : 0));
                 }
                 else
                 {
-                    treasures[rarity].Add(new Treasure(int.Parse(data[0]), rarity, LoadEquipment(data)));
+                    treasures[rarity].Add(new Treasure(int.Parse(data[0]), data[1] , rarity, LoadEquipment(data), 0));
                 }
             }
 
@@ -445,6 +455,11 @@ namespace Descent.Model
             }
 
             System.Diagnostics.Debug.WriteLine("Chests loaded successfully!");
+        }
+
+        private static void LoadLegendaryMonsters(Game game, StreamReader reader)
+        {
+            
         }
 
         #endregion
@@ -626,6 +641,11 @@ namespace Descent.Model
             return AllEquipment.First(equipment => equipment.Id == id).Clone();
         }
 
+        public static Treasure GetTreasure(int id)
+        {
+            return AllTreasures.Single(t => t.ID == id);
+        }
+
         /// <summary>
         /// Gets an overlord card by id
         /// </summary>
@@ -777,8 +797,8 @@ namespace Descent.Model
             get
             {
                 List<Treasure> list = new List<Treasure>();
-                foreach (Treasure t in treasures.Values)
-                    list.Add(t);
+                foreach (EquipmentRarity r in Enum.GetValues(typeof(EquipmentRarity)))
+                    list.AddRange(treasures[r]);
                 return list.ToArray();
             }
         }

@@ -38,7 +38,7 @@ namespace Descent.Model.Board.Marker
 
         public override void PickUp(Hero hero)
         {
-            Contract.Requires(!Open);
+            if (Open) return;
             Player.Player.Instance.HeroParty.AddConquestTokens(3);
             Open = !Open;
             Texture = openTexture;
