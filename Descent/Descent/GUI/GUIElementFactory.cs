@@ -142,13 +142,9 @@ namespace Descent.GUI
                         if (role != Role.Overlord)
                         {
                             GUIElement done = new GUIElement(game, "done", RelW(g, 85), RelH(g, 90), RelW(g, 10), RelH(g, 5));
-                            GUIElement money = new GUIElement(game, "money", 0, 0, RelW(g, 8), RelH(g, 8));
-
-                            money.AddText(money.Name, "Money:\n" + Player.Instance.Hero.Coins, new Vector2(5, 5));
                             done.AddText(done.Name, "Done", new Vector2(0, 0));
 
                             root.AddChild(done);
-                            root.AddChild(money);
                         }
                         root.AddChild(box);
                         break;

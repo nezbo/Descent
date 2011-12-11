@@ -359,7 +359,7 @@ namespace Descent.Model.Player.Figure.HeroStuff
             return slot == (int)EquipmentSlot.Weapon ?
                 equipment.Type == EquipmentType.Weapon && this.CanEquipWeapon(equipment) :
                         slot == (int)EquipmentSlot.Shield ?
-                        equipment.Type == EquipmentType.Shield :
+                        equipment.Type == EquipmentType.Shield && CanEquipWeapon(equipment) :
                                slot == (int)EquipmentSlot.Armor ?
                                equipment.Type == EquipmentType.Armor :
                                     slot >= (int)EquipmentSlot.Other && slot < (int)EquipmentSlot.Potion ?
