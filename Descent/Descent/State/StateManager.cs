@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 
 using Descent.Model.Board;
-using Descent.Model.Event;
 
 namespace Descent.State
 {
@@ -215,8 +214,7 @@ namespace Descent.State
                         }
                         else
                         {
-                            root.Disable("item");
-                            root.Disable("done");
+                            root.Disable("root");
                         }
                         break;
                     }
@@ -409,7 +407,7 @@ namespace Descent.State
                             {
                                 // If attack type is magic or ranged, always allow attack.
                                 eventManager.QueueEvent(EventType.AttackSquare, new CoordinatesEventArgs(eventArgs.X, eventArgs.Y));
-                            } 
+                            }
                             else
                             {
                                 // Attack type is not melee, magic or ranged - do not perform attack.
@@ -516,7 +514,7 @@ namespace Descent.State
                     break;
 
                 case State.WaitForDiceChoice:
-                    if(gameState.CurrentAttack.DiceForAttack.Count(dice => dice.Color == EDice.B) < 5)
+                    if (gameState.CurrentAttack.DiceForAttack.Count(dice => dice.Color == EDice.B) < 5)
                     {
                         eventManager.QueueEvent(EventType.BoughtDice, new GameEventArgs());
                     }
@@ -1287,7 +1285,7 @@ namespace Descent.State
             StateChanged();
         }
 
-         
+
 
         #endregion
 
