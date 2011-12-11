@@ -305,6 +305,7 @@ namespace Descent.Model.Player.Figure.HeroStuff
                             this.type == EquipmentType.Potion && hero.Inventory.Potions.Contains(this));
              * */
             hero.DiceContribution += diceContribution;
+            hero.SurgeAbilityContribution += surgeAbilitiesContribution;
             equipped = true;
         }
 
@@ -356,6 +357,11 @@ namespace Descent.Model.Player.Figure.HeroStuff
         private List<Dice> diceContribution()
         {
             return dice;
+        }
+
+        private List<SurgeAbility> surgeAbilitiesContribution()
+        {
+            return surgeAbilities;
         }
         #endregion
     }
