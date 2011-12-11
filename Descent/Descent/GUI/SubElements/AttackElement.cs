@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using Descent.Model.Event;
 using Descent.Model.Player.Figure.HeroStuff;
 using Microsoft.Xna.Framework;
@@ -22,8 +23,8 @@ namespace Descent.GUI.SubElements
             surgeImage = new Image(game.Content.Load<Texture2D>("Images/Other/surge"));
             List<SurgeAbility> surges = attack.SurgeAbilities;
 
-            int yPos = Bound.Height / 2;
-            int xPos = (int)(Bound.Width * 0.4);
+            int yPos = Bound.Y + Bound.Height / 2;
+            int xPos = Bound.X + (int)(Bound.Width * 0.4);
             int surgeHeight = 100;
             int surgeWidth = (int)(Bound.Width * 0.3);
             bool left = true;
@@ -49,15 +50,15 @@ namespace Descent.GUI.SubElements
                 costX += 10;
                 surgeBox.AddText(surgeBox.Name, ": " + surge.Ability.ToString(), new Vector2(costX, surgeBox.Bound.Y + 5));
 
-                AddChild(surgeBox);
-
                 // click event
                 surgeBox.SetClickAction(surgeBox.Name, (n, g) =>
-                                                           {
-                                                               System.Diagnostics.Debug.WriteLine(id);
-                                                               /*
-                                                               n.EventManager.QueueEvent(EventType.SurgeAbilityClicked, new SurgeAbilityEventArgs(id));*/
-                                                           });
+                {
+                    System.Diagnostics.Debug.WriteLine(id);
+                    /*
+                    n.EventManager.QueueEvent(EventType.SurgeAbilityClicked, new SurgeAbilityEventArgs(id));*/
+                });
+
+                AddChild(surgeBox);
 
                 // ready for next ability
                 if (!left) yPos += height;
@@ -68,6 +69,7 @@ namespace Descent.GUI.SubElements
         public override void Draw(SpriteBatch draw)
         {
             base.Draw(draw);
+            Collection<GUIElement> guiElements = children;
 
             draw.DrawString(GUI.Font, attack.ToString(), new Vector2(Bound.X + 5, Bound.Y + 5), Color.Black);
         }
