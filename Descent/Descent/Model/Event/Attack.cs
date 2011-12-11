@@ -101,19 +101,28 @@ namespace Descent.Model.Event
             }
         }
 
-
         public void RollDice()
         {
             foreach (Dice dice in DiceForAttack)
             {
                 dice.RollDice();
+                if (dice.Color == EDice.B && dice.SideIndex >= 1 && dice.SideIndex <= 3)
+                {
+                    int[] side = dice.ActiveSide;
+                    Range += side[0];
+                    Damage += side[1];
+                    Surge += side[2];
+                }
             }
         }
 
         public override string ToString()
         {
-            return figure.Name + "\nDamage: " + DamageBonus + "\nRange: " + RangeBonus + "\nPierce: "
-                   + PierceBonus + "\nSurge: " + SurgeBonus;
+            return figure.Name + 
+                "\nDamage: " + (DamageBonus + Damage) + 
+                "\nRange: " + (RangeBonus + Range) + 
+                "\nPierce: " + (PierceBonus + Pierce) +
+                "\nSurge: " + (SurgeBonus + Surge);
         }
 
 
