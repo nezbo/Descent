@@ -364,7 +364,7 @@ namespace Descent.State
                         //TODO Pickuptoken/marker, if there is any
                     }
 
-                    if (Player.Instance.Hero.AttacksLeft > 0 && FullModel.Board.Distance(standingPoint, new Point(eventArgs.X, eventArgs.Y)) >= 1 && (FullModel.Board[eventArgs.X, eventArgs.Y] != null && (FullModel.Board[eventArgs.X, eventArgs.Y].Figure != null && FullModel.Board.IsThereLineOfSight(figure, FullModel.Board[eventArgs.X, eventArgs.Y].Figure, false))))
+                    if (figure.AttacksLeft > 0 && FullModel.Board.Distance(standingPoint, new Point(eventArgs.X, eventArgs.Y)) >= 1 && (FullModel.Board[eventArgs.X, eventArgs.Y] != null && (FullModel.Board[eventArgs.X, eventArgs.Y].Figure != null && FullModel.Board.IsThereLineOfSight(figure, FullModel.Board[eventArgs.X, eventArgs.Y].Figure, false))))
                     {
                         // A figure is trying to attack another figure.
                         eventManager.QueueEvent(EventType.AttackSquare, new CoordinatesEventArgs(eventArgs.X, eventArgs.Y));
