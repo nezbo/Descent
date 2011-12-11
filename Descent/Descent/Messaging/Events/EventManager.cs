@@ -178,7 +178,7 @@ namespace Descent.Messaging.Events
 
     public delegate void DamageTakenHandler(object sender, DamageTakenEventArgs eventArgs);
 
-    public delegate void MissedAttackHandler(object sender, PlayerEventArgs eventArgs);
+    public delegate void MissedAttackHandler(object sender, GameEventArgs eventArgs);
 
     public delegate void BoughtDiceHandler(object sender, GameEventArgs eventArgs);
 
@@ -680,7 +680,7 @@ namespace Descent.Messaging.Events
                     if (WasKilledEvent != null) WasKilledEvent(this, (CoordinatesEventArgs)eventArgs);
                     break;
                 case EventType.MissedAttack:
-                    if (MissedAttackEvent != null) MissedAttackEvent(this, (PlayerEventArgs)eventArgs);
+                    if (MissedAttackEvent != null) MissedAttackEvent(this, (GameEventArgs)eventArgs);
                     break;
                 case EventType.BoughtDice:
                     if (BoughtDiceEvent != null) BoughtDiceEvent(this, eventArgs);
@@ -873,7 +873,7 @@ namespace Descent.Messaging.Events
                 case EventType.WasKilled:
                     return new CoordinatesEventArgs(args);
                 case EventType.MissedAttack:
-                    return new PlayerEventArgs(args);
+                    return new GameEventArgs(args);
                 case EventType.ChangedBlackDiceSide:
                     return new DiceEventArgs(args);
                 case EventType.SquareMarked:
