@@ -1,11 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="AttackStruct.cs" company="">
-// TODO: Update copyright text.
-// </copyright>
-// -----------------------------------------------------------------------
-
-using Microsoft.Xna.Framework;
-
+﻿
 namespace Descent.Model.Event
 {
     using System.Collections.Generic;
@@ -13,6 +6,8 @@ namespace Descent.Model.Event
 
     using Descent.Model.Player.Figure;
     using Descent.Model.Player.Figure.HeroStuff;
+
+    using Microsoft.Xna.Framework;
 
     /// <summary>
     /// An attack 

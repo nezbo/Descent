@@ -82,6 +82,7 @@ namespace Descent.Messaging.Events
         DiceClicked = 71,
         DoAttack = 72,
         InflictWounds = 73,
-        WasKilled = 74
+        WasKilled = 74,
+        SurgeAbilityClicked = 75
     }
 }

@@ -202,6 +202,8 @@ namespace Descent.Messaging.Events
 
     public delegate void DoAttackHandler(object sender, GameEventArgs eventArgs);
 
+    public delegate void SurgeAbilityClickedHandler(object sender, SurgeAbilityEventArgs eventArgs);
+
     #endregion
 
     public delegate void AllRespondedNoActionHandler(object sender, EventArgs eventArgs); // Special delegate, contains no eventArgs info.
@@ -212,7 +214,7 @@ namespace Descent.Messaging.Events
     /// </summary>
     public class EventManager
     {
-        private readonly EventType[] internalOnly = new EventType[] { EventType.SquareMarked, EventType.InventoryFieldMarked, EventType.FatigueClicked, EventType.DiceClicked, EventType.DoAttack };
+        private readonly EventType[] internalOnly = new EventType[] { EventType.SquareMarked, EventType.InventoryFieldMarked, EventType.FatigueClicked, EventType.DiceClicked, EventType.DoAttack, EventType.SurgeAbilityClicked };
         private readonly EventType[] needResponses = new EventType[] { };
 
         private Queue<QueuedEvent> queue = new Queue<QueuedEvent>();
@@ -371,6 +373,8 @@ namespace Descent.Messaging.Events
         public event FatigueClickedHandler FatigueClickedEvent;
 
         public event DiceClickedHandler DiceClickedEvent;
+
+        public event SurgeAbilityClickedHandler SurgeAbilityClickedEvent;
 
         #endregion
 
@@ -691,7 +695,10 @@ namespace Descent.Messaging.Events
                     if (FatigueClickedEvent != null) FatigueClickedEvent(this, eventArgs);
                     break;
                 case EventType.DiceClicked:
-                    if (DiceClickedEvent != null) DiceClickedEvent(this, (DiceEventArgs) eventArgs);
+                    if (DiceClickedEvent != null) DiceClickedEvent(this, (DiceEventArgs)eventArgs);
+                    break;
+                case EventType.SurgeAbilityClicked:
+                    if (SurgeAbilityClickedEvent != null) SurgeAbilityClickedEvent(this, (SurgeAbilityEventArgs)eventArgs);
                     break;
             }
 
@@ -864,6 +871,8 @@ namespace Descent.Messaging.Events
                     return new InventoryFieldEventArgs(args);
                 case EventType.DiceClicked:
                     return new DiceEventArgs(args);
+                case EventType.SurgeAbilityClicked:
+                    return new SurgeAbilityEventArgs(args);
                 default:
                     return new GameEventArgs();
             }

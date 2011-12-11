@@ -30,7 +30,7 @@ namespace Descent.GUI
 
             if (Equipment == null)
             {
-                this.AddText(this.Name, slotTitle + " (Empty)", new Vector2(0, 0));
+                this.AddText(this.Name, slotTitle.Length > 0 ? slotTitle + " (Empty)" : "(Empty)", new Vector2(0, 0));
             }
             else
             {
