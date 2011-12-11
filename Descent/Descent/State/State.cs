@@ -93,6 +93,8 @@
         MonsterTurnInitiation,
         DeleteMonsterTurn,
         Initiation,
-        WaitForOverlordChooseAction
+        WaitForOverlordChooseAction,
+        EndGameOverlord,
+        EndGameHeroParty
     }
 }
