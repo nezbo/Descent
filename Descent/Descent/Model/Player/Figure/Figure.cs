@@ -8,6 +8,7 @@
     using Descent.GUI;
     using Descent.Model.Board;
     using Descent.Model.Event;
+    using Descent.Model.Player.Figure.HeroStuff;
 
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
@@ -86,6 +87,11 @@
         public event Bonus<List<Ability>> AbilityContribution;
 
         /// <summary>
+        /// This event contributes lists of surge abilities to the figure
+        /// </summary>
+        public event Bonus<List<SurgeAbility>> SurgeAbilityContribution; 
+
+        /// <summary>
         /// This event contributes lists of effects to the figure
         /// </summary>
         public event Bonus<List<Effect>> EffectContribution; 
@@ -115,6 +121,8 @@
         protected List<Ability> abilities = new List<Ability>();
 
         protected List<Effect> effects = new List<Effect>();
+
+        protected List<SurgeAbility> surgeAbilities = new List<SurgeAbility>();
 
         protected Texture2D texture;
 
@@ -304,6 +312,33 @@
         }
 
         /// <summary>
+        /// Gets the figures list of surgeabilities, including all contributors
+        /// Sets the internal list, not including contributors
+        /// </summary>
+        public List<SurgeAbility> SurgeAbilities
+        {
+            get
+            {
+                List<SurgeAbility> total = new List<SurgeAbility>();
+                if (SurgeAbilityContribution != null)
+                {
+                    foreach (Bonus<List<SurgeAbility>> bonus in SurgeAbilityContribution.GetInvocationList())
+                    {
+                        total.AddRange(bonus.Invoke());
+                    }
+                }
+
+                total.AddRange(surgeAbilities);
+                return total;
+            }
+
+            protected set
+            {
+                surgeAbilities = value;
+            }
+        }
+
+        /// <summary>
         /// Gets the figures list of effects, including contributors
         /// Sets the figures internal list of effect, external contributors not included
         /// </summary>
@@ -483,7 +518,12 @@
         /// Gets an attack instance with the attacking figure, 
         /// different bonuses, and the dice attacking
         /// </summary>
-        /// <returns></returns>
+        /// <param name="targetSquare">
+        /// The target point where the figure is attacking
+        /// </param>
+        /// <returns>
+        /// An attack instance, with the bonuses for damage, range, pierce and surges laid in.
+        /// </returns>
         public Attack GetAttack(Point targetSquare)
         {
             return new Attack(this, targetSquare)

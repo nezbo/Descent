@@ -516,7 +516,10 @@ namespace Descent.State
                     break;
 
                 case State.WaitForDiceChoice:
-                    eventManager.QueueEvent(EventType.BoughtDice, new GameEventArgs());
+                    if(gameState.CurrentAttack.DiceForAttack.Count(dice => dice.Color == EDice.B) < 5)
+                    {
+                        eventManager.QueueEvent(EventType.BoughtDice, new GameEventArgs());
+                    }
                     break;
             }
         }
@@ -1255,6 +1258,7 @@ namespace Descent.State
         private void BoughtDice(object sender, GameEventArgs eventArgs)
         {
             Contract.Requires(CurrentState == State.WaitForDiceChoice);
+            Contract.Requires(gameState.CurrentAttack.DiceForAttack.Count(d => d.Color == EDice.B) < 5);
             Contract.Ensures(CurrentState == Contract.OldValue(CurrentState));
 
             Dice dice = FullModel.GetDice(EDice.B);
@@ -1282,6 +1286,8 @@ namespace Descent.State
             gameState.CurrentAttack.DiceForAttack[eventArgs.DiceId].SideIndex = eventArgs.SideId;
             StateChanged();
         }
+
+         
 
         #endregion
 
