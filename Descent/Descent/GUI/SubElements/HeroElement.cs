@@ -16,6 +16,10 @@ namespace Descent.GUI.SubElements
         private Texture2D rangedT;
         private Texture2D magicT;
 
+        private Texture2D coin25;
+        private Texture2D coin100;
+        private Texture2D coin500;
+
         private Rectangle healthRect;
         private Rectangle fatigueRect;
         private Rectangle movementRect;
@@ -31,12 +35,15 @@ namespace Descent.GUI.SubElements
             rangedT = game.Content.Load<Texture2D>("Images/Other/training-ranged");
             magicT = game.Content.Load<Texture2D>("Images/Other/training-magic");
 
+            coin25 = game.Content.Load<Texture2D>("Images/Other/25gold");
+            coin100 = game.Content.Load<Texture2D>("Images/Other/100gold");
+            coin500 = game.Content.Load<Texture2D>("Images/Other/500gold");
+
             healthRect = new Rectangle(225, this.Bound.Height - 200, 50, 50);
             fatigueRect = new Rectangle(225, this.Bound.Height - 150, 50, 50);
             movementRect = new Rectangle(225, this.Bound.Height - 100, 50, 50);
             attacksRect = new Rectangle(225, this.Bound.Height - 50, 50, 50);
 
-            this.AddDrawable(this.Name, new Image(hero.BigTexture), new Vector2(0, this.Bound.Height - hero.BigTexture.Height));
             this.AddDrawable(this.Name, new Image(game.Content.Load<Texture2D>("Images/Other/health-small")), healthRect);
 
             GUIElement fatigueBox = new GUIElement(game, "fatigue", fatigueRect.X, fatigueRect.Y, fatigueRect.Width, fatigueRect.Height);
@@ -62,7 +69,6 @@ namespace Descent.GUI.SubElements
             Vector2 size = GUI.Font.MeasureString(cost);
             this.AddText(this.Name, cost, new Vector2((40 - size.X) / 2, Bound.Height - 70 + (40 - size.Y) / 2), Color.White);
 
-
             this.AddDrawable(this.Name, new Image(game.Content.Load<Texture2D>("heroheader")), new Rectangle(nameX - 10, nameY - 5, (int)nameV.X + 20, (int)nameV.Y + 10));
             this.AddText(this.Name, hero.Name, new Vector2(nameX, nameY));
 
@@ -83,6 +89,17 @@ namespace Descent.GUI.SubElements
 
         public override void Draw(SpriteBatch draw)
         {
+            // face
+            draw.Draw(hero.BigTexture, new Rectangle(0, Bound.Height - 200, 200, 200), Color.White);
+
+            // coin icon
+            Texture2D chosen = hero.Coins <= 100 ? coin25 : (hero.Coins < 500 ? coin100 : coin500);
+            draw.Draw(chosen, new Rectangle(45, Bound.Height - 70, 40, 40), Color.White);
+
+            string coins = "" + hero.Coins;
+            Vector2 coinSize = GUI.Font.MeasureString(coins);
+            draw.DrawString(GUI.Font, coins, new Vector2(45 + (40 - coinSize.X) / 2, Bound.Height - 70 + (40 - coinSize.Y) / 2), Color.Black);
+
             base.Draw(draw);
 
             // training
