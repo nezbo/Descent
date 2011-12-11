@@ -24,15 +24,16 @@ namespace Descent.GUI.SubElements
 
             int yPos = Bound.Height / 2;
             int xPos = (int)(Bound.Width * 0.4);
-            int height = 100;
-            int width = (int)(Bound.Width * 0.3);
+            int surgeHeight = 100;
+            int surgeWidth = (int)(Bound.Width * 0.3);
             bool left = true;
 
             SurgeAbility surge;
             for (int i = 0; i < surges.Count; i++)
             {
+                int id = i;
                 surge = surges[i];
-                GUIElement surgeBox = new GUIElement(game, "surge box", left ? xPos : xPos + width, yPos, width, height);
+                GUIElement surgeBox = new GUIElement(game, "surge box", left ? xPos : xPos + surgeWidth, yPos, surgeWidth, surgeHeight);
 
                 // icons
                 int cost = surge.Cost;
@@ -49,6 +50,14 @@ namespace Descent.GUI.SubElements
                 surgeBox.AddText(surgeBox.Name, ": " + surge.Ability.ToString(), new Vector2(costX, surgeBox.Bound.Y + 5));
 
                 AddChild(surgeBox);
+
+                // click event
+                surgeBox.SetClickAction(surgeBox.Name, (n, g) =>
+                                                           {
+                                                               System.Diagnostics.Debug.WriteLine(id);
+                                                               /*
+                                                               n.EventManager.QueueEvent(EventType.SurgeAbilityClicked, new SurgeAbilityEventArgs(id));*/
+                                                           });
 
                 // ready for next ability
                 if (!left) yPos += height;
