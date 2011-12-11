@@ -70,7 +70,7 @@ namespace Descent.Model.Board.Marker
         /// </exception>
         public override void PickUp(Hero hero)
         {
-            Player.Player.Instance.EventManager.QueueEvent(EventType.GiveEquipment, new GiveEquipmentEventArgs(Player.Player.Instance.HeroParty.GetPlayerId(hero), potion.Id, true));
+            hero.Inventory.EquipPotion(potion);
         }
         
         #endregion

@@ -26,6 +26,8 @@ namespace Descent.State
     /// </author>
     public class GameState
     {
+        private static Random random = new Random();
+
         private List<Equipment> currentEquipment = new List<Equipment>();
         private List<OverlordCard> overlordCards = new List<OverlordCard>();
         private List<Hero> heroes = new List<Hero>();
@@ -94,7 +96,7 @@ namespace Descent.State
         {
             Random r = new Random(DateTime.Now.Millisecond);
             int n = chestsLeft.Count(c => c.Rarity == rarity);
-            Chest chest = chestsLeft.Where(c1 => c1.Rarity == rarity).ToArray()[n];
+            Chest chest = chestsLeft.Where(c1 => c1.Rarity == rarity).ToArray()[r.Next(n)];
             // TODO Make sure that the chest is removed from the list of chests left at all clients
             return chest.Id;
         }
@@ -105,18 +107,22 @@ namespace Descent.State
         /// </summary>
         /// <param name="chestId">Id of the chest.</param>
         /// <returns>{conquest tokens, coins, curses, treasures}</returns>
-        public int[] getChestContents(int chestId)
+        public Chest getChest(int chestId)
         {
-            // TODO: This should just return the chest itself?
             Chest c = FullModel.AllChests.Single(i => i.Id == chestId);
             chestsLeft.Remove(c);
-            return new int[]{c.ConquestTokens, c.Coin, c.Curses, c.Treasures};
+            return c;
         }
 
         public Treasure getTreasure(int treasureId)
         {
             //TODO
             return null;
+        }
+
+        public Treasure[] getTreasures(int numberOfTreasures, EquipmentRarity rarity)
+        {
+            return treasures.Where(treasure => treasure.Rarity == rarity).OrderBy(t => random.Next()).Take(numberOfTreasures).ToArray();
         }
 
         public void RemoveEquipment(int equipmentId)
