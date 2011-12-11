@@ -301,6 +301,17 @@ namespace Descent.State
                         }
                         break;
                     }
+                case State.WaitForDiceChoice:
+                    {
+                        if (gameState.CurrentPlayer == Player.Instance.Id)
+                        {
+                            root.SetClickAction("finish", (n, g) =>
+                                                              {
+                                                                  int x = gameState.CurrentAttack.//TODO: get coordinates for damage
+                                                                  n.EventManager.QueueEvent(EventType.SendDamage, new DamageEventArgs());
+                                                              });
+                        }
+                    }
             }
 
             gui.ChangeStateGUI(root); // change the GUI's state element.
