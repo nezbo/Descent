@@ -166,6 +166,8 @@ namespace Descent.Messaging.Events
 
     public delegate void OpenDoorHandler(object sender, CoordinatesEventArgs eventArgs);
 
+    public delegate void PickupMarkerHandler(object sender, CoordinatesEventArgs eventArgs);
+
     #endregion
 
     #region Attacking
@@ -341,6 +343,10 @@ namespace Descent.Messaging.Events
         public event OpenChestHandler OpenChestEvent;
 
         public event OpenDoorHandler OpenDoorEvent;
+
+        public event PickupMarkerHandler PickupMarkerEvent;
+
+        // Attack
 
         public event AttackSquareHandler AttackSquareEvent;
 
@@ -661,6 +667,9 @@ namespace Descent.Messaging.Events
                 case EventType.OpenDoor:
                     if (OpenDoorEvent != null) OpenDoorEvent(this, (CoordinatesEventArgs)eventArgs);
                     break;
+                case EventType.PickupMarker:
+                    if (PickupMarkerEvent != null) PickupMarkerEvent(this, (CoordinatesEventArgs)eventArgs);
+                    break;
                 case EventType.AttackSquare:
                     if (AttackSquareEvent != null) AttackSquareEvent(this, (CoordinatesEventArgs)eventArgs);
                     break;
@@ -860,6 +869,8 @@ namespace Descent.Messaging.Events
                 case EventType.OpenChest:
                     return new ChestEventArgs(args);
                 case EventType.OpenDoor:
+                    return new CoordinatesEventArgs(args);
+                case EventType.PickupMarker:
                     return new CoordinatesEventArgs(args);
                 case EventType.AttackSquare:
                     return new CoordinatesEventArgs(args);
