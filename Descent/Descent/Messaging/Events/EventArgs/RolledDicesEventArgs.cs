@@ -28,7 +28,7 @@ namespace Descent.Messaging.Events
 
         public RolledDicesEventArgs(string[] stringArgs)
         {
-            Contract.Requires(stringArgs.Length == 1);
+            Contract.Requires(stringArgs.Length >= 1);
             PopulateWithArgs(stringArgs);
         }
 
@@ -37,7 +37,7 @@ namespace Descent.Messaging.Events
 
         public override void PopulateWithArgs(string[] stringArgs)
         {
-            Contract.Requires(stringArgs.Length >= 2);
+            Contract.Requires(stringArgs.Length >= 1);
 
             RolledSides = new int[stringArgs.Length];
 

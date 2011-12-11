@@ -1189,6 +1189,10 @@ namespace Descent.State
             Contract.Requires(CurrentState == State.WaitForDiceChoice);
             Contract.Ensures(CurrentState == Contract.OldValue(CurrentState));
 
+            Dice dice = FullModel.GetDice(EDice.B);
+            dice.RollDice();
+            gameState.CurrentAttack.DiceForAttack.Add(dice);
+            Player.Instance.HeroParty.Heroes[gameState.CurrentPlayer].RemoveFatigue(1);
 
             stateMachine.PlaceStates(State.BuyExtraDice, State.WaitForDiceChoice);
             stateMachine.ChangeToNextState();
@@ -1199,13 +1203,17 @@ namespace Descent.State
         {
             Contract.Requires(CurrentState == State.WaitForDiceChoice);
             Contract.Requires(gameState.CurrentAttack.DiceForAttack[eventArgs.DiceId].Color == EDice.B);
+            Contract.Requires(gameState.CurrentAttack.DiceForAttack[eventArgs.DiceId].SideIndex != 0 &&
+                             (gameState.CurrentAttack.DiceForAttack[eventArgs.DiceId].SideIndex < 4 ||
+                              gameState.CurrentAttack.DiceForAttack[eventArgs.DiceId].SideIndex > 5));
             Contract.Requires(gameState.CurrentPlayer == eventArgs.SenderId);
             Contract.Ensures(CurrentState == Contract.OldValue(CurrentState));
+            Contract.Ensures(gameState.CurrentAttack.DiceForAttack[eventArgs.DiceId].SideIndex ==
+                            (Contract.OldValue(gameState.CurrentAttack.DiceForAttack[eventArgs.DiceId].SideIndex) < 7 ? 7 : 6));
 
             gameState.CurrentAttack.DiceForAttack[eventArgs.DiceId].SideIndex = eventArgs.SideId;
             StateChanged();
         }
-
 
         #endregion
 
