@@ -518,7 +518,12 @@
         /// Gets an attack instance with the attacking figure, 
         /// different bonuses, and the dice attacking
         /// </summary>
-        /// <returns></returns>
+        /// <param name="targetSquare">
+        /// The target point where the figure is attacking
+        /// </param>
+        /// <returns>
+        /// An attack instance, with the bonuses for damage, range, pierce and surges laid in.
+        /// </returns>
         public Attack GetAttack(Point targetSquare)
         {
             return new Attack(this, targetSquare)
