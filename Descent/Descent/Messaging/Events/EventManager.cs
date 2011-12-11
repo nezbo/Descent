@@ -178,7 +178,7 @@ namespace Descent.Messaging.Events
 
     public delegate void DamageTakenHandler(object sender, DamageTakenEventArgs eventArgs);
 
-    public delegate void MissedAttackHandler(object sender, PlayerEventArgs eventArgs);
+    public delegate void MissedAttackHandler(object sender, GameEventArgs eventArgs);
 
     public delegate void BoughtDiceHandler(object sender, GameEventArgs eventArgs);
 
@@ -187,6 +187,8 @@ namespace Descent.Messaging.Events
     public delegate void InflictWoundsHandler(object sender, InflictWoundsEventArgs eventArgs);
 
     public delegate void WasKilledHandler(object sender, CoordinatesEventArgs eventArgs);
+
+    public delegate void FinishedAttackHandler(object sender, GameEventArgs eventArgs);
 
     #endregion
 
@@ -360,6 +362,8 @@ namespace Descent.Messaging.Events
 
         public event BoughtMovementHandler BoughtMovementEvent;
 
+        public event FinishedAttackHandler FinishedAttackEvent;
+
         // Other
 
         public event AllRespondedNoActionHandler AllRespondedNoActionEvent;
@@ -375,6 +379,8 @@ namespace Descent.Messaging.Events
         public event DiceClickedHandler DiceClickedEvent;
 
         public event SurgeAbilityClickedHandler SurgeAbilityClickedEvent;
+
+        public event DoAttackHandler DoAttackEvent;
 
         #endregion
 
@@ -674,7 +680,7 @@ namespace Descent.Messaging.Events
                     if (WasKilledEvent != null) WasKilledEvent(this, (CoordinatesEventArgs)eventArgs);
                     break;
                 case EventType.MissedAttack:
-                    if (MissedAttackEvent != null) MissedAttackEvent(this, (PlayerEventArgs)eventArgs);
+                    if (MissedAttackEvent != null) MissedAttackEvent(this, (GameEventArgs)eventArgs);
                     break;
                 case EventType.BoughtDice:
                     if (BoughtDiceEvent != null) BoughtDiceEvent(this, eventArgs);
@@ -684,6 +690,9 @@ namespace Descent.Messaging.Events
                     break;
                 case EventType.BoughtMovement:
                     if (BoughtMovementEvent != null) BoughtMovementEvent(this, eventArgs);
+                    break;
+                case EventType.FinishedAttack:
+                    if (FinishedAttackEvent != null) FinishedAttackEvent(this, eventArgs);
                     break;
                 case EventType.SquareMarked:
                     if (SquareMarkedEvent != null) SquareMarkedEvent(this, (CoordinatesEventArgs)eventArgs);
@@ -699,6 +708,9 @@ namespace Descent.Messaging.Events
                     break;
                 case EventType.SurgeAbilityClicked:
                     if (SurgeAbilityClickedEvent != null) SurgeAbilityClickedEvent(this, (SurgeAbilityEventArgs)eventArgs);
+                    break;
+                case EventType.DoAttack:
+                    if (DoAttackEvent != null) DoAttackEvent(this, eventArgs);
                     break;
             }
 
@@ -861,8 +873,6 @@ namespace Descent.Messaging.Events
                     return new DamageTakenEventArgs(args); 
                 case EventType.WasKilled:
                     return new CoordinatesEventArgs(args);
-                case EventType.MissedAttack:
-                    return new PlayerEventArgs(args);
                 case EventType.ChangedBlackDiceSide:
                     return new DiceEventArgs(args);
                 case EventType.SquareMarked:

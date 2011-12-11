@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 using Descent.Model.Board;
@@ -40,35 +41,36 @@ namespace Descent.State
             this.gui = gui;
 
             // subscribe for events
-            eventManager.PlayerJoinedEvent += new PlayerJoinedHandler(PlayerJoined);
-            eventManager.PlayersInGameEvent += new PlayersInGameHandler(PlayersInGame);
-            eventManager.ReadyEvent += new ReadyHandler(BeginGame);
-            eventManager.BeginGameEvent += new BeginGameHandler(BeginGame);
-            eventManager.OverlordIsEvent += new OverlordIsHandler(OverLordIs);
-            eventManager.GiveOverlordCardsEvent += new GiveOverlordCardsHandler(GiveOverlordCards);
-            eventManager.AssignHeroEvent += new AssignHeroHandler(AssignHero);
-            eventManager.RequestBuyEquipmentEvent += new RequestBuyEquipmentHandler(RequestBuyEquipment);
-            eventManager.GiveEquipmentEvent += new GiveEquipmentHandler(GiveEquipment);
-            eventManager.FinishedBuyEvent += new FinishedBuyHandler(FinishedBuy);
-            eventManager.FinishedReequipEvent += new FinishedReequipHandler(FinishedReequip);
-            eventManager.SwitchItemsEvent += new SwitchItemsHandler(SwitchItems);
-            eventManager.RequestPlacementEvent += new RequestPlacementHandler(RequestPlacement);
-            eventManager.PlaceHeroEvent += new PlaceHeroHandler(PlaceHero);
-            eventManager.NewRoundEvent += new NewRoundHandler(NewRound);
-            eventManager.RequestTurnEvent += new RequestTurnHandler(RequestTurn);
-            eventManager.TurnChangedEvent += new TurnChangedHandler(TurnChanged);
-            eventManager.ChooseActionEvent += new ChooseActionHandler(ChooseAction);
-            eventManager.MoveToEvent += new MoveToHandler(MoveTo);
-            eventManager.OpenDoorEvent += new OpenDoorHandler(OpenDoor);
-            eventManager.FinishedTurnEvent += new FinishedTurnHandler(FinishedTurn);
-            eventManager.StartMonsterTurnEvent += new StartMonsterTurnHandler(StartMonsterTurn);
-            eventManager.UseOverlordCardEvent += new UseOvelordCardHandler(OverLordPlayCard);
-            eventManager.EndMonsterTurnEvent += new EndMonsterTurnHandler(EndMonsterTurn);
-            eventManager.AttackSquareEvent += new AttackSquareHandler(AttackSquare);
-            eventManager.RolledDicesEvent += new RolledDicesHandler(RolledDices);
-            eventManager.BoughtDiceEvent += new BoughtDiceHandler(BoughtDice);
-            eventManager.BoughtMovementEvent += new BoughtMovementHandler(BoughtMovement);
-            eventManager.ChangedBlackDiceSideEvent += new ChangedBlackDiceSideHandler(ChangedBlackDiceSide);
+            eventManager.PlayerJoinedEvent += PlayerJoined;
+            eventManager.PlayersInGameEvent += PlayersInGame;
+            eventManager.ReadyEvent += BeginGame;
+            eventManager.BeginGameEvent += BeginGame;
+            eventManager.OverlordIsEvent += OverLordIs;
+            eventManager.GiveOverlordCardsEvent += GiveOverlordCards;
+            eventManager.AssignHeroEvent += AssignHero;
+            eventManager.RequestBuyEquipmentEvent += RequestBuyEquipment;
+            eventManager.GiveEquipmentEvent += GiveEquipment;
+            eventManager.FinishedBuyEvent += FinishedBuy;
+            eventManager.FinishedReequipEvent += FinishedReequip;
+            eventManager.SwitchItemsEvent += SwitchItems;
+            eventManager.RequestPlacementEvent += RequestPlacement;
+            eventManager.PlaceHeroEvent += PlaceHero;
+            eventManager.NewRoundEvent += NewRound;
+            eventManager.RequestTurnEvent += RequestTurn;
+            eventManager.TurnChangedEvent += TurnChanged;
+            eventManager.ChooseActionEvent += ChooseAction;
+            eventManager.MoveToEvent += MoveTo;
+            eventManager.OpenDoorEvent += OpenDoor;
+            eventManager.FinishedTurnEvent += FinishedTurn;
+            eventManager.StartMonsterTurnEvent += StartMonsterTurn;
+            eventManager.UseOverlordCardEvent += OverLordPlayCard;
+            eventManager.EndMonsterTurnEvent += EndMonsterTurn;
+            eventManager.AttackSquareEvent += AttackSquare;
+            eventManager.RolledDicesEvent += RolledDices;
+            eventManager.BoughtDiceEvent += BoughtDice;
+            eventManager.BoughtMovementEvent += BoughtMovement;
+            eventManager.ChangedBlackDiceSideEvent += ChangedBlackDiceSide;
+            eventManager.InflictWoundsEvent += InflictWounds;
 
             // Internal events
             eventManager.SquareMarkedEvent += new SquareMarkedHandler(SquareMarked);
@@ -426,13 +428,19 @@ namespace Descent.State
 
                     break;
                 case State.WaitForOverlordChooseAction:
-                    // If a square with a monster is pressed in an overlord turn and we are the overlord, a monster turn should begin.
-                    Square s = FullModel.Board[eventArgs.X, eventArgs.Y];
-                    if (Player.Instance.IsOverlord && s.Figure != null && s.Figure is Monster && FullModel.Board.SquareVisibleByPlayers(eventArgs.X, eventArgs.Y) && monstersRemaining.Contains(s.Figure))
+
+                    if (FullModel.Board.IsSquareWithinBoard(eventArgs.X, eventArgs.Y))
                     {
-                        eventManager.QueueEvent(EventType.StartMonsterTurn, new CoordinatesEventArgs(eventArgs.X, eventArgs.Y));
+                        Square s = FullModel.Board[eventArgs.X, eventArgs.Y];
+
+                        // If a square with a monster is pressed in an overlord turn and we are the overlord, a monster turn should begin.
+                        if (Player.Instance.IsOverlord && s.Figure != null && s.Figure is Monster && FullModel.Board.SquareVisibleByPlayers(eventArgs.X, eventArgs.Y) && monstersRemaining.Contains(s.Figure))
+                        {
+                            eventManager.QueueEvent(EventType.StartMonsterTurn, new CoordinatesEventArgs(eventArgs.X, eventArgs.Y));
+                        }
                     }
-                    break;
+
+                    break; 
             }
         }
 
@@ -526,6 +534,9 @@ namespace Descent.State
             Contract.Requires(CurrentState == State.WaitForDiceChoice);
             Contract.Ensures(CurrentState == Contract.OldValue(CurrentState));
 
+            // Do not act on dice click if it's not the players turn.
+            if (!HasTurn()) return;
+
             Dice dice = gameState.CurrentAttack.DiceForAttack[eventArgs.DiceId];
             if (dice.Color == EDice.B)
             {
@@ -551,7 +562,9 @@ namespace Descent.State
 
             Point targetSquare = gameState.CurrentAttack.TargetSquare;
 
-            //eventManager.QueueEvent(EventType.InflictWounds, new CoordinatesEventArgs(targetSquare.X, targetSquare.Y));
+            // TODO Save information about target(s)
+
+            eventManager.QueueEvent(EventType.InflictWounds, new CoordinatesEventArgs(targetSquare.X, targetSquare.Y));
         }
 
 
@@ -1055,6 +1068,7 @@ namespace Descent.State
         {
             gui.ClearMarks();
 
+            /* TODO Remove this - debug only
             for (int x = 0; x < FullModel.Board.Width; x++)
             {
                 for (int y = 0; y < FullModel.Board.Height; y++)
@@ -1066,6 +1080,7 @@ namespace Descent.State
                 }
             }
             return;
+            */
 
             if (currentMonster == null)
             {
@@ -1284,7 +1299,33 @@ namespace Descent.State
             StateChanged();
         }
 
+        private void InflictWounds(object sender, InflictWoundsEventArgs eventArgs)
+        {
+            Contract.Requires(CurrentState == State.InflictWounds);
+            Contract.Requires(gameState.CurrentPlayer == eventArgs.SenderId);
+            Contract.Ensures(CurrentState == Contract.OldValue(CurrentState));
 
+            Figure figure = FullModel.Board[eventArgs.X, eventArgs.Y].Figure;
+
+            int damage = eventArgs.Damage - (int)MathHelper.Clamp(figure.Armor - eventArgs.Pierce, 0, figure.Armor);
+
+            if (!Player.Instance.IsOverlord &&
+                Player.Instance.Hero.Inventory.Shield != null &&
+                !Player.Instance.Hero.Inventory.Shield.Tapped &&
+                damage >= 1) // TODO get real armor value
+            {
+                damage -= 1; // TODO get real armor value
+            }
+
+            if (damage >= figure.Health)
+            {
+                eventManager.QueueEvent(EventType.WasKilled, new CoordinatesEventArgs(eventArgs.X, eventArgs.Y));
+            }
+            else
+            {
+                eventManager.QueueEvent(EventType.DamageTaken, new DamageTakenEventArgs(eventArgs.X, eventArgs.Y, damage));
+            }
+        }
 
         #endregion
 
