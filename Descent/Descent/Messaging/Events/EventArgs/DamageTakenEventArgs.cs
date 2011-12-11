@@ -15,9 +15,9 @@ namespace Descent.Messaging.Events
     /// <summary>
     /// The event arguments for the GiveOverlordCards event.
     /// </summary>
-    public sealed class DamageEventArgs : GameEventArgs
+    public sealed class DamageTakenEventArgs : GameEventArgs
     {
-        public DamageEventArgs(int x, int y, int damage)
+        public DamageTakenEventArgs(int x, int y, int damage)
         {
             Contract.Requires(x >= 0);
             Contract.Requires(y >= 0);
@@ -28,7 +28,7 @@ namespace Descent.Messaging.Events
             Damage = damage;
         }
 
-        public DamageEventArgs(string[] stringArgs)
+        public DamageTakenEventArgs(string[] stringArgs)
         {
             Contract.Requires(stringArgs.Length == 3);
             PopulateWithArgs(stringArgs);

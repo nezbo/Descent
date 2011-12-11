@@ -174,19 +174,19 @@ namespace Descent.Messaging.Events
 
     public delegate void RolledDicesHandler(object sender, RolledDicesEventArgs eventArgs);
 
-    public delegate void SendDamageHandler(object sender, DamageEventArgs eventArgs);
-
     public delegate void RerollDicesHandler(object sender, RerollDicesEventArgs eventArgs);
 
-    public delegate void KilledFigureHandler(object sender, CoordinatesEventArgs eventArgs);
-
-    public delegate void DamageTakenHandler(object sender, DamageEventArgs eventArgs);
+    public delegate void DamageTakenHandler(object sender, DamageTakenEventArgs eventArgs);
 
     public delegate void MissedAttackHandler(object sender, PlayerEventArgs eventArgs);
 
     public delegate void BoughtDiceHandler(object sender, GameEventArgs eventArgs);
 
     public delegate void ChangedBlackDiceSideHandler(object sender, DiceEventArgs eventArgs);
+
+    public delegate void InflictWoundsHandler(object sender, InflictWoundsEventArgs eventArgs);
+
+    public delegate void WasKilledHandler(object sender, CoordinatesEventArgs eventArgs);
 
     #endregion
 
@@ -200,6 +200,8 @@ namespace Descent.Messaging.Events
 
     public delegate void DiceClickedHandler(object sender, DiceEventArgs eventArgs);
 
+    public delegate void DoAttackHandler(object sender, GameEventArgs eventArgs);
+
     #endregion
 
     public delegate void AllRespondedNoActionHandler(object sender, EventArgs eventArgs); // Special delegate, contains no eventArgs info.
@@ -210,7 +212,7 @@ namespace Descent.Messaging.Events
     /// </summary>
     public class EventManager
     {
-        private readonly EventType[] localOnly = new EventType[] { EventType.SquareMarked, EventType.InventoryFieldMarked, EventType.FatigueClicked };
+        private readonly EventType[] internalOnly = new EventType[] { EventType.SquareMarked, EventType.InventoryFieldMarked, EventType.FatigueClicked, EventType.DiceClicked, EventType.DoAttack };
         private readonly EventType[] needResponses = new EventType[] { };
 
         private Queue<QueuedEvent> queue = new Queue<QueuedEvent>();
@@ -340,13 +342,13 @@ namespace Descent.Messaging.Events
 
         public event RolledDicesHandler RolledDicesEvent;
 
-        public event SendDamageHandler SendDamageEvent;
-
         public event RerollDicesHandler RerollDicesEvent;
 
-        public event KilledFigureHandler KilledFigureEvent;
-
         public event DamageTakenHandler DamageTakenEvent;
+
+        public event InflictWoundsHandler InflictWoundsEvent;
+
+        public event WasKilledHandler WasKilledEvent;
 
         public event MissedAttackHandler MissedAttackEvent;
 
@@ -655,17 +657,17 @@ namespace Descent.Messaging.Events
                 case EventType.RolledDices:
                     if (RolledDicesEvent != null) RolledDicesEvent(this, (RolledDicesEventArgs)eventArgs);
                     break;
-                case EventType.SendDamage:
-                    if (SendDamageEvent != null) SendDamageEvent(this, (DamageEventArgs)eventArgs);
+                case EventType.InflictWounds:
+                    if (InflictWoundsEvent != null) InflictWoundsEvent(this, (InflictWoundsEventArgs)eventArgs);
                     break;
                 case EventType.RerollDices:
                     if (RerollDicesEvent != null) RerollDicesEvent(this, (RerollDicesEventArgs)eventArgs);
                     break;
-                case EventType.KilledFigure:
-                    if (KilledFigureEvent != null) KilledFigureEvent(this, (CoordinatesEventArgs)eventArgs);
-                    break;
                 case EventType.DamageTaken:
-                    if (DamageTakenEvent != null) DamageTakenEvent(this, (DamageEventArgs)eventArgs);
+                    if (DamageTakenEvent != null) DamageTakenEvent(this, (DamageTakenEventArgs)eventArgs);
+                    break;
+                case EventType.WasKilled:
+                    if (WasKilledEvent != null) WasKilledEvent(this, (CoordinatesEventArgs)eventArgs);
                     break;
                 case EventType.MissedAttack:
                     if (MissedAttackEvent != null) MissedAttackEvent(this, (PlayerEventArgs)eventArgs);
@@ -693,7 +695,7 @@ namespace Descent.Messaging.Events
                     break;
             }
 
-            if (sendOnNetwork && !localOnly.Contains(eventType))
+            if (sendOnNetwork && !this.internalOnly.Contains(eventType))
             {
                 Player.Instance.Connection.SendString(EncodeMessage(eventType, eventArgs));
             }
@@ -844,14 +846,14 @@ namespace Descent.Messaging.Events
                     return new CoordinatesEventArgs(args);
                 case EventType.RolledDices:
                     return new RolledDicesEventArgs(args);
-                case EventType.SendDamage:
-                    return new DamageEventArgs(args);
+                case EventType.InflictWounds:
+                    return new InflictWoundsEventArgs(args);
                 case EventType.RerollDices:
                     return new RerollDicesEventArgs(args);
-                case EventType.KilledFigure:
-                    return new CoordinatesEventArgs(args);
                 case EventType.DamageTaken:
-                    return new DamageEventArgs(args);
+                    return new DamageTakenEventArgs(args); 
+                case EventType.WasKilled:
+                    return new CoordinatesEventArgs(args);
                 case EventType.MissedAttack:
                     return new PlayerEventArgs(args);
                 case EventType.ChangedBlackDiceSide:
