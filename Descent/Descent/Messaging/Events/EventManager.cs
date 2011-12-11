@@ -138,7 +138,7 @@ namespace Descent.Messaging.Events
 
     public delegate void SwitchItemsHandler(object sender, SwitchItemsEventArgs eventArgs);
 
-    public delegate void BoughtMovementHandler(object sender, DiceEventArgs eventArgs);
+    public delegate void BoughtMovementHandler(object sender, GameEventArgs eventArgs);
 
     #endregion
 
