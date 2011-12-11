@@ -269,7 +269,7 @@ namespace Descent.Model
             int n = int.Parse(reader.ReadLine());
 
             // Instantiating all lists
-            Dictionary<EquipmentRarity, List<Treasure>> treasures = new Dictionary<EquipmentRarity, List<Treasure>>();
+            treasures = new Dictionary<EquipmentRarity, List<Treasure>>();
             foreach (EquipmentRarity rarity in Enum.GetValues(typeof(EquipmentRarity)))
             {
                 treasures[rarity] = new List<Treasure>();
