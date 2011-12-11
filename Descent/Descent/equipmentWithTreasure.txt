@@ -44,7 +44,7 @@
 //42,Treasure Cache,Silver,,,,,,1,,Recieve:Coin 50/Recieve:PotionHealing/Recieve:TreasureSilver
 //43,Treasure Cache,Silver,,,,,,1,,Recieve:Coin 100/Recieve:TreasureSilver
 //44,Treasure Cache,Silver,,,,,,1,,Recieve:Coin 50/Recieve:PotionVitality/Recieve:TreasureSilver
-45,Curse of Rot,Gold,Weapon,Rune,MAGIC,1000,2,1,W G G Y,Pierce 4,1 Damage 1/Pierce 1
+45,Curse of Rot,Gold,Weapon,Rune,MAGIC,1000,2,1,W G G Y,Pierce 4,1 Damage 1/1 Pierce 1
 //46,Shield of the Warrior,Gold,Shield,,,1000,1,1,,When(TakingDamage&Attack.Damage(Not(IgnoreArmor):Exhaust&CancelDamage:4,
 //47,Ring of Arcane,Gold,Other,,,1000,,1,,When(MakingAttack(Type=MAGIC))Gain:Range 2&Gain:Damage 2
 //48,Jinn's Lamp,Gold,Other,,,1000,,1,,When(State=EndOfTurn):Dicard&For(Hero withing 1 spaces):Gain:Health 8&Gain:Fatigue 1000
