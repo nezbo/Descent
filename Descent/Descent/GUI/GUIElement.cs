@@ -315,10 +315,6 @@ namespace Descent.GUI
 
             if (Name == target)
             {
-                if (Name == "monster summary")
-                {
-
-                }
                 texts.Add(new Text(WordWrap(text, position), new Vector2(position.X + Bound.X, position.Y + Bound.Y), color));
             }
             foreach (GUIElement e in children) e.AddText(target, text, position);

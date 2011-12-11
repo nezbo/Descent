@@ -105,7 +105,7 @@ namespace Descent.GUI
                             root.AddText("start", "Start Game", new Vector2(0, 0));
 
                             string ipString = "";
-                            foreach (string ip in Player.Instance.Connection.Ips) ipString += ip + "\n";
+                            foreach (string ip in Player.Instance.Connection.Ips) ipString += (ip + "\n");
                             root.AddText(box.Name, ipString, new Vector2(10, 10));
                         }
 
