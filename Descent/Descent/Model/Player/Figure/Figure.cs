@@ -541,10 +541,7 @@
         /// <returns>
         /// Returns the EAttackType of this figure
         /// </returns>
-        public virtual EAttackType AttackType()
-        {
-            return EAttackType.NONE;
-        }
+        public abstract EAttackType AttackType { get; }
 
         /// <summary>
         /// Checks that a lot of numbers are zero or 

@@ -11,7 +11,7 @@
 10,Iron Shield,Common,Shield,,,25,1,2,,Armor 1,
 50
 11,Bane,Bronze,Weapon,Rune,MAGIC,500,2,1,W G,,2 Blast 1
-//12,Belt of Strength,Bronze,Other,500,,,,1,,When(MakingAttack(Type=MELEE)):Damage 1,
+//12,Belt of Strength,Bronze,Other,500,,,,1,,When MakingAttack Type MELEE Damage 1,
 13,Bone Blade,Bronze,Weapon,,MELEE,500,1,1,R G,,1 Damage 1
 //14,Cloak of Deception,Bronze,Amor,,,500,,,1,,Armor 1/WhenTakingDamage:??,
 //15,Crystal of Tival,Bronze,Other,,,500,,2,,When(Equipped(State=StartOfTurn))):Discard&Hero.Health??

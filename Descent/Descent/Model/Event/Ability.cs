@@ -39,42 +39,43 @@ namespace Descent.Model.Event
             string[] data = abilityString.Split(' ');
             Ability ability = new Ability();
 
-            if (abilityString.StartsWith("When"))
+            for (int i = 0; i < data.Length; i++)
             {
-                ability.trigger = GetTrigger(abilityString, ability);
-                ability.triggered = true;
+                switch (data[i])
+                {
+                    case "When":
+                        ability.triggered = true;
+                        break;
+                    case "MakingAttacking":
+                        ability.trigger += ability.WhenAttacking;
+                        break;
+                    case "IfType":
+                        EAttackType.TryParse(data[++i], true, out ability.type);
+                        ability.trigger += ability.IfType;
+                        break;
+                    case "Damage":
+                        ability.bonus = AbilityBonus.Damage;
+                        ability.amount = int.Parse(data[++i]);
+                        break;
+                    case "Pierce":
+                        ability.bonus = AbilityBonus.Pierce;
+                        ability.amount = int.Parse(data[++i]);
+                        break;
+                    case "Range":
+                        ability.bonus = AbilityBonus.Range;
+                        ability.amount = int.Parse(data[++i]);
+                        break;
+                    case "Surge":
+                        ability.bonus = AbilityBonus.Surge;
+                        ability.amount = int.Parse(data[++i]);
+                        break;
+                    case "QuickShot":
+                        ability.bonus = AbilityBonus.QuickShot;
+                        break;
+                }
             }
 
-            switch (data[0])
-            {
-                case "WhenAttacking":
-                    ability.trigger += ability.WhenAttacking;
-                    ability.triggered = true;
-                    break;
-                case "IfType":
-                    EAttackType.TryParse(data[1], true, out ability.type);
-                    ability.trigger += ability.IfType;
-                    break;
-                case "Damage":
-                    ability.bonus = AbilityBonus.Damage;
-                    ability.amount = int.Parse(data[1]);
-                    break;
-                case "Pierce":
-                    ability.bonus = AbilityBonus.Pierce;
-                    ability.amount = int.Parse(data[1]);
-                    break;
-                case "Range":
-                    ability.bonus = AbilityBonus.Range;
-                    ability.amount = int.Parse(data[1]);
-                    break;
-                case "Surge":
-                    ability.bonus = AbilityBonus.Surge;
-                    ability.amount = int.Parse(data[1]);
-                    break;
-                case "QuickShot":
-                    ability.bonus = AbilityBonus.QuickShot;
-                    break;
-            }
+
 
             return ability;
         }
@@ -177,12 +178,13 @@ namespace Descent.Model.Event
 
         bool WhenAttacking()
         {
+            // TODO: return Player.Instance.StateManager.GameState.CurrentAttack != null && Player.Instance.StateManager.GameState.CurrentPlayer;
             return true;
         }
 
         bool IfType()
         {
-            return figure.AttackType().Equals(type);
+            return figure.AttackType.Equals(type);
         }
 
 
