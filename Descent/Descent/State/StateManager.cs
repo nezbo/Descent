@@ -504,8 +504,8 @@ namespace Descent.State
                             equipment2 = hero.Inventory[parsedId2];
                         }
 
-                        if ((realId2 > 99 || equipment1 == null || inventory.CanEquipAtIndex(parsedId2, equipment1) &&
-                        (realId1 > 99 || equipment2 == null || inventory.CanEquipAtIndex(parsedId1, equipment2))))
+                        if ((realId2 > 99 || equipment1 == null || inventory.CanEquipAtIndex(parsedId2, equipment1)) &&
+                        (realId1 > 99 || equipment2 == null || inventory.CanEquipAtIndex(parsedId1, equipment2)))
                         {
                             eventManager.QueueEvent(EventType.SwitchItems, new SwitchItemsEventArgs(realId1, realId2));
                         }
@@ -771,6 +771,17 @@ namespace Descent.State
                 parsedId2 = (realId2 > 99) ? realId2 - 100 : realId2;
             Equipment equipment1 = (realId1 > 99) ? gameState.UnequippedEquipment(eventArgs.SenderId)[parsedId1] : hero.Inventory[parsedId1];
             Equipment equipment2 = (realId2 > 99) ? gameState.UnequippedEquipment(eventArgs.SenderId)[parsedId2] : hero.Inventory[parsedId2];
+
+            if (realId1 < 100)
+            {
+                hero.Inventory[parsedId1] = null;
+            }
+
+            if (realId2 < 100)
+            {
+                hero.Inventory[parsedId2] = null;
+            }
+            
 
             if (realId1 > 99)
             {
