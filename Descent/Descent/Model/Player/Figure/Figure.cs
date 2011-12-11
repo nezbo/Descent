@@ -484,9 +484,9 @@
         /// different bonuses, and the dice attacking
         /// </summary>
         /// <returns></returns>
-        public Attack GetAttack()
+        public Attack GetAttack(Point targetSquare)
         {
-            return new Attack(this)
+            return new Attack(this, targetSquare)
                 {
                     DamageBonus = DamageContribution == null ? 0 : DamageContribution.GetInvocationList().Cast<Bonus<int>>().Sum(bonus => bonus.Invoke()),
                     RangeBonus = RangeContribution == null ? 0 : RangeContribution.GetInvocationList().Cast<Bonus<int>>().Sum(bonus => bonus.Invoke()),
