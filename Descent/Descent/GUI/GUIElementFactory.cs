@@ -252,23 +252,28 @@ namespace Descent.GUI
                 case State.WaitForRollDice:
                     {
                         GUIElement box = new GUIElement(game, "box", RelW(g, 10), RelH(g, 10), RelW(g, 80), RelH(g, 60));
-                        GUIElement roll = new GUIElement(game, "roll", RelW(g, 75), RelH(g, 70), RelW(g, 10), RelH(g, 6));
-
+                        if (gameState.CurrentPlayer == Player.Instance.Id)
+                        {
+                            GUIElement roll = new GUIElement(game, "roll", RelW(g, 75), RelH(g, 70), RelW(g, 10), RelH(g, 6));
+                            root.AddChild(roll);
+                            root.AddText(roll.Name, "Roll", new Vector2(5, 5));
+                        }
                         root.AddChild(box);
-                        root.AddChild(roll);
 
-                        root.AddText(roll.Name, "Roll", new Vector2(5, 5));
                         break;
                     }
                 case State.WaitForDiceChoice:
                     {
                         GUIElement box = new AttackElement(game, gameState.CurrentAttack, RelW(g, 10), RelH(g, 10), RelW(g, 80), RelH(g, 60));
-                        GUIElement finish = new GUIElement(game, "finish", RelW(g, 75), RelH(g, 70), RelW(g, 10), RelH(g, 8));
 
+                        if (gameState.CurrentPlayer == Player.Instance.Id)
+                        {
+                            GUIElement finish = new GUIElement(game, "finish", RelW(g, 75), RelH(g, 70), RelW(g, 10), RelH(g, 8));
+                            root.AddChild(finish);
+                            root.AddText(finish.Name, "Inflict Wounds", new Vector2(5, 5));
+                        }
                         root.AddChild(box);
-                        root.AddChild(finish);
 
-                        root.AddText(finish.Name, "Inflict Wounds", new Vector2(5, 5));
                         break;
                     }
             }
@@ -288,7 +293,7 @@ namespace Descent.GUI
 
             if (role == Role.Overlord)
             {
-                // populate with overlord menus
+                root.AddChild(new OverlordElement(game));
             }
             else
             {

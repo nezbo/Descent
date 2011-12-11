@@ -4,6 +4,8 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using Microsoft.Xna.Framework;
+
 namespace Descent.Model.Event
 {
     using System.Collections.Generic;
@@ -38,6 +40,8 @@ namespace Descent.Model.Event
                 figure = value;
             }
         }
+
+        public Point TargetSquare { get; private set; }
 
         public int DamageBonus { get; set; }
 
@@ -79,11 +83,12 @@ namespace Descent.Model.Event
         /// <param name="attackingFigure">
         /// The attacking Figure.
         /// </param>
-        public Attack(Figure attackingFigure)
+        public Attack(Figure attackingFigure, Point targetSquare)
         {
             this.figure = attackingFigure;
             diceForAttack = figure.DiceForAttack;
             surgeAbilities = figure.SurgeAbilities;
+            this.TargetSquare = targetSquare;
         }
 
         /// <summary>

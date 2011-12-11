@@ -159,7 +159,6 @@ namespace Descent.Model
                 }
 
                 m.Initialize();
-                System.Diagnostics.Debug.WriteLine(m.GetAttack().ToString());
                 monsters.Add(m);
             }
 
