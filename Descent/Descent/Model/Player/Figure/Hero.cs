@@ -131,6 +131,14 @@ namespace Descent.Model.Player.Figure
             }
         }
 
+        public override EAttackType AttackType
+        {
+            get
+            {
+                return inventory[0] == null ? EAttackType.NONE : inventory[0].AttackType;
+            }
+        }
+
         #endregion
 
         #region Initialization

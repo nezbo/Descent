@@ -693,6 +693,7 @@ namespace Descent.Messaging.Events
                     break;
                 case EventType.FinishedAttack:
                     if (FinishedAttackEvent != null) FinishedAttackEvent(this, eventArgs);
+                    break;
                 case EventType.SquareMarked:
                     if (SquareMarkedEvent != null) SquareMarkedEvent(this, (CoordinatesEventArgs)eventArgs);
                     break;

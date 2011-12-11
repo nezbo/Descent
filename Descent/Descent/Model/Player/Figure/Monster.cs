@@ -47,6 +47,14 @@ namespace Descent.Model.Player.Figure
             }
         }
 
+        public override EAttackType AttackType
+        {
+            get
+            {
+                return attackType;
+            }
+        }
+
         #endregion
 
         #region Initialization

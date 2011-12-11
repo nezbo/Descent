@@ -4,8 +4,11 @@ namespace Descent.Model.Event
     using System.Collections.Generic;
     using System.Diagnostics.Contracts;
 
+    using Descent.Model.Player;
     using Descent.Model.Player.Figure;
     using Descent.Model.Player.Figure.HeroStuff;
+
+    using System.Linq;
 
     using Microsoft.Xna.Framework;
 
@@ -45,6 +48,14 @@ namespace Descent.Model.Event
         }
 
         public Point TargetSquare { get; private set; }
+
+        public int RangeNeeded
+        {
+            get
+            {
+                return FullModel.Board.Distance(FullModel.Board.FiguresOnBoard[figure], TargetSquare);
+            }
+        }
 
         public int DamageBonus { get; set; }
 
@@ -122,7 +133,9 @@ namespace Descent.Model.Event
             {
                 return surgeAbilities;
             }
-        } 
+        }
+
+        public bool MissedAttack { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Attack"/> class.
@@ -136,6 +149,7 @@ namespace Descent.Model.Event
             diceForAttack = figure.DiceForAttack;
             surgeAbilities = figure.SurgeAbilities;
             this.TargetSquare = targetSquare;
+            MissedAttack = false;
         }
 
         /// <summary>
@@ -159,6 +173,8 @@ namespace Descent.Model.Event
             {
                 dice.RollDice();
             }
+
+            MissedAttack = !DiceForAttack.All(d => d.ActiveSide[3] == 0);
         }
 
         private void CalculateStats()
@@ -184,7 +200,7 @@ namespace Descent.Model.Event
             this.CalculateStats();
             return figure.Name + 
                 "\nDamage: " + Damage + 
-                "\nRange: " + Range + 
+                (figure.AttackType != EAttackType.MELEE ? "\nRange: " + Range + " of " + RangeNeeded : string.Empty) + 
                 "\nPierce: " + Pierce +
                 "\nSurge: " + (Surge - UsedSurges);
         }

@@ -184,7 +184,7 @@ namespace Descent.Model.Event
 
         bool IfType()
         {
-            return figure.AttackType().Equals(type);
+            return figure.AttackType.Equals(type);
         }
 
 
