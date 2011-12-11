@@ -109,8 +109,9 @@ namespace Descent.GUI
                 }
                 mouseDownBefore = (ms.LeftButton == ButtonState.Pressed);
 
-                // key tuped
                 KeyboardState keyState = Keyboard.GetState();
+
+                // key tuped
                 List<Keys> pressed = new List<Keys>(keyState.GetPressedKeys());
                 foreach (Keys key in Enum.GetValues(typeof(Keys)))
                 {
