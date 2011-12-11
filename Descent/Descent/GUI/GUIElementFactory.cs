@@ -134,7 +134,7 @@ namespace Descent.GUI
                                     Equipment current = shopContent[x + y * 6];
                                     EquipmentElement eq = new EquipmentElement(game, startX + x * width + x * spacerX,
                                                                                startY + y * width + y * spacerY, width, width,
-                                                                               "Empty", current, x + y * 6 + 1000);
+                                                                               "", current, x + y * 6 + 1000);
                                     box.AddChild(eq);
                                 }
                             }
@@ -171,7 +171,7 @@ namespace Descent.GUI
                             for (int x = 0; x < boxes; x++)
                             {
                                 Equipment current = (x < unequipped.Length) ? unequipped[x] : null;
-                                EquipmentElement eq = GUIElementFactory.CreateEquipmentElement(game, startX + x * width + x * spacerX, startY, "Empty", current, x + 100);
+                                EquipmentElement eq = GUIElementFactory.CreateEquipmentElement(game, startX + x * width + x * spacerX, startY, "", current, x + 100);
                                 root.AddChild(eq);
                             }
 
