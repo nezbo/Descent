@@ -45,7 +45,7 @@ namespace Descent.State
             currentIndex++;
             if (Player.Instance.IsServer)
             {
-                Player.Instance.EventManager.QueueEvent(EventType.ChatMessage, new ChatMessageEventArgs("Changed state: "+CurrentState.ToString()));
+                //Player.Instance.EventManager.QueueEvent(EventType.ChatMessage, new ChatMessageEventArgs("Changed state: "+CurrentState.ToString()));
             }
             StateChanged();
         }
