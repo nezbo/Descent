@@ -31,7 +31,7 @@ namespace Descent.Model.Event
                 return figure;
             }
 
-            set
+            private set
             {
                 figure = value;
             }
@@ -57,17 +57,17 @@ namespace Descent.Model.Event
 
         public List<Dice> DiceForAttack
         {
-            get { return diceForAttack; }
+            get
+            {
+                return diceForAttack;
+            }
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Attack"/> class.
         /// </summary>
-        /// <param name="attackingHero">
-        /// The attacking hero
-        /// </param>
-        /// <param name="attackingSquare">
-        /// The point to the square the hero is attacking
+        /// <param name="attackingFigure">
+        /// The attacking Figure.
         /// </param>
         public Attack(Figure attackingFigure)
         {
