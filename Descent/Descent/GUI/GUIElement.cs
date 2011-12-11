@@ -121,13 +121,15 @@ namespace Descent.GUI
                 }
 
                 // ok, its within me
+
+                ActOnDirectClick(x, y);
+                if (onClick != null)
+                {
+                    onClick(Player.Instance, this);
+                }
+
                 if (drawBg)
                 {
-                    ActOnDirectClick(x, y);
-                    if (onClick != null)
-                    {
-                        onClick(Player.Instance, this);
-                    }
                     focus = true;
                     return true;
                 }

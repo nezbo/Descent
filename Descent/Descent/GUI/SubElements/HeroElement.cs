@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Descent.Messaging.Events;
 using Descent.Model.Player;
 using Descent.Model.Player.Figure;
 using Descent.Model.Player.Figure.HeroStuff;
@@ -37,7 +38,17 @@ namespace Descent.GUI.SubElements
 
             this.AddDrawable(this.Name, new Image(hero.BigTexture), new Vector2(0, this.Bound.Height - hero.BigTexture.Height));
             this.AddDrawable(this.Name, new Image(game.Content.Load<Texture2D>("Images/Other/health-small")), healthRect);
-            this.AddDrawable(this.Name, new Image(game.Content.Load<Texture2D>("Images/Other/fatigue-small")), fatigueRect);
+
+            GUIElement fatigueBox = new GUIElement(game, "fatigue", fatigueRect.X, fatigueRect.Y, fatigueRect.Width, fatigueRect.Height);
+            fatigueBox.SetDrawBackground(false);
+            fatigueBox.AddDrawable(fatigueBox.Name, new Image(game.Content.Load<Texture2D>("Images/Other/fatigue-small")), fatigueRect);
+            fatigueBox.SetClickAction(fatigueBox.Name, (n, g) =>
+                                                         {
+                                                             System.Diagnostics.Debug.WriteLine("Fatigue clicked!");
+                                                             n.EventManager.QueueEvent(EventType.FatigueClicked, new GameEventArgs());
+                                                         });
+            AddChild(fatigueBox);
+
             this.AddDrawable(this.Name, new Image(game.Content.Load<Texture2D>("Images/Other/movement-small")), movementRect);
             this.AddDrawable(this.Name, new Image(game.Content.Load<Texture2D>("Images/Other/attacks-small")), attacksRect);
 

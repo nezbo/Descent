@@ -43,6 +43,7 @@ namespace Descent.GUI.SubElements
                             diceBox.AddDrawable(diceBox.Name, die, new Vector2(diceBox.Bound.X, diceBox.Bound.Y));
                             diceBox.SetClickAction(diceBox.Name, (n, g) =>
                                                                      {
+                                                                         System.Diagnostics.Debug.WriteLine(d + "," + die.SideIndex);
                                                                          n.EventManager.QueueEvent(
                                                                              EventType.DiceClicked,
                                                                              new DiceEventArgs(d, die.SideIndex));
