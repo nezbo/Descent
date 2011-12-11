@@ -118,6 +118,7 @@
     <Compile Include="GUI\SubElements\EquipmentPanel.cs" />
     <Compile Include="GUI\SubElements\HeroElement.cs" />
     <Compile Include="GUI\SubElements\InputElement.cs" />
+    <Compile Include="GUI\SubElements\MonsterSummary.cs" />
     <Compile Include="GUI\SubElements\OverlordElement.cs" />
     <Compile Include="GUI\SubElements\OverlordSummary.cs" />
     <Compile Include="GUI\SubElements\PlayersElement.cs" />
