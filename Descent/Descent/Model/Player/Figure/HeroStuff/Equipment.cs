@@ -304,7 +304,6 @@ namespace Descent.Model.Player.Figure.HeroStuff
                         hero.Inventory.OtherItems.Contains(this) :
                             this.type == EquipmentType.Potion && hero.Inventory.Potions.Contains(this));
              * */
-            //TODO: Code to pass abilities on?
             hero.DiceContribution += diceContribution;
             equipped = true;
         }
@@ -320,6 +319,7 @@ namespace Descent.Model.Player.Figure.HeroStuff
             Contract.Requires(Equipped);
             Contract.Ensures(!Equipped);
             //TODO: Code to take abilities back!
+            hero.DiceContribution -= this.diceContribution;
             equipped = false;
         }
 

@@ -12,6 +12,7 @@ namespace Descent.Model.Event
     using System.Diagnostics.Contracts;
 
     using Descent.Model.Player.Figure;
+    using Descent.Model.Player.Figure.HeroStuff;
 
     /// <summary>
     /// An attack 
@@ -21,6 +22,8 @@ namespace Descent.Model.Event
         private Figure figure;
 
         private List<Dice> diceForAttack;
+
+        private List<SurgeAbility> surgeAbilities; 
 
         /// <summary>
         /// Gets or sets the hero that is attacking
@@ -66,6 +69,14 @@ namespace Descent.Model.Event
             }
         }
 
+        public List<SurgeAbility> SurgeAbilities
+        {
+            get
+            {
+                return surgeAbilities;
+            }
+        } 
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Attack"/> class.
         /// </summary>
@@ -76,6 +87,7 @@ namespace Descent.Model.Event
         {
             this.figure = attackingFigure;
             diceForAttack = figure.DiceForAttack;
+            surgeAbilities = figure.SurgeAbilities;
             this.TargetSquare = targetSquare;
         }
 
