@@ -153,6 +153,32 @@ namespace Descent.Model.Player.Figure.HeroStuff
             return equipment.Hands <= FreeHands;
         }
 
+        public bool CanEquipPotion
+        {
+            get
+            {
+                bool result = false;
+                for (int n = (int)EquipmentSlot.Potion; !result && n < (int)EquipmentSlot.Potion + 6; n++)
+                {
+                    result = this[n] == null;
+                }
+
+                return result;
+            }
+        }
+
+        public void EquipPotion(Equipment equipment)
+        {
+            for (int n = (int)EquipmentSlot.Potion; n < (int)EquipmentSlot.Potion + 6; n++)
+            {
+                if (this[n] == null)
+                {
+                    this[n] = equipment;
+                    equipment.EquipToHero(hero);
+                    return;
+                }
+            }
+        }
         /// <summary>
         /// Equip a weapon.
         /// </summary>
@@ -359,7 +385,7 @@ namespace Descent.Model.Player.Figure.HeroStuff
             return slot == (int)EquipmentSlot.Weapon ?
                 equipment.Type == EquipmentType.Weapon && this.CanEquipWeapon(equipment) :
                         slot == (int)EquipmentSlot.Shield ?
-                        equipment.Type == EquipmentType.Shield :
+                        equipment.Type == EquipmentType.Shield && CanEquipWeapon(equipment) :
                                slot == (int)EquipmentSlot.Armor ?
                                equipment.Type == EquipmentType.Armor :
                                     slot >= (int)EquipmentSlot.Other && slot < (int)EquipmentSlot.Potion ?

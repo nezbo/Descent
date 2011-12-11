@@ -12,6 +12,7 @@ namespace Descent.Model.Board.Marker
     using System.Text;
 
     using Descent.Messaging.Events;
+    using Descent.Model.Player;
     using Descent.Model.Player.Figure;
     using Descent.Model.Player.Figure.HeroStuff;
 
@@ -40,9 +41,11 @@ namespace Descent.Model.Board.Marker
         /// </param>
         public override void PickUp(Hero hero)
         {
-            Player.Player.Instance.EventManager.QueueEvent(
-                EventType.OpenChest, 
-                new ChestEventArgs(Player.Player.Instance.StateManager.GameState.GetRandomChestID(rarity)));
+            if (Player.Instance.StateManager.GameState.CurrentPlayer == Player.Instance.Id)
+            {
+                // If I am the current player, I should pick the random chest to open and send the event.
+                Player.Instance.EventManager.QueueEvent(EventType.OpenChest, new ChestEventArgs(Player.Instance.StateManager.GameState.GetRandomChestID(rarity)));
+            }
         }
     }
 }

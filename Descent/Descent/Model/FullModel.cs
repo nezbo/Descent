@@ -38,6 +38,8 @@ namespace Descent.Model
 
         private static List<Monster> monsters;
 
+        private static List<Monster> legendaryMonsters = new List<Monster>();
+
         private static int monstersInPlay;
 
         private static int markersOnBoard = 0;
@@ -50,7 +52,7 @@ namespace Descent.Model
 
         private static List<Equipment> townEquipment;
 
-        private static Dictionary<EquipmentRarity, Treasure> treasures = new Dictionary<EquipmentRarity, Treasure>();
+        private static Dictionary<EquipmentRarity, List<Treasure>> treasures = new Dictionary<EquipmentRarity, List<Treasure>>();
 
         private static List<Marker> markers;
 
@@ -266,7 +268,14 @@ namespace Descent.Model
         {
             int n = int.Parse(reader.ReadLine());
 
-            Dictionary<EquipmentRarity, List<Treasure>> treasures = new Dictionary<EquipmentRarity, List<Treasure>>();
+            // Instantiating all lists
+            treasures = new Dictionary<EquipmentRarity, List<Treasure>>();
+            foreach (EquipmentRarity rarity in Enum.GetValues(typeof(EquipmentRarity)))
+            {
+                treasures[rarity] = new List<Treasure>();
+            }
+
+            // running over all treasures
             for (int i = 0; i < n; i++)
             {
                 string line = reader.ReadLine();
@@ -276,15 +285,24 @@ namespace Descent.Model
 
                 EquipmentRarity rarity;
                 EquipmentRarity.TryParse(data[2], out rarity);
-                if (!treasures.ContainsKey(rarity)) treasures[rarity] = new List<Treasure>();
 
                 if (data[1].Equals("Treasure Cache"))
                 {
-                    treasures[rarity].Add(new Treasure(int.Parse(data[0]), rarity, null));
+                    treasures[rarity].Add(
+                        new Treasure(
+                            int.Parse(data[0]), 
+                            data[1], 
+                            rarity, 
+                            data[10].Contains("Potion Vitality") ? 
+                                GetEquipment(12) : 
+                                data[10].Contains("Potion Healing") ? 
+                                    GetEquipment(11) : 
+                                    null, 
+                            data[10].Contains("Coins") ? int.Parse(data[10].Split(' ').Last()) : 0));
                 }
                 else
                 {
-                    treasures[rarity].Add(new Treasure(int.Parse(data[0]), rarity, LoadEquipment(data)));
+                    treasures[rarity].Add(new Treasure(int.Parse(data[0]), data[1] , rarity, LoadEquipment(data), 0));
                 }
             }
 
@@ -445,6 +463,50 @@ namespace Descent.Model
             }
 
             System.Diagnostics.Debug.WriteLine("Chests loaded successfully!");
+
+            LoadLegendaryMonsters(game, reader);
+        }
+
+        private static void LoadLegendaryMonsters(Game game, StreamReader reader)
+        {
+            int n = int.Parse(reader.ReadLine());
+
+            for (int i = 0; i < n; i++)
+            {
+                string line = reader.ReadLine();
+                string[] data = line.Split(',');
+
+                int id = int.Parse(data[0]);
+                Monster m = GetMonster(int.Parse(data[1]));
+                string name = data[2];
+
+                int bonusSpeed = int.Parse(data[3]);
+                int bonusHealth = int.Parse(data[4]);
+                int bonusArmor = int.Parse(data[5]);
+
+                List<Dice> attackDice = (
+                    from string dice
+                        in data[6].Split(' ')
+                    select GetDice(dice)).ToList<Dice>();
+                attackDice.AddRange(m.DiceForAttack);
+
+                List<Ability> abilities = data[7].Split('/').Select(Ability.GetAbility).ToList();
+                abilities.AddRange(m.Abilities);
+
+                Monster legendary = new Monster(
+                    id, 
+                    name, 
+                    m.IsMaster, 
+                    m.Speed + bonusSpeed, 
+                    m.MaxHealth + bonusHealth, 
+                    m.Armor + bonusArmor, 
+                    m.AttackType, 
+                    attackDice, 
+                    m.Size, 
+                    m.Texture);
+
+                legendaryMonsters.Add(legendary);
+            }
         }
 
         #endregion
@@ -626,6 +688,11 @@ namespace Descent.Model
             return AllEquipment.First(equipment => equipment.Id == id).Clone();
         }
 
+        public static Treasure GetTreasure(int id)
+        {
+            return AllTreasures.Single(t => t.ID == id);
+        }
+
         /// <summary>
         /// Gets an overlord card by id
         /// </summary>
@@ -699,7 +766,7 @@ namespace Descent.Model
                 case "pit":
                     return new OtherMarkers(markersOnBoard++, name, game.Content.Load<Texture2D>("Images/Board/pit1"), 0);
                 case "potion":
-                    return new PotionMarker(markersOnBoard++, name + "-" + other, game.Content.Load<Texture2D>("Images/Board/" + name + "-" + other), 0, GetEquipment(1));
+                    return new PotionMarker(markersOnBoard++, name + "-" + other, game.Content.Load<Texture2D>("Images/Board/" + name + "-" + other), 0, other.Contains("health") ? GetEquipment(11) : GetEquipment(12));
                 case "rune":
                     RuneKey color;
                     RuneKey.TryParse(other, true, out color);
@@ -733,6 +800,12 @@ namespace Descent.Model
         public static Hero[] AllHeroes
         {
             get { return heroes.ToArray(); }
+        }
+
+        [Pure]
+        public static Monster[] AllLengendaryMonsters
+        {
+            get { return legendaryMonsters.ToArray(); }
         }
 
         /// <summary>
@@ -777,8 +850,8 @@ namespace Descent.Model
             get
             {
                 List<Treasure> list = new List<Treasure>();
-                foreach (Treasure t in treasures.Values)
-                    list.Add(t);
+                foreach (EquipmentRarity r in Enum.GetValues(typeof(EquipmentRarity)))
+                    list.AddRange(treasures[r]);
                 return list.ToArray();
             }
         }

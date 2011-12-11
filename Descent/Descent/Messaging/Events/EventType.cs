@@ -84,6 +84,7 @@ namespace Descent.Messaging.Events
         InflictWounds = 73,
         WasKilled = 74,
         SurgeAbilityClicked = 75,
-        FinishedAttack = 76
+        FinishedAttack = 76,
+        PickupMarker = 77
     }
 }

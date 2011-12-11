@@ -9,6 +9,8 @@ namespace Descent.Model.Player
 
     using Descent.Model.Player.Figure;
 
+    using Microsoft.Xna.Framework;
+
     /// <summary>
     /// A party of heroes
     /// </summary>
@@ -86,8 +88,8 @@ namespace Descent.Model.Player
         {
             get
             {
-                Contract.Ensures(Contract.Result<bool>() == (ConquestTokens == 0));
-                return ConquestTokens == 0;
+                Contract.Ensures(Contract.Result<bool>() == (ConquestTokens <= 0));
+                return ConquestTokens <= 0;
             }
         }
 
@@ -120,7 +122,7 @@ namespace Descent.Model.Player
         {
             Contract.Requires(tokens > 0);
             Contract.Ensures(ConquestTokens == Contract.OldValue(ConquestTokens) - tokens || ConquestTokens == 0);
-            ConquestTokens -= tokens;
+            ConquestTokens = (int)MathHelper.Clamp(ConquestTokens - tokens, 0, int.MaxValue);
         }
 
         /// <summary>
