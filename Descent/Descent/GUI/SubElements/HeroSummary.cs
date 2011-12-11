@@ -23,7 +23,8 @@ namespace Descent.GUI.SubElements
             AddDrawable(this.Name, new Image(game.Content.Load<Texture2D>("Images/Other/health-small")), new Rectangle(Bound.X + Bound.Width / 2, Bound.Y + Height / 2, Height / 4, Height / 4));
             AddDrawable(this.Name, new Image(game.Content.Load<Texture2D>("Images/Other/fatigue-small")), new Rectangle(Bound.X + Bound.Width / 2, Bound.Y + (int)(Height * (3 / 4.0)), Height / 4, Height / 4));
             AddDrawable(this.Name, new Image(game.Content.Load<Texture2D>("Images/Other/movement-small")), new Rectangle(Bound.X + (int)(Bound.Width * (3 / 4.0)), Bound.Y + Height / 2, Height / 4, Height / 4));
-            AddDrawable(this.Name, new Image(game.Content.Load<Texture2D>("Images/Other/attacks-small")), new Rectangle(Bound.X + (int)(Bound.Width * (3 / 4.0)), Bound.Y + (int)(Height * (3 / 4.0)), Height / 4, Height / 4));
+            AddDrawable(this.Name, new Image(game.Content.Load<Texture2D>("Images/Other/attacks-small")), new Rectangle(5 + Bound.X + (int)(Bound.Width * (2 / 3.0)), Bound.Y + (int)(Height * (3 / 4.0)), Height / 4, Height / 4));
+            AddDrawable(this.Name, new Image(game.Content.Load<Texture2D>("Images/Other/armor-small")), new Rectangle(5 + Bound.X + (int)(Bound.Width * (5 / 6.0)), Bound.Y + (int)(Height * (3 / 4.0)), Height / 4, Height / 4));
         }
 
         public override void Draw(SpriteBatch draw)
@@ -40,7 +41,8 @@ namespace Descent.GUI.SubElements
             draw.DrawString(GUI.Font, me.Health + "/" + me.MaxHealth, new Vector2(Bound.X + Bound.Width / 2 + 30, Bound.Y + Bound.Height / 2), Color.Black);
             draw.DrawString(GUI.Font, me.Fatigue + "/" + me.MaxFatigue, new Vector2(Bound.X + Bound.Width / 2 + 30, Bound.Y + (int)(Bound.Height * (3 / 4.0))), Color.Black);
             draw.DrawString(GUI.Font, me.MovementLeft + "/" + me.Speed, new Vector2(Bound.X + (int)(Bound.Width * (3 / 4.0)) + 30, Bound.Y + Bound.Height / 2), Color.Black);
-            draw.DrawString(GUI.Font, "" + me.AttacksLeft, new Vector2(Bound.X + (int)(Bound.Width * (3 / 4.0)) + 30, Bound.Y + (int)(Bound.Height * (3 / 4.0))), Color.Black);
+            draw.DrawString(GUI.Font, "" + me.AttacksLeft, new Vector2(5 + Bound.X + (int)(Bound.Width * (2 / 3.0)) + 30, Bound.Y + (int)(Bound.Height * (3 / 4.0))), Color.Black);
+            draw.DrawString(GUI.Font, "" + me.Armor, new Vector2(5 + Bound.X + (int)(Bound.Width * (5 / 6.0)) + 30, Bound.Y + (int)(Bound.Height * (3 / 4.0))), Color.Black);
         }
     }
 }

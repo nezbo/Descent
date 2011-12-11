@@ -40,6 +40,8 @@ namespace Descent.Model
 
         private static int monstersInPlay;
 
+        private static int markersOnBoard = 0;
+
         private static List<Hero> heroes;
 
         private static List<OverlordCard> overlordCards;
@@ -685,19 +687,23 @@ namespace Descent.Model
             switch (name)
             {
                 case "glyph":
-                    return new Marker(name + "-" + other, game.Content.Load<Texture2D>("Images/Board/portal-" + other));
+                    return new GlyphMarker(markersOnBoard++, name + "-" + other, game.Content.Load<Texture2D>("Images/Board/portal-closed"), 0, other.Equals("open"), game.Content.Load<Texture2D>("Images/Board/portal-open"));
                 case "treasure":
-                    return new Marker(name + "-" + other, game.Content.Load<Texture2D>("Images/Board/" + name + "-" + other));
+                    EquipmentRarity rarity;
+                    EquipmentRarity.TryParse(other, true, out rarity);
+                    return new ChestMarker(markersOnBoard++, name + "-" + other, 2, rarity, game.Content.Load<Texture2D>("Images/Board/" + name + "-" + other));
                 case "gold":
-                    return new Marker(name, game.Content.Load<Texture2D>("Images/Board/" + name));
+                    return new MoneyMarker(markersOnBoard++, name, game.Content.Load<Texture2D>("Images/Board/" + name), 0);
                 case "rock":
-                    return new Marker(name, game.Content.Load<Texture2D>("Images/Board/rock1"));
+                    return new OtherMarkers(markersOnBoard++, name, game.Content.Load<Texture2D>("Images/Board/rock1"), 0);
                 case "pit":
-                    return new Marker(name, game.Content.Load<Texture2D>("Images/Board/pit1"));
+                    return new OtherMarkers(markersOnBoard++, name, game.Content.Load<Texture2D>("Images/Board/pit1"), 0);
                 case "potion":
-                    return new Marker(name + "-" + other, game.Content.Load<Texture2D>("Images/Board/" + name + "-" + other));
+                    return new PotionMarker(markersOnBoard++, name + "-" + other, game.Content.Load<Texture2D>("Images/Board/" + name + "-" + other), 0, GetEquipment(1));
                 case "rune":
-                    return new Marker(name + "-" + other, game.Content.Load<Texture2D>("Images/Board/" + name + "-" + other));
+                    RuneKey color;
+                    RuneKey.TryParse(other, true, out color);
+                    return new RuneMarker(markersOnBoard++, name + "-" + other, game.Content.Load<Texture2D>("Images/Board/" + name + "-" + other), 0, color);
                 default:
                     break;
             }

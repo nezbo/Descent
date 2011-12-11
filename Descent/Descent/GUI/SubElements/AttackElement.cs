@@ -1,7 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Descent.Messaging.Events;
+using Descent.Model;
+using Descent.Model.Board;
 using Descent.Model.Event;
+using Descent.Model.Player.Figure;
 using Descent.Model.Player.Figure.HeroStuff;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -28,12 +31,14 @@ namespace Descent.GUI.SubElements
             int surgeWidth = (int)(Bound.Width * 0.3);
             bool left = true;
 
+            // Surge abilities
             SurgeAbility surge;
             for (int i = 0; i < surges.Count; i++)
             {
                 int id = i;
                 surge = surges[i];
                 GUIElement surgeBox = new GUIElement(game, "surge box", left ? xPos : xPos + surgeWidth, yPos, surgeWidth, surgeHeight);
+                surgeBox.SetBackground("boxbg");
 
                 // icons
                 int cost = surge.Cost;
@@ -63,6 +68,14 @@ namespace Descent.GUI.SubElements
                 // ready for next ability
                 if (!left) yPos += height;
                 left = !left;
+            }
+
+            // target monster (if any)
+            Square square = FullModel.Board[attack.TargetSquare.X, attack.TargetSquare.Y];
+            if (square.Figure != null && square.Figure is Monster)
+            {
+                GUIElement target = new MonsterSummary(game, Bound.X + (int)((Bound.Width * 0.4 - 125) / 2), Bound.Y + Bound.Height / 2 + (int)((Bound.Height / 2 - 175) / 2), (Monster)square.Figure);
+                AddChild(target);
             }
         }
 
