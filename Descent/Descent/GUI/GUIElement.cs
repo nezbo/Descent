@@ -100,8 +100,6 @@ namespace Descent.GUI
         /// <param name="y">The y-coordinate of the click</param>
         public virtual bool HandleClick(int x, int y)
         {
-
-            string name = Name;
             // is it within me?
             if (this.HasPoint(x, y))
             {
@@ -143,6 +141,11 @@ namespace Descent.GUI
             foreach (GUIElement e in children) e.HandleClick(x, y);
             focus = false;
             return false;
+        }
+
+        protected void HandleMouseOver(bool onTop, int x, int y)
+        {
+            // can be overwritten for reaction to direct mouseover
         }
 
         private bool VisualClicked(int x, int y)
@@ -312,6 +315,10 @@ namespace Descent.GUI
 
             if (Name == target)
             {
+                if (Name == "monster summary")
+                {
+
+                }
                 texts.Add(new Text(WordWrap(text, position), new Vector2(position.X + Bound.X, position.Y + Bound.Y), color));
             }
             foreach (GUIElement e in children) e.AddText(target, text, position);
@@ -335,8 +342,6 @@ namespace Descent.GUI
             StringBuilder builder = new StringBuilder();
 
             int totalSpace = Bound.Width - (int)position.X;
-
-            if (totalSpace < GUI.Font.MeasureString("mmm").X) return "";
 
             string currentLine = "";
             string nextWord;
