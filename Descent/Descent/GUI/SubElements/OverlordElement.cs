@@ -1,4 +1,6 @@
 ﻿
+using Descent.Model.Player;
+using Descent.Model.Player.Overlord;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -11,6 +13,13 @@ namespace Descent.GUI.SubElements
         {
             SetDrawBackground(false);
             AddDrawable(Name, new Image(game.Content.Load<Texture2D>("Images/Heroes/BIG-0")), new Rectangle(Bound.X, Bound.Y + Bound.Height - 200, 200, 200));
+
+            int cardX = 250;
+            foreach (OverlordCard card in Player.Instance.Overlord.Hand)
+            {
+                AddChild(new OverlordCardElement(game, cardX, Bound.Height - 25, card));
+                cardX += 50;
+            }
         }
     }
 }

@@ -449,7 +449,7 @@ namespace Descent.State
                         }
                     }
 
-                    break; 
+                    break;
             }
         }
 
@@ -870,7 +870,7 @@ namespace Descent.State
         private void MoveTo(object sender, CoordinatesEventArgs eventArgs)
         {
             Contract.Requires(CurrentState == State.WaitForPerformAction);
-            Contract.Requires(IsAHeroTurn() ? Player.Instance.HeroParty.Heroes[eventArgs.SenderId].MovementLeft >= 1 : 
+            Contract.Requires(IsAHeroTurn() ? Player.Instance.HeroParty.Heroes[eventArgs.SenderId].MovementLeft >= 1 :
                               currentMonster.MovementLeft >= 1);
             Contract.Ensures(CurrentState == State.WaitForPerformAction);
 
@@ -1125,9 +1125,9 @@ namespace Descent.State
         }
 
         private void OverLordPlayCard(object sender, OverlordCardEventArgs eventArgs)
-        {
+        {/*
             Contract.Requires(CurrentState == State.WaitForPlayCard);
-            Contract.Ensures(CurrentState == State.WaitForPlayCard);
+            Contract.Ensures(CurrentState == State.WaitForPlayCard);*/
 
             // Check rules for playing cards
             // Play card and invoke changes
@@ -1262,7 +1262,7 @@ namespace Descent.State
             }
             Contract.Assert(damage >= 0);
 
-            string status =  figure.Name + " ";
+            string status = figure.Name + " ";
             if (damage >= figure.Health)
             {
                 eventManager.QueueEvent(EventType.WasKilled, new CoordinatesEventArgs(eventArgs.X, eventArgs.Y));

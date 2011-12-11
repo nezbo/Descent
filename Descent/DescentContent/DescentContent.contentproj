@@ -819,7 +819,7 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-	<Compile Include="Images\Heroes\BIG-5.png">
+    <Compile Include="Images\Heroes\BIG-5.png">
       <Name>BIG-5</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
@@ -841,10 +841,10 @@
     </Compile>
     <Compile Include="Images\Heroes\BIG-9.png">
       <Name>BIG-9</Name>
-	  <Importer>TextureImporter</Importer>
+      <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
-	</Compile>
-	<Compile Include="Images\Heroes\BIG-1.png">
+    </Compile>
+    <Compile Include="Images\Heroes\BIG-1.png">
       <Name>BIG-1</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
@@ -864,7 +864,7 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-	<Compile Include="Images\Heroes\BIG-15.png">
+    <Compile Include="Images\Heroes\BIG-15.png">
       <Name>BIG-15</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
@@ -931,6 +931,21 @@
       <Name>ranged-icon</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Images\Other\overlordcard.png">
+      <Name>overlordcard</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="fontSmall.spritefont">
+      <SubType>Designer</SubType>
+      <Name>fontSmall</Name>
+      <Importer>FontDescriptionImporter</Importer>
+      <Processor>FontDescriptionProcessor</Processor>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
