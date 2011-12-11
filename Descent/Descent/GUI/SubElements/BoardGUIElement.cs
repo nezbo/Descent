@@ -238,14 +238,13 @@ namespace Descent.GUI
             MouseState ms = Mouse.GetState();
             Point p = CalcBoardSquare(ms.X, ms.Y);
 
-
-            if (board.IsSquareWithinBoard(p.X, p.Y))
+            if (Bound.Contains(ms.X, ms.Y) && board.IsSquareWithinBoard(p.X, p.Y) && (role == Role.Overlord || board.SquareVisibleByPlayers(p.X, p.Y)))
             {
                 Square s = board[p.X, p.Y];
                 if (s.Figure != null && s.Figure is Monster)
                 {
                     Monster m = (Monster)s.Figure;
-                    AddChild(new MonsterSummary(this.Game, ms.X, ms.Y, m));
+                    AddChild(new MonsterSummary(this.Game, ms.X + 15, ms.Y + 15, m));
                 }
             }
         }
