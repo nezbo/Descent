@@ -266,9 +266,10 @@ namespace Descent.GUI
                         GUIElement finish = new GUIElement(game, "finish", RelW(g, 75), RelH(g, 70), RelW(g, 10), RelH(g, 8));
 
                         root.AddChild(box);
-                        root.AddChild(roll);
+                        root.AddChild(finish);
 
                         root.AddText(finish.Name, "Inflict Wounds", new Vector2(5, 5));
+                        break;
                     }
             }
 

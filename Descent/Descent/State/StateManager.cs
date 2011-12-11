@@ -304,13 +304,14 @@ namespace Descent.State
                 case State.WaitForDiceChoice:
                     {
                         if (gameState.CurrentPlayer == Player.Instance.Id)
-                        {
+                        {/*
                             root.SetClickAction("finish", (n, g) =>
                                                               {
                                                                   int x = gameState.CurrentAttack.//TODO: get coordinates for damage
                                                                   n.EventManager.QueueEvent(EventType.SendDamage, new DamageEventArgs());
-                                                              });
+                                                              });*/
                         }
+                        break;
                     }
             }
 
