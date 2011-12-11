@@ -40,7 +40,7 @@ namespace Descent.GUI.SubElements
                             GUIElement diceBox = new GUIElement(game, "dice", Bound.X + Spacing + number * die.Texture.Width + number * Spacing,
                                                                 Bound.Y + Spacing + line * die.Texture.Height + line * Spacing,
                                                                 die.Texture.Width, die.Texture.Height);
-                            diceBox.AddDrawable(diceBox.Name, die, new Vector2(0, 0));
+                            diceBox.AddDrawable(diceBox.Name, die, new Vector2(diceBox.Bound.X, diceBox.Bound.Y));
                             diceBox.SetClickAction(diceBox.Name, (n, g) =>
                                                                      {
                                                                          n.EventManager.QueueEvent(

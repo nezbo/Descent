@@ -18,7 +18,7 @@ namespace Descent.Model.Event
     {
         private Figure figure;
 
-        private List<Dice> diceForAttack; 
+        private List<Dice> diceForAttack;
 
         /// <summary>
         /// Gets or sets the hero that is attacking
@@ -100,8 +100,8 @@ namespace Descent.Model.Event
 
         public override string ToString()
         {
-            return figure.Name + "\n\tDamage: " + DamageBonus + "\n\tRange: " + RangeBonus + "\n\tPierce: "
-                   + PierceBonus + "\n\tSurge: " + SurgeBonus;
+            return figure.Name + "\nDamage: " + DamageBonus + "\nRange: " + RangeBonus + "\nPierce: "
+                   + PierceBonus + "\nSurge: " + SurgeBonus;
         }
 
 
