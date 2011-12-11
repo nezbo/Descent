@@ -356,7 +356,7 @@ namespace Descent.State
                     }
                     Point standingPoint = FullModel.Board.FiguresOnBoard[figure];
 
-                    if (FullModel.Board.Distance(standingPoint, new Point(eventArgs.X, eventArgs.Y)) == 1)
+                    if (FullModel.Board.IsSquareWithinBoard(new Point(eventArgs.X, eventArgs.Y)) && FullModel.Board.Distance(standingPoint, new Point(eventArgs.X, eventArgs.Y)) == 1)
                     {
                         // Move to adjecent
                         // If a an entire figure can move to the square
@@ -376,15 +376,20 @@ namespace Descent.State
                         //TODO Pickuptoken/marker, if there is any
                     }
 
-                    if (figure.AttacksLeft > 0 && FullModel.Board.Distance(standingPoint, new Point(eventArgs.X, eventArgs.Y)) >= 1 && (FullModel.Board[eventArgs.X, eventArgs.Y] != null && (FullModel.Board[eventArgs.X, eventArgs.Y].Figure != null && FullModel.Board.IsThereLineOfSight(figure, FullModel.Board[eventArgs.X, eventArgs.Y].Figure, false))))
+                    if (figure.AttacksLeft > 0 && FullModel.Board.IsSquareWithinBoard(new Point(eventArgs.X, eventArgs.Y)) && FullModel.Board.Distance(standingPoint, new Point(eventArgs.X, eventArgs.Y)) >= 1 && (FullModel.Board[eventArgs.X, eventArgs.Y] != null && (FullModel.Board[eventArgs.X, eventArgs.Y].Figure != null && FullModel.Board.IsThereLineOfSight(figure, FullModel.Board[eventArgs.X, eventArgs.Y].Figure, false))))
                     {
                         // A figure is trying to attack another figure.
 
-                        if (Player.Instance.HeroParty.Heroes[eventArgs.SenderId] != null)
+                        if (Player.Instance.HeroParty.Heroes.ContainsKey(eventArgs.SenderId))
                         {
                             // A player is attacking
                             Hero hero = Player.Instance.HeroParty.Heroes[eventArgs.SenderId];
                             Figure target = FullModel.Board[eventArgs.X, eventArgs.Y].Figure;
+
+                            if (target is Hero)
+                            {
+                                return; // Do not allow attack if target is hero.
+                            }
 
                             if (hero.Inventory.Weapon == null)
                             {
@@ -412,6 +417,11 @@ namespace Descent.State
                         }
                         else
                         {
+                            if (FullModel.Board[eventArgs.X, eventArgs.Y].Figure is Monster)
+                            {
+                                return; // A monster is trying to attack another monster. No go!
+                            }
+
                             // A monster is attacking
                             eventManager.QueueEvent(EventType.AttackSquare, new CoordinatesEventArgs(eventArgs.X, eventArgs.Y));
                         }
