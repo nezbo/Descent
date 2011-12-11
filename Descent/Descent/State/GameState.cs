@@ -30,7 +30,9 @@ namespace Descent.State
         private List<OverlordCard> overlordCards = new List<OverlordCard>();
         private List<Hero> heroes = new List<Hero>();
         private List<Monster> monstersLeftToAct = new List<Monster>();
-        private Dictionary<int, List<Equipment>> unequippedEquipment; 
+        private Dictionary<int, List<Equipment>> unequippedEquipment;
+
+        private List<Chest> chestsLeft = new List<Chest>(); 
 
         private List<Treasure> treasures;
 
@@ -46,6 +48,8 @@ namespace Descent.State
             overlordCards.AddRange(FullModel.AllOverlordCards);
             heroes.AddRange(FullModel.AllHeroes);
             treasures.AddRange(FullModel.AllTreasures);
+
+            chestsLeft.AddRange(FullModel.AllChests);
 
             // Listen to events
             Player.Instance.EventManager.GiveOverlordCardsEvent += GiveOverlordCards;
@@ -85,8 +89,18 @@ namespace Descent.State
             return unequippedEquipment[playerId].ToArray();
         }
 
+        public int GetRandomChestID(EquipmentRarity rarity)
+        {
+            Random r = new Random(DateTime.Now.Millisecond);
+            int n = chestsLeft.Count(c => c.Rarity == rarity);
+            Chest chest = chestsLeft.Where(c1 => c1.Rarity == rarity).ToArray()[n];
+            // TODO Make sure that the chest is removed from the list of chests left at all clients
+            return chest.Id;
+        }
+
         /// <summary>
         /// Gets the contents of a chest.
+        /// This method will remove the 
         /// </summary>
         /// <param name="chestId">Id of the chest.</param>
         /// <returns>{conquest tokens, coins, curses, treasures}</returns>
@@ -94,6 +108,7 @@ namespace Descent.State
         {
             // TODO: This should just return the chest itself?
             Chest c = FullModel.AllChests.Single(i => i.Id == chestId);
+            chestsLeft.Remove(c);
             return new int[]{c.ConquestTokens, c.Coin, c.Curses, c.Treasures};
         }
 

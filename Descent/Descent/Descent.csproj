@@ -168,7 +168,13 @@
     <Compile Include="Model\Board\Board.cs" />
     <Compile Include="Model\Board\Door.cs" />
     <Compile Include="Model\Board\Marker\Chest.cs" />
+    <Compile Include="Model\Board\Marker\ChestMarker.cs" />
+    <Compile Include="Model\Board\Marker\GlyphMarker.cs" />
     <Compile Include="Model\Board\Marker\Marker.cs" />
+    <Compile Include="Model\Board\Marker\MoneyMarker.cs" />
+    <Compile Include="Model\Board\Marker\OtherMarkers.cs" />
+    <Compile Include="Model\Board\Marker\PotionMarker.cs" />
+    <Compile Include="Model\Board\Marker\RuneMarker.cs" />
     <Compile Include="Model\Board\Square.cs" />
     <Compile Include="Model\Board\Town.cs" />
     <Compile Include="Model\Dice.cs" />
