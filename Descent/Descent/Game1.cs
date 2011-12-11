@@ -156,6 +156,9 @@ namespace Descent
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            //fullscreen
+            if (Keyboard.GetState().IsKeyDown(Keys.F11)) graphics.ToggleFullScreen();
+
             // FPS
             if (gameTime.TotalGameTime.Milliseconds == 0)
             {
