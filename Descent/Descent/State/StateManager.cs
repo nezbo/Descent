@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 
 using Descent.Model.Board;
-using Descent.Model.Event;
 
 namespace Descent.State
 {
@@ -217,8 +216,7 @@ namespace Descent.State
                         }
                         else
                         {
-                            root.Disable("item");
-                            root.Disable("done");
+                            root.Disable("root");
                         }
                         break;
                     }
@@ -306,12 +304,11 @@ namespace Descent.State
                 case State.WaitForDiceChoice:
                     {
                         if (gameState.CurrentPlayer == Player.Instance.Id)
-                        {/*
+                        {
                             root.SetClickAction("finish", (n, g) =>
                                                               {
-                                                                  int x = gameState.CurrentAttack.//TODO: get coordinates for damage
-                                                                  n.EventManager.QueueEvent(EventType.SendDamage, new DamageEventArgs());
-                                                              });*/
+                                                                  n.EventManager.QueueEvent(EventType.DoAttack, new GameEventArgs());
+                                                              });
                         }
                         break;
                     }
@@ -411,7 +408,7 @@ namespace Descent.State
                             {
                                 // If attack type is magic or ranged, always allow attack.
                                 eventManager.QueueEvent(EventType.AttackSquare, new CoordinatesEventArgs(eventArgs.X, eventArgs.Y));
-                            } 
+                            }
                             else
                             {
                                 // Attack type is not melee, magic or ranged - do not perform attack.
@@ -431,13 +428,19 @@ namespace Descent.State
 
                     break;
                 case State.WaitForOverlordChooseAction:
-                    // If a square with a monster is pressed in an overlord turn and we are the overlord, a monster turn should begin.
-                    Square s = FullModel.Board[eventArgs.X, eventArgs.Y];
-                    if (Player.Instance.IsOverlord && s.Figure != null && s.Figure is Monster && FullModel.Board.SquareVisibleByPlayers(eventArgs.X, eventArgs.Y) && monstersRemaining.Contains(s.Figure))
+
+                    if (FullModel.Board.IsSquareWithinBoard(eventArgs.X, eventArgs.Y))
                     {
-                        eventManager.QueueEvent(EventType.StartMonsterTurn, new CoordinatesEventArgs(eventArgs.X, eventArgs.Y));
+                        Square s = FullModel.Board[eventArgs.X, eventArgs.Y];
+
+                        // If a square with a monster is pressed in an overlord turn and we are the overlord, a monster turn should begin.
+                        if (Player.Instance.IsOverlord && s.Figure != null && s.Figure is Monster && FullModel.Board.SquareVisibleByPlayers(eventArgs.X, eventArgs.Y) && monstersRemaining.Contains(s.Figure))
+                        {
+                            eventManager.QueueEvent(EventType.StartMonsterTurn, new CoordinatesEventArgs(eventArgs.X, eventArgs.Y));
+                        }
                     }
-                    break;
+
+                    break; 
             }
         }
 
@@ -518,7 +521,7 @@ namespace Descent.State
                     break;
 
                 case State.WaitForDiceChoice:
-                    if(gameState.CurrentAttack.DiceForAttack.Count(dice => dice.Color == EDice.B) < 5)
+                    if (gameState.CurrentAttack.DiceForAttack.Count(dice => dice.Color == EDice.B) < 5)
                     {
                         eventManager.QueueEvent(EventType.BoughtDice, new GameEventArgs());
                     }
@@ -530,6 +533,9 @@ namespace Descent.State
         {
             Contract.Requires(CurrentState == State.WaitForDiceChoice);
             Contract.Ensures(CurrentState == Contract.OldValue(CurrentState));
+
+            // Do not act on dice click if it's not the players turn.
+            if (!HasTurn()) return;
 
             Dice dice = gameState.CurrentAttack.DiceForAttack[eventArgs.DiceId];
             if (dice.Color == EDice.B)
@@ -1062,6 +1068,7 @@ namespace Descent.State
         {
             gui.ClearMarks();
 
+            /* TODO Remove this - debug only
             for (int x = 0; x < FullModel.Board.Width; x++)
             {
                 for (int y = 0; y < FullModel.Board.Height; y++)
@@ -1073,6 +1080,7 @@ namespace Descent.State
                 }
             }
             return;
+            */
 
             if (currentMonster == null)
             {
