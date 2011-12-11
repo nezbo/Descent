@@ -18,7 +18,15 @@ namespace Descent.Model.Event
 
         private List<Dice> diceForAttack;
 
-        private List<SurgeAbility> surgeAbilities; 
+        private List<SurgeAbility> surgeAbilities;
+
+        private int damage;
+
+        private int range;
+
+        private int surges;
+
+        private int pierce;
 
         /// <summary>
         /// Gets or sets the hero that is attacking
@@ -46,13 +54,57 @@ namespace Descent.Model.Event
 
         public int PierceBonus { get; set; }
 
-        public int Damage { get; set; }
+        public int Damage
+        {
+            get
+            {
+                return damage + DamageBonus;
+            }
 
-        public int Range { get; set; }
+            private set
+            {
+                damage = value;
+            }
+        }
 
-        public int Surge { get; set; }
+        public int Range
+        {
+            get
+            {
+                return range + RangeBonus;
+            }
 
-        public int Pierce { get; set; }
+            private set
+            {
+                range = value;
+            }
+        }
+
+        public int Surge
+        {
+            get
+            {
+                return surges + SurgeBonus;
+            }
+
+            private set
+            {
+                surges = value;
+            }
+        }
+
+        public int Pierce
+        {
+            get
+            {
+                return pierce + PierceBonus;
+            }
+
+            private set
+            {
+                pierce = value;
+            }
+        }
 
         public int UsedSurges { get; set; }
 
@@ -106,7 +158,18 @@ namespace Descent.Model.Event
             foreach (Dice dice in DiceForAttack)
             {
                 dice.RollDice();
-                if (dice.Color == EDice.B && dice.SideIndex >= 1 && dice.SideIndex <= 3)
+            }
+        }
+
+        private void CalculateStats()
+        {
+            Range = 0;
+            Damage = 0;
+            Surge = 0;
+            Pierce = 0;
+            foreach (Dice dice in DiceForAttack)
+            {
+                if (!(dice.Color == EDice.B && dice.SideIndex >= 1 && dice.SideIndex <= 3))
                 {
                     int[] side = dice.ActiveSide;
                     Range += side[0];
@@ -118,11 +181,12 @@ namespace Descent.Model.Event
 
         public override string ToString()
         {
+            this.CalculateStats();
             return figure.Name + 
-                "\nDamage: " + (DamageBonus + Damage) + 
-                "\nRange: " + (RangeBonus + Range) + 
-                "\nPierce: " + (PierceBonus + Pierce) +
-                "\nSurge: " + (SurgeBonus + Surge);
+                "\nDamage: " + Damage + 
+                "\nRange: " + Range + 
+                "\nPierce: " + Pierce +
+                "\nSurge: " + (Surge - UsedSurges);
         }
 
 
