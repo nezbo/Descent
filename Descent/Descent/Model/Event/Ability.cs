@@ -79,7 +79,6 @@ namespace Descent.Model.Event
             return ability;
         }
 
-
         private static Func<bool> GetTrigger(string trigger, Ability ability)
         {
             bool triggerFunc;
@@ -191,9 +190,13 @@ namespace Descent.Model.Event
 
         #region Methods
 
+        /// <summary>
+        /// Prints an ability as a 
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
-            return "+" + amount + " " + bonus.ToString();
+            return (amount > 0 ? "+" + amount + " " : string.Empty) + bonus.ToString();
         }
 
         #endregion
