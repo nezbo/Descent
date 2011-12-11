@@ -22,7 +22,7 @@ namespace Descent.GUI.SubElements
         {
             base.Draw(draw);
 
-            draw.DrawString(GUI.Font, attack.ToString(), new Vector2(5, 5), Color.Black);
+            draw.DrawString(GUI.Font, "Test", new Vector2(Bound.X + 5, Bound.Y + 5), Color.Black);
         }
     }
 }
