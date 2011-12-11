@@ -499,6 +499,17 @@ namespace Descent.State
             }
         }
 
+        private void DoAttack(object sender, GameEventArgs eventArgs)
+        {
+            Contract.Requires(CurrentState == State.WaitForDiceChoice);
+            Contract.Ensures(CurrentState == State.WaitForDiceChoice);//TODO
+
+            Point targetSquare = gameState.CurrentAttack.TargetSquare;
+
+            //eventManager.QueueEvent(EventType.InflictWounds, new CoordinatesEventArgs(targetSquare.X, targetSquare.Y));
+        }
+
+
         #endregion
 
         // event handlers
@@ -1181,7 +1192,7 @@ namespace Descent.State
                 attacker = currentMonster;
             }
 
-            gameState.CurrentAttack = new Attack(attacker);
+            gameState.CurrentAttack = attacker.GetAttack(new Point(eventArgs.X, eventArgs.Y));
 
             stateMachine.PlaceStates(State.WaitForRollDice, State.WaitForDiceChoice);
             stateMachine.ChangeToNextState();
