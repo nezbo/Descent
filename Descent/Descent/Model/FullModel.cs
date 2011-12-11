@@ -64,8 +64,6 @@ namespace Descent.Model
 
         private static HeroParty heroParty;
 
-        private static List<Monster> legendaryMonsters = new List<Monster>();
-
         /// <summary>
         /// Gets the instance of the board
         /// Can I have the board?
