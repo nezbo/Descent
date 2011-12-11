@@ -134,9 +134,10 @@
     <Compile Include="Messaging\Events\EventArgs\CoordinatesEventArgs.cs" />
     <Compile Include="Messaging\Events\EventArgs\ChooseActionEventArgs.cs" />
     <Compile Include="Messaging\Events\EventArgs\ChestEventArgs.cs" />
+    <Compile Include="Messaging\Events\EventArgs\InflictWoundsEventArgs.cs" />
     <Compile Include="Messaging\Events\EventArgs\DiceEventArgs.cs" />
     <Compile Include="Messaging\Events\EventArgs\InventoryFieldEventArgs.cs" />
-    <Compile Include="Messaging\Events\EventArgs\DamageEventArgs.cs" />
+    <Compile Include="Messaging\Events\EventArgs\DamageTakenEventArgs.cs" />
     <Compile Include="Messaging\Events\EventArgs\RerollDicesEventArgs.cs" />
     <Compile Include="Messaging\Events\EventArgs\RolledDicesEventArgs.cs" />
     <Compile Include="Messaging\Events\EventArgs\SpawnMonsterEventArgs.cs" />

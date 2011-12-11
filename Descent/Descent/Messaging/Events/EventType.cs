@@ -65,9 +65,7 @@ namespace Descent.Messaging.Events
         OpenDoor = 51,
         AttackSquare = 52,
         RolledDices = 53,
-        SendDamage = 54,
         RerollDices = 55,
-        KilledFigure = 56,
         DamageTaken = 57,
         MissedAttack = 58,
         AcceptPlayer = 59,
@@ -81,6 +79,9 @@ namespace Descent.Messaging.Events
         ChangedBlackDiceSide = 68,
         FatigueClicked = 69,
         BoughtMovement = 70,
-        DiceClicked = 71
+        DiceClicked = 71,
+        DoAttack = 72,
+        InflictWounds = 73,
+        WasKilled = 74
     }
 }
