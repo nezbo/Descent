@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Descent.Model.Player.Figure.HeroStuff;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -30,6 +31,24 @@ namespace Descent.GUI.SubElements
             AddText(this.Name, title, new Vector2(5, 10));
         }
 
+        private string GetSlotType(int index)
+        {
+            string name = "";
+            foreach (EquipmentSlot e in Enum.GetValues(typeof(EquipmentSlot)))
+            {
+                int value = (int)e;
+                if (value > index)
+                {
+                    break;
+                }
+                else
+                {
+                    name = e.ToString();
+                }
+            }
+            return name;
+        }
+
         private void UpdateInventory()
         {
             bool changed = false;
@@ -45,7 +64,7 @@ namespace Descent.GUI.SubElements
                     }
                     EquipmentElement e = GUIElementFactory.CreateEquipmentElement(Game, Bound.X + 10,
                                                               Bound.Y + 50 + i * height + i * space,
-                                                              inventory[slots[i]], slots[i]);
+                                                              GetSlotType(slots[i]), inventory[slots[i]], slots[i]);
                     equipments[slots[i]] = e;
                     changed = true;
                 }

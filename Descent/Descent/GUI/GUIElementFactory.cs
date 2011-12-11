@@ -134,7 +134,7 @@ namespace Descent.GUI
                                     Equipment current = shopContent[x + y * 6];
                                     EquipmentElement eq = new EquipmentElement(game, startX + x * width + x * spacerX,
                                                                                startY + y * width + y * spacerY, width, width,
-                                                                               current, x + y * 6 + 1000);
+                                                                               "Empty", current, x + y * 6 + 1000);
                                     box.AddChild(eq);
                                 }
                             }
@@ -171,7 +171,7 @@ namespace Descent.GUI
                             for (int x = 0; x < boxes; x++)
                             {
                                 Equipment current = (x < unequipped.Length) ? unequipped[x] : null;
-                                EquipmentElement eq = GUIElementFactory.CreateEquipmentElement(game, startX + x * width + x * spacerX, startY, current, x + 100);
+                                EquipmentElement eq = GUIElementFactory.CreateEquipmentElement(game, startX + x * width + x * spacerX, startY, "Empty", current, x + 100);
                                 root.AddChild(eq);
                             }
 
@@ -251,13 +251,24 @@ namespace Descent.GUI
                     }
                 case State.WaitForRollDice:
                     {
-                        GUIElement box = new GUIElement(game, "box", RelW(g, 20), RelH(g, 10), RelW(g, 60), RelH(g, 60));
+                        GUIElement box = new GUIElement(game, "box", RelW(g, 10), RelH(g, 10), RelW(g, 80), RelH(g, 60));
                         GUIElement roll = new GUIElement(game, "roll", RelW(g, 75), RelH(g, 70), RelW(g, 10), RelH(g, 6));
 
                         root.AddChild(box);
                         root.AddChild(roll);
 
                         root.AddText(roll.Name, "Roll", new Vector2(5, 5));
+                        break;
+                    }
+                case State.WaitForDiceChoice:
+                    {
+                        GUIElement box = new AttackElement(game, gameState.CurrentAttack, RelW(g, 10), RelH(g, 10), RelW(g, 80), RelH(g, 60));
+                        GUIElement finish = new GUIElement(game, "finish", RelW(g, 75), RelH(g, 70), RelW(g, 10), RelH(g, 8));
+
+                        root.AddChild(box);
+                        root.AddChild(finish);
+
+                        root.AddText(finish.Name, "Inflict Wounds", new Vector2(5, 5));
                         break;
                     }
             }
@@ -298,9 +309,9 @@ namespace Descent.GUI
             return root;
         }
 
-        public static EquipmentElement CreateEquipmentElement(Game game, int x, int y, Equipment equipment, int id)
+        public static EquipmentElement CreateEquipmentElement(Game game, int x, int y, string slotTitle, Equipment equipment, int id)
         {
-            return new EquipmentElement(game, x, y, RelW(game.GraphicsDevice.Viewport, 10), RelW(game.GraphicsDevice.Viewport, 10), equipment, id);
+            return new EquipmentElement(game, x, y, RelW(game.GraphicsDevice.Viewport, 10), RelW(game.GraphicsDevice.Viewport, 10), slotTitle, equipment, id);
         }
     }
 }

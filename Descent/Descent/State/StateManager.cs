@@ -301,6 +301,18 @@ namespace Descent.State
                         }
                         break;
                     }
+                case State.WaitForDiceChoice:
+                    {
+                        if (gameState.CurrentPlayer == Player.Instance.Id)
+                        {/*
+                            root.SetClickAction("finish", (n, g) =>
+                                                              {
+                                                                  int x = gameState.CurrentAttack.//TODO: get coordinates for damage
+                                                                  n.EventManager.QueueEvent(EventType.SendDamage, new DamageEventArgs());
+                                                              });*/
+                        }
+                        break;
+                    }
             }
 
             gui.ChangeStateGUI(root); // change the GUI's state element.
@@ -364,7 +376,7 @@ namespace Descent.State
                         //TODO Pickuptoken/marker, if there is any
                     }
 
-                    if (Player.Instance.Hero.AttacksLeft > 0 && FullModel.Board.Distance(standingPoint, new Point(eventArgs.X, eventArgs.Y)) >= 1 && (FullModel.Board[eventArgs.X, eventArgs.Y] != null && (FullModel.Board[eventArgs.X, eventArgs.Y].Figure != null && FullModel.Board.IsThereLineOfSight(figure, FullModel.Board[eventArgs.X, eventArgs.Y].Figure, false))))
+                    if (figure.AttacksLeft > 0 && FullModel.Board.Distance(standingPoint, new Point(eventArgs.X, eventArgs.Y)) >= 1 && (FullModel.Board[eventArgs.X, eventArgs.Y] != null && (FullModel.Board[eventArgs.X, eventArgs.Y].Figure != null && FullModel.Board.IsThereLineOfSight(figure, FullModel.Board[eventArgs.X, eventArgs.Y].Figure, false))))
                     {
                         // A figure is trying to attack another figure.
                         eventManager.QueueEvent(EventType.AttackSquare, new CoordinatesEventArgs(eventArgs.X, eventArgs.Y));
@@ -814,10 +826,10 @@ namespace Descent.State
 
         private void RequestTurn(object sender, GameEventArgs eventArgs)
         {
-            Contract.Requires(CurrentState == State.WaitForHeroTurn);
+            Contract.Requires(CurrentState == State.WaitForHeroTurn || CurrentState == State.Equip);
             Contract.Ensures(CurrentState == Contract.OldValue(CurrentState));
 
-            if (Player.Instance.IsServer && gameState.CurrentPlayer == 0 && gameState.CurrentPlayer == 0 && playersRemaining.Contains(eventArgs.SenderId))
+            if (Player.Instance.IsServer && gameState.CurrentPlayer == 0 && playersRemaining.Contains(eventArgs.SenderId))
             {
                 eventManager.QueueEvent(EventType.TurnChanged, new PlayerEventArgs(eventArgs.SenderId));
                 gameState.CurrentPlayer = eventArgs.SenderId;
@@ -1189,6 +1201,10 @@ namespace Descent.State
             Contract.Requires(CurrentState == State.WaitForDiceChoice);
             Contract.Ensures(CurrentState == Contract.OldValue(CurrentState));
 
+            Dice dice = FullModel.GetDice(EDice.B);
+            dice.RollDice();
+            gameState.CurrentAttack.DiceForAttack.Add(dice);
+            Player.Instance.HeroParty.Heroes[gameState.CurrentPlayer].RemoveFatigue(1);
 
             stateMachine.PlaceStates(State.BuyExtraDice, State.WaitForDiceChoice);
             stateMachine.ChangeToNextState();
@@ -1199,13 +1215,17 @@ namespace Descent.State
         {
             Contract.Requires(CurrentState == State.WaitForDiceChoice);
             Contract.Requires(gameState.CurrentAttack.DiceForAttack[eventArgs.DiceId].Color == EDice.B);
+            Contract.Requires(gameState.CurrentAttack.DiceForAttack[eventArgs.DiceId].SideIndex != 0 &&
+                             (gameState.CurrentAttack.DiceForAttack[eventArgs.DiceId].SideIndex < 4 ||
+                              gameState.CurrentAttack.DiceForAttack[eventArgs.DiceId].SideIndex > 5));
             Contract.Requires(gameState.CurrentPlayer == eventArgs.SenderId);
             Contract.Ensures(CurrentState == Contract.OldValue(CurrentState));
+            Contract.Ensures(gameState.CurrentAttack.DiceForAttack[eventArgs.DiceId].SideIndex ==
+                            (Contract.OldValue(gameState.CurrentAttack.DiceForAttack[eventArgs.DiceId].SideIndex) < 7 ? 7 : 6));
 
             gameState.CurrentAttack.DiceForAttack[eventArgs.DiceId].SideIndex = eventArgs.SideId;
             StateChanged();
         }
-
 
         #endregion
 

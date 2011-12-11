@@ -204,6 +204,11 @@ namespace Descent.Model.Player.Figure
 
         #region Public Methods
 
+        public int TrainingTokens(EAttackType attackType)
+        {
+            return blackDice.ContainsKey(attackType) ? blackDice[attackType] : 0;
+        }
+
         /// <summary>
         /// Adds fatigue to the hero, up to max fatigue
         /// </summary>
@@ -276,7 +281,7 @@ namespace Descent.Model.Player.Figure
                 }
             }
         }
-        
+
         /// <summary>
         /// Called when a hero has ended his turn. Removes movement and attacks.
         /// </summary>
