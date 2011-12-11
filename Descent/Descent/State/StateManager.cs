@@ -375,7 +375,7 @@ namespace Descent.State
                         //TODO Pickuptoken/marker, if there is any
                     }
 
-                    if (Player.Instance.Hero.AttacksLeft > 0 && FullModel.Board.Distance(standingPoint, new Point(eventArgs.X, eventArgs.Y)) >= 1 && (FullModel.Board[eventArgs.X, eventArgs.Y] != null && (FullModel.Board[eventArgs.X, eventArgs.Y].Figure != null && FullModel.Board.IsThereLineOfSight(figure, FullModel.Board[eventArgs.X, eventArgs.Y].Figure, false))))
+                    if (figure.AttacksLeft > 0 && FullModel.Board.Distance(standingPoint, new Point(eventArgs.X, eventArgs.Y)) >= 1 && (FullModel.Board[eventArgs.X, eventArgs.Y] != null && (FullModel.Board[eventArgs.X, eventArgs.Y].Figure != null && FullModel.Board.IsThereLineOfSight(figure, FullModel.Board[eventArgs.X, eventArgs.Y].Figure, false))))
                     {
                         // A figure is trying to attack another figure.
                         eventManager.QueueEvent(EventType.AttackSquare, new CoordinatesEventArgs(eventArgs.X, eventArgs.Y));
@@ -825,10 +825,10 @@ namespace Descent.State
 
         private void RequestTurn(object sender, GameEventArgs eventArgs)
         {
-            Contract.Requires(CurrentState == State.WaitForHeroTurn);
+            Contract.Requires(CurrentState == State.WaitForHeroTurn || CurrentState == State.Equip);
             Contract.Ensures(CurrentState == Contract.OldValue(CurrentState));
 
-            if (Player.Instance.IsServer && gameState.CurrentPlayer == 0 && gameState.CurrentPlayer == 0 && playersRemaining.Contains(eventArgs.SenderId))
+            if (Player.Instance.IsServer && gameState.CurrentPlayer == 0 && playersRemaining.Contains(eventArgs.SenderId))
             {
                 eventManager.QueueEvent(EventType.TurnChanged, new PlayerEventArgs(eventArgs.SenderId));
                 gameState.CurrentPlayer = eventArgs.SenderId;
