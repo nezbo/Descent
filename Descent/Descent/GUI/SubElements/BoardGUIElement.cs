@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using Descent.GUI.SubElements;
 using Descent.Messaging.Events;
 using Descent.Model.Board;
 using Descent.Model.Player;
@@ -225,7 +226,7 @@ namespace Descent.GUI
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-            texts.Clear();
+            children.Clear();
 
             KeyboardState keyState = Keyboard.GetState();
             if (keyState.IsKeyDown(Keys.Left) && xDisp > -BorderTiles * TileSize) xDisp -= 10;
@@ -241,10 +242,10 @@ namespace Descent.GUI
             if (board.IsSquareWithinBoard(p.X, p.Y))
             {
                 Square s = board[p.X, p.Y];
-                if (s.Figure != null && s.Figure is Hero)
+                if (s.Figure != null && s.Figure is Monster)
                 {
-                    Hero h = (Hero)s.Figure;
-                    //AddText(this.Name, h.Name, new Vector2(ms.X, ms.Y)); //TODO:
+                    Monster m = (Monster)s.Figure;
+                    AddChild(new MonsterSummary(this.Game, ms.X, ms.Y, m));
                 }
             }
         }
