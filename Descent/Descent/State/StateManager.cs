@@ -4,6 +4,9 @@ namespace Descent.State
     using System.Collections.Generic;
     using System.Diagnostics.Contracts;
     using System.Linq;
+
+    using Descent.Model.Board.Marker;
+
     using GUI;
     using Messaging.Events;
 
@@ -49,6 +52,7 @@ namespace Descent.State
             eventManager.AssignHeroEvent += AssignHero;
             eventManager.RequestBuyEquipmentEvent += RequestBuyEquipment;
             eventManager.GiveEquipmentEvent += GiveEquipment;
+            eventManager.GiveCoinsEvent += GiveCoins;
             eventManager.FinishedBuyEvent += FinishedBuy;
             eventManager.FinishedReequipEvent += FinishedReequip;
             eventManager.SwitchItemsEvent += SwitchItems;
@@ -74,6 +78,8 @@ namespace Descent.State
             eventManager.WasKilledEvent += WasKilled;
             eventManager.MissedAttackEvent += MissedAttack;
             eventManager.FinishedAttackEvent += FinishedAttack;
+            eventManager.PickupMarkerEvent += PickupMarker;
+            eventManager.OpenChestEvent += OpenChest;
 
             // Internal events
             eventManager.SquareMarkedEvent += new SquareMarkedHandler(SquareMarked);
@@ -379,9 +385,18 @@ namespace Descent.State
                             eventManager.QueueEvent(EventType.OpenDoor, new CoordinatesEventArgs(eventArgs.X, eventArgs.Y));
                         }
                     }
-                    else if (FullModel.Board.Distance(standingPoint, new Point(eventArgs.X, eventArgs.Y)) == 0)
+                    else if (FullModel.Board.Distance(standingPoint, new Point(eventArgs.X, eventArgs.Y)) == 0 && figure is Hero && FullModel.Board[eventArgs.X, eventArgs.Y].Marker != null)
                     {
-                        //TODO Pickuptoken/marker, if there is any
+                        Marker marker = FullModel.Board[eventArgs.X, eventArgs.Y].Marker;
+
+                        if (figure.MovementLeft >= marker.MovementPoints)
+                        {
+                            if (marker is PotionMarker)
+                            {
+                                if (!Player.Instance.Hero.Inventory.CanEquipPotion) return;
+                            }
+                            eventManager.QueueEvent(EventType.PickupMarker, new CoordinatesEventArgs(eventArgs.X, eventArgs.Y));
+                        }
                     }
 
                     if (figure.AttacksLeft > 0 && FullModel.Board.IsSquareWithinBoard(new Point(eventArgs.X, eventArgs.Y)) && FullModel.Board.Distance(standingPoint, new Point(eventArgs.X, eventArgs.Y)) >= 1 && (FullModel.Board[eventArgs.X, eventArgs.Y] != null && (FullModel.Board[eventArgs.X, eventArgs.Y].Figure != null && FullModel.Board.IsThereLineOfSight(figure, FullModel.Board[eventArgs.X, eventArgs.Y].Figure, false))))
@@ -737,7 +752,7 @@ namespace Descent.State
 
         private void GiveEquipment(object sender, GiveEquipmentEventArgs eventArgs)
         {
-            Contract.Requires(CurrentState == State.BuyEquipment || CurrentState == State.AllBuyEquipment);
+            Contract.Requires(CurrentState == State.BuyEquipment || CurrentState == State.AllBuyEquipment || CurrentState == State.AllEquip);
             Contract.Ensures(CurrentState == Contract.OldValue(CurrentState));
 
             Equipment equipment = FullModel.GetEquipment(eventArgs.EquipmentId);
@@ -813,12 +828,13 @@ namespace Descent.State
         {
             Contract.Requires(CurrentState == State.Equip || CurrentState == State.AllEquip);
             Contract.Ensures(CurrentState == (Contract.OldValue(CurrentState) == State.Equip ? State.WaitForChooseAction :
-                (playersRemaining.Count == Player.Instance.HeroParty.NumberOfHeroes) ? State.WaitForChooseSquare : State.AllEquip));
+                (playersRemaining.Count == Player.Instance.HeroParty.NumberOfHeroes ? 
+                Contract.OldValue(stateMachine.NextState) : Contract.OldValue(CurrentState))));
 
             gameState.RemoveAllUnequippedEquipment(eventArgs.SenderId);
             playersRemaining.Remove(eventArgs.SenderId);
 
-            if (gameState.CurrentPlayer != 0)
+            if (gameState.CurrentPlayer != 0 && stateMachine.IsOneMoreRecentThanOther(State.WaitForHeroTurn, State.OpenChest))
             {
                 stateMachine.ChangeToNextState();
             }
@@ -1041,6 +1057,78 @@ namespace Descent.State
                     stateMachine.ChangeToNextState();
                 }
             }
+        }
+
+        private void PickupMarker(object sender, CoordinatesEventArgs eventArgs)
+        {
+            Contract.Requires(CurrentState == State.WaitForPerformAction);
+            Contract.Ensures(CurrentState == State.WaitForPerformAction);
+            FullModel.Board[eventArgs.X, eventArgs.Y].Marker.PickUp(Player.Instance.HeroParty.Heroes[eventArgs.SenderId]);
+            FullModel.Board[eventArgs.X, eventArgs.Y].Marker = null;
+        }
+
+        private void OpenChest(object sender, ChestEventArgs eventArgs)
+        {
+            Contract.Requires(CurrentState == State.WaitForPerformAction);
+            Contract.Ensures(CurrentState == State.AllEquip);
+
+            Chest chest = gameState.getChest(eventArgs.ChestId);
+
+            // Give conquest tokens to the hero party
+            Player.Instance.HeroParty.AddConquestTokens(chest.ConquestTokens);
+
+            // Give coins to each hero
+            foreach (Hero hero in Player.Instance.HeroParty.Heroes.Values)
+            {
+                hero.Coins += chest.Coin;
+            }
+
+            // Give threat tokens to the overlord
+            Player.Instance.Overlord.ThreatTokens += Player.Instance.HeroParty.Heroes.Count * chest.Curses;
+
+            // Go into equip
+            stateMachine.PlaceStates(State.OpenChest, State.AllEquip);
+            AllPlayersRemain();
+            stateMachine.ChangeToNextState();
+            stateMachine.ChangeToNextState();
+
+            // If we are the server, we are responsible for giving out treasures in the chest.
+            if (Player.Instance.IsServer)
+            {
+               // Get a treasure for each hero
+                Treasure[] treasures = gameState.getTreasures(Player.Instance.HeroParty.Heroes.Count, chest.Rarity);
+
+                int treasureCount = 0;
+                foreach (int heroPlayerId in Player.Instance.HeroParty.Heroes.Keys)
+                {
+                    GiveTreasure(heroPlayerId, treasures[treasureCount]);
+                    treasureCount++;
+                } 
+            }     
+        }
+        
+        private void GiveTreasure(int playerId, Treasure treasure)
+        {
+            // Treasure may have coins
+            if (treasure.Coins > 0) eventManager.QueueEvent(EventType.GiveCoins, new GiveCoinsEventArgs(playerId, treasure.Coins));
+
+            // Treasure may have equipment
+            if (treasure.Equipment != null) eventManager.QueueEvent(EventType.GiveEquipment, new GiveEquipmentEventArgs(playerId, treasure.Equipment.Id));
+
+            if(treasure.IsTreasureCache)
+            {
+                // If treasure is a cache
+                GiveTreasure(playerId, gameState.getTreasures(1, treasure.Rarity).First());
+            }
+            else
+            {
+                return; // We are done here!
+            }
+        }
+
+        private void GiveCoins(object sender, GiveCoinsEventArgs eventArgs)
+        {
+            Player.Instance.HeroParty.Heroes[eventArgs.PlayerId].Coins += eventArgs.NumberOfCoins;
         }
 
         #endregion
