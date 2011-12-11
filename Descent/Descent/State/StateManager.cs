@@ -580,6 +580,7 @@ namespace Descent.State
             if (attack.MissedAttack || FullModel.Board.Distance(FullModel.Board.FiguresOnBoard[attack.AttackingFigure], targetSquare) > attack.Range)
             {
                 eventManager.QueueEvent(EventType.MissedAttack, new GameEventArgs());
+                eventManager.QueueEvent(EventType.ChatMessage, new ChatMessageEventArgs(attack.AttackingFigure.Name + " missed the attack!"));
                 return;
             }
 
@@ -1354,14 +1355,19 @@ namespace Descent.State
                 damage -= 1; // TODO get real armor value
             }
             Contract.Assert(damage >= 0);
+
+            string status =  figure.Name + " ";
             if (damage >= figure.Health)
             {
                 eventManager.QueueEvent(EventType.WasKilled, new CoordinatesEventArgs(eventArgs.X, eventArgs.Y));
+                status += "was killed!";
             }
             else
             {
                 eventManager.QueueEvent(EventType.DamageTaken, new DamageTakenEventArgs(eventArgs.X, eventArgs.Y, damage));
+                status += "lost " + damage + " health!";
             }
+            eventManager.QueueEvent(EventType.ChatMessage, new ChatMessageEventArgs(status));
         }
 
         private void DamageTaken(object sender, DamageTakenEventArgs eventArgs)
