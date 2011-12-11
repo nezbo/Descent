@@ -8,10 +8,7 @@ using System.Diagnostics.Contracts;
 
 namespace Descent.Model.Player.Figure.HeroStuff
 {
-    using System;
-    using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
 
     public enum EquipmentSlot
     {
@@ -354,11 +351,11 @@ namespace Descent.Model.Player.Figure.HeroStuff
         public bool CanEquipAtIndex(int slot, Equipment equipment)
         {
             if (equipment == null) return true;
-            return  slot == (int)EquipmentSlot.Weapon ? 
+            return slot == (int)EquipmentSlot.Weapon ?
                 equipment.Type == EquipmentType.Weapon && this.CanEquipWeapon(equipment) :
-                        slot == (int)EquipmentSlot.Shield ? 
+                        slot == (int)EquipmentSlot.Shield ?
                         equipment.Type == EquipmentType.Shield :
-                               slot == (int)EquipmentSlot.Armor ? 
+                               slot == (int)EquipmentSlot.Armor ?
                                equipment.Type == EquipmentType.Armor :
                                     slot >= (int)EquipmentSlot.Other && slot < (int)EquipmentSlot.Potion ?
                                     equipment.Type == EquipmentType.Other :

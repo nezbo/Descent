@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Descent.Model.Player;
 using Descent.Model.Player.Figure;
 using Descent.Model.Player.Figure.HeroStuff;
 using Microsoft.Xna.Framework;
@@ -9,6 +10,10 @@ namespace Descent.GUI.SubElements
     class HeroElement : GUIElement
     {
         private Hero hero;
+
+        private Texture2D meleeT;
+        private Texture2D rangedT;
+        private Texture2D magicT;
 
         private Rectangle healthRect;
         private Rectangle fatigueRect;
@@ -21,10 +26,14 @@ namespace Descent.GUI.SubElements
             this.hero = hero;
             this.SetDrawBackground(false);
 
-            healthRect = new Rectangle(210, this.Bound.Height - 200, 50, 50);
-            fatigueRect = new Rectangle(210, this.Bound.Height - 150, 50, 50);
-            movementRect = new Rectangle(210, this.Bound.Height - 100, 50, 50);
-            attacksRect = new Rectangle(210, this.Bound.Height - 50, 50, 50);
+            meleeT = game.Content.Load<Texture2D>("Images/Other/training-melee");
+            rangedT = game.Content.Load<Texture2D>("Images/Other/training-ranged");
+            magicT = game.Content.Load<Texture2D>("Images/Other/training-magic");
+
+            healthRect = new Rectangle(225, this.Bound.Height - 200, 50, 50);
+            fatigueRect = new Rectangle(225, this.Bound.Height - 150, 50, 50);
+            movementRect = new Rectangle(225, this.Bound.Height - 100, 50, 50);
+            attacksRect = new Rectangle(225, this.Bound.Height - 50, 50, 50);
 
             this.AddDrawable(this.Name, new Image(hero.BigTexture), new Vector2(0, this.Bound.Height - hero.BigTexture.Height));
             this.AddDrawable(this.Name, new Image(game.Content.Load<Texture2D>("Images/Other/health-small")), healthRect);
@@ -66,6 +75,33 @@ namespace Descent.GUI.SubElements
         {
             base.Draw(draw);
 
+            // training
+            int yPos = Bound.Height - 25;
+            int number;
+
+            number = hero.TrainingTokens(EAttackType.MELEE);
+            while (number > 0)
+            {
+                draw.Draw(meleeT, new Rectangle(200, yPos, 25, 25), Color.White);
+                yPos -= 25;
+                number--;
+            }
+            number = hero.TrainingTokens(EAttackType.RANGED);
+            while (number > 0)
+            {
+                draw.Draw(rangedT, new Rectangle(200, yPos, 25, 25), Color.White);
+                yPos -= 25;
+                number--;
+            }
+            number = hero.TrainingTokens(EAttackType.MAGIC);
+            while (number > 0)
+            {
+                draw.Draw(magicT, new Rectangle(200, yPos, 25, 25), Color.White);
+                yPos -= 25;
+                number--;
+            }
+
+            // values
             draw.DrawString(GUI.Font, hero.Health + "/" + hero.MaxHealth, new Vector2(healthRect.X + 8, healthRect.Y + 16), Color.White);
             draw.DrawString(GUI.Font, hero.Fatigue + "/" + hero.MaxFatigue, new Vector2(fatigueRect.X + 12, fatigueRect.Y + 25), Color.White);
             draw.DrawString(GUI.Font, hero.MovementLeft + "/" + hero.Speed, new Vector2(movementRect.X + 15, movementRect.Y + 20), Color.White);

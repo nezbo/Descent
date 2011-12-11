@@ -12,7 +12,7 @@ namespace Descent.GUI
         public Equipment Equipment { get; internal set; }
         public int Id { get; internal set; }
 
-        public EquipmentElement(Game game, int posX, int posY, int width, int height, Equipment eq, int id)
+        public EquipmentElement(Game game, int posX, int posY, int width, int height, string slotTitle, Equipment eq, int id)
             : base(game, "item", posX, posY, width, height)
         {
             Equipment = eq;
@@ -30,7 +30,7 @@ namespace Descent.GUI
 
             if (Equipment == null)
             {
-                this.AddText(this.Name, "Empty", new Vector2(0, 0));
+                this.AddText(this.Name, slotTitle + " (Empty)", new Vector2(0, 0));
             }
             else
             {
