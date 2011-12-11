@@ -121,13 +121,15 @@ namespace Descent.GUI
                 }
 
                 // ok, its within me
-                if (drawBg)
+
+                ActOnDirectClick(x, y);
+                if (onClick != null)
                 {
-                    ActOnDirectClick(x, y);
-                    if (onClick != null)
-                    {
-                        onClick(Player.Instance, this);
-                    }
+                    onClick(Player.Instance, this);
+                }
+
+                if (drawBg || VisualClicked(x, y))
+                {
                     focus = true;
                     return true;
                 }
@@ -140,6 +142,15 @@ namespace Descent.GUI
             // ill let all my children discover that
             foreach (GUIElement e in children) e.HandleClick(x, y);
             focus = false;
+            return false;
+        }
+
+        private bool VisualClicked(int x, int y)
+        {
+            foreach (Rectangle r in visuals.Values)
+            {
+                if (r.Contains(x, y)) return true;
+            }
             return false;
         }
 
