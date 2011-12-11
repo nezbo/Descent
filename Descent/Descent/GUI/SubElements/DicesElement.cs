@@ -37,16 +37,16 @@ namespace Descent.GUI.SubElements
                         if (dices[d].Color == diceType)
                         {
                             Dice die = dices[d];
+                            int index = d;
                             GUIElement diceBox = new GUIElement(game, "dice", Bound.X + Spacing + number * die.Texture.Width + number * Spacing,
                                                                 Bound.Y + Spacing + line * die.Texture.Height + line * Spacing,
                                                                 die.Texture.Width, die.Texture.Height);
                             diceBox.AddDrawable(diceBox.Name, die, new Vector2(diceBox.Bound.X, diceBox.Bound.Y));
                             diceBox.SetClickAction(diceBox.Name, (n, g) =>
                                                                      {
-                                                                         System.Diagnostics.Debug.WriteLine(d + "," + die.SideIndex);
                                                                          n.EventManager.QueueEvent(
                                                                              EventType.DiceClicked,
-                                                                             new DiceEventArgs(d, die.SideIndex));
+                                                                             new DiceEventArgs(index, die.SideIndex));
                                                                      });
                             this.AddChild(diceBox);
 

@@ -128,7 +128,7 @@ namespace Descent.GUI
                     onClick(Player.Instance, this);
                 }
 
-                if (drawBg)
+                if (drawBg || VisualClicked(x, y))
                 {
                     focus = true;
                     return true;
@@ -142,6 +142,15 @@ namespace Descent.GUI
             // ill let all my children discover that
             foreach (GUIElement e in children) e.HandleClick(x, y);
             focus = false;
+            return false;
+        }
+
+        private bool VisualClicked(int x, int y)
+        {
+            foreach (Rectangle r in visuals.Values)
+            {
+                if (r.Contains(x, y)) return true;
+            }
             return false;
         }
 

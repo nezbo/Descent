@@ -44,7 +44,6 @@ namespace Descent.GUI.SubElements
             fatigueBox.AddDrawable(fatigueBox.Name, new Image(game.Content.Load<Texture2D>("Images/Other/fatigue-small")), fatigueRect);
             fatigueBox.SetClickAction(fatigueBox.Name, (n, g) =>
                                                          {
-                                                             System.Diagnostics.Debug.WriteLine("Fatigue clicked!");
                                                              n.EventManager.QueueEvent(EventType.FatigueClicked, new GameEventArgs());
                                                          });
             AddChild(fatigueBox);
