@@ -18,6 +18,7 @@ namespace Descent.Model.Event
         Pierce,
         Surge,
         QuickShot,
+        Armor,
         None
     }
 
@@ -67,6 +68,10 @@ namespace Descent.Model.Event
                         break;
                     case "Surge":
                         ability.bonus = AbilityBonus.Surge;
+                        ability.amount = int.Parse(data[++i]);
+                        break;
+                    case "Armor":
+                        ability.bonus = AbilityBonus.Armor;
                         ability.amount = int.Parse(data[++i]);
                         break;
                     case "QuickShot":
@@ -143,13 +148,13 @@ namespace Descent.Model.Event
 
         public void Apply(Figure figure)
         {
-            figure = figure;
+            this.figure = figure;
             if (!triggered || trigger.Invoke())
             {
                 switch (bonus)
                 {
                     case AbilityBonus.Damage:
-                        figure.DamageContribution += new Model.Player.Figure.Bonus<int>(IntBonus);
+                        figure.DamageContribution += IntBonus;
                         break;
                     case AbilityBonus.Pierce:
                         figure.PierceContribution += IntBonus;
@@ -161,6 +166,9 @@ namespace Descent.Model.Event
                         figure.SurgeContribution += IntBonus;
                         break;
                     case AbilityBonus.QuickShot:
+                        break;
+                    case AbilityBonus.Armor:
+                        figure.ArmorContribution += IntBonus;
                         break;
                 }
             }
