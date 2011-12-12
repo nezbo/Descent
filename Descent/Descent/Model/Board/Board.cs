@@ -651,6 +651,13 @@
         public void PlaceFigure(Figure figure, Point point)
         {
             this[point].Figure = figure;
+            for (int x = point.X; x < point.X + (figure.Orientation.Equals(Orientation.V) ? figure.Size.Width : figure.Size.Height); x++)
+            {
+                for (int y = point.Y; y < point.Y + (figure.Orientation.Equals(Orientation.V) ? figure.Size.Height : figure.Size.Width); y++)
+                {
+                    board[x, y].Figure = figure;
+                }
+            }
             figuresOnBoard[figure] = point;
             boardChanged = true;
         }

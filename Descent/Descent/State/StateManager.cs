@@ -1150,7 +1150,8 @@ namespace Descent.State
             Contract.Ensures(CurrentState == State.WaitForPerformAction);
 
             // Record monsterId
-            currentMonster = (Monster)FullModel.Board.FiguresOnBoard.Single(pair => pair.Value.X == eventArgs.X && pair.Value.Y == eventArgs.Y).Key;
+            //currentMonster = (Monster)FullModel.Board.FiguresOnBoard.Single(pair => pair.Value.X == eventArgs.X && pair.Value.Y == eventArgs.Y).Key;
+            currentMonster = (Monster)FullModel.Board[eventArgs.X, eventArgs.Y].Figure;
 
             stateMachine.PlaceStates(State.MonsterTurn);
             stateMachine.ChangeToNextState();
@@ -1223,7 +1224,15 @@ namespace Descent.State
                     // If we're not in a monster turn, all monsters should be marked to indicate all monsters can be chosen, but only for the overlord.
                     foreach (Point point in FullModel.Board.FiguresOnBoard.Where(pair => monstersRemaining.Contains(pair.Key)).Select(pair => pair.Value))
                     {
-                        gui.MarkSquare(point.X, point.Y, true);
+                        Figure monster = FullModel.Board[point].Figure;
+                        
+                        for (int x = point.X; x < point.X + (monster.Orientation.Equals(Orientation.V) ? monster.Size.Width : monster.Size.Height); x++)
+                        {
+                            for (int y = point.Y; y < point.Y + (monster.Orientation.Equals(Orientation.V) ? monster.Size.Height : monster.Size.Width); y++)
+                            {
+                                gui.MarkSquare(point.X, point.Y, true);
+                            }
+                        }
                     }
                 }
             }
@@ -1231,7 +1240,14 @@ namespace Descent.State
             {
                 // We have a current monster, mark only this monster indicate that the overlord can only perform actions with this monster.
                 Point monsterpoint = FullModel.Board.FiguresOnBoard[currentMonster];
-                gui.MarkSquare(monsterpoint.X, monsterpoint.Y, true);
+                for (int x = monsterpoint.X; x < monsterpoint.X + (currentMonster.Orientation.Equals(Orientation.V) ? currentMonster.Size.Width : currentMonster.Size.Height); x++)
+                {
+                    for (int y = monsterpoint.Y; y < monsterpoint.Y + (currentMonster.Orientation.Equals(Orientation.V) ? currentMonster.Size.Height : currentMonster.Size.Width); y++)
+                    {
+                        gui.MarkSquare(monsterpoint.X, monsterpoint.Y, true);
+                    }
+                }
+                
             }
 
         }
