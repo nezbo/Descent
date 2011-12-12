@@ -31,6 +31,8 @@ namespace Descent.GUI
 
         private bool drawBg = true;
         private Texture2D background = null;
+        private SpriteFont font = null;
+        private SpriteFont Font { get { return font ?? GUI.Font; } }
 
         private bool focus;
 
@@ -81,6 +83,11 @@ namespace Descent.GUI
             return this.focus;
         }
 
+        public void SetFont(SpriteFont newFont)
+        {
+            font = newFont;
+        }
+
         public void SetFocus(bool focus)
         {
             Contract.Requires(HasFocus() == focus);
@@ -105,11 +112,12 @@ namespace Descent.GUI
             {
                 // is it within any of my children?
                 bool handled = false;
-                foreach (GUIElement e in children)
+                for (int i = children.Count - 1; i >= 0; i--)
                 {
-                    if (e.HandleClick(x, y))
+                    if (children[i].HandleClick(x, y))
                     {
                         handled = true;
+                        break;
                     }
                 }
                 if (handled) // did someone take it?
@@ -119,8 +127,8 @@ namespace Descent.GUI
                 }
 
                 // ok, its within me
-
                 ActOnDirectClick(x, y);
+
                 if (onClick != null)
                 {
                     onClick(Player.Instance, this);
@@ -424,7 +432,7 @@ namespace Descent.GUI
             // draw my own text
             foreach (Text t in texts)
             {
-                draw.DrawString(GUI.Font, t.Line, t.Position, t.Color);
+                draw.DrawString(Font, t.Line, t.Position, t.Color);
             }
 
             // draw the children on top
