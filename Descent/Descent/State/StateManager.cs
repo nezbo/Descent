@@ -1093,7 +1093,11 @@ namespace Descent.State
             Contract.Requires(CurrentState == State.WaitForPerformAction);
             Contract.Ensures(CurrentState == State.WaitForPerformAction);
             FullModel.Board[eventArgs.X, eventArgs.Y].Marker.PickUp(Player.Instance.HeroParty.Heroes[eventArgs.SenderId]);
-            FullModel.Board[eventArgs.X, eventArgs.Y].Marker = null;
+            if (!(FullModel.Board[eventArgs.X, eventArgs.Y].Marker is GlyphMarker))
+            {
+                FullModel.Board[eventArgs.X, eventArgs.Y].Marker = null;  
+            }
+            
         }
 
         private void OpenChest(object sender, ChestEventArgs eventArgs)
