@@ -106,7 +106,7 @@ namespace Descent.Model.Player
         /// </param>
         public void AddConquestTokens(int tokens)
         {
-            Contract.Requires(tokens > 0);
+            Contract.Requires(tokens >= 0);
             Contract.Ensures(ConquestTokens == Contract.OldValue(ConquestTokens) + tokens);
             ConquestTokens += tokens;
         }
@@ -186,7 +186,7 @@ namespace Descent.Model.Player
         [ContractInvariantMethod]
         private void ObjectInvariant()
         {
-            Contract.Invariant(NumberOfHeroes >= 0 && NumberOfHeroes <= 4);
+            // Contract.Invariant(NumberOfHeroes >= 0 && NumberOfHeroes <= 4); TODO Breaks because at the beginning, all players are heroes (until OverlordIs event)
         }
         #endregion
     }

@@ -5,12 +5,12 @@ using Descent.Model.Player.Figure.HeroStuff;
 
 namespace Descent.GUI
 {
+    using System.Linq;
     using Descent.Model.Board;
     using Descent.Model.Player;
     using Descent.State;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
-
 
     /// <summary>
     /// Responsible for creating the GUIElements for the different layers of the gui and
@@ -123,7 +123,7 @@ namespace Descent.GUI
 
                         int width = RelW(g, 10);
 
-                        Equipment[] shopContent = gameState.CurrentEquipment;
+                        Equipment[] shopContent = gameState.CurrentEquipment.Where(n => n.Rarity == EquipmentRarity.Common).Distinct().ToArray();
                         for (int y = 0; y < 4; y++)
                         {
                             for (int x = 0; x < 6; x++)
@@ -227,7 +227,7 @@ namespace Descent.GUI
                         }
                         else if (role == Role.Overlord && Player.Instance.StateManager.HasTurn())
                         {
-                            GUIElement end = new GUIElement(game, "end", RelW(g, 3), RelW(g, 3), RelW(g, 15), RelH(g, 10));
+                            GUIElement end = new GUIElement(game, "end", RelW(g, 3), RelW(g, 3), RelW(g, 15), RelH(g, 8));
                             root.AddChild(end);
                             root.AddText(end.Name, "End Monster Turn", new Vector2(5, 5));
                         }
@@ -237,7 +237,7 @@ namespace Descent.GUI
                     {
                         if (role == Role.Overlord)
                         {
-                            GUIElement end = new GUIElement(game, "end", RelW(g, 3), RelW(g, 3), RelW(g, 15), RelH(g, 10));
+                            GUIElement end = new GUIElement(game, "end", RelW(g, 3), RelW(g, 3), RelW(g, 15), RelH(g, 8));
 
                             root.AddChild(end);
                             root.AddText(end.Name, "End Overlord Turn", new Vector2(5, 5));

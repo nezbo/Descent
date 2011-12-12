@@ -79,14 +79,17 @@ namespace Descent.State
         public bool IsOneMoreRecentThanOther(State one, State other)
         {
             int index = currentIndex;
-            while (index >= 0 && (_states[index] != one || _states[index] != other))
+            while (index >= 0)
             {
+                if (_states[index] == one)
+                {
+                    return true;
+                }
+                else if (_states[index] == other)
+                {
+                    return false;
+                }
                 index--;
-            }
-
-            if (index >= 0)
-            {
-                return _states[index] == one;
             }
             return false; // there were no "one" at all
         }
