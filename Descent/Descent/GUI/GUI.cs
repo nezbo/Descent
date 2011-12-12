@@ -52,6 +52,7 @@ namespace Descent.GUI
         /// <summary>
         /// Draws the GUI to the screen.
         /// </summary>
+        /// <param name="draw">The SpriteBatch to draw on.</param>
         public void Draw(SpriteBatch draw)
         {
             draw.Begin();
@@ -96,7 +97,7 @@ namespace Descent.GUI
         /// Updates the content of the gui by checking for mouse
         /// clicks and key presses.
         /// </summary>
-        /// <param name="delta">The number of milliseconds since last update</param>
+        /// <param name="gameTime">The GameTime object for this game.</param>
         public override void Update(GameTime gameTime)
         {
             if (Game.IsActive)
@@ -146,6 +147,7 @@ namespace Descent.GUI
         /// that displays the game board.
         /// </summary>
         /// <param name="board">The board to be displayed.</param>
+        /// <param name="role">The Role determining how much is visible on the board.</param>
         public void CreateBoardGUI(Board board, Role role)
         {
             layers[0] = GUIElementFactory.CreateBoardElement(Game, board, role);
@@ -155,7 +157,7 @@ namespace Descent.GUI
         /// Creates (and initiates) the layer of the GUI
         /// that displays the chat and player stats
         /// </summary>
-        /// <param name="model"></param>
+        /// <param name="role">The Role that should be created a menu for.</param>
         public void CreateMenuGUI(Role role)
         {
             layers[2] = GUIElementFactory.CreateMenuElement(Game, role);
