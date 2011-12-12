@@ -83,6 +83,12 @@ namespace Descent.State
             eventManager.PickupMarkerEvent += PickupMarker;
             eventManager.OpenChestEvent += OpenChest;
             eventManager.RemoveOverlordCardEvent += RemoveOverlordCard;
+            eventManager.AddHealthEvent += AddHealth;
+            eventManager.RemoveHealthEvent += RemoveHealth;
+            eventManager.AddFatigueEvent += AddFatigue;
+            eventManager.RemoveFatigueEvent += RemoveFatigue;
+            eventManager.AddMovementEvent += AddMovement;
+            eventManager.RemoveMovementEvent += RemoveMovement;
 
             // Internal events
             eventManager.SquareMarkedEvent += new SquareMarkedHandler(SquareMarked);
@@ -380,6 +386,9 @@ namespace Descent.State
 
                     if (FullModel.Board.IsSquareWithinBoard(new Point(eventArgs.X, eventArgs.Y)) && FullModel.Board.Distance(standingPoint, new Point(eventArgs.X, eventArgs.Y)) == 1)
                     {
+                        //if(FullModel.Board[eventArgs.X, eventArgs.Y].Marker != null && figure.Size.Equals(new Rectangle(0, 0, 1, 1)) && FullModel.Board[eventArgs.X, eventArgs.Y].Marker.Name.Equals("pit"))
+                        //{
+                        //  
                         // Move to adjecent
                         // If a an entire figure can move to the square
                         if (FullModel.Board.CanFigureMoveToPoint(figure, new Point(eventArgs.X, eventArgs.Y)) && figure.MovementLeft >= 1)
@@ -498,6 +507,9 @@ namespace Descent.State
 
         private void InventoryFieldMarked(object sender, InventoryFieldEventArgs eventArgs)
         {
+            Hero hero = Player.Instance.Hero;
+            Inventory inventory = hero.Inventory;
+
             switch (CurrentState)
             {
                 case State.Equip:
@@ -512,8 +524,7 @@ namespace Descent.State
                     }
                     else
                     {
-                        Hero hero = Player.Instance.Hero;
-                        Inventory inventory = hero.Inventory;
+                        
                         int realId1 = inventoryFieldMarked,
                             realId2 = eventArgs.InventoryField,
                             parsedId1 = (realId1 > 99) ? realId1 - 100 : realId1,
@@ -555,6 +566,35 @@ namespace Descent.State
 
                         inventoryFieldMarked = -1;
                     }
+                    break;
+                case State.WaitForPerformAction:
+                    if (eventArgs.InventoryField >= 5 && eventArgs.InventoryField <= 7 && hero.MovementLeft >= 1)
+                    {
+                        // A hero can keep chucking potions as long as he has movement.
+
+                        // There's a potion on the inventory field clicked
+                        if (inventory[eventArgs.InventoryField] != null)
+                        {
+                            Equipment equipment = inventory[eventArgs.InventoryField];
+
+                            if (equipment.Id == 11)
+                            {
+                                // Health potion
+                                eventManager.QueueEvent(EventType.AddHealth, new PointsEventArgs(3));
+                                eventManager.QueueEvent(EventType.RemoveMovement, new PointsEventArgs(1));
+                                inventory[eventArgs.InventoryField] = null;
+                            }
+                            else if (equipment.Id == 12)
+                            {
+                                // Vitality potion
+                                eventManager.QueueEvent(EventType.AddFatigue, new PointsEventArgs(hero.MaxFatigue));
+                                eventManager.QueueEvent(EventType.RemoveMovement, new PointsEventArgs(1));
+                                inventory[eventArgs.InventoryField] = null;
+                            }
+
+                        }
+                    }
+
                     break;
             }
         }
@@ -912,6 +952,9 @@ namespace Descent.State
             Contract.Requires(CurrentState == State.NewRound);
             Contract.Ensures(CurrentState == State.WaitForHeroTurn);
 
+            // Place dead heroes on board
+            FullModel.Board.RespawnDeadHeroes();
+
             AllPlayersRemainTurn(); // For WaitForHeroTurn
             ResetCurrentPlayer();
 
@@ -1166,6 +1209,36 @@ namespace Descent.State
             Player.Instance.HeroParty.Heroes[eventArgs.PlayerId].Coins += eventArgs.NumberOfCoins;
         }
 
+        private void AddHealth(object sender, PointsEventArgs eventArgs)
+        {
+            Player.Instance.HeroParty.Heroes[eventArgs.SenderId].AddHealth(eventArgs.Points);
+        }
+
+        private void RemoveHealth(object sender, PointsEventArgs eventArgs)
+        {
+            Player.Instance.HeroParty.Heroes[eventArgs.SenderId].RemoveHealth(eventArgs.Points);
+        }
+
+        private void AddFatigue(object sender, PointsEventArgs eventArgs)
+        {
+            Player.Instance.HeroParty.Heroes[eventArgs.SenderId].AddFatigue(eventArgs.Points);
+        }
+
+        private void RemoveFatigue(object sender, PointsEventArgs eventArgs)
+        {
+            Player.Instance.HeroParty.Heroes[eventArgs.SenderId].RemoveFatigue(eventArgs.Points);
+        }
+
+        private void AddMovement(object sender, PointsEventArgs eventArgs)
+        {
+            Player.Instance.HeroParty.Heroes[eventArgs.SenderId].AddMovement(eventArgs.Points);
+        }
+
+        private void RemoveMovement(object sender, PointsEventArgs eventArgs)
+        {
+            Player.Instance.HeroParty.Heroes[eventArgs.SenderId].RemoveMovement(eventArgs.Points);
+        }
+
         #endregion
 
         #region Overlord methods
@@ -1210,18 +1283,8 @@ namespace Descent.State
             Player.Instance.Overlord.ThreatTokens += Player.Instance.HeroParty.NumberOfHeroes;
             if (Player.Instance.IsServer)
             {
-                if (Player.Instance.Overlord.Hand.Count >= 7)
-                {
-                    return; // Overlord need to sell cards before he can receive more.
-                }
-                else
-                {
-                    int[] overlordCardIds = gameState.GetOverlordCards(2).Select(card => card.Id).ToArray();
-                    if (overlordCardIds.Length >= 1)
-                    {
-                        eventManager.QueueEvent(EventType.GiveOverlordCards, new GiveOverlordCardsEventArgs(overlordCardIds));
-                    }
-                }  
+                int[] overlordCardIds = gameState.GetOverlordCards(2).Select(card => card.Id).ToArray();
+                eventManager.QueueEvent(EventType.GiveOverlordCards, new GiveOverlordCardsEventArgs(overlordCardIds));
             }
 
             monstersRemaining = FullModel.Board.FiguresOnBoard.Where(pair => pair.Key is Monster && FullModel.Board.SquareVisibleByPlayers(pair.Value.X, pair.Value.Y)).Select(pair => (Monster)pair.Key).ToList();

@@ -85,6 +85,9 @@ namespace Descent.Messaging.Events
         WasKilled = 74,
         SurgeAbilityClicked = 75,
         FinishedAttack = 76,
-        PickupMarker = 77
+        PickupMarker = 77,
+        AddHealth = 78,
+        RemoveHealth = 79,
+        RemoveMovement = 80
     }
 }

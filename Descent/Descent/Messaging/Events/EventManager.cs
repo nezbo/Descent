@@ -130,11 +130,17 @@ namespace Descent.Messaging.Events
 
     public delegate void ChooseActionHandler(object sender, ChooseActionEventArgs eventArgs);
 
+    public delegate void AddHealthHandler(object sender, PointsEventArgs eventArgs);
+
+    public delegate void RemoveHealthHandler(object sender, PointsEventArgs eventArgs);
+
     public delegate void AddFatigueHandler(object sender, PointsEventArgs eventArgs);
 
     public delegate void RemoveFatigueHandler(object sender, PointsEventArgs eventArgs);
 
     public delegate void AddMovementHandler(object sender, PointsEventArgs eventArgs);
+
+    public delegate void RemoveMovementHandler(object sender, PointsEventArgs eventArgs);
 
     public delegate void SwitchItemsHandler(object sender, SwitchItemsEventArgs eventArgs);
 
@@ -318,11 +324,17 @@ namespace Descent.Messaging.Events
 
         public event ChooseActionHandler ChooseActionEvent;
 
+        public event AddHealthHandler AddHealthEvent;
+
+        public event RemoveHealthHandler RemoveHealthEvent;
+
         public event AddFatigueHandler AddFatigueEvent;
 
         public event RemoveFatigueHandler RemoveFatigueEvent;
 
         public event AddMovementHandler AddMovementEvent;
+
+        public event RemoveMovementHandler RemoveMovementEvent;
 
         public event SwitchItemsHandler SwitchItemsEvent;
 
@@ -628,6 +640,12 @@ namespace Descent.Messaging.Events
                 case EventType.ChooseAction:
                     if (ChooseActionEvent != null) ChooseActionEvent(this, (ChooseActionEventArgs)eventArgs);
                     break;
+                case EventType.AddHealth:
+                    if (AddHealthEvent != null) AddHealthEvent(this, (PointsEventArgs)eventArgs);
+                    break;
+                case EventType.RemoveHealth:
+                    if (RemoveHealthEvent != null) RemoveHealthEvent(this, (PointsEventArgs)eventArgs);
+                    break;
                 case EventType.AddFatigue:
                     if (AddFatigueEvent != null) AddFatigueEvent(this, (PointsEventArgs)eventArgs);
                     break;
@@ -636,6 +654,9 @@ namespace Descent.Messaging.Events
                     break;
                 case EventType.AddMovement:
                     if (AddMovementEvent != null) AddMovementEvent(this, (PointsEventArgs)eventArgs);
+                    break;
+                case EventType.RemoveMovement:
+                    if (RemoveMovementEvent != null) RemoveMovementEvent(this, (PointsEventArgs)eventArgs);
                     break;
                 case EventType.SwitchItems:
                     if (SwitchItemsEvent != null) SwitchItemsEvent(this, (SwitchItemsEventArgs)eventArgs);
@@ -848,11 +869,17 @@ namespace Descent.Messaging.Events
                     return new PlayerEventArgs(args);
                 case EventType.ChooseAction:
                     return new ChooseActionEventArgs(args);
+                case EventType.AddHealth:
+                    return new PointsEventArgs(args);
+                case EventType.RemoveHealth:
+                    return new PointsEventArgs(args);
                 case EventType.AddFatigue:
                     return new PointsEventArgs(args);
                 case EventType.RemoveFatigue:
                     return new PointsEventArgs(args);
                 case EventType.AddMovement:
+                    return new PointsEventArgs(args);
+                case EventType.RemoveMovement:
                     return new PointsEventArgs(args);
                 case EventType.SwitchItems:
                     return new SwitchItemsEventArgs(args);
