@@ -133,8 +133,9 @@ namespace Descent.GUI.SubElements
 
             // values
             string healthString = hero.Health + "/" + hero.MaxHealth;
-            int healthX = healthRect.X + (int)(GUI.Font.MeasureString(healthString).X - healthRect.Width) / 2;
+            int healthX = healthRect.X + (int)(healthRect.Width - GUI.Font.MeasureString(healthString).X) / 2;
             draw.DrawString(GUI.Font, healthString, new Vector2(healthX, healthRect.Y + 16), Color.White);
+
             draw.DrawString(GUI.Font, hero.Fatigue + "/" + hero.MaxFatigue, new Vector2(fatigueRect.X + 12, fatigueRect.Y + 25), Color.White);
             draw.DrawString(GUI.Font, "" + hero.Armor, new Vector2(armorRect.X + 20, armorRect.Y + 12), Color.White);
             draw.DrawString(GUI.Font, hero.MovementLeft + "/" + hero.Speed, new Vector2(movementRect.X + 15, movementRect.Y + 20), Color.White);
