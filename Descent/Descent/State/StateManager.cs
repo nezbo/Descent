@@ -405,7 +405,11 @@ namespace Descent.State
                         }
                     }
 
-                    if (figure.AttacksLeft > 0 && FullModel.Board.IsSquareWithinBoard(new Point(eventArgs.X, eventArgs.Y)) && FullModel.Board.Distance(standingPoint, new Point(eventArgs.X, eventArgs.Y)) >= 1 && (FullModel.Board[eventArgs.X, eventArgs.Y] != null && (FullModel.Board[eventArgs.X, eventArgs.Y].Figure != null && FullModel.Board.IsThereLineOfSight(figure, FullModel.Board[eventArgs.X, eventArgs.Y].Figure, false))))
+                    if (figure.AttacksLeft > 0 && FullModel.Board.IsSquareWithinBoard(new Point(eventArgs.X, eventArgs.Y)) && 
+                        FullModel.Board.Distance(standingPoint, new Point(eventArgs.X, eventArgs.Y)) >= 1 && 
+                        (FullModel.Board[eventArgs.X, eventArgs.Y] != null && 
+                        (FullModel.Board[eventArgs.X, eventArgs.Y].Figure != null && 
+                        FullModel.Board.IsThereLineOfSight(figure, FullModel.Board[eventArgs.X, eventArgs.Y].Figure, false))))
                     {
                         // A figure is trying to attack another figure.
 
@@ -425,16 +429,16 @@ namespace Descent.State
                                 return; // Do not allow attack if hero does not have weapon
                             }
 
-                            if (hero.Inventory.Weapon.AttackType == EAttackType.MELEE)
+                            if (hero.AttackType == EAttackType.MELEE)
                             {
                                 // If the player has a melee weapon, he should be adjacent to the figure he is attacking.
-                                if (FullModel.Board.Distance(FullModel.Board.FiguresOnBoard[hero], FullModel.Board.FiguresOnBoard[target]) == 1)
+                                if (FullModel.Board.Distance(FullModel.Board.FiguresOnBoard[hero], new Point(eventArgs.X, eventArgs.Y)) == 1)
                                 {
                                     // Hero is adjacent to target figure, carry on with attack.
                                     eventManager.QueueEvent(EventType.AttackSquare, new CoordinatesEventArgs(eventArgs.X, eventArgs.Y));
                                 }
                             }
-                            else if (hero.Inventory.Weapon.AttackType == EAttackType.MAGIC || hero.Inventory.Weapon.AttackType == EAttackType.RANGED)
+                            else if (hero.AttackType == EAttackType.MAGIC || hero.AttackType == EAttackType.RANGED)
                             {
                                 // If attack type is magic or ranged, always allow attack.
                                 eventManager.QueueEvent(EventType.AttackSquare, new CoordinatesEventArgs(eventArgs.X, eventArgs.Y));
@@ -451,8 +455,24 @@ namespace Descent.State
                                 return; // A monster is trying to attack another monster. No go!
                             }
 
-                            // A monster is attacking
-                            eventManager.QueueEvent(EventType.AttackSquare, new CoordinatesEventArgs(eventArgs.X, eventArgs.Y));
+                            if (figure.AttackType == EAttackType.MELEE)
+                            {
+                                // If the monster has a melee weapon, he should be adjacent to the gero he is attacking.
+                                if (FullModel.Board.Distance(FullModel.Board.FiguresOnBoard[figure], new Point(eventArgs.X, eventArgs.Y)) == 1)
+                                {
+                                    // Monster is adjacent to target figure, carry on with attack.
+                                    eventManager.QueueEvent(EventType.AttackSquare, new CoordinatesEventArgs(eventArgs.X, eventArgs.Y));
+                                }
+                            }
+                            else if (figure.AttackType == EAttackType.MAGIC || figure.AttackType == EAttackType.RANGED)
+                            {
+                                // If attack type is magic or ranged, always allow attack.
+                                eventManager.QueueEvent(EventType.AttackSquare, new CoordinatesEventArgs(eventArgs.X, eventArgs.Y));
+                            }
+                            else
+                            {
+                                // Attack type is not melee, magic or ranged - do not perform attack.
+                            }
                         }
                     }
 
@@ -1203,19 +1223,20 @@ namespace Descent.State
         {
             gui.ClearMarks();
 
-            /* TODO Remove this - debug only
-            for (int x = 0; x < FullModel.Board.Width; x++)
+            // Spawn darkness
+            if (!IsAHeroTurn())
             {
-                for (int y = 0; y < FullModel.Board.Height; y++)
+                for (int x = 0; x < FullModel.Board.Width; x++)
                 {
-                    if (FullModel.Board.CanOverlordSpawn(new Point(x, y)))
+                    for (int y = 0; y < FullModel.Board.Height; y++)
                     {
-                        gui.MarkSquare(x, y, true);
+                        if (FullModel.Board.CanOverlordSpawn(new Point(x, y)))
+                        {
+                            gui.MarkSquare(x, y, false);
+                        }
                     }
                 }
             }
-            return;
-            */
 
             if (currentMonster == null)
             {

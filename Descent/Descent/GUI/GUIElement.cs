@@ -84,6 +84,16 @@ namespace Descent.GUI
         }
 
         /// <summary>
+        /// Indicate to the element (and all its children) that it
+        /// has lost focus.
+        /// </summary>
+        public void LostFocus()
+        {
+            focus = false;
+            foreach (GUIElement e in children) e.LostFocus();
+        }
+
+        /// <summary>
         /// Sets the font that this GUIElement draws its
         /// texts with.
         /// </summary>
@@ -120,9 +130,13 @@ namespace Descent.GUI
                 bool handled = false;
                 for (int i = children.Count - 1; i >= 0; i--)
                 {
-                    if (children[i].HandleClick(x, y))
+                    if (!handled)
                     {
-                        handled = true;
+                        handled = children[i].HandleClick(x, y);
+                    }
+                    else
+                    {
+                        children[i].LostFocus();
                     }
                 }
                 if (handled) // did someone take it?
@@ -150,9 +164,8 @@ namespace Descent.GUI
             }
             // nope, wasnt me :(
 
-            // ill let all my children discover that
-            foreach (GUIElement e in children) e.HandleClick(x, y);
-            focus = false;
+            // ill tell all my children that it has lost focus.
+            LostFocus();
             return false;
         }
 
