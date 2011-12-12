@@ -1,12 +1,11 @@
-﻿using System.Diagnostics.Contracts;
-using System.Text;
-
-namespace Descent.GUI
+﻿namespace Descent.GUI
 {
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.Diagnostics.Contracts;
     using System.Linq;
+    using System.Text;
     using Descent.Messaging.Events;
     using Descent.Model.Player;
     using Microsoft.Xna.Framework;

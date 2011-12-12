@@ -1,11 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using Descent.Messaging.Events;
-using Descent.Model.Player.Figure.HeroStuff;
-using Microsoft.Xna.Framework;
-
-namespace Descent.GUI.SubElements
+﻿namespace Descent.GUI.SubElements
 {
+    using System;
+    using System.Collections.Generic;
+    using Descent.Messaging.Events;
+    using Descent.Model.Player.Figure.HeroStuff;
+    using Microsoft.Xna.Framework;
+
+    /// <summary>
+    /// A panel of EquipmentElements that expands and hides by user clicks.
+    /// The panel links to a range of slots in an inventory and updates itself
+    /// whenever the equipment at the slots change.
+    /// </summary>
+    /// <author>
+    /// Emil Juul Jacobsen
+    /// </author>
     class EquipmentPanel : GUIElement
     {
         private bool expanded;
@@ -14,6 +22,16 @@ namespace Descent.GUI.SubElements
         private int[] slots;
         private Inventory inventory;
 
+        /// <summary>
+        /// Creates an EquipmentPanel that can be expanded and hidden by being
+        /// clicked on by the user.
+        /// </summary>
+        /// <param name="game">The current Game object.</param>
+        /// <param name="title">The title to display at the top.</param>
+        /// <param name="x">The top-left x-coordinate of the EquipmentPanel when hidden.</param>
+        /// <param name="y">The top-left y-coordinate of the EquipmentPanel when hidden.</param>
+        /// <param name="inv">The inventory to show equipment from.</param>
+        /// <param name="slots">The indexes (slots) of the inventory to visualize.</param>
         public EquipmentPanel(Game game, string title, int x, int y, Inventory inv, int[] slots)
             : base(game, "equipment panel", x, y, 1, 1)
         {

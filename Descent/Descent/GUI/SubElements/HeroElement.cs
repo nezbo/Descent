@@ -1,13 +1,20 @@
-﻿using System.Collections.Generic;
-using Descent.Messaging.Events;
-using Descent.Model.Player;
-using Descent.Model.Player.Figure;
-using Descent.Model.Player.Figure.HeroStuff;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-
-namespace Descent.GUI.SubElements
+﻿namespace Descent.GUI.SubElements
 {
+    using System.Collections.Generic;
+    using Descent.Messaging.Events;
+    using Descent.Model.Player;
+    using Descent.Model.Player.Figure;
+    using Descent.Model.Player.Figure.HeroStuff;
+    using Microsoft.Xna.Framework;
+    using Microsoft.Xna.Framework.Graphics;
+
+    /// <summary>
+    /// The specialized user interface for a hero player. It displays most of
+    /// the hero's belongings and scores along with an image of the hero.
+    /// </summary>
+    /// <author>
+    /// Emil Juul Jacobsen
+    /// </author>
     class HeroElement : GUIElement
     {
         private Hero hero;
@@ -26,6 +33,11 @@ namespace Descent.GUI.SubElements
         private Rectangle movementRect;
         private Rectangle attacksRect;
 
+        /// <summary>
+        /// Creates a new HeroElement to visualize the given hero.
+        /// </summary>
+        /// <param name="game">The current Game object.</param>
+        /// <param name="hero">The hero to display.</param>
         public HeroElement(Game game, Hero hero)
             : base(game, "hero", 0, 0, (int)(game.GraphicsDevice.Viewport.Width * (3 / 4.0)), game.GraphicsDevice.Viewport.Height)
         {

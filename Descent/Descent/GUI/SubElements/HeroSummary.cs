@@ -1,16 +1,30 @@
-﻿using Descent.Model.Player;
-using Descent.Model.Player.Figure;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-
-namespace Descent.GUI.SubElements
+﻿namespace Descent.GUI.SubElements
 {
+    using Descent.Model.Player;
+    using Descent.Model.Player.Figure;
+    using Microsoft.Xna.Framework;
+    using Microsoft.Xna.Framework.Graphics;
+
+    /// <summary>
+    /// A small panel that shows the most essential information about a
+    /// hero in the game.
+    /// </summary>
+    /// <author>
+    /// Emil Juul Jacobsen
+    /// </author>
     class HeroSummary : GUIElement
     {
         private static readonly int Height = 100;
 
         private Hero me;
 
+        /// <summary>
+        /// Creates a new HeroSummary to display the given hero to the right of
+        /// the screen, at the given y-coordinate (down from the top).
+        /// </summary>
+        /// <param name="game">The current Game object.</param>
+        /// <param name="y">How far down the screen this HeroSummary should be located.</param>
+        /// <param name="hero">The hero to display.</param>
         public HeroSummary(Game game, int y, Hero hero)
             : base(game, "overlord summary", (int)(game.GraphicsDevice.Viewport.Width * (3 / 4.0)), y, game.GraphicsDevice.Viewport.Width / 4, Height)
         {
