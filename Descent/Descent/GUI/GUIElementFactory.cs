@@ -175,7 +175,7 @@ namespace Descent.GUI
                                 root.AddChild(eq);
                             }
 
-                            GUIElement done = new GUIElement(game, "done", RelW(g, 85), RelH(g, 90), RelW(g, 10), RelH(g, 5));
+                            GUIElement done = new GUIElement(game, "done", RelW(g, 3), RelW(g, 3), RelW(g, 10), RelH(g, 5));
                             done.AddText(done.Name, "Done", new Vector2(0, 0));
                             root.AddChild(done);
                         }
@@ -274,6 +274,28 @@ namespace Descent.GUI
                         }
                         root.AddChild(box);
 
+                        break;
+                    }
+                case State.EndGameHeroParty:
+                    {
+                        GUIElement box = new GUIElement(game, "box", RelW(g, 10), RelH(g, 10), RelW(g, 80), RelH(g, 60));
+                        GUIElement inner = new GUIElement(game, "inner", RelW(g, 30), RelH(g, 20), RelW(g, 40), RelH(g, 60));
+                        box.AddChild(inner);
+                        inner.AddText(inner.Name, "The heroes have triumphed over Joe and won the game!", new Vector2(5, 5));
+                        inner.SetDrawBackground(false);
+
+                        root.AddChild(box);
+                        break;
+                    }
+                case State.EndGameOverlord:
+                    {
+                        GUIElement box = new GUIElement(game, "box", RelW(g, 10), RelH(g, 10), RelW(g, 80), RelH(g, 60));
+                        GUIElement inner = new GUIElement(game, "inner", RelW(g, 30), RelH(g, 20), RelW(g, 40), RelH(g, 60));
+                        box.AddChild(inner);
+                        inner.AddText(inner.Name, "Joe has truimphed over the heroes and won the game!", new Vector2(5, 5));
+                        inner.SetDrawBackground(false);
+
+                        root.AddChild(box);
                         break;
                     }
             }

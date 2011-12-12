@@ -61,6 +61,11 @@ namespace Descent.GUI.SubElements
             {
                 GUIElement target = new MonsterSummary(game, Bound.X + (int)((Bound.Width * 0.4 - 125) / 2), Bound.Y + Bound.Height / 2 + (int)((Bound.Height / 2 - 175) / 2), (Monster)square.Figure);
                 AddChild(target);
+            }else if(square.Figure != null && square.Figure is Hero)
+            {
+                Image picture = new Image(((Hero) square.Figure).Texture);
+                AddDrawable(Name, picture, new Vector2(Bound.X + (int) ((Bound.Width - picture.Texture.Width)/2),
+                                                       Bound.Y + (int) ((Bound.Height - picture.Texture.Height)/2)));
             }
         }
 
