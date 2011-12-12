@@ -130,6 +130,10 @@ namespace Descent.Messaging.Events
 
     public delegate void ChooseActionHandler(object sender, ChooseActionEventArgs eventArgs);
 
+    public delegate void AddHealthHandler(object sender, PointsEventArgs eventArgs);
+
+    public delegate void RemoveHealthHandler(object sender, PointsEventArgs eventArgs);
+
     public delegate void AddFatigueHandler(object sender, PointsEventArgs eventArgs);
 
     public delegate void RemoveFatigueHandler(object sender, PointsEventArgs eventArgs);
@@ -317,6 +321,10 @@ namespace Descent.Messaging.Events
 
 
         public event ChooseActionHandler ChooseActionEvent;
+
+        public event AddHealthHandler AddHealthEvent;
+
+        public event RemoveHealthHandler RemoveHandlerEvent;
 
         public event AddFatigueHandler AddFatigueEvent;
 
