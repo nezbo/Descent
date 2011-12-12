@@ -6,18 +6,15 @@
 
 namespace Descent.Messaging.Events
 {
-    using System;
-    using System.Collections.Generic;
     using System.Diagnostics.Contracts;
-    using System.Linq;
-    using System.Text;
-
-    using Descent.Model;
 
     /// <summary>
     /// The event arguments for the RolledDices event.
-    /// Example on arguments: 0,2,1,6 - Two dice rolls, dice 0 rolled to side 2, dice 1 rolled to side 6.
+    /// Example on arguments: 1,4,4,2
     /// </summary>
+    /// <author>
+    /// Simon Westh Henriksen
+    /// </author>
     public sealed class RolledDicesEventArgs : GameEventArgs
     {
         public RolledDicesEventArgs(int[] rolledSides)

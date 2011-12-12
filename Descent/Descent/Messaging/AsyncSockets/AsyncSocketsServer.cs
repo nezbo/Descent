@@ -1,10 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="AsyncSocketsServer.cs" company="">
-// TODO: Update copyright text.
-// </copyright>
-// -----------------------------------------------------------------------
-
-namespace Descent.Messaging.AsyncSockets
+﻿namespace Descent.Messaging.AsyncSockets
 {
     using System;
     using System.Collections.Generic;
@@ -18,6 +12,9 @@ namespace Descent.Messaging.AsyncSockets
     /// <summary>
     /// Implementation of the asynchronous sockets server.
     /// </summary>
+    /// <author>
+    /// Simon Westh Henriksen
+    /// </author>
     public class AsyncSocketsServer
     {
         
@@ -48,6 +45,9 @@ namespace Descent.Messaging.AsyncSockets
         /// </summary>
         public event ClientConnectedHandler ClientConnectedEvent;
 
+        /// <summary>
+        /// Gets an array of strings corresponding to the IPs of the machine. Only selects "InterNetwork" IPs.
+        /// </summary>
         public string[] Ips
         {
             get

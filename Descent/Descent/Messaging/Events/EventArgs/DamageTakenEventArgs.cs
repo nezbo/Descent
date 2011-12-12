@@ -1,15 +1,14 @@
 ﻿
 namespace Descent.Messaging.Events
 {
-    using System;
-    using System.Collections.Generic;
     using System.Diagnostics.Contracts;
-    using System.Linq;
-    using System.Text;
 
     /// <summary>
     /// The event arguments for the GiveOverlordCards event.
     /// </summary>
+    /// <author>
+    /// Simon Westh Henriksen
+    /// </author>
     public sealed class DamageTakenEventArgs : GameEventArgs
     {
         public DamageTakenEventArgs(int x, int y, int damage)

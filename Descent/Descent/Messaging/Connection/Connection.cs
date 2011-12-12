@@ -9,6 +9,9 @@ namespace Descent.Messaging.Connection
     /// <summary>
     /// Abstraction of a connection. Can send text messages.
     /// </summary>
+    /// <author>
+    /// Simon Westh Henriksen
+    /// </author>
     public abstract class Connection
     {
         /// <summary>

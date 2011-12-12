@@ -1,10 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="EventManager.cs" company="">
-// TODO: Update copyright text.
-// </copyright>
-// -----------------------------------------------------------------------
-
-namespace Descent.Messaging.Events
+﻿namespace Descent.Messaging.Events
 {
     using System;
     using System.Collections.Generic;
@@ -222,6 +216,9 @@ namespace Descent.Messaging.Events
     /// <summary>
     /// Takes strings received from the network and fires the appropriate events. Can also convert an event to a text string and send it.
     /// </summary>
+    /// <author>
+    /// Simon Westh Henriksen
+    /// </author>
     public class EventManager
     {
         private readonly EventType[] internalOnly = new EventType[] { EventType.SquareMarked, EventType.InventoryFieldMarked, EventType.FatigueClicked, EventType.DiceClicked, EventType.DoAttack, EventType.SurgeAbilityClicked };

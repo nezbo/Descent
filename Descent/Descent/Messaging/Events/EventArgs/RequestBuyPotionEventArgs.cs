@@ -7,14 +7,14 @@
 namespace Descent.Messaging.Events
 {
     using System;
-    using System.Collections.Generic;
     using System.Diagnostics.Contracts;
-    using System.Linq;
-    using System.Text;
 
     /// <summary>
     /// Helper enum to make the type of a potion typesafe in the event scheme.
     /// </summary>
+    /// <author>
+    /// Simon Westh Henriksen
+    /// </author>
     public enum PotionType
     {
         Health = 1,

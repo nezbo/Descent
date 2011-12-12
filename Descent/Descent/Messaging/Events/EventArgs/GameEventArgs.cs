@@ -1,19 +1,14 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="GameEventArgs.cs" company="">
-// TODO: Update copyright text.
-// </copyright>
-// -----------------------------------------------------------------------
-
+﻿
 namespace Descent.Messaging.Events
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
 
     /// <summary>
-    /// TODO: Update summary.
+    /// The standard event arguments class. Has sender id, event id, event type and a bool indicating whether the message needs a response.
     /// </summary>
+    /// <author>
+    /// Simon Westh Henriksen
+    /// </author>
     public class GameEventArgs : EventArgs
     {
         public GameEventArgs()

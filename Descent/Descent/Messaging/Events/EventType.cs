@@ -1,10 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="EventType.cs" company="">
-// TODO: Update copyright text.
-// </copyright>
-// -----------------------------------------------------------------------
-
-namespace Descent.Messaging.Events
+﻿namespace Descent.Messaging.Events
 {
     using System;
     using System.Collections.Generic;
@@ -12,8 +6,11 @@ namespace Descent.Messaging.Events
     using System.Text;
 
     /// <summary>
-    /// TODO: Update summary.
+    /// Defines the different types of events we are able to send.
     /// </summary>
+    /// <author>
+    /// Simon Westh Henriksen
+    /// </author>
     public enum EventType
     {
         PlayerJoined = 1,

@@ -1,15 +1,14 @@
 ﻿
 namespace Descent.Messaging.Events
 {
-    using System;
-    using System.Collections.Generic;
     using System.Diagnostics.Contracts;
-    using System.Linq;
-    using System.Text;
 
     /// <summary>
-    /// The event arguments for events sending a number of tokens.
+    /// The event arguments for events sending a chest.
     /// </summary>
+    /// <author>
+    /// Simon Westh Henriksen
+    /// </author>
     public sealed class ChestEventArgs : GameEventArgs
     {
         public ChestEventArgs(int chestId)

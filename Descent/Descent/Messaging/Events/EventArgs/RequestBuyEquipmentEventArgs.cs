@@ -6,15 +6,14 @@
 
 namespace Descent.Messaging.Events
 {
-    using System;
-    using System.Collections.Generic;
     using System.Diagnostics.Contracts;
-    using System.Linq;
-    using System.Text;
 
     /// <summary>
     /// The event arguments for the RequestBuyEquipment event.
     /// </summary>
+    /// <author>
+    /// Simon Westh Henriksen
+    /// </author>
     public sealed class RequestBuyEquipmentEventArgs : GameEventArgs
     {
         public RequestBuyEquipmentEventArgs(int equipmentId)
