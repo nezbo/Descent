@@ -18,7 +18,7 @@ namespace Descent.GUI.SubElements
             SetBackground("Images/Other/overlordcard");
 
             // header
-            GUIElement header = new GUIElement(game, "overlord header", Bound.X + 48, Bound.Y + 15, 200 - 2 * 48, 100);
+            GUIElement header = new GUIElement(game, "overlord header", Bound.X + 48, Bound.Y + 15, 200 - 48, 100);
             header.AddText(header.Name, card.Name, new Vector2(0, 0));
             header.SetDrawBackground(false);
             header.SetFont(Font);

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Descent.Messaging.Events;
 using Descent.Model.Player.Figure.HeroStuff;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace Descent.GUI.SubElements
 {
@@ -94,10 +93,10 @@ namespace Descent.GUI.SubElements
             expanded = !expanded;
         }
 
-        public override void Draw(SpriteBatch draw)
+        public override void Update(GameTime gameTime)
         {
             UpdateInventory();
-            base.Draw(draw);
+            base.Update(gameTime);
         }
     }
 }
