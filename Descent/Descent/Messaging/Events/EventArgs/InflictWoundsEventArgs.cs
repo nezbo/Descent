@@ -21,7 +21,7 @@ namespace Descent.Messaging.Events
         {
             Contract.Requires(x >= 0);
             Contract.Requires(y >= 0);
-            Contract.Requires(damage > 0);
+            Contract.Requires(damage >= 0);
             Contract.Requires(pierce >= 0);
 
             X = x;

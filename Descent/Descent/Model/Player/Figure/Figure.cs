@@ -420,10 +420,10 @@
         {
             Contract.Requires(amount > 0);
             Contract.Ensures(
-                Contract.OldValue(health) - amount < 0 ? 
+                Contract.OldValue(health) + amount > MaxHealth ? 
                 Health == 0 : 
-                Health == Contract.OldValue(Health) - amount);
-            health = (int)MathHelper.Clamp(Health - amount, 0, MaxHealth);
+                Health == Contract.OldValue(Health) + amount);
+            health = (int)MathHelper.Clamp(Health + amount, 0, MaxHealth);
         }
 
         /// <summary>
