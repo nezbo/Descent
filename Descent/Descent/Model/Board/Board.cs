@@ -724,6 +724,7 @@
             Contract.Ensures(this[point].Figure == null);
 
             Figure figure = this[point].Figure;
+            point = FiguresOnBoard[figure]; // Get top left corner if big monster
             if (figure is Hero)
             {
                 heroesInTown.Add((Hero)figure);
