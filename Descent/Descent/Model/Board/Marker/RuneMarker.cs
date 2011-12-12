@@ -12,6 +12,7 @@ namespace Descent.Model.Board.Marker
     using System.Text;
 
     using Descent.Messaging.Events;
+    using Descent.Model.Player;
     using Descent.Model.Player.Figure;
 
     using Microsoft.Xna.Framework.Graphics;
@@ -39,7 +40,12 @@ namespace Descent.Model.Board.Marker
 
         public override void PickUp(Hero hero)
         {
-            Player.Player.Instance.HeroParty.AddRuneKey(color);
+            Player.Instance.HeroParty.AddRuneKey(color);
+
+            if (Player.Instance.IsServer)
+            {
+                Player.Instance.EventManager.QueueEvent(EventType.ChatMessage, new ChatMessageEventArgs("The hero party collected a " + color.ToString().ToLower() + " rune."));
+            }
         }
     }
 }
