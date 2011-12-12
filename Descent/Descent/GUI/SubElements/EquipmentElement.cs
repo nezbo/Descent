@@ -13,6 +13,7 @@ namespace Descent.GUI
         private Dictionary<EquipmentRarity, string> Border;
 
         private Image Coin;
+        private Image Hand;
 
         public Equipment Equipment { get; internal set; }
         public int Id { get; internal set; }
@@ -24,6 +25,7 @@ namespace Descent.GUI
             Id = id;
 
             if (Coin == null) Coin = new Image(game.Content.Load<Texture2D>("Images/Other/25gold"));
+            if (Hand == null) Hand = new Image(game.Content.Load<Texture2D>("Images/Other/hand"));
 
             if (EquipmentFont == null) EquipmentFont = game.Content.Load<SpriteFont>("fontSmall");
             SetFont(EquipmentFont);
@@ -72,7 +74,7 @@ namespace Descent.GUI
                             yPos += (int)Font.MeasureString(texts[texts.Count - 1].Line).Y;
                         }
 
-
+                        //TODO:
                         break;
                     }
             }
