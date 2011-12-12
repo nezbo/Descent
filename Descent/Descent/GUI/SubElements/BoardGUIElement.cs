@@ -178,7 +178,7 @@ namespace Descent.GUI
 
         private bool RightPosition(Figure f, Point toTest)
         {
-            return board.FiguresOnBoard[f].Equals(toTest);
+            return board.FiguresOnBoard.ContainsKey(f) ? board.FiguresOnBoard[f].Equals(toTest) : false;
         }
 
         private void DrawMark(SpriteBatch draw, int boardX, int boardY, bool positiveMark)
