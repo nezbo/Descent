@@ -386,6 +386,9 @@ namespace Descent.State
 
                     if (FullModel.Board.IsSquareWithinBoard(new Point(eventArgs.X, eventArgs.Y)) && FullModel.Board.Distance(standingPoint, new Point(eventArgs.X, eventArgs.Y)) == 1)
                     {
+                        //if(FullModel.Board[eventArgs.X, eventArgs.Y].Marker != null && figure.Size.Equals(new Rectangle(0, 0, 1, 1)) && FullModel.Board[eventArgs.X, eventArgs.Y].Marker.Name.Equals("pit"))
+                        //{
+                        //  
                         // Move to adjecent
                         // If a an entire figure can move to the square
                         if (FullModel.Board.CanFigureMoveToPoint(figure, new Point(eventArgs.X, eventArgs.Y)) && figure.MovementLeft >= 1)
@@ -948,6 +951,9 @@ namespace Descent.State
         {
             Contract.Requires(CurrentState == State.NewRound);
             Contract.Ensures(CurrentState == State.WaitForHeroTurn);
+
+            // Place dead heroes on board
+            FullModel.Board.RespawnDeadHeroes();
 
             AllPlayersRemainTurn(); // For WaitForHeroTurn
             ResetCurrentPlayer();
