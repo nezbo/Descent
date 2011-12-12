@@ -40,7 +40,7 @@ namespace Descent.GUI.SubElements
                 GUIElement surgeBox = new GUIElement(game, "surge box", left ? xPos : xPos + surgeWidth, yPos, surgeWidth, surgeHeight);
                 surgeBox.SetBackground("boxbg");
 
-                GUIElementFactory.DrawSurgeAbility(surgeBox, surge, xPos, 10,false);
+                GUIElementFactory.DrawSurgeAbility(surgeBox, surge, xPos, 10, false);
 
                 // click event
                 surgeBox.SetClickAction(surgeBox.Name, (n, g) =>
@@ -61,11 +61,12 @@ namespace Descent.GUI.SubElements
             {
                 GUIElement target = new MonsterSummary(game, Bound.X + (int)((Bound.Width * 0.4 - 125) / 2), Bound.Y + Bound.Height / 2 + (int)((Bound.Height / 2 - 175) / 2), (Monster)square.Figure);
                 AddChild(target);
-            }else if(square.Figure != null && square.Figure is Hero)
+            }
+            else if (square.Figure != null && square.Figure is Hero)
             {
-                Image picture = new Image(((Hero) square.Figure).Texture);
-                AddDrawable(Name, picture, new Vector2(Bound.X + (int) ((Bound.Width - picture.Texture.Width)/2),
-                                                       Bound.Y + (int) ((Bound.Height - picture.Texture.Height)/2)));
+                Image picture = new Image(((Hero)square.Figure).Texture);
+                AddDrawable(Name, picture, new Vector2(Bound.X + (int)((Bound.Width * 0.4 - picture.Texture.Width) / 2),
+                                                       Bound.Y + Bound.Height / 2 + (int)((Bound.Height / 2 - picture.Texture.Height) / 2)));
             }
         }
 

@@ -9,12 +9,16 @@ namespace Descent.Messaging.Connection
     /// <summary>
     /// A TCP client connected to the host server. When sending a message, it will send only to the server at the other end of the connection.
     /// </summary>
+    /// <author>
+    /// Simon Westh Henriksen
+    /// </author>
     public class ClientConnection : Connection
     {
         private ClientInfo client;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ClientConnection"/> class. 
+        /// Initializes a new instance of the <see cref="ClientConnection"/> class.
+        /// Responsible for client connections to the host/server.
         /// </summary>
         /// <param name="ip">Ips of server.</param>
         /// <param name="port">Port of server.</param>
@@ -24,14 +28,29 @@ namespace Descent.Messaging.Connection
             RemotePort = port;
         }
 
+        /// <summary>
+        /// Gets the id of the client.
+        /// </summary>
         public override int Id { get { return client.Id; } }
 
+        /// <summary>
+        /// Gets the clients ip.
+        /// </summary>
         public override string[] Ips { get { return new string[] { client.Ip }; } }
 
+        /// <summary>
+        /// Gets or sets the remote ip this client is connected to.
+        /// </summary>
         private string RemoteIp { get; set; }
 
+        /// <summary>
+        /// Gets or sets the remote port this client is connected to.
+        /// </summary>
         private int RemotePort { get; set; }
 
+        /// <summary>
+        /// Beging the client connection. Will connect to specified host and begin receiving data.
+        /// </summary>
         public override void Start()
         {
             AsyncSocketsClient socketsClient = new AsyncSocketsClient(RemoteIp, RemotePort);
@@ -40,6 +59,10 @@ namespace Descent.Messaging.Connection
             client.BeginReceive();
         }
 
+        /// <summary>
+        /// Send a string to the host.
+        /// </summary>
+        /// <param name="message">Message to send.</param>
         public override void SendString(string message)
         {
             client.Send(message);
@@ -55,10 +78,10 @@ namespace Descent.Messaging.Connection
             // Split up the message to check for special messages.
             string[] split = message.Split(",".ToCharArray());
 
+            /// SPECIAL CASE: ASSIGN ID.
             if (split[0].Equals("ASSIGNID"))
             {
                 client.Id = int.Parse(split[1]);
-                Console.WriteLine("RECEIVED ID: " + client.Id);
                 
                 Player.Instance.EventManager.QueueEvent(EventType.AcceptPlayer, new PlayerEventArgs(client.Id));
             }

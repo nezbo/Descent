@@ -11,6 +11,9 @@ namespace Descent.Messaging.AsyncSockets
     /// <summary>
     /// Stores information about a client connection.
     /// </summary>
+    /// <author>
+    /// Simon Westh Henriksen
+    /// </author>
     public class ClientInfo
     {
         private const int BUFSIZE = 1024;
@@ -33,12 +36,24 @@ namespace Descent.Messaging.AsyncSockets
             Id = nextId++;
         }
 
+        /// <summary>
+        /// This event is fired when a message is received.
+        /// </summary>
         public event MessageReceivedHandler MessageReceivedEvent;
 
+        /// <summary>
+        /// This event is fired when a connection is closed.
+        /// </summary>
         public event ConnectionClosedHandler ConnectionClosedEvent;
 
+        /// <summary>
+        /// Gets or sets the id of the client.
+        /// </summary>
         public int Id { get; set; }
 
+        /// <summary>
+        /// Gets the ip of the client.
+        /// </summary>
         public string Ip { get { return ((IPEndPoint)socket.LocalEndPoint).Address.ToString(); } }
 
         /// <summary>
@@ -74,25 +89,25 @@ namespace Descent.Messaging.AsyncSockets
 
                 string content = str.ToString();
 
-                // Check for end of message
-                if (content.IndexOf("<EOF>") > -1)
+                // If and while we have an EOF marker, we would like to parse messages.
+                // When no marker is left, we're done and need to receive more data.
+                while (content.IndexOf("<EOF>") > -1)
                 {
+                    // Gets the first message in the content string.
+                    string newMessage = content.Substring(0, content.IndexOf("<EOF>"));
+                        
+                    // Remove the new message from our content string.
+                    content = content.Substring(newMessage.Length + 5, content.Length - newMessage.Length - 5);
 
-                    while (content.IndexOf("<EOF>") > -1)
+                    // Fire message received event.
+                    if (MessageReceivedEvent != null)
                     {
-                        string newMessage = content.Substring(0, content.IndexOf("<EOF>"));
-                        content = content.Substring(newMessage.Length + 5, content.Length - newMessage.Length - 5);
-
-                        System.Console.WriteLine("Message: " + newMessage);
-
-                        if (MessageReceivedEvent != null)
-                        {
-                            MessageReceivedEvent(this, newMessage);
-                        }
+                        MessageReceivedEvent(this, newMessage);
                     }
-
-                    str.Clear();
                 }
+
+                str.Clear();
+                str.Append(content);
 
                 BeginReceive();
             }

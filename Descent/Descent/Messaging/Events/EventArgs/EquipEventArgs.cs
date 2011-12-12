@@ -1,20 +1,13 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="PlayerJoinedEventArgs.cs" company="">
-// TODO: Update copyright text.
-// </copyright>
-// -----------------------------------------------------------------------
-
-namespace Descent.Messaging.Events
+﻿namespace Descent.Messaging.Events
 {
-    using System;
-    using System.Collections.Generic;
     using System.Diagnostics.Contracts;
-    using System.Linq;
-    using System.Text;
 
     /// <summary>
     /// The event arguments for events about equipping and unequipping equipments at a special inventory fields.
     /// </summary>
+    /// <author>
+    /// Simon Westh Henriksen
+    /// </author>
     public sealed class InventoryFieldEventArgs : GameEventArgs
     {
         public InventoryFieldEventArgs(int inventoryField)

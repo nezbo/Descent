@@ -15,6 +15,9 @@ namespace Descent.Messaging.AsyncSockets
     /// <summary>
     /// Implementation of the asynchronous sockets client.
     /// </summary>
+    /// <author>
+    /// Simon Westh Henriksen
+    /// </author>
     public class AsyncSocketsClient
     {
         /// <summary>

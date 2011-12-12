@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="PlayerJoinedEventArgs.cs" company="">
-// TODO: Update copyright text.
-// </copyright>
-// -----------------------------------------------------------------------
-
+﻿
 namespace Descent.Messaging.Events
 {
     using System.Diagnostics.Contracts;
@@ -13,6 +8,9 @@ namespace Descent.Messaging.Events
     /// <summary>
     /// The event arguments for the GiveOverlordCards event.
     /// </summary>
+    /// <author>
+    /// Simon Westh Henriksen
+    /// </author>
     public sealed class GiveOverlordCardsEventArgs : GameEventArgs
     {
         public GiveOverlordCardsEventArgs(int[] overlordCardIds)

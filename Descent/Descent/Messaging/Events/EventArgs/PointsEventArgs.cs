@@ -1,20 +1,14 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="PlayerJoinedEventArgs.cs" company="">
-// TODO: Update copyright text.
-// </copyright>
-// -----------------------------------------------------------------------
-
+﻿
 namespace Descent.Messaging.Events
 {
-    using System;
-    using System.Collections.Generic;
     using System.Diagnostics.Contracts;
-    using System.Linq;
-    using System.Text;
 
     /// <summary>
     /// The event arguments for events needing to send some kind of points. Like AddFatigue.
     /// </summary>
+    /// <author>
+    /// Simon Westh Henriksen
+    /// </author>
     public sealed class PointsEventArgs : GameEventArgs
     {
         public PointsEventArgs(int points)

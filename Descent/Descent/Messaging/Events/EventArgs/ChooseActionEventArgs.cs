@@ -2,14 +2,14 @@
 namespace Descent.Messaging.Events
 {
     using System;
-    using System.Collections.Generic;
     using System.Diagnostics.Contracts;
-    using System.Linq;
-    using System.Text;
 
     /// <summary>
     /// Helper enum to make the type of action typesafe in the event scheme.
     /// </summary>
+    /// <author>
+    /// Simon Westh Henriksen
+    /// </author>
     public enum ActionType
     {
         Advance = 1,
@@ -20,6 +20,9 @@ namespace Descent.Messaging.Events
     /// <summary>
     /// The event arguments for the ChooseAction event.
     /// </summary>
+    /// <author>
+    /// Simon Westh Henriksen
+    /// </author>
     public sealed class ChooseActionEventArgs : GameEventArgs
     {
         public ChooseActionEventArgs(ActionType actionType)

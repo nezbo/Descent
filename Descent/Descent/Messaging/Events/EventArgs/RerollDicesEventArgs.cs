@@ -1,20 +1,15 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="PlayerJoinedEventArgs.cs" company="">
-// TODO: Update copyright text.
-// </copyright>
-// -----------------------------------------------------------------------
-
+﻿
 namespace Descent.Messaging.Events
 {
-    using System;
-    using System.Collections.Generic;
     using System.Diagnostics.Contracts;
-    using System.Linq;
     using System.Text;
 
     /// <summary>
     /// The event arguments for the RerollDices event.
     /// </summary>
+    /// <author>
+    /// Simon Westh Henriksen
+    /// </author>
     public sealed class RerollDicesEventArgs : GameEventArgs
     {
         public RerollDicesEventArgs(int[] diceIds)

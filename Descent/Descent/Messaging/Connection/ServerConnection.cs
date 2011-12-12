@@ -13,8 +13,11 @@ namespace Descent.Messaging.Connection
     using Descent.State;
 
     /// <summary>
-    /// TODO: Update summary.
+    /// A TCP server connection.
     /// </summary>
+    /// <author>
+    /// Simon Westh Henriksen
+    /// </author>
     public class ServerConnection : Connection
     {
         private AsyncSocketsServer mServer;
@@ -24,12 +27,24 @@ namespace Descent.Messaging.Connection
             ServerPort = port;
         }
 
-        public override int Id { get { return 1; } } // Server is always ID 1
+        /// <summary>
+        /// Gets the id of the connection. Always 1 for the server!
+        /// </summary>
+        public override int Id { get { return 1; } }
 
+        /// <summary>
+        /// Gets the ips of the server.
+        /// </summary>
         public override string[] Ips { get { return mServer.Ips; } }
 
+        /// <summary>
+        /// Get or set the server port to use.
+        /// </summary>
         private int ServerPort { get; set; }
 
+        /// <summary>
+        /// Start the server. Will listen on port for new clients.
+        /// </summary>
         public override void Start()
         {
             mServer = new AsyncSocketsServer(ServerPort);
