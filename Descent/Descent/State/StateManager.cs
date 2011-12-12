@@ -1119,7 +1119,7 @@ namespace Descent.State
             if (treasure.Coins > 0) eventManager.QueueEvent(EventType.GiveCoins, new GiveCoinsEventArgs(playerId, treasure.Coins));
 
             // Treasure may have equipment
-            if (treasure.Equipment != null) eventManager.QueueEvent(EventType.GiveEquipment, new GiveEquipmentEventArgs(playerId, treasure.Equipment.Id));
+            if (treasure.Equipment != null) eventManager.QueueEvent(EventType.GiveEquipment, new GiveEquipmentEventArgs(playerId, treasure.Equipment.Id, true));
 
             if(treasure.IsTreasureCache)
             {
