@@ -197,6 +197,14 @@ namespace Descent.Model.Player.Figure.HeroStuff
             }
         }
 
+        public List<Dice> DiceForAttack
+        {
+            get
+            {
+                return dice;
+            }
+        }
+
         /// <summary>
         /// Gets a value indicating whether the equipment
         /// is equipped to a hero.
