@@ -166,7 +166,7 @@ namespace Descent.State
                             root.SetClickAction("start", (n, g) =>
                                                              {
 #if DEBUG
-                                                                 if (n.NumberOfPlayers >= 1)
+                                                                 if (n.NumberOfPlayers > 1)
 #else 
                                                                      if (n.NumberOfPlayers >= 3)
 #endif
@@ -464,7 +464,7 @@ namespace Descent.State
                         }
                     }
 
-                    break; 
+                    break;
             }
         }
 
@@ -901,7 +901,7 @@ namespace Descent.State
         private void MoveTo(object sender, CoordinatesEventArgs eventArgs)
         {
             Contract.Requires(CurrentState == State.WaitForPerformAction);
-            Contract.Requires(IsAHeroTurn() ? Player.Instance.HeroParty.Heroes[eventArgs.SenderId].MovementLeft >= 1 : 
+            Contract.Requires(IsAHeroTurn() ? Player.Instance.HeroParty.Heroes[eventArgs.SenderId].MovementLeft >= 1 :
                               currentMonster.MovementLeft >= 1);
             Contract.Ensures(CurrentState == State.WaitForPerformAction);
 
@@ -1228,9 +1228,9 @@ namespace Descent.State
         }
 
         private void OverLordPlayCard(object sender, OverlordCardEventArgs eventArgs)
-        {
+        {/*
             Contract.Requires(CurrentState == State.WaitForPlayCard);
-            Contract.Ensures(CurrentState == State.WaitForPlayCard);
+            Contract.Ensures(CurrentState == State.WaitForPlayCard);*/
 
             // Check rules for playing cards
             // Play card and invoke changes
@@ -1363,9 +1363,9 @@ namespace Descent.State
             {
                 damage -= 1; // TODO get real armor value
             }
-            Contract.Assert(damage >= 0);
+            damage = damage < 0 ? 0 : damage;
 
-            string status =  figure.Name + " ";
+            string status = figure.Name + " ";
             if (damage >= figure.Health)
             {
                 eventManager.QueueEvent(EventType.WasKilled, new CoordinatesEventArgs(eventArgs.X, eventArgs.Y));
@@ -1411,6 +1411,7 @@ namespace Descent.State
                 if (Player.Instance.HeroParty.IsConquestPoolEmpty)
                 {
                     GameWon(false);
+                    return;
                 }
             }
             else
@@ -1419,6 +1420,7 @@ namespace Descent.State
                 if (gameState.LegendaryMonsters.Count == 0)
                 {
                     GameWon(true);
+                    return;
                 }
             }
 
@@ -1466,6 +1468,11 @@ namespace Descent.State
         {
             Contract.Requires(CurrentState == State.InflictWounds);
             Contract.Ensures(CurrentState == State.EndGameHeroParty || CurrentState == State.EndGameOverlord);
+
+            if (Player.Instance.IsServer)
+            {
+                eventManager.QueueEvent(EventType.ChatMessage, new ChatMessageEventArgs("The " + (HeroPartyWon ? "hero party" : "overlord") + " wins!!!"));
+            }
 
             stateMachine.PlaceStates(HeroPartyWon ? State.EndGameHeroParty : State.EndGameOverlord);
             stateMachine.ChangeToNextState();

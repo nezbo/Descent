@@ -88,8 +88,8 @@ namespace Descent.Model.Player
         {
             get
             {
-                Contract.Ensures(Contract.Result<bool>() == (ConquestTokens == 0));
-                return ConquestTokens == 0;
+                Contract.Ensures(Contract.Result<bool>() == (ConquestTokens <= 0));
+                return ConquestTokens <= 0;
             }
         }
 

@@ -454,6 +454,7 @@ namespace Descent.Model
                 int id = int.Parse(data[0]);
                 EquipmentRarity rarity;
                 EquipmentRarity.TryParse(data[1], true, out rarity);
+                System.Diagnostics.Debug.WriteLine(rarity.ToString());
                 int tokens = int.Parse(data[2]);
                 int coins = int.Parse(data[3]);
                 int curses = int.Parse(data[4]);
@@ -463,6 +464,8 @@ namespace Descent.Model
             }
 
             System.Diagnostics.Debug.WriteLine("Chests loaded successfully!");
+
+            LoadLegendaryMonsters(game, reader);
         }
 
         private static void LoadLegendaryMonsters(Game game, StreamReader reader)
@@ -484,14 +487,14 @@ namespace Descent.Model
 
                 List<Dice> attackDice = (
                     from string dice
-                        in data[7].Split(' ')
+                        in data[6].Split(' ')
                     select GetDice(dice)).ToList<Dice>();
                 attackDice.AddRange(m.DiceForAttack);
 
-                List<Ability> abilities = data[8].Split('/').Select(Ability.GetAbility).ToList();
+                List<Ability> abilities = data[7].Split('/').Select(Ability.GetAbility).ToList();
                 abilities.AddRange(m.Abilities);
 
-                Monster Legendary = new Monster(
+                Monster legendary = new Monster(
                     id, 
                     name, 
                     m.IsMaster, 
@@ -503,7 +506,7 @@ namespace Descent.Model
                     m.Size, 
                     m.Texture);
 
-
+                legendaryMonsters.Add(legendary);
             }
         }
 
