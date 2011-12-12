@@ -26,7 +26,7 @@
      11     11    22
      11
      11
-59
+58
 monster,5,17,3,
 monster,5,24,3,
 monster,7,21,4,
@@ -47,9 +47,8 @@ monster,15,12,19,
 monster,8,13,20,
 monster,13,7,3,
 monster,12,7,3,
-monster,10,3,14,
 monster,14,3,14,
-monster,12,0,10,
+monster,10,3,14,
 potion,17,19,health
 potion,11,19,fatigue
 potion,5,25,health
@@ -96,4 +95,4 @@ door,3,12,9,13,9,4,12,8,13,8,H,Red
 7,gold,3,0,1,1
 8,gold,0,0,3,2
 1
-1,10,Narthak,0,4,2,,Knockback
+1,10,12,0,Joe Kiniry,0,4,2,,Knockback

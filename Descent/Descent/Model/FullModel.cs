@@ -428,9 +428,8 @@ namespace Descent.Model
 
             System.Diagnostics.Debug.WriteLine("Markers loaded successfully!");
 
-            LoadChests(game, reader);
-
             FullModel.board = board;
+            LoadChests(game, reader);
         }
 
         /// <summary>
@@ -480,19 +479,21 @@ namespace Descent.Model
 
                 int id = int.Parse(data[0]);
                 Monster m = GetMonster(int.Parse(data[1]));
-                string name = data[2];
+                int x = int.Parse(data[2]);
+                int y = int.Parse(data[3]);
+                string name = data[4];
 
-                int bonusSpeed = int.Parse(data[3]);
-                int bonusHealth = int.Parse(data[4]);
-                int bonusArmor = int.Parse(data[5]);
+                int bonusSpeed = data[5].Equals(string.Empty) ? 0 : int.Parse(data[5]);
+                int bonusHealth = data[6].Equals(string.Empty) ? 0 : int.Parse(data[6]);
+                int bonusArmor = int.Parse(data[7]);
 
-                List<Dice> attackDice = (
+                List<Dice> attackDice = data[8].Equals(string.Empty) ? new List<Dice>() : (
                     from string dice
-                        in data[6].Split(' ')
+                        in data[8].Split(' ')
                     select GetDice(dice)).ToList<Dice>();
                 attackDice.AddRange(m.DiceForAttack);
 
-                List<Ability> abilities = data[7].Split('/').Select(Ability.GetAbility).ToList();
+                List<Ability> abilities = data[9].Split('/').Select(Ability.GetAbility).ToList();
                 abilities.AddRange(m.Abilities);
 
                 Monster legendary = new Monster(
@@ -508,6 +509,7 @@ namespace Descent.Model
                     m.Texture);
 
                 legendaryMonsters.Add(legendary);
+                board.PlaceFigure(legendary, new Point(x, y));
             }
         }
 
