@@ -12,24 +12,24 @@
 11,Health Potion,Common,Potion,,,25,,5,,,
 12,Vitality Potion,Common,Potion,,,25,,5,,,
 50
-13,Bane,Bronze,Weapon,Rune,MAGIC,500,2,1,W G,,2 Blast 1
-//14,Belt of Strength,Bronze,Other,500,,,,1,,When MakingAttack Type MELEE Damage 1,
-15,Bone Blade,Bronze,Weapon,,MELEE,500,1,1,R G,,1 Damage 1
-//16,Cloak of Deception,Bronze,Amor,,,500,,,1,,Armor 1/WhenTakingDamage:??,
-//17,Crystal of Tival,Bronze,Other,,,500,,2,,When(Equipped(State=StartOfTurn))):Discard&Hero.Health??
-//18,Crystal Shield,Bronze,Shield,,,500,1,1,,When(TakingDamage):Exhaust&CancelDamage:2,
-19,Crystalize,Bronze,Weapon,Rune,MAGIC,500,2,1,W G,,2 Pierce 2
-20,Dragontooth Hammer,Bronze,Weapon,,MELEE,500,2,1,R G,Pierce 2,1 Damage 1
-//21,Dwarven Fire Bombs,Bronze,Weapon,,RANGED,500,1,1,U G,,1 Damage 1/2 Range 1
-22,Great Bow,Bronze,Weapon,,RANGED,500,2,1,U Y,Pierce 2,1 Range 1/2 Damage 1
-//23,Mana Weave,Bronze,Other,Rune,,500,,1,,WhenMakingAttack(Type=MAGIC):Gain:Surge 1
-//24,Pacify,Bronze,Weapon,Rune,MAGIC,500,2,1,W Y,When(DealDamage(State=Turn(Hero)&State=Attack)):Deal:Stun 1,2 Damage 1
-//25,Plate Mail,Bronze,Armor,,,500,,1,,Armor 3/Hero.Speed:Set:3/,??
-//26,Ring of Quickness,Bronze,Other,,,500,,1,,When(State=BeginTurn&State=Turn(Hero):Gain:Movement 1,
-27,Staff of Punishment,Bronze,Weapon,,MAGIC,500,2,1,W G,,1 Damage 1/1 Range 1
-28,Treasure Cache,Bronze,,,,,,1,,Potion Healing,
-29,Treasure Cache,Bronze,,,,,,1,,Potion Vitality,
-30,Treasure Cache,Bronze,,,,,,2,,Coin 50,
+13,Bane,Copper,Weapon,Rune,MAGIC,500,2,1,W G,,2 Blast 1
+//14,Belt of Strength,Copper,Other,500,,,,1,,When MakingAttack Type MELEE Damage 1,
+15,Bone Blade,Copper,Weapon,,MELEE,500,1,1,R G,,1 Damage 1
+//16,Cloak of Deception,Copper,Amor,,,500,,,1,,Armor 1/WhenTakingDamage:??,
+//17,Crystal of Tival,Copper,Other,,,500,,2,,When(Equipped(State=StartOfTurn))):Discard&Hero.Health??
+//18,Crystal Shield,Copper,Shield,,,500,1,1,,When(TakingDamage):Exhaust&CancelDamage:2,
+19,Crystalize,Copper,Weapon,Rune,MAGIC,500,2,1,W G,,2 Pierce 2
+20,Dragontooth Hammer,Copper,Weapon,,MELEE,500,2,1,R G,Pierce 2,1 Damage 1
+//21,Dwarven Fire Bombs,Copper,Weapon,,RANGED,500,1,1,U G,,1 Damage 1/2 Range 1
+22,Great Bow,Copper,Weapon,,RANGED,500,2,1,U Y,Pierce 2,1 Range 1/2 Damage 1
+//23,Mana Weave,Copper,Other,Rune,,500,,1,,WhenMakingAttack(Type=MAGIC):Gain:Surge 1
+//24,Pacify,Copper,Weapon,Rune,MAGIC,500,2,1,W Y,When(DealDamage(State=Turn(Hero)&State=Attack)):Deal:Stun 1,2 Damage 1
+//25,Plate Mail,Copper,Armor,,,500,,1,,Armor 3/Hero.Speed:Set:3/,??
+//26,Ring of Quickness,Copper,Other,,,500,,1,,When(State=BeginTurn&State=Turn(Hero):Gain:Movement 1,
+27,Staff of Punishment,Copper,Weapon,,MAGIC,500,2,1,W G,,1 Damage 1/1 Range 1
+28,Treasure Cache,Copper,,,,,,1,,Potion Healing,
+29,Treasure Cache,Copper,,,,,,1,,Potion Vitality,
+30,Treasure Cache,Copper,,,,,,2,,Coin 50,
 //31,Scorpion Helmet,Silver,Other,,,750,,1,,When(MakingAttack(Type=RANGED)):Gain:Range 1&Gain:Damage 1,
 //32,Golden Armor,Silver,Armor,,,750,,1,,Armor 3/Hero.Speed:Set:3/CannotEquip:Type=Rune/Immune:Grapple/Immune:Daze,??
 33,Ice Storm,Silver,Weapon,Rune,MAGIC,750,2,1,W G G,Blast 1,2 Blast 1

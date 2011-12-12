@@ -13,13 +13,28 @@ namespace Descent.Model.Event
 
     public enum AbilityBonus
     {
-        Damage,
-        Range,
-        Pierce,
-        Surge,
-        QuickShot,
+        None,
         Armor,
-        None
+        Aura,
+        Breath,
+        Burn,
+        Command,
+        Damage,
+        Fear,
+        Fly,
+        Grapple,
+        Knockback,
+        Pierce,
+        Poison,
+        QuickShot,
+        Range,
+        Reach,
+        Sorcery,
+        Stun,
+        Surge,
+        Sweep,
+        Undying,
+        Web
     }
 
     /// <summary>
@@ -54,6 +69,22 @@ namespace Descent.Model.Event
                         EAttackType.TryParse(data[++i], true, out ability.type);
                         ability.trigger += ability.IfType;
                         break;
+                    case "Armor":
+                        ability.bonus = AbilityBonus.Armor;
+                        ability.amount = int.Parse(data[++i]);
+                        break;
+                    case "Aura":
+                        ability.bonus = AbilityBonus.Aura;
+                        break;
+                    case "Breath":
+                        ability.bonus = AbilityBonus.Breath;
+                        break;
+                    case "Burn":
+                        ability.bonus = AbilityBonus.Burn;
+                        break;
+                    case "Command":
+                        ability.bonus = AbilityBonus.Command;
+                        break;
                     case "Damage":
                         ability.bonus = AbilityBonus.Damage;
                         ability.amount = int.Parse(data[++i]);
@@ -68,10 +99,6 @@ namespace Descent.Model.Event
                         break;
                     case "Surge":
                         ability.bonus = AbilityBonus.Surge;
-                        ability.amount = int.Parse(data[++i]);
-                        break;
-                    case "Armor":
-                        ability.bonus = AbilityBonus.Armor;
                         ability.amount = int.Parse(data[++i]);
                         break;
                     case "QuickShot":
