@@ -68,7 +68,7 @@ namespace Descent.GUI
         /// </summary>
         /// <param name="x">The x-coordinate of the point</param>
         /// <param name="y">The y-coordinate of the point</param>
-        /// <returns></returns>
+        /// <returns>True, if it contains the given point, else false.</returns>
         public bool HasPoint(int x, int y)
         {
             return Bound.Contains(x, y);
@@ -83,17 +83,23 @@ namespace Descent.GUI
             return this.focus;
         }
 
+        /// <summary>
+        /// Sets the font that this GUIElement draws its
+        /// texts with.
+        /// </summary>
+        /// <param name="newFont">The new font to draw with.</param>
         public void SetFont(SpriteFont newFont)
         {
             font = newFont;
         }
 
-        public void SetFocus(bool focus)
-        {
-            Contract.Requires(HasFocus() == focus);
-            this.focus = focus;
-        }
-
+        /// <summary>
+        /// This memthod can be overwritten if you need to act
+        /// on clicks that are directly targetting this guielement
+        /// and not its sub-elements.
+        /// </summary>
+        /// <param name="x">The x-coordinate of the direct click.</param>
+        /// <param name="y">The y-coordinate of the direct click.</param>
         protected virtual void ActOnDirectClick(int x, int y)
         {
             // can be implemented if needed
@@ -117,7 +123,6 @@ namespace Descent.GUI
                     if (children[i].HandleClick(x, y))
                     {
                         handled = true;
-                        break;
                     }
                 }
                 if (handled) // did someone take it?
@@ -149,11 +154,6 @@ namespace Descent.GUI
             foreach (GUIElement e in children) e.HandleClick(x, y);
             focus = false;
             return false;
-        }
-
-        protected void HandleMouseOver(bool onTop, int x, int y)
-        {
-            // can be overwritten for reaction to direct mouseover
         }
 
         private bool VisualClicked(int x, int y)

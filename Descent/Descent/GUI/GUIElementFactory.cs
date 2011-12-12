@@ -227,7 +227,7 @@ namespace Descent.GUI
                         }
                         else if (role == Role.Overlord && Player.Instance.StateManager.HasTurn())
                         {
-                            GUIElement end = new GUIElement(game, "end", RelW(g, 3), RelW(g, 3), RelW(g, 15), RelH(g, 10));
+                            GUIElement end = new GUIElement(game, "end", RelW(g, 3), RelW(g, 3), RelW(g, 15), RelH(g, 8));
                             root.AddChild(end);
                             root.AddText(end.Name, "End Monster Turn", new Vector2(5, 5));
                         }
@@ -237,7 +237,7 @@ namespace Descent.GUI
                     {
                         if (role == Role.Overlord)
                         {
-                            GUIElement end = new GUIElement(game, "end", RelW(g, 3), RelW(g, 3), RelW(g, 15), RelH(g, 10));
+                            GUIElement end = new GUIElement(game, "end", RelW(g, 3), RelW(g, 3), RelW(g, 15), RelH(g, 8));
 
                             root.AddChild(end);
                             root.AddText(end.Name, "End Overlord Turn", new Vector2(5, 5));
