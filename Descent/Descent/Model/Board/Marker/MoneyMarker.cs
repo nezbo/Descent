@@ -11,6 +11,8 @@ namespace Descent.Model.Board.Marker
     using System.Linq;
     using System.Text;
 
+    using Descent.Messaging.Events;
+    using Descent.Model.Player;
     using Descent.Model.Player.Figure;
 
     using Microsoft.Xna.Framework.Graphics;
@@ -30,9 +32,14 @@ namespace Descent.Model.Board.Marker
 
         public override void PickUp(Hero hero)
         {
-            foreach (Hero h in Player.Player.Instance.HeroParty.AllHeroes)
+            foreach (Hero h in Player.Instance.HeroParty.AllHeroes)
             {
                 h.Coins += 100;
+            }
+
+            if (Player.Instance.IsServer)
+            {
+                Player.Instance.EventManager.QueueEvent(EventType.ChatMessage, new ChatMessageEventArgs("All heroes received 100 coins."));
             }
         }
     }

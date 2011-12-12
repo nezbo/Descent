@@ -902,6 +902,11 @@ namespace Descent.State
             gameState.RemoveAllUnequippedEquipment(eventArgs.SenderId);
             playersRemainingEquip.Remove(eventArgs.SenderId);
 
+            if (CurrentState == State.AllEquip && Player.Instance.IsServer)
+            {
+                eventManager.QueueEvent(EventType.ChatMessage, new ChatMessageEventArgs(Player.Instance.GetPlayerNick(eventArgs.SenderId) + " has finished re-equipping."));
+            }
+
             if (gameState.CurrentPlayer != 0 && stateMachine.IsOneMoreRecentThanOther(State.WaitForHeroTurn, State.OpenChest))
             {
                 stateMachine.ChangeToNextState();
@@ -1040,6 +1045,11 @@ namespace Descent.State
             Contract.Ensures(CurrentState == State.Equip);
 
             gameState.CurrentPlayer = eventArgs.PlayerId;
+
+            if (Player.Instance.IsServer)
+            {
+                eventManager.QueueEvent(EventType.ChatMessage, new ChatMessageEventArgs(Player.Instance.GetPlayerNick(eventArgs.SenderId) + " has started his turn."));
+            }
 
             Player.Instance.HeroParty.Heroes[gameState.CurrentPlayer].UntapAll();
 
