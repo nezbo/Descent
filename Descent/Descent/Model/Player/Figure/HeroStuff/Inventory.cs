@@ -58,9 +58,9 @@ namespace Descent.Model.Player.Figure.HeroStuff
                 Contract.Requires(this.CanEquipAtIndex(slot, value));
                 Contract.Ensures(this[slot] == value);
 
-                if(this[slot] != null)
+                if(this[slot] != null && slot < 5)
                     this[slot].UnequipFromHero(hero);
-                if(value != null)
+                if(value != null && slot < 5)
                     value.EquipToHero(hero);
 
                 inventory[slot] = value;
