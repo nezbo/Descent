@@ -151,18 +151,20 @@ class_chart MODEL
         author: "Martin Marcher, Jonas Breindahl";
 		in_cluster: "MODEL";
 		created: "02-12-2011";
-		revised: "09-12-2011";
+		revised: "12-12-2011";
 	explanation
 		"Holds references to all model related classes"
     query
         "Can I have the board?",
         "Can I have a copy of the monster with 'this' id?",
 		"Can I have a copy of the equipment with 'this' id?",
+		"Can I have the treasure with 'this' id?",
 		"Can I have the overlord card with 'this' id?",
-		"Can I have the dice of 'this' color?",
+		"Can I have a copy of the dice with 'this' color?",
 		"Can I have the hero with 'this' id?",
 		"Can I have a list of all heroes?",
-		"Can I have a list of all town equipment?",
+		"Can I have a list of all legendary monsters?",
+		"Can I have a list of all equipment?",
 		"Can I have a list of all overlord cards?",
 		"Can I have a list of all chests on the map?",
 		"Can I have a list of all treasures?",
@@ -291,7 +293,7 @@ class_chart FIGURE
 		"A Figure must always have more than or equal to 0 attacks left"
 end
 
-class_chart HERO -- A hero, made from a hero-sheet
+class_chart HERO 
 	indexing
 		author: "Jonas Breindahl";
 		created: "21-11-2011";
