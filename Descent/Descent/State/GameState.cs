@@ -77,6 +77,10 @@ namespace Descent.State
         public OverlordCard[] GetOverlordCards(int count)
         {
             Console.WriteLine("OoverlordCards.Count:" + overlordCards.Count);
+            if (overlordCards.Count < count)
+            {
+                overlordCards.AddRange(FullModel.AllOverlordCards);
+            }
             return overlordCards.OrderBy(x => System.Guid.NewGuid()).Take(count).ToArray();
         }
 

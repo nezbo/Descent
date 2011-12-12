@@ -498,6 +498,9 @@ namespace Descent.State
 
         private void InventoryFieldMarked(object sender, InventoryFieldEventArgs eventArgs)
         {
+            Hero hero = Player.Instance.Hero;
+            Inventory inventory = hero.Inventory;
+
             switch (CurrentState)
             {
                 case State.Equip:
@@ -512,8 +515,7 @@ namespace Descent.State
                     }
                     else
                     {
-                        Hero hero = Player.Instance.Hero;
-                        Inventory inventory = hero.Inventory;
+                        
                         int realId1 = inventoryFieldMarked,
                             realId2 = eventArgs.InventoryField,
                             parsedId1 = (realId1 > 99) ? realId1 - 100 : realId1,
@@ -555,6 +557,27 @@ namespace Descent.State
 
                         inventoryFieldMarked = -1;
                     }
+                    break;
+                case State.WaitForPerformAction:
+                    if (eventArgs.InventoryField >= 5 && eventArgs.InventoryField <= 7)
+                    {
+                        // There's a potion on the inventory field clicked
+                        if (inventory[eventArgs.InventoryField] != null)
+                        {
+                            Equipment equipment = inventory[eventArgs.InventoryField];
+
+                            if (equipment.Id == 11)
+                            {
+                                // Health potion
+                            }
+                            else if (equipment.Id == 12)
+                            {
+                                // Vitality potion
+                            }
+
+                        }
+                    }
+
                     break;
             }
         }
@@ -1210,18 +1233,8 @@ namespace Descent.State
             Player.Instance.Overlord.ThreatTokens += Player.Instance.HeroParty.NumberOfHeroes;
             if (Player.Instance.IsServer)
             {
-                if (Player.Instance.Overlord.Hand.Count >= 7)
-                {
-                    return; // Overlord need to sell cards before he can receive more.
-                }
-                else
-                {
-                    int[] overlordCardIds = gameState.GetOverlordCards(2).Select(card => card.Id).ToArray();
-                    if (overlordCardIds.Length >= 1)
-                    {
-                        eventManager.QueueEvent(EventType.GiveOverlordCards, new GiveOverlordCardsEventArgs(overlordCardIds));
-                    }
-                }  
+                int[] overlordCardIds = gameState.GetOverlordCards(2).Select(card => card.Id).ToArray();
+                eventManager.QueueEvent(EventType.GiveOverlordCards, new GiveOverlordCardsEventArgs(overlordCardIds));
             }
 
             monstersRemaining = FullModel.Board.FiguresOnBoard.Where(pair => pair.Key is Monster && FullModel.Board.SquareVisibleByPlayers(pair.Value.X, pair.Value.Y)).Select(pair => (Monster)pair.Key).ToList();
