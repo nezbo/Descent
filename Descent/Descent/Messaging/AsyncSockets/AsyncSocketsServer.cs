@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="AsyncSocketsServer.cs" company="">
-// TODO: Update copyright text.
-// </copyright>
-// -----------------------------------------------------------------------
-
+﻿
 namespace Descent.Messaging.AsyncSockets
 {
     using System;

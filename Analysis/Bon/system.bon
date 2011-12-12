@@ -24,18 +24,16 @@ end
 cluster_chart FIGURE_CLUSTER
 	class FIGURE description "A figure with basic stats"
 	class HERO description "A hero, made from a herosheet"
-	class PET description "A pet that a HeroPlayer can control"
 	class MONSTER description "A monster, controlled by  the overlord"
 	cluster HERO_STUFF description "Everything that is specific to a hero"
 end
 
 cluster_chart HERO_STUFF
-	class SKILL description "The skill-cards of a hero"
-	class INVENTORY description "The inventory of a hero"
 	class EQUIPMENT description "Equipment can be worn by the hero"
-	class POTION description "A potion, that can either be on a square, or equipped on a Hero"
+	class INVENTORY description "The inventory of a hero"
+	class SKILL description "The skill-cards of a hero"
 	class SURGE_ABILITY description "A surge power on a piece of equipment"
-	class TRAINING_TOKEN description "A token that give extra dice in a specific kind of attack"
+	class TREASURE description "A treasure, that can be in a chest"
 end
 
 cluster_chart OVERLORD_STUFF
@@ -49,14 +47,8 @@ end
 -- HOW TO DO/DESCRIBE EVENTS AND ABILITIES??!
 cluster_chart EVENT_MODEL_CLUSTER
 	class EFFECT description "An Effect that can be on an figure"
-	class POISON_EFFECT description "A poison Effect, that has to be healed through"
-	class BURN_EFFECT description "A burn Effect that damages a figure"
-	class STUN_EFFECT description "A stun Effect, that limits movement and attacks"
-	class WEB_EFFECT description "A web Effect that limits movement"
 	class ABILITY description "Any ability, that have an effect on figures, heroes and the overlord."
 	class EVENT description "A Event that will make something happen"
-	class TRIGGERED_EVENT description "An Event that is triggered by something og some ability"
-	class PASSIVE_EVENT description "An Event that is always on"
 end
 
 cluster_chart BOARD_CLUSTER
@@ -305,20 +297,6 @@ class_chart HERO -- A hero, made from a hero-sheet
 		"A Hero may never have more fatique than max fatique"	
 end
 
--- THIS IS A BIT IFFY? IS IT A TOKEN OR A FIGURE?
-class_chart PET 
-	indexing
-		author: "Jonas Breindahl";
-		created: "21-11-2011";
-		revised: "21-11-2011"
-	explanation 
-		"A pet that a HeroPlayer can control"
-	query
-		"What hero owns you?",
-		"What are your abilities?",
-		"What is you max speed?"
-end
-
 class_chart MONSTER
 	indexing
 		author: "Jonas Breindahl";
@@ -512,50 +490,6 @@ class_chart EFFECT
 		"An effect that can be on an figure"
 end
 
-class_chart POISON_EFFECT
-	indexing
-		author: "Jonas Breindahl";
-		created: "23-11-2011";
-		revised: "23-11-2011"
-	explanation
-		"A poison effect, that has to be healed through"
-	inherit
-		EFFECT
-end
-
-class_chart BURN_EFFECT
-	indexing
-		author: "Jonas Breindahl";
-		created: "23-11-2011";
-		revised: "23-11-2011"
-	explanation
-		"A burn effect that damages a figure"
-	inherit
-		EFFECT
-end
-
-class_chart STUN_EFFECT
-	indexing
-		author: "Jonas Breindahl";
-		created: "23-11-2011";
-		revised: "23-11-2011"
-	explanation
-		"A stun effect, that limits movement and attacks"
-	inherit
-		EFFECT
-end
-
-class_chart WEB_EFFECT
-	indexing
-		author: "Jonas Breindahl";
-		created: "23-11-2011";
-		revised: "23-11-2011"
-	explanation
-		"A web effect that limits movement"
-	inherit
-		EFFECT
-end
-
 class_chart ABILITY
 	indexing
 		author: "Jonas Breindahl";
@@ -575,28 +509,6 @@ class_chart EVENT
 		revised: "23-11-2011"
 	explanation
 		"A event that will make something happen"
-end
-
-class_chart TRIGGERED_EVENT
-	indexing
-		author: "Jonas Breindahl";
-		created: "23-11-2011";
-		revised: "23-11-2011"
-	explanation
-		"An event that is triggered by something og some ability"
-	inherit
-		EVENT
-end
-
-class_chart PASSIVE_EVENT
-	indexing
-		author: "Jonas Breindahl";
-		created: "23-11-2011";
-		revised: "23-11-2011"
-	explanation
-		"An Event that is always on"
-	inherit
-		EVENT
 end
 
 class_chart BOARD
