@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.Contracts;
+using System.Text;
 
 namespace Descent.GUI
 {
@@ -6,7 +7,6 @@ namespace Descent.GUI
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Linq;
-    using System.Text;
     using Descent.Messaging.Events;
     using Descent.Model.Player;
     using Microsoft.Xna.Framework;
@@ -188,19 +188,17 @@ namespace Descent.GUI
         {
             Contract.Ensures(Bound.X == Contract.OldValue<int>(Bound.X) + x);
             Contract.Ensures(Bound.Y == Contract.OldValue<int>(Bound.Y) + y);
-            lock (this)
-            {
-                Bound = new Rectangle(Bound.X + x, Bound.Y + y, Bound.Width, Bound.Height);
-                foreach (GUIElement e in children) e.Move(x, y);
-                foreach (Text t in texts) t.Position = new Vector2(t.Position.X + x, t.Position.Y + y);
+            Bound = new Rectangle(Bound.X + x, Bound.Y + y, Bound.Width, Bound.Height);
+            foreach (GUIElement e in children) e.Move(x, y);
+            foreach (Text t in texts) t.Position = new Vector2(t.Position.X + x, t.Position.Y + y);
 
-                Drawable[] values = visuals.Keys.ToArray();
-                for (int i = 0; i < values.Length; i++)
-                {
-                    Rectangle old = visuals[values[i]];
-                    visuals[values[i]] = new Rectangle(old.X + x, old.Y + y, old.Width, old.Height);
-                }
+            Drawable[] values = visuals.Keys.ToArray();
+            for (int i = 0; i < values.Length; i++)
+            {
+                Rectangle old = visuals[values[i]];
+                visuals[values[i]] = new Rectangle(old.X + x, old.Y + y, old.Width, old.Height);
             }
+
         }
 
         /// <summary>
@@ -260,10 +258,7 @@ namespace Descent.GUI
         {
             Contract.Requires(child.Bound.X >= Bound.X);
             Contract.Requires(child.Bound.Y >= Bound.Y);
-            lock (this)
-            {
-                children.Add(child);
-            }
+            children.Add(child);
         }
 
         /// <summary>
@@ -271,10 +266,7 @@ namespace Descent.GUI
         /// </summary>
         public void ClearChildren()
         {
-            lock (this)
-            {
-                children.Clear();
-            }
+            children.Clear();
         }
 
         /// <summary>
@@ -308,16 +300,13 @@ namespace Descent.GUI
             Contract.Requires(rectangle.Y >= Bound.Y);
             Contract.Requires(rectangle.X + rectangle.Width <= Bound.X + Bound.Width);
             Contract.Requires(rectangle.Y + rectangle.Height <= Bound.Y + Bound.Height);
-            lock (this)
+            if (Name == target)
             {
-                if (Name == target)
-                {
-                    visuals.Add(visual, rectangle);
-                }
-                foreach (GUIElement e in children)
-                {
-                    if (e.Bound.Contains(rectangle)) e.AddDrawable(target, visual, rectangle);
-                }
+                visuals.Add(visual, rectangle);
+            }
+            foreach (GUIElement e in children)
+            {
+                if (e.Bound.Contains(rectangle)) e.AddDrawable(target, visual, rectangle);
             }
         }
 
@@ -346,14 +335,11 @@ namespace Descent.GUI
             Contract.Requires(target != null);
             Contract.Requires(text != null);
 
-            lock (this)
+            if (Name == target)
             {
-                if (Name == target)
-                {
-                    texts.Add(new Text(WordWrap(text, position), new Vector2(position.X + Bound.X, position.Y + Bound.Y), color));
-                }
-                foreach (GUIElement e in children) e.AddText(target, text, position);
+                texts.Add(new Text(WordWrap(text, position), new Vector2(position.X + Bound.X, position.Y + Bound.Y), color));
             }
+            foreach (GUIElement e in children) e.AddText(target, text, position);
         }
 
         /// <summary>
@@ -448,26 +434,23 @@ namespace Descent.GUI
         /// <param name="draw">The SpriteBatch to draw on</param>
         public virtual void Draw(SpriteBatch draw)
         {
-            lock (this)
+            // draw my own background
+            if (drawBg)
             {
-                // draw my own background
-                if (drawBg)
-                {
-                    draw.Draw(background ?? defaultBG, Bound, Color.White);
-                }
-
-                // draw my own "pictures"
-                foreach (Drawable d in visuals.Keys) draw.Draw(d.Texture, visuals[d], Color.White);
-
-                // draw my own text
-                foreach (Text t in texts)
-                {
-                    draw.DrawString(Font, t.Line, t.Position, t.Color);
-                }
-
-                // draw the children on top
-                foreach (GUIElement e in children) e.Draw(draw);
+                draw.Draw(background ?? defaultBG, Bound, Color.White);
             }
+
+            // draw my own "pictures"
+            foreach (Drawable d in visuals.Keys) draw.Draw(d.Texture, visuals[d], Color.White);
+
+            // draw my own text
+            foreach (Text t in texts)
+            {
+                draw.DrawString(Font, t.Line, t.Position, t.Color);
+            }
+
+            // draw the children on top
+            foreach (GUIElement e in children) e.Draw(draw);
         }
 
         public override void Update(GameTime gameTime)
