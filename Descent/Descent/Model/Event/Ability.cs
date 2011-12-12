@@ -89,20 +89,52 @@ namespace Descent.Model.Event
                         ability.bonus = AbilityBonus.Damage;
                         ability.amount = int.Parse(data[++i]);
                         break;
+                    case "Fear":
+                        ability.bonus = AbilityBonus.Fear;
+                        ability.amount = int.Parse(data[++i]);
+                        break;
+                    case "Fly":
+                        ability.bonus = AbilityBonus.Fly;
+                        break;
+                    case "Grapple":
+                        ability.bonus = AbilityBonus.Grapple;
+                        break;
+                    case "Knockback":
+                        ability.bonus = AbilityBonus.Grapple;
+                        break;
                     case "Pierce":
                         ability.bonus = AbilityBonus.Pierce;
                         ability.amount = int.Parse(data[++i]);
+                        break;
+                    case "Poison":
+                        ability.bonus = AbilityBonus.Poison;
+                        break;
+                    case "QuickShot":
+                        ability.bonus = AbilityBonus.QuickShot;
                         break;
                     case "Range":
                         ability.bonus = AbilityBonus.Range;
                         ability.amount = int.Parse(data[++i]);
                         break;
+                    case "Reach":
+                        ability.bonus = AbilityBonus.Reach;
+                        break;
+                    case "Sorcery":
+                        ability.bonus = AbilityBonus.Sorcery;
+                        ability.amount = int.Parse(data[++i]);
+                        break;
+                    case "Stun":
+                        ability.bonus = AbilityBonus.Stun;
+                        break;
                     case "Surge":
                         ability.bonus = AbilityBonus.Surge;
                         ability.amount = int.Parse(data[++i]);
                         break;
-                    case "QuickShot":
-                        ability.bonus = AbilityBonus.QuickShot;
+                    case "Sweep":
+                        ability.bonus = AbilityBonus.Sweep;
+                        break;
+                    case "Undying":
+                        ability.bonus = AbilityBonus.Undying;
                         break;
                 }
             }

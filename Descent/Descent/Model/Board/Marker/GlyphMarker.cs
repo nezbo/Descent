@@ -32,8 +32,8 @@ namespace Descent.Model.Board.Marker
             : base(id, name, texture, movementPoints)
         {
             this.Open = open;
-            if (open) texture = openTexture;
-            else this.openTexture = openTexture;
+            if (open) this.Texture = openTexture;
+            this.openTexture = openTexture;
         }
 
         public override void PickUp(Hero hero)

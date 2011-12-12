@@ -752,7 +752,7 @@ namespace Descent.Model
         /// <param name="other"></param>
         /// <returns></returns>
         [Pure]
-        public static Marker GetMarker(string name, string other)
+        private static Marker GetMarker(string name, string other)
         {
             switch (name)
             {
