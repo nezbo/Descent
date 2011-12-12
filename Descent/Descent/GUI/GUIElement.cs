@@ -5,6 +5,7 @@ namespace Descent.GUI
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.Linq;
     using System.Text;
     using Descent.Messaging.Events;
     using Descent.Model.Player;
@@ -192,10 +193,12 @@ namespace Descent.GUI
                 Bound = new Rectangle(Bound.X + x, Bound.Y + y, Bound.Width, Bound.Height);
                 foreach (GUIElement e in children) e.Move(x, y);
                 foreach (Text t in texts) t.Position = new Vector2(t.Position.X + x, t.Position.Y + y);
-                foreach (Drawable d in visuals.Keys)
+
+                Drawable[] values = visuals.Keys.ToArray();
+                for (int i = 0; i < values.Length; i++)
                 {
-                    Rectangle old = visuals[d];
-                    visuals[d] = new Rectangle(old.X + x, old.Y + y, old.Width, old.Height);
+                    Rectangle old = visuals[values[i]];
+                    visuals[values[i]] = new Rectangle(old.X + x, old.Y + y, old.Width, old.Height);
                 }
             }
         }
@@ -257,8 +260,10 @@ namespace Descent.GUI
         {
             Contract.Requires(child.Bound.X >= Bound.X);
             Contract.Requires(child.Bound.Y >= Bound.Y);
-
-            children.Add(child);
+            lock (this)
+            {
+                children.Add(child);
+            }
         }
 
         /// <summary>
@@ -266,7 +271,10 @@ namespace Descent.GUI
         /// </summary>
         public void ClearChildren()
         {
-            children.Clear();
+            lock (this)
+            {
+                children.Clear();
+            }
         }
 
         /// <summary>
@@ -300,15 +308,17 @@ namespace Descent.GUI
             Contract.Requires(rectangle.Y >= Bound.Y);
             Contract.Requires(rectangle.X + rectangle.Width <= Bound.X + Bound.Width);
             Contract.Requires(rectangle.Y + rectangle.Height <= Bound.Y + Bound.Height);
-
-            if (Name == target)
+            lock (this)
             {
-                visuals.Add(visual, rectangle);
+                if (Name == target)
+                {
+                    visuals.Add(visual, rectangle);
+                }
+                foreach (GUIElement e in children)
+                {
+                    if (e.Bound.Contains(rectangle)) e.AddDrawable(target, visual, rectangle);
+                }
             }
-            foreach (GUIElement e in children)
-            {
-                if (e.Bound.Contains(rectangle)) e.AddDrawable(target, visual, rectangle);
-            };
         }
 
         /// <summary>
@@ -336,11 +346,14 @@ namespace Descent.GUI
             Contract.Requires(target != null);
             Contract.Requires(text != null);
 
-            if (Name == target)
+            lock (this)
             {
-                texts.Add(new Text(WordWrap(text, position), new Vector2(position.X + Bound.X, position.Y + Bound.Y), color));
+                if (Name == target)
+                {
+                    texts.Add(new Text(WordWrap(text, position), new Vector2(position.X + Bound.X, position.Y + Bound.Y), color));
+                }
+                foreach (GUIElement e in children) e.AddText(target, text, position);
             }
-            foreach (GUIElement e in children) e.AddText(target, text, position);
         }
 
         /// <summary>
