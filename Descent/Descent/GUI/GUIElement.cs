@@ -359,7 +359,7 @@ namespace Descent.GUI
             string[] words = text.Split();
             StringBuilder builder = new StringBuilder();
 
-            int totalSpace = Bound.Width - (int)position.X + 25;
+            int totalSpace = Bound.Width - (int)position.X + 15;
 
             string currentLine = "";
             string nextWord;

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Text;
 using Descent.Model;
 using Descent.Model.Event;
@@ -12,14 +11,11 @@ namespace Descent.GUI.SubElements
 {
     class MonsterSummary : GUIElement
     {
-        private static Dictionary<EDice, Texture2D> dicetinary;
 
         public MonsterSummary(Game game, int x, int y, Monster monster)
             : base(game, "monster summary", x, y, 125, 175)
         {
             SetBackground("boxbg");
-
-            if (dicetinary == null) LoadDiceTextures(game);
 
             // top images
             AddDrawable(this.Name, new Image(game.Content.Load<Texture2D>("Images/Other/movement-small")), new Rectangle(Bound.X, Bound.Y + 25, 25, 25));
@@ -65,7 +61,7 @@ namespace Descent.GUI.SubElements
                     xPos = Bound.X + 35;
                 }
 
-                AddDrawable(this.Name, new Image(dicetinary[dice]), new Rectangle(xPos, yPos, 20, 20));
+                GUIElementFactory.DrawDice(this, dice, xPos, yPos, 20);
                 xPos += 20;
             }
 
@@ -79,18 +75,6 @@ namespace Descent.GUI.SubElements
             if (builder.Length > 2) builder.Remove(builder.Length - 2, 1);
 
             AddText(this.Name, builder.ToString(), new Vector2(5, yPos + 25 - Bound.Y));
-        }
-
-        private void LoadDiceTextures(Game game)
-        {
-            dicetinary = new Dictionary<EDice, Texture2D>();
-
-            dicetinary.Add(EDice.B, game.Content.Load<Texture2D>("Images/Other/dice-black-icon"));
-            dicetinary.Add(EDice.G, game.Content.Load<Texture2D>("Images/Other/dice-green-icon"));
-            dicetinary.Add(EDice.R, game.Content.Load<Texture2D>("Images/Other/dice-red-icon"));
-            dicetinary.Add(EDice.U, game.Content.Load<Texture2D>("Images/Other/dice-blue-icon"));
-            dicetinary.Add(EDice.W, game.Content.Load<Texture2D>("Images/Other/dice-white-icon"));
-            dicetinary.Add(EDice.Y, game.Content.Load<Texture2D>("Images/Other/dice-yellow-icon"));
         }
     }
 }
