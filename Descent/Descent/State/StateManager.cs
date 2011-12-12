@@ -83,6 +83,12 @@ namespace Descent.State
             eventManager.PickupMarkerEvent += PickupMarker;
             eventManager.OpenChestEvent += OpenChest;
             eventManager.RemoveOverlordCardEvent += RemoveOverlordCard;
+            eventManager.AddHealthEvent += AddHealth;
+            eventManager.RemoveHealthEvent += RemoveHealth;
+            eventManager.AddFatigueEvent += AddFatigue;
+            eventManager.RemoveFatigueEvent += RemoveFatigue;
+            eventManager.AddMovementEvent += AddMovement;
+            eventManager.RemoveMovementEvent += RemoveMovement;
 
             // Internal events
             eventManager.SquareMarkedEvent += new SquareMarkedHandler(SquareMarked);
@@ -562,8 +568,10 @@ namespace Descent.State
                     }
                     break;
                 case State.WaitForPerformAction:
-                    if (eventArgs.InventoryField >= 5 && eventArgs.InventoryField <= 7)
+                    if (eventArgs.InventoryField >= 5 && eventArgs.InventoryField <= 7 && hero.MovementLeft >= 1)
                     {
+                        // A hero can keep chucking potions as long as he has movement.
+
                         // There's a potion on the inventory field clicked
                         if (inventory[eventArgs.InventoryField] != null)
                         {
@@ -572,10 +580,16 @@ namespace Descent.State
                             if (equipment.Id == 11)
                             {
                                 // Health potion
+                                eventManager.QueueEvent(EventType.AddHealth, new PointsEventArgs(3));
+                                eventManager.QueueEvent(EventType.RemoveMovement, new PointsEventArgs(1));
+                                inventory[eventArgs.InventoryField] = null;
                             }
                             else if (equipment.Id == 12)
                             {
                                 // Vitality potion
+                                eventManager.QueueEvent(EventType.AddFatigue, new PointsEventArgs(hero.MaxFatigue));
+                                eventManager.QueueEvent(EventType.RemoveMovement, new PointsEventArgs(1));
+                                inventory[eventArgs.InventoryField] = null;
                             }
 
                         }
@@ -1193,6 +1207,36 @@ namespace Descent.State
         private void GiveCoins(object sender, GiveCoinsEventArgs eventArgs)
         {
             Player.Instance.HeroParty.Heroes[eventArgs.PlayerId].Coins += eventArgs.NumberOfCoins;
+        }
+
+        private void AddHealth(object sender, PointsEventArgs eventArgs)
+        {
+            Player.Instance.HeroParty.Heroes[eventArgs.SenderId].AddHealth(eventArgs.Points);
+        }
+
+        private void RemoveHealth(object sender, PointsEventArgs eventArgs)
+        {
+            Player.Instance.HeroParty.Heroes[eventArgs.SenderId].RemoveHealth(eventArgs.Points);
+        }
+
+        private void AddFatigue(object sender, PointsEventArgs eventArgs)
+        {
+            Player.Instance.HeroParty.Heroes[eventArgs.SenderId].AddFatigue(eventArgs.Points);
+        }
+
+        private void RemoveFatigue(object sender, PointsEventArgs eventArgs)
+        {
+            Player.Instance.HeroParty.Heroes[eventArgs.SenderId].RemoveFatigue(eventArgs.Points);
+        }
+
+        private void AddMovement(object sender, PointsEventArgs eventArgs)
+        {
+            Player.Instance.HeroParty.Heroes[eventArgs.SenderId].AddMovement(eventArgs.Points);
+        }
+
+        private void RemoveMovement(object sender, PointsEventArgs eventArgs)
+        {
+            Player.Instance.HeroParty.Heroes[eventArgs.SenderId].RemoveMovement(eventArgs.Points);
         }
 
         #endregion
