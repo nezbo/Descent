@@ -935,6 +935,9 @@ namespace Descent.State
             Contract.Requires(CurrentState == State.NewRound);
             Contract.Ensures(CurrentState == State.WaitForHeroTurn);
 
+            // Place dead heroes on board
+            FullModel.Board.RespawnDeadHeroes();
+
             AllPlayersRemainTurn(); // For WaitForHeroTurn
             ResetCurrentPlayer();
 

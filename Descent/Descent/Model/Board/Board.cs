@@ -68,10 +68,7 @@
         /// </summary>
         public int Width
         {
-            get
-            {
-                return bounds.Width;
-            }
+            get { return bounds.Width; }
         }
 
         /// <summary>
@@ -80,10 +77,7 @@
         /// </summary>
         public int Height
         {
-            get
-            {
-                return bounds.Height;
-            }
+            get { return bounds.Height; }
         }
 
         /// <summary>
@@ -91,23 +85,16 @@
         /// </summary>
         public Hero[] HeroesInTown
         {
-            get
-            {
-                return heroesInTown.ToArray();
-            }
+            get { return heroesInTown.ToArray(); }
         }
 
         /// <summary>
         /// Gets the points where all figures are standing
         /// 
         /// </summary>
-        public Dictionary<Figure,Point> FiguresOnBoard
+        public Dictionary<Figure, Point> FiguresOnBoard
         {
-            get
-            {
-                return figuresOnBoard;
-
-            }
+            get { return figuresOnBoard; }
         }
 
         /// <summary>
@@ -115,10 +102,7 @@
         /// </summary>
         public Texture2D FloorTexture
         {
-            get
-            {
-                return floorTexture;
-            }
+            get { return floorTexture; }
         }
 
         /// <summary>
@@ -126,7 +110,11 @@
         /// </summary>
         public Door[] RelevantDoors
         {
-            get { return doors.Where(door => !door.Opened && door.Areas.Any(area => revealedAreas.Contains(area))).ToArray(); }
+            get
+            {
+                return
+                    doors.Where(door => !door.Opened && door.Areas.Any(area => revealedAreas.Contains(area))).ToArray();
+            }
         }
 
         /// <summary>
@@ -155,15 +143,9 @@
         /// </returns>
         public Square this[int x, int y]
         {
-            get
-            {
-                return board[x, y];
-            }
+            get { return board[x, y]; }
 
-            set
-            {
-                board[x, y] = value;
-            }
+            set { board[x, y] = value; }
         }
 
         /// <summary>
@@ -177,15 +159,9 @@
         /// </returns>
         public Square this[Point p]
         {
-            get
-            {
-                return board[p.X, p.Y];
-            }
+            get { return board[p.X, p.Y]; }
 
-            set
-            {
-                board[p.X, p.Y] = value;
-            }
+            set { board[p.X, p.Y] = value; }
         }
 
         #endregion
@@ -207,8 +183,8 @@
         public Board(int width, int height, Texture2D floorTexture)
         {
             bounds = new Rectangle(0, 0, width, height);
-            board = new Square[width, height];
-            canSpawn = new bool[width, height];
+            board = new Square[width,height];
+            canSpawn = new bool[width,height];
             this.floorTexture = floorTexture;
             revealedAreas.Add(0);
         }
@@ -278,7 +254,8 @@
         /// </returns>
         public bool IsStandable(int x, int y)
         {
-            return IsSquareWithinBoard(x, y) && SquareVisibleByPlayers(x, y) && board[x, y].Figure == null && (board[x, y].Marker == null || !board[x, y].Marker.Name.Equals("rock"));
+            return IsSquareWithinBoard(x, y) && SquareVisibleByPlayers(x, y) && board[x, y].Figure == null &&
+                   (board[x, y].Marker == null || !board[x, y].Marker.Name.Equals("rock"));
         }
 
         /// <summary>
@@ -318,7 +295,7 @@
                     canSpawn[x, y] = true;
                 }
             }
-            
+
             foreach (Point point in FiguresOnBoard.Where(pair => pair.Key is Hero).Select(pair => pair.Value))
             {
                 for (int x = 0; x < Width; x++)
@@ -350,7 +327,8 @@
             {
                 for (int y = point.Y - 1; y <= point.Y + 1; y++)
                 {
-                    if (IsSquareWithinBoard(x, y) && this[x, y].Marker != null && this[x, y].Marker.Name.Equals("glyph-open")) return true;
+                    if (IsSquareWithinBoard(x, y) && this[x, y].Marker != null &&
+                        this[x, y].Marker.Name.Equals("glyph-open")) return true;
                 }
             }
 
@@ -382,7 +360,9 @@
             }
             foreach (var point in SquaresBetweenPoints(from, to))
             {
-                if (!(IsStandable(point.X, point.Y) || (ignoreMonsters && board[point.X, point.Y] != null && board[point.X, point.Y].Figure is Monster)))
+                if (
+                    !(IsStandable(point.X, point.Y) ||
+                      (ignoreMonsters && board[point.X, point.Y] != null && board[point.X, point.Y].Figure is Monster)))
                     return false;
             }
             return true;
@@ -423,7 +403,7 @@
 
             if (from == to)
             {
-                return new Point[]{from};
+                return new Point[] {from};
             }
             // if the lines are completely vertical
             if (from.X == to.X)
@@ -435,17 +415,17 @@
                 }
             }
 
-            // if the lines are completely horizontal
+                // if the lines are completely horizontal
             else if (from.Y == to.Y)
             {
-                int step = (to.X - from.X) / Math.Abs(to.X - from.X);
+                int step = (to.X - from.X)/Math.Abs(to.X - from.X);
                 for (int x = from.X; x != to.X; x += step)
                 {
                     points.Add(new Point(x, from.Y));
                 }
             }
 
-            // the line is not straight
+                // the line is not straight
             else
             {
                 // if we are going left instead of right, switch the from and to
@@ -457,31 +437,31 @@
                 }
 
                 // calculate the angle of descent/decline
-                double a = (double)(to.Y - from.Y) / (to.X - from.X);
+                double a = (double) (to.Y - from.Y)/(to.X - from.X);
 
                 // step by 0.5 from the from x-coordinate to the to x-coordinate
                 for (double xn = from.X + .5; xn < to.X; xn++)
                 {
                     // calculate the y-value
-                    double yn = (xn - from.X) * a + from.Y;
+                    double yn = (xn - from.X)*a + from.Y;
                     if (Math.Abs(yn - Math.Truncate(yn) - .5) < .0000001)
                     {
                         if (a < 0)
                         {
-                            points.Add(new Point((int)Math.Truncate(xn), (int)Math.Ceiling(yn)));
-                            points.Add(new Point((int)Math.Ceiling(xn), (int)Math.Truncate(yn)));
+                            points.Add(new Point((int) Math.Truncate(xn), (int) Math.Ceiling(yn)));
+                            points.Add(new Point((int) Math.Ceiling(xn), (int) Math.Truncate(yn)));
                         }
                         else
                         {
-                            points.Add(new Point((int)Math.Truncate(xn), (int)Math.Truncate(yn)));
-                            points.Add(new Point((int)Math.Ceiling(xn), (int)Math.Ceiling(yn)));
-                            
+                            points.Add(new Point((int) Math.Truncate(xn), (int) Math.Truncate(yn)));
+                            points.Add(new Point((int) Math.Ceiling(xn), (int) Math.Ceiling(yn)));
+
                         }
                     }
                     else
                     {
-                        points.Add(new Point((int)Math.Truncate(xn), (int)Math.Round(yn)));
-                        points.Add(new Point((int)Math.Truncate(xn) + 1, (int)Math.Round(yn)));
+                        points.Add(new Point((int) Math.Truncate(xn), (int) Math.Round(yn)));
+                        points.Add(new Point((int) Math.Truncate(xn) + 1, (int) Math.Round(yn)));
                     }
                 }
 
@@ -495,25 +475,25 @@
                 for (double yn = from.Y + .5; yn < to.Y; yn++)
                 {
                     // calculates the x value
-                    double xn = (yn - from.Y) / a + from.X;
+                    double xn = (yn - from.Y)/a + from.X;
                     if (Math.Abs(xn - Math.Truncate(xn) - .5) < .000001)
                     {
                         if (a < 0)
                         {
-                            points.Add(new Point((int)Math.Truncate(xn), (int)Math.Ceiling(yn)));
-                            points.Add(new Point((int)Math.Ceiling(xn), (int)Math.Truncate(yn)));
+                            points.Add(new Point((int) Math.Truncate(xn), (int) Math.Ceiling(yn)));
+                            points.Add(new Point((int) Math.Ceiling(xn), (int) Math.Truncate(yn)));
                         }
                         else
                         {
-                            points.Add(new Point((int)Math.Truncate(xn), (int)Math.Truncate(yn)));
-                            points.Add(new Point((int)Math.Ceiling(xn), (int)Math.Ceiling(yn)));
+                            points.Add(new Point((int) Math.Truncate(xn), (int) Math.Truncate(yn)));
+                            points.Add(new Point((int) Math.Ceiling(xn), (int) Math.Ceiling(yn)));
 
                         }
                     }
                     else
                     {
-                        points.Add(new Point((int)Math.Round(xn), (int)Math.Truncate(yn)));
-                        points.Add(new Point((int)Math.Round(xn), (int)Math.Truncate(yn) + 1));
+                        points.Add(new Point((int) Math.Round(xn), (int) Math.Truncate(yn)));
+                        points.Add(new Point((int) Math.Round(xn), (int) Math.Truncate(yn) + 1));
                     }
                 }
             }
@@ -625,19 +605,27 @@
         {
             // Remove monsters from old position
             Point p = FiguresOnBoard[figure];
-            for (int x = p.X; x < p.X + (figure.Orientation.Equals(Orientation.V) ? figure.Size.Width : figure.Size.Height); x++)
+            for (int x = p.X;
+                 x < p.X + (figure.Orientation.Equals(Orientation.V) ? figure.Size.Width : figure.Size.Height);
+                 x++)
             {
-                for (int y = p.Y; y < p.Y + (figure.Orientation.Equals(Orientation.V) ? figure.Size.Height : figure.Size.Width); y++)
+                for (int y = p.Y;
+                     y < p.Y + (figure.Orientation.Equals(Orientation.V) ? figure.Size.Height : figure.Size.Width);
+                     y++)
                 {
                     board[x, y].Figure = null;
                 }
             }
-            
+
             //this[FiguresOnBoard[figure]].Figure = null;
 
-            for (int x = point.X; x < point.X + (figure.Orientation.Equals(Orientation.V) ? figure.Size.Width : figure.Size.Height); x++)
+            for (int x = point.X;
+                 x < point.X + (figure.Orientation.Equals(Orientation.V) ? figure.Size.Width : figure.Size.Height);
+                 x++)
             {
-                for (int y = point.Y; y < point.Y + (figure.Orientation.Equals(Orientation.V) ? figure.Size.Height : figure.Size.Width); y++)
+                for (int y = point.Y;
+                     y < point.Y + (figure.Orientation.Equals(Orientation.V) ? figure.Size.Height : figure.Size.Width);
+                     y++)
                 {
                     board[x, y].Figure = figure;
                 }
@@ -650,9 +638,13 @@
 
         public void PlaceFigure(Figure figure, Point point)
         {
-            for (int x = point.X; x < point.X + (figure.Orientation.Equals(Orientation.V) ? figure.Size.Width : figure.Size.Height); x++)
+            for (int x = point.X;
+                 x < point.X + (figure.Orientation.Equals(Orientation.V) ? figure.Size.Width : figure.Size.Height);
+                 x++)
             {
-                for (int y = point.Y; y < point.Y + (figure.Orientation.Equals(Orientation.V) ? figure.Size.Height : figure.Size.Width); y++)
+                for (int y = point.Y;
+                     y < point.Y + (figure.Orientation.Equals(Orientation.V) ? figure.Size.Height : figure.Size.Width);
+                     y++)
                 {
                     board[x, y].Figure = figure;
                 }
@@ -668,9 +660,13 @@
         {
             List<Point> list = new List<Point>();
             Point point = this.FiguresOnBoard[figure];
-            for (int x = point.X; x < point.X + (figure.Orientation.Equals(Orientation.V) ? figure.Size.Width : figure.Size.Height); x++)
+            for (int x = point.X;
+                 x < point.X + (figure.Orientation.Equals(Orientation.V) ? figure.Size.Width : figure.Size.Height);
+                 x++)
             {
-                for (int y = point.Y; y < point.Y + (figure.Orientation.Equals(Orientation.V) ? figure.Size.Height : figure.Size.Width); y++)
+                for (int y = point.Y;
+                     y < point.Y + (figure.Orientation.Equals(Orientation.V) ? figure.Size.Height : figure.Size.Width);
+                     y++)
                 {
                     list.Add(new Point(x, y));
                 }
@@ -685,9 +681,13 @@
             bool canMove = true;
 
             List<Point> list = new List<Point>();
-            for (int x = point.X; x < point.X + (figure.Orientation.Equals(Orientation.V) ? figure.Size.Width : figure.Size.Height); x++)
+            for (int x = point.X;
+                 x < point.X + (figure.Orientation.Equals(Orientation.V) ? figure.Size.Width : figure.Size.Height);
+                 x++)
             {
-                for (int y = point.Y; y < point.Y + (figure.Orientation.Equals(Orientation.V) ? figure.Size.Height : figure.Size.Width); y++)
+                for (int y = point.Y;
+                     y < point.Y + (figure.Orientation.Equals(Orientation.V) ? figure.Size.Height : figure.Size.Width);
+                     y++)
                 {
                     canMove &= (IsStandable(x, y) || (IsSquareWithinBoard(x, y) && this[x, y].Figure == figure));
                 }
@@ -711,7 +711,7 @@
             {
                 for (int y = 0; y < h; y++)
                 {
-                    System.Diagnostics.Debug.Write(p.Contains(new Point(y,x))?1:0);
+                    System.Diagnostics.Debug.Write(p.Contains(new Point(y, x)) ? 1 : 0);
                 }
                 System.Diagnostics.Debug.WriteLine("");
             }
@@ -727,16 +727,48 @@
             point = FiguresOnBoard[figure]; // Get top left corner if big monster
             if (figure is Hero)
             {
-                heroesInTown.Add((Hero)figure);
+                heroesInTown.Add((Hero) figure);
             }
-            for (int x = point.X; x < point.X + (figure.Orientation.Equals(Orientation.V) ? figure.Size.Width : figure.Size.Height); x++)
+            for (int x = point.X;
+                 x < point.X + (figure.Orientation.Equals(Orientation.V) ? figure.Size.Width : figure.Size.Height);
+                 x++)
             {
-                for (int y = point.Y; y < point.Y + (figure.Orientation.Equals(Orientation.V) ? figure.Size.Height : figure.Size.Width); y++)
+                for (int y = point.Y;
+                     y < point.Y + (figure.Orientation.Equals(Orientation.V) ? figure.Size.Height : figure.Size.Width);
+                     y++)
                 {
                     this[x, y].Figure = null;
                 }
             }
             figuresOnBoard.Remove(figure);
+        }
+
+        public void RespawnDeadHeroes()
+        {
+            Contract.Ensures(HeroesInTown.Length == 0);
+            foreach (var hero in heroesInTown)
+            {
+                PlaceDeadHero(hero);
+            }
+            foreach (var hero in FiguresOnBoard.Keys.Where(figure => figure is Hero))
+            {
+                heroesInTown.Remove((Hero)hero);
+            }
+        }
+
+        private void PlaceDeadHero(Hero hero)
+        {
+            for (int y = 0; y < Height; y++)
+            {
+                for (int x = 0; x < Width; x++)
+                {
+                    if (IsValidStartSquare(new Point(x, y)))
+                    {
+                        PlaceFigure(hero, new Point(x, y));
+                        return;
+                    }
+                }
+            }
         }
     }
 }
