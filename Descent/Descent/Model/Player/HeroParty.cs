@@ -106,7 +106,7 @@ namespace Descent.Model.Player
         /// </param>
         public void AddConquestTokens(int tokens)
         {
-            Contract.Requires(tokens > 0);
+            Contract.Requires(tokens >= 0);
             Contract.Ensures(ConquestTokens == Contract.OldValue(ConquestTokens) + tokens);
             ConquestTokens += tokens;
         }
