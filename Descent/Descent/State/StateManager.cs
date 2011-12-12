@@ -6,6 +6,7 @@ namespace Descent.State
     using System.Linq;
 
     using Descent.Model.Board.Marker;
+    using Descent.Model.Player.Overlord;
 
     using GUI;
     using Messaging.Events;
@@ -81,6 +82,7 @@ namespace Descent.State
             eventManager.FinishedAttackEvent += FinishedAttack;
             eventManager.PickupMarkerEvent += PickupMarker;
             eventManager.OpenChestEvent += OpenChest;
+            eventManager.RemoveOverlordCardEvent += RemoveOverlordCard;
 
             // Internal events
             eventManager.SquareMarkedEvent += new SquareMarkedHandler(SquareMarked);
@@ -405,7 +407,11 @@ namespace Descent.State
                         }
                     }
 
-                    if (figure.AttacksLeft > 0 && FullModel.Board.IsSquareWithinBoard(new Point(eventArgs.X, eventArgs.Y)) && FullModel.Board.Distance(standingPoint, new Point(eventArgs.X, eventArgs.Y)) >= 1 && (FullModel.Board[eventArgs.X, eventArgs.Y] != null && (FullModel.Board[eventArgs.X, eventArgs.Y].Figure != null && FullModel.Board.IsThereLineOfSight(figure, FullModel.Board[eventArgs.X, eventArgs.Y].Figure, false))))
+                    if (figure.AttacksLeft > 0 && FullModel.Board.IsSquareWithinBoard(new Point(eventArgs.X, eventArgs.Y)) && 
+                        FullModel.Board.Distance(standingPoint, new Point(eventArgs.X, eventArgs.Y)) >= 1 && 
+                        (FullModel.Board[eventArgs.X, eventArgs.Y] != null && 
+                        (FullModel.Board[eventArgs.X, eventArgs.Y].Figure != null && 
+                        FullModel.Board.IsThereLineOfSight(figure, FullModel.Board[eventArgs.X, eventArgs.Y].Figure, false))))
                     {
                         // A figure is trying to attack another figure.
 
@@ -425,16 +431,16 @@ namespace Descent.State
                                 return; // Do not allow attack if hero does not have weapon
                             }
 
-                            if (hero.Inventory.Weapon.AttackType == EAttackType.MELEE)
+                            if (hero.AttackType == EAttackType.MELEE)
                             {
                                 // If the player has a melee weapon, he should be adjacent to the figure he is attacking.
-                                if (FullModel.Board.Distance(FullModel.Board.FiguresOnBoard[hero], FullModel.Board.FiguresOnBoard[target]) == 1)
+                                if (FullModel.Board.Distance(FullModel.Board.FiguresOnBoard[hero], new Point(eventArgs.X, eventArgs.Y)) == 1)
                                 {
                                     // Hero is adjacent to target figure, carry on with attack.
                                     eventManager.QueueEvent(EventType.AttackSquare, new CoordinatesEventArgs(eventArgs.X, eventArgs.Y));
                                 }
                             }
-                            else if (hero.Inventory.Weapon.AttackType == EAttackType.MAGIC || hero.Inventory.Weapon.AttackType == EAttackType.RANGED)
+                            else if (hero.AttackType == EAttackType.MAGIC || hero.AttackType == EAttackType.RANGED)
                             {
                                 // If attack type is magic or ranged, always allow attack.
                                 eventManager.QueueEvent(EventType.AttackSquare, new CoordinatesEventArgs(eventArgs.X, eventArgs.Y));
@@ -451,8 +457,24 @@ namespace Descent.State
                                 return; // A monster is trying to attack another monster. No go!
                             }
 
-                            // A monster is attacking
-                            eventManager.QueueEvent(EventType.AttackSquare, new CoordinatesEventArgs(eventArgs.X, eventArgs.Y));
+                            if (figure.AttackType == EAttackType.MELEE)
+                            {
+                                // If the monster has a melee weapon, he should be adjacent to the gero he is attacking.
+                                if (FullModel.Board.Distance(FullModel.Board.FiguresOnBoard[figure], new Point(eventArgs.X, eventArgs.Y)) == 1)
+                                {
+                                    // Monster is adjacent to target figure, carry on with attack.
+                                    eventManager.QueueEvent(EventType.AttackSquare, new CoordinatesEventArgs(eventArgs.X, eventArgs.Y));
+                                }
+                            }
+                            else if (figure.AttackType == EAttackType.MAGIC || figure.AttackType == EAttackType.RANGED)
+                            {
+                                // If attack type is magic or ranged, always allow attack.
+                                eventManager.QueueEvent(EventType.AttackSquare, new CoordinatesEventArgs(eventArgs.X, eventArgs.Y));
+                            }
+                            else
+                            {
+                                // Attack type is not melee, magic or ranged - do not perform attack.
+                            }
                         }
                     }
 
@@ -1073,7 +1095,11 @@ namespace Descent.State
             Contract.Requires(CurrentState == State.WaitForPerformAction);
             Contract.Ensures(CurrentState == State.WaitForPerformAction);
             FullModel.Board[eventArgs.X, eventArgs.Y].Marker.PickUp(Player.Instance.HeroParty.Heroes[eventArgs.SenderId]);
-            FullModel.Board[eventArgs.X, eventArgs.Y].Marker = null;
+            if (!(FullModel.Board[eventArgs.X, eventArgs.Y].Marker is GlyphMarker))
+            {
+                FullModel.Board[eventArgs.X, eventArgs.Y].Marker = null;  
+            }
+            
         }
 
         private void OpenChest(object sender, ChestEventArgs eventArgs)
@@ -1150,7 +1176,8 @@ namespace Descent.State
             Contract.Ensures(CurrentState == State.WaitForPerformAction);
 
             // Record monsterId
-            currentMonster = (Monster)FullModel.Board.FiguresOnBoard.Single(pair => pair.Value.X == eventArgs.X && pair.Value.Y == eventArgs.Y).Key;
+            //currentMonster = (Monster)FullModel.Board.FiguresOnBoard.Single(pair => pair.Value.X == eventArgs.X && pair.Value.Y == eventArgs.Y).Key;
+            currentMonster = (Monster)FullModel.Board[eventArgs.X, eventArgs.Y].Figure;
 
             stateMachine.PlaceStates(State.MonsterTurn);
             stateMachine.ChangeToNextState();
@@ -1183,7 +1210,18 @@ namespace Descent.State
             Player.Instance.Overlord.ThreatTokens += Player.Instance.HeroParty.NumberOfHeroes;
             if (Player.Instance.IsServer)
             {
-                eventManager.QueueEvent(EventType.GiveOverlordCards, new GiveOverlordCardsEventArgs(gameState.GetOverlordCards(2).Select(card => card.Id).ToArray()));
+                if (Player.Instance.Overlord.Hand.Count >= 7)
+                {
+                    return; // Overlord need to sell cards before he can receive more.
+                }
+                else
+                {
+                    int[] overlordCardIds = gameState.GetOverlordCards(2).Select(card => card.Id).ToArray();
+                    if (overlordCardIds.Length >= 1)
+                    {
+                        eventManager.QueueEvent(EventType.GiveOverlordCards, new GiveOverlordCardsEventArgs(overlordCardIds));
+                    }
+                }  
             }
 
             monstersRemaining = FullModel.Board.FiguresOnBoard.Where(pair => pair.Key is Monster && FullModel.Board.SquareVisibleByPlayers(pair.Value.X, pair.Value.Y)).Select(pair => (Monster)pair.Key).ToList();
@@ -1202,19 +1240,20 @@ namespace Descent.State
         {
             gui.ClearMarks();
 
-            /* TODO Remove this - debug only
-            for (int x = 0; x < FullModel.Board.Width; x++)
+            // Spawn darkness
+            if (!IsAHeroTurn())
             {
-                for (int y = 0; y < FullModel.Board.Height; y++)
+                for (int x = 0; x < FullModel.Board.Width; x++)
                 {
-                    if (FullModel.Board.CanOverlordSpawn(new Point(x, y)))
+                    for (int y = 0; y < FullModel.Board.Height; y++)
                     {
-                        gui.MarkSquare(x, y, true);
+                        if (FullModel.Board.CanOverlordSpawn(new Point(x, y)))
+                        {
+                            gui.MarkSquare(x, y, false);
+                        }
                     }
                 }
             }
-            return;
-            */
 
             if (currentMonster == null)
             {
@@ -1223,7 +1262,15 @@ namespace Descent.State
                     // If we're not in a monster turn, all monsters should be marked to indicate all monsters can be chosen, but only for the overlord.
                     foreach (Point point in FullModel.Board.FiguresOnBoard.Where(pair => monstersRemaining.Contains(pair.Key)).Select(pair => pair.Value))
                     {
-                        gui.MarkSquare(point.X, point.Y, true);
+                        Figure monster = FullModel.Board[point].Figure;
+                        
+                        for (int x = point.X; x < point.X + (monster.Orientation.Equals(Orientation.V) ? monster.Size.Width : monster.Size.Height); x++)
+                        {
+                            for (int y = point.Y; y < point.Y + (monster.Orientation.Equals(Orientation.V) ? monster.Size.Height : monster.Size.Width); y++)
+                            {
+                                gui.MarkSquare(point.X, point.Y, true);
+                            }
+                        }
                     }
                 }
             }
@@ -1231,7 +1278,14 @@ namespace Descent.State
             {
                 // We have a current monster, mark only this monster indicate that the overlord can only perform actions with this monster.
                 Point monsterpoint = FullModel.Board.FiguresOnBoard[currentMonster];
-                gui.MarkSquare(monsterpoint.X, monsterpoint.Y, true);
+                for (int x = monsterpoint.X; x < monsterpoint.X + (currentMonster.Orientation.Equals(Orientation.V) ? currentMonster.Size.Width : currentMonster.Size.Height); x++)
+                {
+                    for (int y = monsterpoint.Y; y < monsterpoint.Y + (currentMonster.Orientation.Equals(Orientation.V) ? currentMonster.Size.Height : currentMonster.Size.Width); y++)
+                    {
+                        gui.MarkSquare(monsterpoint.X, monsterpoint.Y, true);
+                    }
+                }
+                
             }
 
         }
@@ -1254,6 +1308,18 @@ namespace Descent.State
             /*
             stateMachine.PlaceStates(State.ActivateMonsters);
              * */
+        }
+        
+        private void RemoveOverlordCard(object sender, OverlordCardEventArgs eventArgs)
+        {
+            OverlordCard overlordCard = FullModel.GetOverlordCard(eventArgs.OverlordCardId);
+            Player.Instance.Overlord.Hand.Remove(overlordCard);
+            Player.Instance.Overlord.ThreatTokens += overlordCard.SellPrice;
+
+            if (Player.Instance.IsServer)
+            {
+                eventManager.QueueEvent(EventType.ChatMessage, new ChatMessageEventArgs("The overlord sold a card."));  
+            } 
         }
 
         private void EndMonsterTurn(object sender, GameEventArgs eventArgs)
