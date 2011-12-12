@@ -1242,7 +1242,9 @@ namespace Descent.State
                 stateMachine.PlaceStates(State.SpawnMonsters);
             }
              * */
+            /*
             stateMachine.PlaceStates(State.ActivateMonsters);
+             * */
         }
 
         private void EndMonsterTurn(object sender, GameEventArgs eventArgs)
