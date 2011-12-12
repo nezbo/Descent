@@ -23,7 +23,7 @@ namespace Descent.GUI
             {
                 Border = new Dictionary<EquipmentRarity, string>();
                 Border.Add(EquipmentRarity.Common, "Images/Other/equipbg");
-                Border.Add(EquipmentRarity.Bronze, "Images/Other/equipbg-bronze");
+                Border.Add(EquipmentRarity.Copper, "Images/Other/equipbg-bronze");
                 Border.Add(EquipmentRarity.Silver, "Images/Other/equipbg-silver");
                 Border.Add(EquipmentRarity.Gold, "Images/Other/equipbg-gold");
             }
