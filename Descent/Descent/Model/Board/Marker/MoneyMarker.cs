@@ -1,16 +1,5 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="MoneyMarker.cs" company="">
-// TODO: Update copyright text.
-// </copyright>
-// -----------------------------------------------------------------------
-
-namespace Descent.Model.Board.Marker
+﻿namespace Descent.Model.Board.Marker
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-
     using Descent.Messaging.Events;
     using Descent.Model.Player;
     using Descent.Model.Player.Figure;
@@ -18,7 +7,7 @@ namespace Descent.Model.Board.Marker
     using Microsoft.Xna.Framework.Graphics;
 
     /// <summary>
-    /// TODO: Update summary.
+    /// A type of marker, that has money on it
     /// </summary>
     /// <author>
     /// Jonas Breindahl (jobre@itu.dk)
@@ -30,6 +19,12 @@ namespace Descent.Model.Board.Marker
         {
         }
 
+        /// <summary>
+        /// Gives all heroes 100 coins
+        /// </summary>
+        /// <param name="hero">
+        /// The hero standing on the marker
+        /// </param>
         public override void PickUp(Hero hero)
         {
             foreach (Hero h in Player.Instance.HeroParty.AllHeroes)

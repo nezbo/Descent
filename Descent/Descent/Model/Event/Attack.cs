@@ -3,12 +3,11 @@ namespace Descent.Model.Event
 {
     using System.Collections.Generic;
     using System.Diagnostics.Contracts;
+    using System.Linq;
 
     using Descent.Model.Player;
     using Descent.Model.Player.Figure;
     using Descent.Model.Player.Figure.HeroStuff;
-
-    using System.Linq;
 
     using Microsoft.Xna.Framework;
 

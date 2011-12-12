@@ -1,15 +1,6 @@
-﻿
-namespace Descent.Model.Board.Marker
+﻿namespace Descent.Model.Board.Marker
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-
-    using Descent.Model.Player.Figure;
     using Descent.Model.Player.Figure.HeroStuff;
-
-    using Microsoft.Xna.Framework.Graphics;
 
     /// <summary>
     /// A chest with treasures, coins and tokens
@@ -37,6 +28,9 @@ namespace Descent.Model.Board.Marker
 
         #region Properties
 
+        /// <summary>
+        /// Gets the unique id of the chest
+        /// </summary>
         public int Id
         {
             get

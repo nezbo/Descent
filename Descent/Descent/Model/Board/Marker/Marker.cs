@@ -6,10 +6,7 @@
 
 namespace Descent.Model.Board.Marker
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
+    using System.Diagnostics.Contracts;
 
     using Descent.GUI;
     using Descent.Model.Player.Figure;
@@ -35,6 +32,9 @@ namespace Descent.Model.Board.Marker
 
         #region Properties
 
+        /// <summary>
+        /// Gets the unique id of the marker
+        /// </summary>
         public int Id
         {
             get
@@ -43,6 +43,9 @@ namespace Descent.Model.Board.Marker
             }
         }
 
+        /// <summary>
+        /// Gets the name of the marker
+        /// </summary>
         public string Name
         {
             get
@@ -51,6 +54,9 @@ namespace Descent.Model.Board.Marker
             }
         }
 
+        /// <summary>
+        /// Gets or sets the texture of the marker
+        /// </summary>
         public Texture2D Texture
         {
             get
@@ -64,6 +70,9 @@ namespace Descent.Model.Board.Marker
             }
         }
 
+        /// <summary>
+        /// Gets the number of movementpoints it costs to pick up/interact with the marker
+        /// </summary>
         public int MovementPoints
         {
             get
@@ -79,6 +88,9 @@ namespace Descent.Model.Board.Marker
         /// <summary>
         /// Initializes a new instance of the <see cref="Marker"/> class.
         /// </summary>
+        /// <param name="id">
+        /// The unique id of the marker
+        /// </param>
         /// <param name="name">
         /// The name of the marker
         /// </param>
@@ -99,7 +111,22 @@ namespace Descent.Model.Board.Marker
 
         #region Methods
 
+        /// <summary>
+        /// Picks up, or interacts with, the marker
+        /// </summary>
+        /// <param name="hero">
+        /// The hero, standing on the marker
+        /// </param>
         public abstract void PickUp(Hero hero);
+
+        /// <summary>
+        /// The cost of interacting is always larger or equal to zero
+        /// </summary>
+        [ContractInvariantMethod]
+        private void ObjectInvariant()
+        {
+            Contract.Invariant(movementPoints >= 0);
+        }
 
         #endregion
     }

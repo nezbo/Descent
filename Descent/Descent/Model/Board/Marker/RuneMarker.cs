@@ -1,16 +1,5 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="RuneMarker.cs" company="">
-// TODO: Update copyright text.
-// </copyright>
-// -----------------------------------------------------------------------
-
-namespace Descent.Model.Board.Marker
+﻿namespace Descent.Model.Board.Marker
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-
     using Descent.Messaging.Events;
     using Descent.Model.Player;
     using Descent.Model.Player.Figure;
@@ -18,8 +7,11 @@ namespace Descent.Model.Board.Marker
     using Microsoft.Xna.Framework.Graphics;
 
     /// <summary>
-    /// TODO: Update summary.
+    /// A type of marker, that has a rune key on it
     /// </summary>
+    /// <author>
+    /// Jonas Breindahl (jobre@itu.dk)
+    /// </author>
     public class RuneMarker : Marker
     {
         private RuneKey color;
@@ -38,6 +30,12 @@ namespace Descent.Model.Board.Marker
             this.color = color;
         }
 
+        /// <summary>
+        /// Adds the runes color to the hero party
+        /// </summary>
+        /// <param name="hero">
+        /// The hero standing on the marker
+        /// </param>
         public override void PickUp(Hero hero)
         {
             Player.Instance.HeroParty.AddRuneKey(color);

@@ -44,7 +44,6 @@ cluster_chart OVERLORD_STUFF
 	class SPAWN_CARD description "A type of Overlord_Card to spawn creatures"
 end
 
--- HOW TO DO/DESCRIBE EVENTS AND ABILITIES??!
 cluster_chart EVENT_MODEL_CLUSTER
 	class EFFECT description "An Effect that can be on an figure"
 	class ABILITY description "Any ability, that have an effect on figures, heroes and the overlord."
@@ -65,7 +64,9 @@ cluster_chart MARKER_CLUSTER
 	class MONEY_MARKER description "A gold marker, that can be on a square"
 	class RUNE_KEY_MARKER description "A rune that will open a rune-door, that is either on the map, or aquired by the party"
 	class TREASURE_CHEST_MARKER description "A treasure chest, that can be placed on a board"
+	class POTION_MARKER description "A marker holding a potion"
 	class OTHER_MARKER description "Either rubble, water or pit, that can be on a square"
+	class TREASURE_CHEST description "A treasure chest, that have conquest tokens, coins, curses and treasures in it"
 end
 
 cluster_chart GUI_CLUSTER
@@ -596,22 +597,40 @@ class_chart BOARD
 		author: "Jonas Breindahl";
 		in_cluster: "BOARD";
 		created: "23-11-2011";
-		revised: "30-11-2011"
+		revised: "12-12-2011"
 	explanation
 		"The entire gameboard, made up of squares"
 	query
 		"What is your width?",
 		"What is your height?",
         "What heroes are currently in town?",
-        "Where are the heroes on the board?",
+        "Where are the figures on the board?",
+		"What is the floor texture of the board?",
+		"Where are all the doors on the map?",
+		"Where are all the relevant doors on the map?",
 		"Is the coordinate (x/y) within the board?",
-		"Is this square standable?",
-		"Can the overlord spawn here?",
+		"Are all these coordinates within the board?",
+		"Can the overlord spawn at this coordinate?",
+		"Is this square a valid start square?",
 		"Is there line of sight from 'here' to 'there'?",
 		"Is there line of sight from 'here' to 'there', not included monsters?",
+		"Is there line of sight from 'this' monster to 'that' monster?",
+		"Is there line of sight from 'this' monster to 'that' monster, not included monsters?",
+		"Is the square at (x/y) visible by players?",
+		"What is the distance from 'here' to there'?",
+		"What door, if there is one, at 'this' point?",
+		"Can a door be opened at 'this' point?",
+		"Can I have a list of all points where 'this' figure is standing?"
+		"Can 'this' figure move to 'this' point?",
+		"Is this square standable?",
+		"Can the overlord spawn here?",
 		"Is this space visible by the players?"
     command
-        "Open the door adjecent to this square!"
+		"Add 'this' door to the map!",
+        "Open the door adjecent to this square!",
+		"Move 'this' figure to 'that' square on the board!",
+		"Place 'this' figure to 'that' square on the board!",
+		"Remove the figure at 'this' point from the board!"		
 end
 
 class_chart SQUARE
@@ -619,33 +638,31 @@ class_chart SQUARE
 		author: "Jonas Breindahl";
 		in_cluster: "BOARD";
 		created: "23-11-2011";
-		revised: "23-11-2011"
+		revised: "12-12-2011"
 	explanation
 		"A single square of the board"
 	query
+		"What area is this square in?",
 		"What marker is on this square?",
 		"What figure is on this square?"
-end
-
-class_chart TOWN
-	indexing
-		author: "Jonas Breindahl";
-		in_cluster: "BOARD";
-		created: "23-11-2011";
-		revised: "23-11-2011"
-	explanation
-		"When in town the players can buy, they also go there when they die"
-	query
-		"What heroes are in town right now?"
 end
 
 class_chart MARKER
 	indexing
 		author: "Jonas Breindahl";
 		created: "23-11-2011";
-		revised: "23-11-2011"
+		revised: "12-12-2011"
 	explanation
 		"Something that can be on a square that is not a figure"
+	query
+		"What is your unique id?",
+		"What is your name?",
+		"What is your texture?",
+		"How many movement points does it cost to interact with the marker?"
+	command
+		"Pick up, or interact with the marker!"
+	invariant
+		"The cost of interacting is always larger or equal to zero."
 end
 
 class_chart MONEY_MARKER
@@ -668,29 +685,48 @@ class_chart RUNE_KEY_MARKER
 		"A rune that will open a rune-door, that is either on the map, or aquired by the party"
 	inherit
 		MARKER
-	query
-		"What color are your?"
 end
 
 class_chart TREASURE_CHEST_MARKER
 	indexing
 		author: "Jonas Breindahl";
 		created: "23-11-2011";
-		revised: "23-11-2011"
+		revised: "12-12-2011"
 	explanation
 		"A treasure chest, that can be placed on a board"
 	inherit
 		MARKER
+end
+
+class_chart TREASURE_CHEST
+	indexing
+		author: "Jonas Breindahl"
+		in_cluster: "MARKER";
+		created: "12-12-2011";
+		revised: "12-12-2011";
+	explanation
+		"A treasure chest, that have conquest tokens, coins, curses and treasures in it."
 	query
+		"What is your unique id?",
 		"What kind of treasure do you have?",
 		"How many treasures do you have?",
 		"How much gold do you have?",
 		"How many conquest tokens do you have?",
 		"How many curses do you have?"
-		
 end
 
-class_chart OBSTACLE_MARKER
+class_chart POTION_MARKER
+	indexing
+		author: "Jonas Breindahl";
+		created: "12-12-2011";
+		revised: "12-12-2011"
+	explanation
+		"A marker holding a potion"
+	inherit
+		MARKER
+end
+
+class_chart OTHER_MARKER
 	indexing
 		author: "Jonas Breindahl";
 		created: "23-11-2011";

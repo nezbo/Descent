@@ -177,7 +177,6 @@
     <Compile Include="Model\Board\Marker\PotionMarker.cs" />
     <Compile Include="Model\Board\Marker\RuneMarker.cs" />
     <Compile Include="Model\Board\Square.cs" />
-    <Compile Include="Model\Board\Town.cs" />
     <Compile Include="Model\Dice.cs" />
     <Compile Include="Model\Event\Ability.cs" />
     <Compile Include="Model\Event\Attack.cs" />
