@@ -50,7 +50,7 @@ namespace Descent.Model
 
         private static Dictionary<EDice, Dice> diceDictionary;
 
-        private static List<Equipment> townEquipment;
+        private static List<Equipment> allEquipment;
 
         private static Dictionary<EquipmentRarity, List<Treasure>> treasures = new Dictionary<EquipmentRarity, List<Treasure>>();
 
@@ -256,7 +256,7 @@ namespace Descent.Model
                 }
             }
 
-            townEquipment = equipmentList;
+            allEquipment = equipmentList;
             System.Diagnostics.Debug.WriteLine("Common equipment loaded successfully!");
 
             LoadTreasures(game, reader);
@@ -302,7 +302,9 @@ namespace Descent.Model
                 }
                 else
                 {
-                    treasures[rarity].Add(new Treasure(int.Parse(data[0]), data[1] , rarity, LoadEquipment(data), 0));
+                    Equipment e = LoadEquipment(data);
+                    treasures[rarity].Add(new Treasure(int.Parse(data[0]), data[1] , rarity, e, 0));
+                    allEquipment.Add(e);
                 }
             }
 
@@ -817,7 +819,7 @@ namespace Descent.Model
         {
             get
             {
-                return townEquipment.ToArray();
+                return allEquipment.ToArray();
             }
         }
 

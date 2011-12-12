@@ -31,7 +31,8 @@ namespace Descent.State
 
         // fields for different game logic variables
         private Monster currentMonster;
-        private readonly List<int> playersRemaining = new List<int>();
+        private readonly List<int> playersRemainingTurn = new List<int>();
+        private readonly List<int> playersRemainingEquip = new List<int>();
         private readonly List<Point> damageTargetsRemaining = new List<Point>();
 
         private List<Monster> monstersRemaining = new List<Monster>();
@@ -184,7 +185,7 @@ namespace Descent.State
                 case State.AllBuyEquipment:
                 case State.BuyEquipment:
                     {
-                        if (role != Role.Overlord && ((CurrentState == State.AllBuyEquipment && playersRemaining.Contains(Player.Instance.Id)) || (CurrentState == State.BuyEquipment && HasTurn())))
+                        if (role != Role.Overlord && ((CurrentState == State.AllBuyEquipment && playersRemainingTurn.Contains(Player.Instance.Id)) || (CurrentState == State.BuyEquipment && HasTurn())))
                         {
 
                             root.SetClickAction("done", (n, g) =>
@@ -213,7 +214,7 @@ namespace Descent.State
                 case State.AllEquip:
                 case State.Equip:
                     {
-                        if (role != Role.Overlord && ((CurrentState == State.AllEquip && playersRemaining.Contains(Player.Instance.Id)) || (CurrentState == State.Equip && HasTurn())))
+                        if (role != Role.Overlord && ((CurrentState == State.AllEquip && playersRemainingTurn.Contains(Player.Instance.Id)) || (CurrentState == State.Equip && HasTurn())))
                         {
 
                             root.SetClickAction("item", (n, g) =>
@@ -239,7 +240,7 @@ namespace Descent.State
                     {
                         if (role != Role.Overlord)
                         {
-                            if (playersRemaining.Contains(Player.Instance.Id))
+                            if (playersRemainingTurn.Contains(Player.Instance.Id))
                             {
                                 root.SetClickAction("take turn", (n, g) =>
                                                                      {
@@ -332,9 +333,14 @@ namespace Descent.State
             gui.ChangeStateGUI(root); // change the GUI's state element.
         }
 
-        private void AllPlayersRemain()
+        private void AllPlayersRemainTurn()
         {
-            playersRemaining.AddRange(Player.Instance.HeroParty.PlayerIds);
+            playersRemainingTurn.AddRange(Player.Instance.HeroParty.PlayerIds);
+        }
+
+        private void AllPlayersRemainEquip()
+        {
+            playersRemainingEquip.AddRange(Player.Instance.HeroParty.PlayerIds);
         }
 
         private void ResetCurrentPlayer()
@@ -352,7 +358,7 @@ namespace Descent.State
             switch (CurrentState)
             {
                 case State.WaitForChooseSquare:
-                    if (playersRemaining.Contains(Player.Instance.Id))
+                    if (playersRemainingTurn.Contains(Player.Instance.Id))
                     {
                         eventManager.QueueEvent(EventType.RequestPlacement, new CoordinatesEventArgs(eventArgs.X, eventArgs.Y));
                     }
@@ -716,7 +722,7 @@ namespace Descent.State
 
             if (stateMachine.NextState == State.AllBuyEquipment)
             {
-                AllPlayersRemain();
+                AllPlayersRemainTurn();
                 gui.CreateMenuGUI(DetermineRole());
 
                 foreach (Hero hero in Player.Instance.HeroParty.Heroes.Values)
@@ -766,13 +772,13 @@ namespace Descent.State
         {
             Contract.Requires(CurrentState == State.BuyEquipment || CurrentState == State.AllBuyEquipment);
             Contract.Ensures(CurrentState == ((Contract.OldValue(CurrentState) == State.BuyEquipment) ? State.Equip :
-                (playersRemaining.Count == Player.Instance.HeroParty.NumberOfHeroes) ? State.AllEquip : State.AllBuyEquipment));
+                (playersRemainingTurn.Count == Player.Instance.HeroParty.NumberOfHeroes) ? State.AllEquip : State.AllBuyEquipment));
 
-            playersRemaining.Remove(eventArgs.SenderId);
+            playersRemainingTurn.Remove(eventArgs.SenderId);
 
-            if (playersRemaining.Count == 0)
+            if (playersRemainingTurn.Count == 0)
             {
-                AllPlayersRemain();
+                AllPlayersRemainTurn();
                 stateMachine.ChangeToNextState();
             }
             StateChanged();
@@ -828,19 +834,19 @@ namespace Descent.State
         {
             Contract.Requires(CurrentState == State.Equip || CurrentState == State.AllEquip);
             Contract.Ensures(CurrentState == (Contract.OldValue(CurrentState) == State.Equip ? State.WaitForChooseAction :
-                (playersRemaining.Count == Player.Instance.HeroParty.NumberOfHeroes ? 
+                (playersRemainingTurn.Count == Player.Instance.HeroParty.NumberOfHeroes ? 
                 Contract.OldValue(stateMachine.NextState) : Contract.OldValue(CurrentState))));
 
             gameState.RemoveAllUnequippedEquipment(eventArgs.SenderId);
-            playersRemaining.Remove(eventArgs.SenderId);
+            playersRemainingTurn.Remove(eventArgs.SenderId);
 
             if (gameState.CurrentPlayer != 0 && stateMachine.IsOneMoreRecentThanOther(State.WaitForHeroTurn, State.OpenChest))
             {
                 stateMachine.ChangeToNextState();
             }
-            else if (playersRemaining.Count == 0)
+            else if (playersRemainingTurn.Count == 0)
             {
-                AllPlayersRemain();
+                AllPlayersRemainTurn();
                 stateMachine.ChangeToNextState();
             }
             StateChanged();
@@ -860,13 +866,13 @@ namespace Descent.State
         private void PlaceHero(object sender, PlaceHeroEventArgs eventArgs)
         {
             Contract.Requires(CurrentState == State.WaitForChooseSquare);
-            Contract.Ensures(CurrentState == ((playersRemaining.Count == 0) ? State.NewRound : State.WaitForChooseSquare));
+            Contract.Ensures(CurrentState == ((playersRemainingTurn.Count == 0) ? State.NewRound : State.WaitForChooseSquare));
 
             FullModel.Board.PlaceFigure(Player.Instance.HeroParty.Heroes[eventArgs.PlayerId], new Point(eventArgs.X, eventArgs.Y));
 
-            playersRemaining.Remove(eventArgs.PlayerId);
+            playersRemainingTurn.Remove(eventArgs.PlayerId);
 
-            if (playersRemaining.Count == 0)
+            if (playersRemainingTurn.Count == 0)
             {
                 stateMachine.ChangeToNextState();
                 if (Player.Instance.IsServer)
@@ -881,7 +887,7 @@ namespace Descent.State
             Contract.Requires(CurrentState == State.NewRound);
             Contract.Ensures(CurrentState == State.WaitForHeroTurn);
 
-            AllPlayersRemain(); // For WaitForHeroTurn
+            AllPlayersRemainTurn(); // For WaitForHeroTurn
             ResetCurrentPlayer();
 
             stateMachine.PlaceStates(State.WaitForHeroTurn);
@@ -951,7 +957,7 @@ namespace Descent.State
             Contract.Requires(CurrentState == State.WaitForHeroTurn || CurrentState == State.Equip);
             Contract.Ensures(CurrentState == Contract.OldValue(CurrentState));
 
-            if (Player.Instance.IsServer && gameState.CurrentPlayer == 0 && playersRemaining.Contains(eventArgs.SenderId))
+            if (Player.Instance.IsServer && gameState.CurrentPlayer == 0 && playersRemainingTurn.Contains(eventArgs.SenderId))
             {
                 eventManager.QueueEvent(EventType.TurnChanged, new PlayerEventArgs(eventArgs.SenderId));
                 gameState.CurrentPlayer = eventArgs.SenderId;
@@ -962,7 +968,7 @@ namespace Descent.State
         {
             Contract.Requires(CurrentState == State.WaitForHeroTurn);
             Contract.Requires(gameState.CurrentPlayer == 0 || Player.Instance.IsServer);
-            Contract.Requires(playersRemaining.Contains(eventArgs.PlayerId));
+            Contract.Requires(playersRemainingTurn.Contains(eventArgs.PlayerId));
             Contract.Ensures(CurrentState == State.Equip);
 
             gameState.CurrentPlayer = eventArgs.PlayerId;
@@ -1023,9 +1029,9 @@ namespace Descent.State
         {
             Contract.Requires(CurrentState == (IsAHeroTurn() ? State.WaitForPerformAction : State.WaitForOverlordChooseAction));
             Contract.Requires(gameState.CurrentPlayer == eventArgs.SenderId);
-            Contract.Ensures(CurrentState == (playersRemaining.Count == 0 ? ((eventArgs.SenderId == Player.Instance.OverlordId) ? State.NewRound : State.OverlordTurn) : State.WaitForHeroTurn));
+            Contract.Ensures(CurrentState == (playersRemainingTurn.Count == 0 ? ((eventArgs.SenderId == Player.Instance.OverlordId) ? State.NewRound : State.OverlordTurn) : State.WaitForHeroTurn));
 
-            playersRemaining.Remove(eventArgs.SenderId);
+            playersRemainingTurn.Remove(eventArgs.SenderId);
             gameState.CurrentPlayer = 0;
 
             // If the player ending the game was a hero, reset his movement.
@@ -1045,7 +1051,7 @@ namespace Descent.State
             }
             else
             {
-                if (playersRemaining.Count == 0)
+                if (playersRemainingTurn.Count == 0)
                 {
                     stateMachine.PlaceStates(State.OverlordTurn);
                     stateMachine.ChangeToNextState();
@@ -1087,8 +1093,8 @@ namespace Descent.State
             Player.Instance.Overlord.ThreatTokens += Player.Instance.HeroParty.Heroes.Count * chest.Curses;
 
             // Go into equip
-            stateMachine.PlaceStates(State.OpenChest, State.AllEquip);
-            AllPlayersRemain();
+            stateMachine.PlaceStates(State.OpenChest, State.AllEquip, State.WaitForPerformAction);
+            AllPlayersRemainTurn();
             stateMachine.ChangeToNextState();
             stateMachine.ChangeToNextState();
 
@@ -1242,7 +1248,9 @@ namespace Descent.State
                 stateMachine.PlaceStates(State.SpawnMonsters);
             }
              * */
+            /*
             stateMachine.PlaceStates(State.ActivateMonsters);
+             * */
         }
 
         private void EndMonsterTurn(object sender, GameEventArgs eventArgs)

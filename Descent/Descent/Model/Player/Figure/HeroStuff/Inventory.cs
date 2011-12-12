@@ -174,7 +174,7 @@ namespace Descent.Model.Player.Figure.HeroStuff
                 if (this[n] == null)
                 {
                     this[n] = equipment;
-                    equipment.EquipToHero(hero);
+                    // equipment.EquipToHero(hero); TODO
                     return;
                 }
             }
