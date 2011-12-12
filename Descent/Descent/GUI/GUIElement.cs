@@ -32,7 +32,7 @@ namespace Descent.GUI
         private bool drawBg = true;
         private Texture2D background = null;
         private SpriteFont font = null;
-        private SpriteFont Font { get { return font ?? GUI.Font; } }
+        public SpriteFont Font { get { return font ?? GUI.Font; } }
 
         private bool focus;
 
@@ -358,17 +358,17 @@ namespace Descent.GUI
             string[] words = text.Split();
             StringBuilder builder = new StringBuilder();
 
-            int totalSpace = Bound.Width - (int)position.X;
+            int totalSpace = Bound.Width - (int)position.X + 25;
 
             string currentLine = "";
             string nextWord;
             while (wordsIndex < words.Length)
             {
-                nextWord = words[wordsIndex] + " ";
+                nextWord = words[wordsIndex];
 
-                if (GUI.Font.MeasureString(currentLine + nextWord).X < totalSpace) // word fits
+                if (GUI.Font.MeasureString(currentLine + nextWord).X <= totalSpace) // word fits
                 {
-                    currentLine += nextWord;
+                    currentLine += nextWord + " ";
                     wordsIndex++;
                 }
                 else if (GUI.Font.MeasureString(nextWord).X > totalSpace) // cut word

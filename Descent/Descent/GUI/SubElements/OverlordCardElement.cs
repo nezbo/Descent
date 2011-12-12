@@ -18,14 +18,14 @@ namespace Descent.GUI.SubElements
             SetBackground("Images/Other/overlordcard");
 
             // header
-            GUIElement header = new GUIElement(game, "overlord header", Bound.X + 48, Bound.Y + 15, 200 - 48, 100);
+            GUIElement header = new GUIElement(game, "overlord header", Bound.X + 48, Bound.Y + 15, 200 - 48 * 2, 100);
             header.AddText(header.Name, card.Name, new Vector2(0, 0));
             header.SetDrawBackground(false);
             header.SetFont(Font);
             AddChild(header);
 
             // description
-            GUIElement description = new GUIElement(game, "overlord desc", Bound.X + 35, Bound.Y + 80, 180, 160);
+            GUIElement description = new GUIElement(game, "overlord desc", Bound.X + 35, Bound.Y + 80, 150, 160);
             description.AddText(description.Name, card.Decription, new Vector2(0, 0));
             description.SetDrawBackground(false);
             description.SetFont(Font);
