@@ -214,7 +214,7 @@ namespace Descent.State
                 case State.AllEquip:
                 case State.Equip:
                     {
-                        if (role != Role.Overlord && ((CurrentState == State.AllEquip && playersRemainingTurn.Contains(Player.Instance.Id)) || (CurrentState == State.Equip && HasTurn())))
+                        if (role != Role.Overlord && ((CurrentState == State.AllEquip && playersRemainingEquip.Contains(Player.Instance.Id)) || (CurrentState == State.Equip && HasTurn())))
                         {
 
                             root.SetClickAction("item", (n, g) =>
@@ -772,13 +772,13 @@ namespace Descent.State
         {
             Contract.Requires(CurrentState == State.BuyEquipment || CurrentState == State.AllBuyEquipment);
             Contract.Ensures(CurrentState == ((Contract.OldValue(CurrentState) == State.BuyEquipment) ? State.Equip :
-                (playersRemainingTurn.Count == Player.Instance.HeroParty.NumberOfHeroes) ? State.AllEquip : State.AllBuyEquipment));
+                (playersRemainingTurn.Count == 0) ? State.AllEquip : State.AllBuyEquipment));
 
             playersRemainingTurn.Remove(eventArgs.SenderId);
 
             if (playersRemainingTurn.Count == 0)
             {
-                AllPlayersRemainTurn();
+                AllPlayersRemainEquip();
                 stateMachine.ChangeToNextState();
             }
             StateChanged();
@@ -834,19 +834,22 @@ namespace Descent.State
         {
             Contract.Requires(CurrentState == State.Equip || CurrentState == State.AllEquip);
             Contract.Ensures(CurrentState == (Contract.OldValue(CurrentState) == State.Equip ? State.WaitForChooseAction :
-                (playersRemainingTurn.Count == Player.Instance.HeroParty.NumberOfHeroes ? 
+                (playersRemainingEquip.Count == 0 ? 
                 Contract.OldValue(stateMachine.NextState) : Contract.OldValue(CurrentState))));
 
             gameState.RemoveAllUnequippedEquipment(eventArgs.SenderId);
-            playersRemainingTurn.Remove(eventArgs.SenderId);
+            playersRemainingEquip.Remove(eventArgs.SenderId);
 
             if (gameState.CurrentPlayer != 0 && stateMachine.IsOneMoreRecentThanOther(State.WaitForHeroTurn, State.OpenChest))
             {
                 stateMachine.ChangeToNextState();
             }
-            else if (playersRemainingTurn.Count == 0)
+            else if (playersRemainingEquip.Count == 0)
             {
-                AllPlayersRemainTurn();
+                if(stateMachine.NextState == State.WaitForChooseSquare)
+                {
+                    AllPlayersRemainTurn();
+                }
                 stateMachine.ChangeToNextState();
             }
             StateChanged();
@@ -1094,7 +1097,7 @@ namespace Descent.State
 
             // Go into equip
             stateMachine.PlaceStates(State.OpenChest, State.AllEquip, State.WaitForPerformAction);
-            AllPlayersRemainTurn();
+            AllPlayersRemainEquip();
             stateMachine.ChangeToNextState();
             stateMachine.ChangeToNextState();
 
