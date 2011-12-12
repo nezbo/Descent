@@ -76,7 +76,7 @@ namespace Descent.State
 
         public OverlordCard[] GetOverlordCards(int count)
         {
-            Console.WriteLine("OoverlordCards.Count:" + overlordCards.Count);
+            Console.WriteLine("OverlordCards.Count:" + overlordCards.Count);
             return overlordCards.OrderBy(x => System.Guid.NewGuid()).Take(count).ToArray();
         }
 
@@ -88,8 +88,17 @@ namespace Descent.State
         public Equipment[] UnequippedEquipment(int playerId)
         {
             Contract.Requires(playerId > 0);
-            if(!unequippedEquipment.Keys.Contains(playerId)) return new Equipment[0];
-            return unequippedEquipment[playerId].ToArray();
+            Contract.Ensures(Contract.Result<Equipment[]>().Count() >= 3);
+            List<Equipment> equipment = new List<Equipment>();
+            if (unequippedEquipment.Keys.Contains(playerId))
+            {
+                equipment.AddRange(unequippedEquipment[playerId]);
+            }
+            while(equipment.Count < 3)
+            {
+                equipment.Add(null);
+            }
+            return equipment.ToArray();
         }
 
         public int GetRandomChestID(EquipmentRarity rarity)
@@ -173,7 +182,7 @@ namespace Descent.State
         public void RemoveAllUnequippedEquipment(int playerId)
         {
             Contract.Requires(playerId > 0);
-            Contract.Ensures(UnequippedEquipment(playerId).Length == 0);
+            Contract.Ensures(UnequippedEquipment(playerId).Length == 3);
 
             if(unequippedEquipment.ContainsKey(playerId)) unequippedEquipment[playerId].Clear();
         }
