@@ -6,6 +6,7 @@ namespace Descent.State
     using System.Linq;
 
     using Descent.Model.Board.Marker;
+    using Descent.Model.Player.Overlord;
 
     using GUI;
     using Messaging.Events;
@@ -81,6 +82,7 @@ namespace Descent.State
             eventManager.FinishedAttackEvent += FinishedAttack;
             eventManager.PickupMarkerEvent += PickupMarker;
             eventManager.OpenChestEvent += OpenChest;
+            eventManager.RemoveOverlordCardEvent += RemoveOverlordCard;
 
             // Internal events
             eventManager.SquareMarkedEvent += new SquareMarkedHandler(SquareMarked);
@@ -1093,7 +1095,11 @@ namespace Descent.State
             Contract.Requires(CurrentState == State.WaitForPerformAction);
             Contract.Ensures(CurrentState == State.WaitForPerformAction);
             FullModel.Board[eventArgs.X, eventArgs.Y].Marker.PickUp(Player.Instance.HeroParty.Heroes[eventArgs.SenderId]);
-            FullModel.Board[eventArgs.X, eventArgs.Y].Marker = null;
+            if (!(FullModel.Board[eventArgs.X, eventArgs.Y].Marker is GlyphMarker))
+            {
+                FullModel.Board[eventArgs.X, eventArgs.Y].Marker = null;  
+            }
+            
         }
 
         private void OpenChest(object sender, ChestEventArgs eventArgs)
@@ -1204,7 +1210,18 @@ namespace Descent.State
             Player.Instance.Overlord.ThreatTokens += Player.Instance.HeroParty.NumberOfHeroes;
             if (Player.Instance.IsServer)
             {
-                eventManager.QueueEvent(EventType.GiveOverlordCards, new GiveOverlordCardsEventArgs(gameState.GetOverlordCards(2).Select(card => card.Id).ToArray()));
+                if (Player.Instance.Overlord.Hand.Count >= 7)
+                {
+                    return; // Overlord need to sell cards before he can receive more.
+                }
+                else
+                {
+                    int[] overlordCardIds = gameState.GetOverlordCards(2).Select(card => card.Id).ToArray();
+                    if (overlordCardIds.Length >= 1)
+                    {
+                        eventManager.QueueEvent(EventType.GiveOverlordCards, new GiveOverlordCardsEventArgs(overlordCardIds));
+                    }
+                }  
             }
 
             monstersRemaining = FullModel.Board.FiguresOnBoard.Where(pair => pair.Key is Monster && FullModel.Board.SquareVisibleByPlayers(pair.Value.X, pair.Value.Y)).Select(pair => (Monster)pair.Key).ToList();
@@ -1291,6 +1308,18 @@ namespace Descent.State
             /*
             stateMachine.PlaceStates(State.ActivateMonsters);
              * */
+        }
+        
+        private void RemoveOverlordCard(object sender, OverlordCardEventArgs eventArgs)
+        {
+            OverlordCard overlordCard = FullModel.GetOverlordCard(eventArgs.OverlordCardId);
+            Player.Instance.Overlord.Hand.Remove(overlordCard);
+            Player.Instance.Overlord.ThreatTokens += overlordCard.SellPrice;
+
+            if (Player.Instance.IsServer)
+            {
+                eventManager.QueueEvent(EventType.ChatMessage, new ChatMessageEventArgs("The overlord sold a card."));  
+            } 
         }
 
         private void EndMonsterTurn(object sender, GameEventArgs eventArgs)

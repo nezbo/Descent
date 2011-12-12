@@ -113,15 +113,16 @@ namespace Descent.GUI
                 case State.AllBuyEquipment:
                 case State.BuyEquipment:
                     {
-                        GUIElement box = new GUIElement(game, "shop", RelW(g, 10), RelH(g, 10), RelW(g, 80), RelH(g, 80));
+                        GUIElement box = new GUIElement(game, "shop", RelW(g, 5), RelH(g, 5), RelW(g, 90), RelH(g, 80));
 
-                        int startY = RelH(g, 15);
-                        int startX = RelW(g, 15);
+                        int startY = RelH(g, 10);
+                        int startX = RelW(g, 10);
 
                         int spacerX = RelW(g, 2);
                         int spacerY = RelH(g, 5);
 
-                        int width = RelW(g, 10);
+                        int width = RelW(g, 12);
+                        int height = RelH(g, 16);
 
                         Equipment[] shopContent = gameState.CurrentEquipment.Where(n => n.Rarity == EquipmentRarity.Common).Distinct().ToArray();
                         for (int y = 0; y < 4; y++)
@@ -132,7 +133,7 @@ namespace Descent.GUI
                                 {
                                     Equipment current = shopContent[x + y * 6];
                                     EquipmentElement eq = new EquipmentElement(game, startX + x * width + x * spacerX,
-                                                                               startY + y * width + y * spacerY, width, width,
+                                                                               startY + y * width + y * spacerY, width, height,
                                                                                "", current, x + y * 6 + 1000);
                                     box.AddChild(eq);
                                 }
@@ -303,7 +304,27 @@ namespace Descent.GUI
 
         public static EquipmentElement CreateEquipmentElement(Game game, int x, int y, string slotTitle, Equipment equipment, int id)
         {
-            return new EquipmentElement(game, x, y, RelW(game.GraphicsDevice.Viewport, 10), RelW(game.GraphicsDevice.Viewport, 10), slotTitle, equipment, id);
+            return new EquipmentElement(game, x, y, RelW(game.GraphicsDevice.Viewport, 12), RelH(game.GraphicsDevice.Viewport, 16), slotTitle, equipment, id);
+        }
+
+        public static void DrawSurgeAbility(GUIElement target, SurgeAbility ability, int xPosition, int yPosition, bool small)
+        {
+            // icons
+            int cost = ability.Cost;
+            int costX = target.Bound.X + 5;
+            while (cost > 0)
+            {
+                Image img = new Image(target.Game.Content.Load<Texture2D>("Images/Other/surge"));
+                target.AddDrawable(target.Name, img, new Vector2(costX, target.Bound.Y + yPosition));
+                cost--;
+                costX += img.Texture.Width + (small ? -5 : + 2);
+            }
+
+            // text
+            costX += 10;
+            string s = ability.Ability.ToString();
+            if (small) s = s.Replace("Damage", "Dmg");
+            target.AddText(target.Name, ":" + s, new Vector2(costX - target.Bound.X, yPosition));
         }
     }
 }
