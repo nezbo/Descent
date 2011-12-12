@@ -5,6 +5,14 @@
     using System.Linq;
     using System.Text;
 
+    public enum OverlordCardType
+    {
+        Spawn,
+        Trap,
+        Power,
+        Event
+    }
+
     /// <summary>
     /// TODO: Update summary.
     /// </summary>

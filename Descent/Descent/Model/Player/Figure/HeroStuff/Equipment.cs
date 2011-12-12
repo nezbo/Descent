@@ -52,7 +52,7 @@ namespace Descent.Model.Player.Figure.HeroStuff
     public enum EquipmentRarity
     {
         Common,
-        Bronze,
+        Copper,
         Silver,
         Gold
     }

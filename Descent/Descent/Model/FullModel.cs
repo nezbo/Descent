@@ -454,6 +454,7 @@ namespace Descent.Model
                 int id = int.Parse(data[0]);
                 EquipmentRarity rarity;
                 EquipmentRarity.TryParse(data[1], true, out rarity);
+                System.Diagnostics.Debug.WriteLine(rarity.ToString());
                 int tokens = int.Parse(data[2]);
                 int coins = int.Parse(data[3]);
                 int curses = int.Parse(data[4]);
