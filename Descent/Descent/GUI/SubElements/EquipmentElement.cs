@@ -1,4 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using Descent.Model;
+using Descent.Model.Event;
+using Descent.Model.Player;
 using Descent.Model.Player.Figure.HeroStuff;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -13,7 +17,7 @@ namespace Descent.GUI
         private Dictionary<EquipmentRarity, string> Border;
 
         private Image Coin;
-        private Image Hand;
+        private Texture2D Hand;
 
         public Equipment Equipment { get; internal set; }
         public int Id { get; internal set; }
@@ -25,7 +29,7 @@ namespace Descent.GUI
             Id = id;
 
             if (Coin == null) Coin = new Image(game.Content.Load<Texture2D>("Images/Other/25gold"));
-            if (Hand == null) Hand = new Image(game.Content.Load<Texture2D>("Images/Other/hand"));
+            if (Hand == null) Hand = game.Content.Load<Texture2D>("Images/Other/hand");
 
             if (EquipmentFont == null) EquipmentFont = game.Content.Load<SpriteFont>("fontSmall");
             SetFont(EquipmentFont);
@@ -59,22 +63,63 @@ namespace Descent.GUI
             Vector2 nameSize = this.Font.MeasureString(texts[0].Line);
             yPos += (int)nameSize.Y + 5;
 
-            this.AddText(this.Name, Equipment.Type.ToString() == "Weapon" ? "Wpn" : Equipment.Type.ToString(), new Vector2(4, yPos));
+            this.AddText(this.Name, Equipment.Type.ToString(), new Vector2(4, yPos));
+
+            yPos += 20;
 
             // specifics
             switch (Equipment.Type)
             {
                 case EquipmentType.Weapon:
                     {
-                        this.AddText(Name, "(" + Equipment.AttackType.ToString() + ")", new Vector2((int)(Bound.Width * (1 / 3.0)), yPos));
-                        yPos += 20;
+                        Rectangle wpnTypeRect = new Rectangle(Bound.X + Bound.Width / 2 + 10, Bound.Y + yPos - 20, 15, 15);
+                        switch (Equipment.AttackType)
+                        {
+                            case EAttackType.MAGIC: AddDrawable(Name, new Image(Game.Content.Load<Texture2D>("Images/Other/magic-icon")), wpnTypeRect);
+                                break;
+                            case EAttackType.MELEE: AddDrawable(Name, new Image(Game.Content.Load<Texture2D>("Images/Other/melee-icon")), wpnTypeRect);
+                                break;
+                            case EAttackType.RANGED: AddDrawable(Name, new Image(Game.Content.Load<Texture2D>("Images/Other/ranged-icon")), wpnTypeRect);
+                                break;
+                        }
+
                         foreach (SurgeAbility ability in Equipment.SurgeAbilities)
                         {
                             GUIElementFactory.DrawSurgeAbility(this, ability, 2, yPos, true);
                             yPos += (int)Font.MeasureString(texts[texts.Count - 1].Line).Y;
                         }
 
-                        //TODO:
+                        int xHand = 45;
+                        for (int i = 0; i < Equipment.Hands; i++)
+                        {
+                            AddDrawable(Name, new Image(Hand), new Rectangle(Bound.X + xHand, Bound.Y + Bound.Height - 19, 15, 15));
+                            xHand += 15;
+                        }
+
+                        int yDice = Bound.Y + Bound.Height - 19;
+                        int xDice = Bound.X + xHand;
+                        EDice[] dices = Equipment.DiceForAttack.Select(n => n.Color).ToArray();
+                        foreach (EDice dice in dices)
+                        {
+                            GUIElementFactory.DrawDice(this, dice, xDice, yDice, 15);
+                            if (xDice + 15 > Bound.X + Bound.Width)
+                            {
+                                xDice = Bound.X + xHand + 20;
+                                yDice -= 15;
+                            }
+                            xDice += 15;
+                        }
+
+                        break;
+                    }
+                default:
+                    {
+                        foreach (Ability a in Equipment.Abilities)
+                        {
+                            string s = a.ToString();
+                            AddText(Name, s, new Vector2(4, yPos));
+                            yPos += (int)Font.MeasureString(s).Y;
+                        }
                         break;
                     }
             }

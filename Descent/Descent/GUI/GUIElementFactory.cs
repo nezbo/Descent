@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using Descent.GUI.SubElements;
+using Descent.Model;
 using Descent.Model.Player.Figure.HeroStuff;
 
 namespace Descent.GUI
@@ -23,6 +25,8 @@ namespace Descent.GUI
     /// </author>
     public class GUIElementFactory
     {
+        private static Dictionary<EDice, Texture2D> dicetinary;
+
         private static GUIElement CreateEmptyRoot(Game game)
         {
             Contract.Ensures(Contract.Result<GUIElement>().Bound.X == 0);
@@ -317,7 +321,7 @@ namespace Descent.GUI
                 Image img = new Image(target.Game.Content.Load<Texture2D>("Images/Other/surge"));
                 target.AddDrawable(target.Name, img, new Vector2(costX, target.Bound.Y + yPosition));
                 cost--;
-                costX += img.Texture.Width + (small ? -5 : + 2);
+                costX += img.Texture.Width + (small ? -5 : +2);
             }
 
             // text
@@ -325,6 +329,25 @@ namespace Descent.GUI
             string s = ability.Ability.ToString();
             if (small) s = s.Replace("Damage", "Dmg");
             target.AddText(target.Name, ":" + s, new Vector2(costX - target.Bound.X, yPosition));
+        }
+
+        public static void DrawDice(GUIElement target, EDice dice, int x, int y, int size)
+        {
+            if (dicetinary == null) LoadDiceTextures(target.Game);
+
+            target.AddDrawable(target.Name, new Image(dicetinary[dice]), new Rectangle(x, y, size, size));
+        }
+
+        private static void LoadDiceTextures(Game game)
+        {
+            dicetinary = new Dictionary<EDice, Texture2D>();
+
+            dicetinary.Add(EDice.B, game.Content.Load<Texture2D>("Images/Other/dice-black-icon"));
+            dicetinary.Add(EDice.G, game.Content.Load<Texture2D>("Images/Other/dice-green-icon"));
+            dicetinary.Add(EDice.R, game.Content.Load<Texture2D>("Images/Other/dice-red-icon"));
+            dicetinary.Add(EDice.U, game.Content.Load<Texture2D>("Images/Other/dice-blue-icon"));
+            dicetinary.Add(EDice.W, game.Content.Load<Texture2D>("Images/Other/dice-white-icon"));
+            dicetinary.Add(EDice.Y, game.Content.Load<Texture2D>("Images/Other/dice-yellow-icon"));
         }
     }
 }
