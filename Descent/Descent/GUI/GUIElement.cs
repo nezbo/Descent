@@ -1,11 +1,12 @@
 ﻿using System.Diagnostics.Contracts;
+using System.Text;
 
 namespace Descent.GUI
 {
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.Text;
+    using System.Linq;
     using Descent.Messaging.Events;
     using Descent.Model.Player;
     using Microsoft.Xna.Framework;
@@ -32,7 +33,7 @@ namespace Descent.GUI
         private bool drawBg = true;
         private Texture2D background = null;
         private SpriteFont font = null;
-        private SpriteFont Font { get { return font ?? GUI.Font; } }
+        public SpriteFont Font { get { return font ?? GUI.Font; } }
 
         private bool focus;
 
@@ -187,15 +188,17 @@ namespace Descent.GUI
         {
             Contract.Ensures(Bound.X == Contract.OldValue<int>(Bound.X) + x);
             Contract.Ensures(Bound.Y == Contract.OldValue<int>(Bound.Y) + y);
-
             Bound = new Rectangle(Bound.X + x, Bound.Y + y, Bound.Width, Bound.Height);
             foreach (GUIElement e in children) e.Move(x, y);
             foreach (Text t in texts) t.Position = new Vector2(t.Position.X + x, t.Position.Y + y);
-            foreach (Drawable d in visuals.Keys)
+
+            Drawable[] values = visuals.Keys.ToArray();
+            for (int i = 0; i < values.Length; i++)
             {
-                Rectangle old = visuals[d];
-                visuals[d] = new Rectangle(old.X + x, old.Y + y, old.Width, old.Height);
+                Rectangle old = visuals[values[i]];
+                visuals[values[i]] = new Rectangle(old.X + x, old.Y + y, old.Width, old.Height);
             }
+
         }
 
         /// <summary>
@@ -255,7 +258,6 @@ namespace Descent.GUI
         {
             Contract.Requires(child.Bound.X >= Bound.X);
             Contract.Requires(child.Bound.Y >= Bound.Y);
-
             children.Add(child);
         }
 
@@ -298,7 +300,6 @@ namespace Descent.GUI
             Contract.Requires(rectangle.Y >= Bound.Y);
             Contract.Requires(rectangle.X + rectangle.Width <= Bound.X + Bound.Width);
             Contract.Requires(rectangle.Y + rectangle.Height <= Bound.Y + Bound.Height);
-
             if (Name == target)
             {
                 visuals.Add(visual, rectangle);
@@ -306,7 +307,7 @@ namespace Descent.GUI
             foreach (GUIElement e in children)
             {
                 if (e.Bound.Contains(rectangle)) e.AddDrawable(target, visual, rectangle);
-            };
+            }
         }
 
         /// <summary>
@@ -358,17 +359,17 @@ namespace Descent.GUI
             string[] words = text.Split();
             StringBuilder builder = new StringBuilder();
 
-            int totalSpace = Bound.Width - (int)position.X;
+            int totalSpace = Bound.Width - (int)position.X + 25;
 
             string currentLine = "";
             string nextWord;
             while (wordsIndex < words.Length)
             {
-                nextWord = words[wordsIndex] + " ";
+                nextWord = words[wordsIndex];
 
-                if (GUI.Font.MeasureString(currentLine + nextWord).X < totalSpace) // word fits
+                if (GUI.Font.MeasureString(currentLine + nextWord).X <= totalSpace) // word fits
                 {
-                    currentLine += nextWord;
+                    currentLine += nextWord + " ";
                     wordsIndex++;
                 }
                 else if (GUI.Font.MeasureString(nextWord).X > totalSpace) // cut word
