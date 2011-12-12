@@ -1,3 +1,4 @@
+
 ﻿namespace Descent.Messaging.AsyncSockets
 {
     using System;
