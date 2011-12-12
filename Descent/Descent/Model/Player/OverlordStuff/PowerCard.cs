@@ -1,16 +1,6 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="PowerCard.cs" company="">
-// TODO: Update copyright text.
-// </copyright>
-// -----------------------------------------------------------------------
-
-namespace Descent.Model.Player.Overlord
+﻿
+namespace Descent.Model.Player.OverlordStuff
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-
     /// <summary>
     /// The power card will give the overlord extra abilities and boosts, 
     /// but are more expensive than reguar cards.
@@ -21,7 +11,7 @@ namespace Descent.Model.Player.Overlord
     public class PowerCard : OverlordCard
     {
         public PowerCard(int id, string name, string description, int playPrice, int sellPrice)
-            : base(id, name, description, playPrice, sellPrice)
+            : base(id, name, description, playPrice, sellPrice, OverlordCardType.Power)
         {
             
         }

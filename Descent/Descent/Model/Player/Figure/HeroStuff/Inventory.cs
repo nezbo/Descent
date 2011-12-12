@@ -1,39 +1,67 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="Inventory.cs" company="">
-// TODO: Update copyright text.
-// </copyright>
-// -----------------------------------------------------------------------
-
-using System.Diagnostics.Contracts;
-
+﻿
 namespace Descent.Model.Player.Figure.HeroStuff
 {
+    using System.Diagnostics.Contracts;
     using System.Linq;
 
+    /// <summary>
+    /// An enum of all equipment types,
+    /// which can be cast to int, for the start
+    /// position of the slot in the inventory.
+    /// </summary>
     public enum EquipmentSlot
     {
+        /// <summary>
+        /// There is only one weapon slot
+        /// </summary>
         Weapon = 0,
+
+        /// <summary>
+        /// There is only one shield slot
+        /// </summary>
         Shield = 1,
+
+        /// <summary>
+        /// There is only one armor slot
+        /// </summary>
         Armor = 2,
+
+        /// <summary>
+        /// There are two other item slots
+        /// </summary>
         Other = 3,
+
+        /// <summary>
+        /// There are three potion slots
+        /// </summary>
         Potion = 5,
+
+        /// <summary>
+        /// There are three backpack slots
+        /// </summary>
         Backpack = 8
     }
 
     /// <summary>
-    /// TODO: Update summary.
+    /// The inventory of a hero
     /// </summary>
     /// <author>
     /// Jonas Breindahl (jobre@itu.dk)
     /// </author>
     public class Inventory
     {
+        #region Fields
+
         public const int MaxPotions = 3;
         public const int MaxOtherItems = 2;
         public const int MaxInBackpack = 3;
 
         private readonly Equipment[] inventory = new Equipment[11];
         private readonly Hero hero;
+
+        #endregion
+
+        #region Indexer
 
         /// <summary>
         /// Gets an equipment at a 
@@ -58,15 +86,23 @@ namespace Descent.Model.Player.Figure.HeroStuff
                 Contract.Requires(this.CanEquipAtIndex(slot, value));
                 Contract.Ensures(this[slot] == value);
 
-                if(this[slot] != null && slot < 5)
+                if (this[slot] != null && slot < 5)
                     this[slot].UnequipFromHero(hero);
-                if(value != null && slot < 5)
+                if (value != null && slot < 5)
                     value.EquipToHero(hero);
 
                 inventory[slot] = value;
             }
         }
 
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Gets the size of the inventory,
+        /// This is always 13
+        /// </summary>
         public int Length
         {
             get
@@ -75,17 +111,18 @@ namespace Descent.Model.Player.Figure.HeroStuff
             }
         }
 
-        /// <param name="hero">The hero, that has this inventory.</param>
-        public Inventory(Hero hero)
-        {
-            this.hero = hero;
-        }
-
+        /// <summary>
+        /// Gets the max number of hands 
+        /// the hero owning the inventory has
+        /// </summary>
         public int MaxHands
         {
             get { return hero.Hands; }
         }
 
+        /// <summary>
+        /// Gets how many free hands the hero has left
+        /// </summary>
         public int FreeHands
         {
             get
@@ -97,21 +134,34 @@ namespace Descent.Model.Player.Figure.HeroStuff
             }
         }
 
-        public Equipment Shield
-        {
-            get { return inventory[(int)EquipmentSlot.Shield]; }
-        }
-
-        public Equipment Armor
-        {
-            get { return inventory[(int)EquipmentSlot.Armor]; }
-        }
-
+        /// <summary>
+        /// Gets the equipped weapon, null if there isnt any
+        /// </summary>
         public Equipment Weapon
         {
             get { return inventory[(int)EquipmentSlot.Weapon]; }
         }
 
+        /// <summary>
+        /// Gets the equipped shield, null if there is no shield equipped
+        /// </summary>
+        public Equipment Shield
+        {
+            get { return inventory[(int)EquipmentSlot.Shield]; }
+        }
+
+        /// <summary>
+        /// Gets the equipped armor, null if there isnt any
+        /// </summary>
+        public Equipment Armor
+        {
+            get { return inventory[(int)EquipmentSlot.Armor]; }
+        }
+
+        /// <summary>
+        /// Gets an array of equipped other items.
+        /// If some slots are empty, null will be there instead
+        /// </summary>
         public Equipment[] OtherItems
         {
             get
@@ -121,6 +171,10 @@ namespace Descent.Model.Player.Figure.HeroStuff
             }
         }
 
+        /// <summary>
+        /// Gets a list of all equipped potions
+        /// If some slots are empty, null will be there instead
+        /// </summary>
         public Equipment[] Potions
         {
             get
@@ -130,6 +184,10 @@ namespace Descent.Model.Player.Figure.HeroStuff
             }
         }
 
+        /// <summary>
+        /// Gets a list of all items in the backpack
+        /// If some slots are empty, null will be there
+        /// </summary>
         public Equipment[] Backpack
         {
             get
@@ -138,6 +196,26 @@ namespace Descent.Model.Player.Figure.HeroStuff
                 return Enumerable.Range((int)EquipmentSlot.Backpack, 3).Select(i => inventory[i]).ToArray();
             }
         }
+
+        #endregion
+
+        #region Initialization
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Inventory"/> class. 
+        /// The inventory of a hero
+        /// </summary>
+        /// <param name="hero">
+        /// The hero, that has this inventory.
+        /// </param>
+        public Inventory(Hero hero)
+        {
+            this.hero = hero;
+        }
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Do you have enough hands left to equip this weapon?
@@ -153,6 +231,10 @@ namespace Descent.Model.Player.Figure.HeroStuff
             return equipment.Hands <= FreeHands;
         }
 
+        /// <summary>
+        /// Gets a value indicating whether there is room for
+        /// a potion in either the potion slots, or the backpack.
+        /// </summary>
         public bool CanEquipPotion
         {
             get
@@ -167,21 +249,34 @@ namespace Descent.Model.Player.Figure.HeroStuff
             }
         }
 
-        public void EquipPotion(Equipment equipment)
+        /// <summary>
+        /// Places a potion in the first 
+        /// </summary>
+        /// <param name="potion">
+        /// The potion to be equipped
+        /// </param>
+        public void EquipPotion(Equipment potion)
         {
+            Contract.Requires(potion != null);
+            Contract.Requires(CanEquipPotion);
+            Contract.Requires(potion.Type == EquipmentType.Potion);
+
             for (int n = (int)EquipmentSlot.Potion; n < (int)EquipmentSlot.Potion + 6; n++)
             {
                 if (this[n] == null)
                 {
-                    this[n] = equipment;
-                    // equipment.EquipToHero(hero); TODO
+                    this[n] = potion;
                     return;
                 }
             }
         }
+
         /// <summary>
-        /// Equip a weapon.
+        /// Equip a weapon
         /// </summary>
+        /// <param name="weapon">
+        /// The weapon to be equipped
+        /// </param>
         public void EquipWeapon(Equipment weapon)
         {
             Contract.Requires(weapon != null);
@@ -195,8 +290,11 @@ namespace Descent.Model.Player.Figure.HeroStuff
         }
 
         /// <summary>
-        /// Equip armor.
+        /// Equip an armor
         /// </summary>
+        /// <param name="armor">
+        /// The armor to be equipped
+        /// </param>
         public void EquipArmor(Equipment armor)
         {
             Contract.Requires(armor != null);
@@ -210,6 +308,9 @@ namespace Descent.Model.Player.Figure.HeroStuff
         /// <summary>
         /// Equip a shield.
         /// </summary>
+        /// <param name="shield">
+        /// The shield to be equipped
+        /// </param>
         public void EquipShield(Equipment shield)
         {
             Contract.Requires(shield != null);
@@ -326,9 +427,14 @@ namespace Descent.Model.Player.Figure.HeroStuff
         }
 
         /// <summary>
-        /// Returns a removes an item from 'other'.
+        /// Unequips an other item, and returns it
         /// </summary>
-        /// <param name="index">The index from where to remove.</param>
+        /// <param name="index">
+        /// The index from where to remove.
+        /// </param>
+        /// <returns>
+        /// The unequipped equipment
+        /// </returns>
         public Equipment UnequipFromOther(int index)
         {
             Contract.Requires(0 < index && index < MaxOtherItems);
@@ -344,9 +450,14 @@ namespace Descent.Model.Player.Figure.HeroStuff
         }
 
         /// <summary>
-        /// Returns a removes an item from backpack.
+        /// Returns and removes a equipment from the backpack.
         /// </summary>
-        /// <param name="index">The index from where to remove.</param>
+        /// <param name="index">
+        /// The index from where to remove.
+        /// </param>
+        /// <returns>
+        /// The unequipped equipment.
+        /// </returns>
         public Equipment UnequipFromBackpack(int index)
         {
             Contract.Requires(0 < index && index < MaxInBackpack);
@@ -361,9 +472,14 @@ namespace Descent.Model.Player.Figure.HeroStuff
         }
 
         /// <summary>
-        /// Returns a removes an item from potions.
+        /// Returns and removes a potion from the inventory
         /// </summary>
-        /// <param name="index">The index from where to remove.</param>
+        /// <param name="index">
+        /// The index from where to remove the potion
+        /// </param>
+        /// <returns>
+        /// The unequipped potion
+        /// </returns>
         public Equipment UnequipFromPotions(int index)
         {
             Contract.Requires(0 < index && index < MaxPotions);
@@ -378,6 +494,20 @@ namespace Descent.Model.Player.Figure.HeroStuff
             return result;
         }
 
+        /// <summary>
+        /// Gets whether a piece of equipment can 
+        /// be equipped at a specific slot.
+        /// </summary>
+        /// <param name="slot">
+        /// The slot to equip the equipment
+        /// </param>
+        /// <param name="equipment">
+        /// The equipment to equip
+        /// </param>
+        /// <returns>
+        /// Whether there is room in the inventory, 
+        /// and if that room is legal
+        /// </returns>
         [Pure]
         public bool CanEquipAtIndex(int slot, Equipment equipment)
         {
@@ -395,8 +525,14 @@ namespace Descent.Model.Player.Figure.HeroStuff
                                             slot >= (int)EquipmentSlot.Backpack && slot < this.Length;
         }
 
+        #endregion
+
+        /// <summary>
+        /// Ensures that all types of equipment are in the correct positions,
+        /// and that there er never more or less hands than max and 0.
+        /// </summary>
         [ContractInvariantMethod]
-        private void Invariant()
+        private void ObjectInvariant()
         {
             Contract.Invariant(inventory[(int)EquipmentSlot.Weapon] == null || inventory[(int)EquipmentSlot.Weapon].Type == EquipmentType.Weapon);
             Contract.Invariant(inventory[(int)EquipmentSlot.Shield] == null || inventory[(int)EquipmentSlot.Shield].Type == EquipmentType.Shield);

@@ -601,8 +601,19 @@
             return doors.SingleOrDefault(door => door.IsAdjecentSquare(point));
         }
 
+        /// <summary>
+        /// Moves a figure to a specific point.
+        /// </summary>
+        /// <param name="figure">
+        /// The figure that is moved
+        /// </param>
+        /// <param name="point">
+        /// The upper left corner of the figure, that is moved to
+        /// </param>
         public void MoveFigure(Figure figure, Point point)
         {
+            Contract.Requires(this.CanFigureMoveToPoint(figure, point));
+
             // Remove monsters from old position
             Point p = FiguresOnBoard[figure];
             for (int x = p.X;
@@ -636,6 +647,15 @@
             boardChanged = true;
         }
 
+        /// <summary>
+        /// Places a figure at a specific point
+        /// </summary>
+        /// <param name="figure">
+        /// The figure that is placed
+        /// </param>
+        /// <param name="point">
+        /// The upper left corner of the figure
+        /// </param>
         public void PlaceFigure(Figure figure, Point point)
         {
             for (int x = point.X;
@@ -656,6 +676,12 @@
         /// <summary>
         /// Creates an array of all points a figure is on
         /// </summary>
+        /// <param name="figure">
+        /// The figure
+        /// </param>
+        /// <returns>
+        /// The figure squares the figure is standing on
+        /// </returns>
         public Point[] FigureSquares(Figure figure)
         {
             List<Point> list = new List<Point>();
@@ -674,6 +700,18 @@
             return list.ToArray();
         }
 
+        /// <summary>
+        /// Gets a value indicating whether a figure can move to a point
+        /// </summary>
+        /// <param name="figure">
+        /// The figure
+        /// </param>
+        /// <param name="point">
+        /// The upper left corner of the end point
+        /// </param>
+        /// <returns>
+        /// Whether all squares of the final destination are legal
+        /// </returns>
         public bool CanFigureMoveToPoint(Figure figure, Point point)
         {
             if (figure.Size.Width == 1 && figure.Size.Height == 1) return IsStandable(point.X, point.Y);
@@ -689,34 +727,19 @@
                      y < point.Y + (figure.Orientation.Equals(Orientation.V) ? figure.Size.Height : figure.Size.Width);
                      y++)
                 {
-                    canMove &= (IsStandable(x, y) || (IsSquareWithinBoard(x, y) && this[x, y].Figure == figure));
+                    canMove &= IsStandable(x, y) || (IsSquareWithinBoard(x, y) && this[x, y].Figure == figure);
                 }
             }
 
             return canMove;
         }
 
-        #endregion
-
         /// <summary>
-        /// Testing line of sight algorithm.
+        /// Removes a figure from all squares where it was previously on the board
         /// </summary>
-        /// <param name="args"></param>
-        public static void Main(string[] args)
-        {
-            int w = 10, h = 10;
-            var b = new Board(w, h, null);
-            var p = b.SquaresBetweenPoints(new Point(0, 0), new Point(1, 3));
-            for (int x = 0; x < w; x++)
-            {
-                for (int y = 0; y < h; y++)
-                {
-                    System.Diagnostics.Debug.Write(p.Contains(new Point(y, x)) ? 1 : 0);
-                }
-                System.Diagnostics.Debug.WriteLine("");
-            }
-        }
-
+        /// <param name="point">
+        /// The point where the figure is standing
+        /// </param>
         internal void RemoveFigure(Point point)
         {
             Contract.Requires(IsSquareWithinBoard(point.X, point.Y));
@@ -727,8 +750,9 @@
             point = FiguresOnBoard[figure]; // Get top left corner if big monster
             if (figure is Hero)
             {
-                heroesInTown.Add((Hero) figure);
+                heroesInTown.Add((Hero)figure);
             }
+
             for (int x = point.X;
                  x < point.X + (figure.Orientation.Equals(Orientation.V) ? figure.Size.Width : figure.Size.Height);
                  x++)
@@ -740,9 +764,13 @@
                     this[x, y].Figure = null;
                 }
             }
+
             figuresOnBoard.Remove(figure);
         }
 
+        /// <summary>
+        /// Respawns a dead hero next to the start glyph
+        /// </summary>
         public void RespawnDeadHeroes()
         {
             Contract.Ensures(HeroesInTown.Length == 0);
@@ -770,5 +798,7 @@
                 }
             }
         }
+
+        #endregion
     }
 }

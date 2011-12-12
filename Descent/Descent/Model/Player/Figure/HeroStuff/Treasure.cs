@@ -1,14 +1,15 @@
 ﻿
 namespace Descent.Model.Player.Figure.HeroStuff
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
+    using System.Diagnostics.Contracts;
 
     /// <summary>
-    /// TODO: Update summary.
+    /// A treasure, that can be in a chest, either a 
+    /// piece of equipment or a treasure cache
     /// </summary>
+    /// <author>
+    /// Jonas Breindahl (jobre@itu.dk)
+    /// </author>
     public class Treasure
     {
         #region Fields
@@ -30,7 +31,7 @@ namespace Descent.Model.Player.Figure.HeroStuff
         /// <summary>
         /// Gets the unique ID of the treasure
         /// </summary>
-        public int ID
+        public int Id
         {
             get
             {
@@ -72,6 +73,9 @@ namespace Descent.Model.Player.Figure.HeroStuff
             }
         }
 
+        /// <summary>
+        /// Gets the amount of coins in the treasure
+        /// </summary>
         public int Coins
         {
             get
@@ -80,6 +84,10 @@ namespace Descent.Model.Player.Figure.HeroStuff
             }
         }
 
+        /// <summary>
+        /// Gets a value indicating whether the 
+        /// treasure is a treasure cache or an equipment.
+        /// </summary>
         public bool IsTreasureCache
         {
             get
@@ -98,11 +106,17 @@ namespace Descent.Model.Player.Figure.HeroStuff
         /// <param name="id">
         /// The id of the treasure
         /// </param>
+        /// <param name="name">
+        /// The name of the treasure
+        /// </param>
         /// <param name="rarity">
         /// The rarity of the treasure
         /// </param>
         /// <param name="equipment">
         /// The equipment equipment in the treasure
+        /// </param>
+        /// <param name="coins">
+        /// The amount of coins in the treasure
         /// </param>
         public Treasure(int id, string name, EquipmentRarity rarity, Equipment equipment, int coins)
         {
@@ -114,5 +128,14 @@ namespace Descent.Model.Player.Figure.HeroStuff
         }
 
         #endregion
+
+        /// <summary>
+        /// Checks whether an equipment is always legal
+        /// </summary>
+        [ContractInvariantMethod]
+        private void ObjectInvariant()
+        {
+            Contract.Invariant(Coins >= 0);
+        }
     }
 }

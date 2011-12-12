@@ -1,7 +1,7 @@
-﻿namespace Descent.GUI.SubElements
+namespace Descent.GUI.SubElements
 {
     using Descent.Messaging.Events;
-    using Descent.Model.Player.Overlord;
+    using Descent.Model.Player.OverlordStuff;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
 
@@ -13,6 +13,7 @@
     /// <author>
     /// Emil Juul Jacobsen
     /// </author>
+
     class OverlordCardElement : GUIElement
     {
         private static SpriteFont Font { get; set; }

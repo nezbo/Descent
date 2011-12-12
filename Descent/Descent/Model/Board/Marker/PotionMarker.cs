@@ -1,17 +1,5 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="PotionMarker.cs" company="">
-// TODO: Update copyright text.
-// </copyright>
-// -----------------------------------------------------------------------
-
-namespace Descent.Model.Board.Marker
+﻿namespace Descent.Model.Board.Marker
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-
-    using Descent.Messaging.Events;
     using Descent.Model.Player.Figure;
     using Descent.Model.Player.Figure.HeroStuff;
 
@@ -62,12 +50,11 @@ namespace Descent.Model.Board.Marker
         #region Methods
 
         /// <summary>
+        /// Picks up the potion
         /// </summary>
         /// <param name="hero">
         /// The hero.
         /// </param>
-        /// <exception cref="NotImplementedException">
-        /// </exception>
         public override void PickUp(Hero hero)
         {
             hero.Inventory.EquipPotion(potion);

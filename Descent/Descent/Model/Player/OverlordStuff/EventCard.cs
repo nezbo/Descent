@@ -1,18 +1,7 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="EventCard.cs" company="">
-// TODO: Update copyright text.
-// </copyright>
-// -----------------------------------------------------------------------
-
-namespace Descent.Model.Player.Overlord
+﻿namespace Descent.Model.Player.OverlordStuff
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-
     /// <summary>
-    /// TODO: Update summary.
+    /// A type of overlord card that lets the overlord play one time abilities
     /// </summary>
     /// <author>
     /// Jonas Breindahl (jobre@itu.dk)
@@ -38,7 +27,7 @@ namespace Descent.Model.Player.Overlord
         /// The sell price of the card
         /// </param>
         public EventCard(int id, string name, string description, int playPrice, int sellPrice)
-            : base(id, name, description, playPrice, sellPrice)
+            : base(id, name, description, playPrice, sellPrice, OverlordCardType.Event)
         {
             
         }

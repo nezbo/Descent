@@ -1,6 +1,4 @@
 ﻿
-using Descent.Model.Player.Overlord;
-
 namespace Descent.Model
 {
     using System;
@@ -16,6 +14,7 @@ namespace Descent.Model
     using Descent.Model.Player;
     using Descent.Model.Player.Figure;
     using Descent.Model.Player.Figure.HeroStuff;
+    using Descent.Model.Player.OverlordStuff;
 
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
@@ -694,7 +693,7 @@ namespace Descent.Model
 
         public static Treasure GetTreasure(int id)
         {
-            return AllTreasures.Single(t => t.ID == id);
+            return AllTreasures.Single(t => t.Id == id);
         }
 
         /// <summary>

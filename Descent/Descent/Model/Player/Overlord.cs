@@ -1,10 +1,8 @@
-﻿namespace Descent.Model.Player.Overlord
+namespace Descent.Model.Player
 {
-    using System;
     using System.Collections.Generic;
-    using System.Diagnostics.Contracts;
-    using System.Linq;
-    using System.Text;
+
+    using Descent.Model.Player.OverlordStuff;
 
     /// <summary>
     /// The role of a overlord, that a hero can be.

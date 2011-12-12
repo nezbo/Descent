@@ -18,14 +18,13 @@ namespace Descent.Model.Player.Figure
     using Microsoft.Xna.Framework.Graphics;
 
     /// <summary>
-    /// TODO: Update summary.
+    /// A monster, controlled by the Overlord
     /// </summary>
     /// <author>
     /// Jonas Breindahl (jobre@itu.dk)
     /// </author>
     public class Monster : Figure
     {
-
         #region Fields
 
         private bool isMaster;

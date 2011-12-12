@@ -1,11 +1,5 @@
-﻿
-namespace Descent.Model.Board.Marker
+﻿namespace Descent.Model.Board.Marker
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-
     using Descent.Messaging.Events;
     using Descent.Model.Player;
     using Descent.Model.Player.Figure;

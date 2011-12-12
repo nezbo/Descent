@@ -1,21 +1,14 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="SurgeAbility.cs" company="">
-// TODO: Update copyright text.
-// </copyright>
-// -----------------------------------------------------------------------
-
+﻿
 namespace Descent.Model.Player.Figure.HeroStuff
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-
     using Descent.Model.Event;
 
     /// <summary>
-    /// TODO: Update summary.
+    /// A surge ability is an ability with a cost
     /// </summary>
+    /// <author>
+    /// Jonas Breindahl (jobre@itu.dk)
+    /// </author>
     public class SurgeAbility
     {
         /// <summary>
@@ -43,6 +36,9 @@ namespace Descent.Model.Player.Figure.HeroStuff
 
         #region Properties
 
+        /// <summary>
+        /// Gets the cost of the ability
+        /// </summary>
         public int Cost
         {
             get
@@ -51,6 +47,9 @@ namespace Descent.Model.Player.Figure.HeroStuff
             }
         }
 
+        /// <summary>
+        /// Gets the ability to be gained if the cost is payed.
+        /// </summary>
         public Ability Ability
         {
             get
@@ -63,6 +62,15 @@ namespace Descent.Model.Player.Figure.HeroStuff
 
         #region Initialization
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SurgeAbility"/> class.
+        /// </summary>
+        /// <param name="cost">
+        /// The cost of the ability
+        /// </param>
+        /// <param name="ability">
+        /// The ability to be bought
+        /// </param>
         public SurgeAbility(int cost, Ability ability)
         {
             this.cost = cost;

@@ -1,16 +1,11 @@
 ﻿
 namespace Descent.Model.Player.Figure.HeroStuff
 {
-    using System;
     using System.Collections.Generic;
     using System.Diagnostics.Contracts;
-    using System.IO;
     using System.Linq;
-    using System.Text;
 
     using Descent.Model.Event;
-
-    using Microsoft.Xna.Framework;
 
     #region Enums
     /// <summary>
@@ -51,9 +46,24 @@ namespace Descent.Model.Player.Figure.HeroStuff
     /// </summary>
     public enum EquipmentRarity
     {
+        /// <summary>
+        /// The common rarity, only found in the town
+        /// </summary>
         Common,
+
+        /// <summary>
+        /// The copper rarity, only found through copper chests
+        /// </summary>
         Copper,
+
+        /// <summary>
+        /// The silver rarity, only found through silver chests
+        /// </summary>
         Silver,
+
+        /// <summary>
+        /// The gold rarity, only found through gold chests
+        /// </summary>
         Gold
     }
     #endregion
@@ -66,7 +76,6 @@ namespace Descent.Model.Player.Figure.HeroStuff
     /// </author>
     public class Equipment
     {
-
         #region Fields
 
         private int id;
@@ -86,20 +95,12 @@ namespace Descent.Model.Player.Figure.HeroStuff
 
         #region Properties
 
+        /// <summary>
+        /// Gets the unique id of the equipment
+        /// </summary>
         public int Id
         {
             get { return id; }
-        }
-
-        /// <summary>
-        /// Gets the unique ID of the equipment
-        /// </summary>
-        public int ID
-        {
-            get
-            {
-                return id;
-            }
         }
 
         /// <summary>
@@ -134,10 +135,15 @@ namespace Descent.Model.Player.Figure.HeroStuff
             }
         }
 
+        /// <summary>
+        /// Gets the attack type of the equipment,
+        /// None if the equipment is not a weapon.
+        /// </summary>
         public EAttackType AttackType
         {
             get
             {
+                Contract.Ensures(this.type == EquipmentType.Weapon || Contract.Result<EAttackType>() == EAttackType.NONE);
                 return attackType;
             }
         }
@@ -197,6 +203,10 @@ namespace Descent.Model.Player.Figure.HeroStuff
             }
         }
 
+        /// <summary>
+        /// Gets the list of dice that the weapon supplies.
+        /// This is used when drawing the GUI of the weapon.
+        /// </summary>
         public List<Dice> DiceForAttack
         {
             get
@@ -225,7 +235,7 @@ namespace Descent.Model.Player.Figure.HeroStuff
         /// Initializes a new instance of the <see cref="Equipment"/> class.
         /// </summary>
         /// <param name="id">
-        /// The id.
+        /// The unique id of the equipment
         /// </param>
         /// <param name="name">
         /// The name of the equipment
@@ -234,7 +244,7 @@ namespace Descent.Model.Player.Figure.HeroStuff
         /// The equipments type
         /// </param>
         /// <param name="attackType">
-        /// The attack Type.
+        /// The attack type of the equipment
         /// </param>
         /// <param name="rarity">
         /// The rarity of the equipment
@@ -250,7 +260,10 @@ namespace Descent.Model.Player.Figure.HeroStuff
         /// The number of hands it takes to wield, if the equipment is a weapon
         /// </param>
         /// <param name="abilities">
-        /// The abilities.
+        /// The abilities that the equipment have
+        /// </param>
+        /// <param name="dice">
+        /// The dice that the equipment has
         /// </param>
         public Equipment(int id, string name, EquipmentType type, EAttackType attackType, EquipmentRarity rarity, int buyPrice, List<SurgeAbility> surgeAbilities, int hands, List<Ability> abilities, List<Dice> dice)
         {
@@ -312,8 +325,8 @@ namespace Descent.Model.Player.Figure.HeroStuff
                         hero.Inventory.OtherItems.Contains(this) :
                             this.type == EquipmentType.Potion && hero.Inventory.Potions.Contains(this));
              * */
-            hero.DiceContribution += diceContribution;
-            hero.SurgeAbilityContribution += surgeAbilitiesContribution;
+            hero.DiceContribution += this.DiceContribution;
+            hero.SurgeAbilityContribution += this.SurgeAbilitiesContribution;
             equipped = true;
         }
 
@@ -327,8 +340,8 @@ namespace Descent.Model.Player.Figure.HeroStuff
         {
             Contract.Requires(Equipped);
             Contract.Ensures(!Equipped);
-            //TODO: Code to take abilities back!
-            hero.DiceContribution -= this.diceContribution;
+            
+            hero.DiceContribution -= this.DiceContribution;
             equipped = false;
         }
 
@@ -355,6 +368,15 @@ namespace Descent.Model.Player.Figure.HeroStuff
                 dice.Select(d => d).ToList());
         }
 
+        /// <summary>
+        /// Compares a piece of equipment to this one
+        /// </summary>
+        /// <param name="obj">
+        /// The obj to be compared
+        /// </param>
+        /// <returns>
+        /// Returns true if the two pieces of equipment have the same id
+        /// </returns>
         public override bool Equals(object obj)
         {
             if (obj == null || !(obj is Equipment)) return false;
@@ -362,12 +384,26 @@ namespace Descent.Model.Player.Figure.HeroStuff
             return false;
         }
 
-        private List<Dice> diceContribution()
+        /// <summary>
+        /// A method that return the dice of the weapon,
+        /// used to pass on as a delegate.
+        /// </summary>
+        /// <returns>
+        /// The list of dice the equipment contributes
+        /// </returns>
+        private List<Dice> DiceContribution()
         {
             return dice;
         }
 
-        private List<SurgeAbility> surgeAbilitiesContribution()
+        /// <summary>
+        /// A method that return the surge abilities of the weapon,
+        /// used to pass on as a delegate
+        /// </summary>
+        /// <returns>
+        /// The list of surge abilities the weapon has
+        /// </returns>
+        private List<SurgeAbility> SurgeAbilitiesContribution()
         {
             return surgeAbilities;
         }
