@@ -1,16 +1,31 @@
-﻿using System;
-using Descent.Messaging.Events;
-using Descent.Model;
-using Microsoft.Xna.Framework;
-
-namespace Descent.GUI.SubElements
+﻿namespace Descent.GUI.SubElements
 {
+    using System;
+    using Descent.Messaging.Events;
+    using Descent.Model;
+    using Microsoft.Xna.Framework;
+
+    /// <summary>
+    /// Displays a number of dice on their rolled sides.
+    /// </summary>
+    /// <author>
+    /// Emil Juul Jacobsen
+    /// </author>
     class DicesElement : GUIElement
     {
         private static readonly int Spacing = 10;
         private int diceWidth;
         private int perLine;
 
+        /// <summary>
+        /// Creates a new DIcesElement that displays the given dice within the boundaries.
+        /// </summary>
+        /// <param name="game">The current Game object.</param>
+        /// <param name="dices">The dice to display on the screen.</param>
+        /// <param name="x">The top-left x-coordinate of this element.</param>
+        /// <param name="y">The top-left y-coordinate of this element.</param>
+        /// <param name="width">The width of this element.</param>
+        /// <param name="height">The height of this element.</param>
         public DicesElement(Game game, Dice[] dices, int x, int y, int width, int height)
             : base(game, "dice", x, y, width, height)
         {
@@ -62,7 +77,6 @@ namespace Descent.GUI.SubElements
                     }
                 }
             }
-
         }
     }
 }

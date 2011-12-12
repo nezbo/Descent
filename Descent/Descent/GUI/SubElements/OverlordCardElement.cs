@@ -1,16 +1,32 @@
-﻿using Descent.Messaging.Events;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-
 namespace Descent.GUI.SubElements
 {
+    using Descent.Messaging.Events;
     using Descent.Model.Player.OverlordStuff;
+    using Microsoft.Xna.Framework;
+    using Microsoft.Xna.Framework.Graphics;
+
+    /// <summary>
+    /// Shows the information of an overlord card and
+    /// is able to switch between a hidden and an
+    /// expanded mode.
+    /// </summary>
+    /// <author>
+    /// Emil Juul Jacobsen
+    /// </author>
 
     class OverlordCardElement : GUIElement
     {
         private static SpriteFont Font { get; set; }
         private bool up = false;
 
+        /// <summary>
+        /// Creates a new OverlordCardElement to display information about
+        /// the given OverlordCard starting from the given position.
+        /// </summary>
+        /// <param name="game">The current Game object.</param>
+        /// <param name="x">The top-left x-coordinate of the hidden mode.</param>
+        /// <param name="y">The top-left y-coordinate of the hidden mode.</param>
+        /// <param name="card">The OverlordCard to display information for.</param>
         public OverlordCardElement(Game game, int x, int y, OverlordCard card)
             : base(game, "overlord card", x, y, 200, 300)
         {

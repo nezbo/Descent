@@ -106,8 +106,8 @@
   <ItemGroup>
     <Compile Include="Game1.cs" />
     <Compile Include="GUI\SubElements\AttackElement.cs" />
-    <Compile Include="GUI\SubElements\BoardGUIElement.cs" />
-    <Compile Include="GUI\SubElements\Chat.cs" />
+    <Compile Include="GUI\SubElements\BoardElement.cs" />
+    <Compile Include="GUI\SubElements\ChatElement.cs" />
     <Compile Include="GUI\Drawable.cs" />
     <Compile Include="GUI\SubElements\DicesElement.cs" />
     <Compile Include="GUI\SubElements\EquipmentElement.cs" />

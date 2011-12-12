@@ -1,19 +1,29 @@
-﻿using Descent.Model;
-
-namespace Descent.GUI
+﻿namespace Descent.GUI
 {
     using System.Collections.Generic;
     using Descent.Messaging.Events;
+    using Descent.Model;
     using Descent.Model.Player;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Input;
 
-    public class Chat : GUIElement
+    /// <summary>
+    /// The chat displays chat messages and has an input element as a child that is used to write
+    /// chatmessages to the chat.
+    /// </summary>
+    /// <author>
+    /// Emil Juul Jacobsen
+    /// </author>
+    public class ChatElement : GUIElement
     {
         private LinkedList<string> messages;
 
-        public Chat(Game game)
+        /// <summary>
+        /// Creates a new Chat for the given Game.
+        /// </summary>
+        /// <param name="game">The current Game object.</param>
+        public ChatElement(Game game)
             : base(game, "chat", (int)(game.GraphicsDevice.Viewport.Width * (3 / 4.0)), (Player.Instance.NumberOfPlayers - 1) * 100, game.GraphicsDevice.Viewport.Width / 4, game.GraphicsDevice.Viewport.Height - (Player.Instance.NumberOfPlayers - 1) * 100)
         {
             InputElement input = new InputElement(game, "chatInput", Bound.X + 10, Bound.Y + Bound.Height - 40, Bound.Width - 18, 30);

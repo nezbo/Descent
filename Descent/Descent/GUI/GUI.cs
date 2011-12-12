@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.Contracts;
-using Descent.Model.Board;
-using Descent.Model.Player;
-using Microsoft.Xna.Framework.Input;
-
-namespace Descent.GUI
+﻿namespace Descent.GUI
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics.Contracts;
+    using Descent.Model.Board;
+    using Descent.Model.Player;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
+    using Microsoft.Xna.Framework.Input;
 
     /// <summary>
     /// Handles the visual aspects of the game and input
@@ -171,7 +170,7 @@ namespace Descent.GUI
         /// <param name="positive">True if the highlight should indicate a eligible. False if it should indicate inaccessibility.</param>
         public void MarkSquare(int x, int y, bool positive)
         {
-            ((BoardGUIElement)layers[0]).MarkSquare(x, y, positive);
+            ((BoardElement)layers[0]).MarkSquare(x, y, positive);
         }
 
         /// <summary>
@@ -179,7 +178,7 @@ namespace Descent.GUI
         /// </summary>
         public void ClearMarks()
         {
-            ((BoardGUIElement)layers[0]).ClearMarks();
+            ((BoardElement)layers[0]).ClearMarks();
         }
     }
 }
