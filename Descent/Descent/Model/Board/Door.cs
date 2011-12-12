@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="Door.cs" company="">
-// TODO: Update copyright text.
-// </copyright>
-// -----------------------------------------------------------------------
-
+﻿
 using Descent.GUI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -18,8 +13,11 @@ namespace Descent.Model.Board
     }
 
     /// <summary>
-    /// TODO: Update summary.
+    /// A door, that can b
     /// </summary>
+    /// <author>
+    /// Jonas Breindahl (jobre@itu.dk)
+    /// </author>
     public class Door : Drawable
     {
         private readonly int[] areas;

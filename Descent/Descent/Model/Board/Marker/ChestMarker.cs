@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="ChestMarker.cs" company="">
-// TODO: Update copyright text.
-// </copyright>
-// -----------------------------------------------------------------------
-
+﻿
 namespace Descent.Model.Board.Marker
 {
     using System;

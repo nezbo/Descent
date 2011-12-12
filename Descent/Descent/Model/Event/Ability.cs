@@ -51,7 +51,6 @@ namespace Descent.Model.Event
         /// <returns></returns>
         public static Ability GetAbility(string abilityString)
         {
-            // TODO: I am too old for this ... stuff
             string[] data = abilityString.Split(' ');
             Ability ability = new Ability();
 
@@ -245,7 +244,7 @@ namespace Descent.Model.Event
 
         bool WhenAttacking()
         {
-            // TODO: return Player.Instance.StateManager.GameState.CurrentAttack != null && Player.Instance.StateManager.GameState.CurrentPlayer;
+            // TODO: A trigger that returns true when attacking
             return true;
         }
 
@@ -253,6 +252,7 @@ namespace Descent.Model.Event
         {
             return figure.AttackType.Equals(type);
         }
+
 
 
         #endregion
