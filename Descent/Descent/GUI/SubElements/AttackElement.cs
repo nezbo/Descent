@@ -40,26 +40,11 @@ namespace Descent.GUI.SubElements
                 GUIElement surgeBox = new GUIElement(game, "surge box", left ? xPos : xPos + surgeWidth, yPos, surgeWidth, surgeHeight);
                 surgeBox.SetBackground("boxbg");
 
-                // icons
-                int cost = surge.Cost;
-                int costX = surgeBox.Bound.X + 5;
-                while (cost > 0)
-                {
-                    Image img = new Image(game.Content.Load<Texture2D>("Images/Other/surge"));
-                    surgeBox.AddDrawable(surgeBox.Name, img, new Vector2(costX, surgeBox.Bound.Y + 10));
-                    cost--;
-                    costX += img.Texture.Width + 2;
-                }
-
-                // text
-                costX += 10;
-                string s = surge.Ability.ToString();
-                surgeBox.AddText(surgeBox.Name, ": " + surge.Ability.ToString(), new Vector2(costX - surgeBox.Bound.X, 5));
+                GUIElementFactory.DrawSurgeAbility(surgeBox, surge, xPos, 10,false);
 
                 // click event
                 surgeBox.SetClickAction(surgeBox.Name, (n, g) =>
                 {
-                    System.Diagnostics.Debug.WriteLine(id);
                     n.EventManager.QueueEvent(EventType.SurgeAbilityClicked, new SurgeAbilityEventArgs(id));
                 });
 

@@ -32,7 +32,7 @@ namespace Descent.GUI
         private bool drawBg = true;
         private Texture2D background = null;
         private SpriteFont font = null;
-        private SpriteFont Font { get { return font ?? GUI.Font; } }
+        public SpriteFont Font { get { return font ?? GUI.Font; } }
 
         private bool focus;
 
@@ -187,14 +187,16 @@ namespace Descent.GUI
         {
             Contract.Ensures(Bound.X == Contract.OldValue<int>(Bound.X) + x);
             Contract.Ensures(Bound.Y == Contract.OldValue<int>(Bound.Y) + y);
-
-            Bound = new Rectangle(Bound.X + x, Bound.Y + y, Bound.Width, Bound.Height);
-            foreach (GUIElement e in children) e.Move(x, y);
-            foreach (Text t in texts) t.Position = new Vector2(t.Position.X + x, t.Position.Y + y);
-            foreach (Drawable d in visuals.Keys)
+            lock (this)
             {
-                Rectangle old = visuals[d];
-                visuals[d] = new Rectangle(old.X + x, old.Y + y, old.Width, old.Height);
+                Bound = new Rectangle(Bound.X + x, Bound.Y + y, Bound.Width, Bound.Height);
+                foreach (GUIElement e in children) e.Move(x, y);
+                foreach (Text t in texts) t.Position = new Vector2(t.Position.X + x, t.Position.Y + y);
+                foreach (Drawable d in visuals.Keys)
+                {
+                    Rectangle old = visuals[d];
+                    visuals[d] = new Rectangle(old.X + x, old.Y + y, old.Width, old.Height);
+                }
             }
         }
 
@@ -358,17 +360,17 @@ namespace Descent.GUI
             string[] words = text.Split();
             StringBuilder builder = new StringBuilder();
 
-            int totalSpace = Bound.Width - (int)position.X;
+            int totalSpace = Bound.Width - (int)position.X + 25;
 
             string currentLine = "";
             string nextWord;
             while (wordsIndex < words.Length)
             {
-                nextWord = words[wordsIndex] + " ";
+                nextWord = words[wordsIndex];
 
-                if (GUI.Font.MeasureString(currentLine + nextWord).X < totalSpace) // word fits
+                if (GUI.Font.MeasureString(currentLine + nextWord).X <= totalSpace) // word fits
                 {
-                    currentLine += nextWord;
+                    currentLine += nextWord + " ";
                     wordsIndex++;
                 }
                 else if (GUI.Font.MeasureString(nextWord).X > totalSpace) // cut word
@@ -433,23 +435,26 @@ namespace Descent.GUI
         /// <param name="draw">The SpriteBatch to draw on</param>
         public virtual void Draw(SpriteBatch draw)
         {
-            // draw my own background
-            if (drawBg)
+            lock (this)
             {
-                draw.Draw(background ?? defaultBG, Bound, Color.White);
+                // draw my own background
+                if (drawBg)
+                {
+                    draw.Draw(background ?? defaultBG, Bound, Color.White);
+                }
+
+                // draw my own "pictures"
+                foreach (Drawable d in visuals.Keys) draw.Draw(d.Texture, visuals[d], Color.White);
+
+                // draw my own text
+                foreach (Text t in texts)
+                {
+                    draw.DrawString(Font, t.Line, t.Position, t.Color);
+                }
+
+                // draw the children on top
+                foreach (GUIElement e in children) e.Draw(draw);
             }
-
-            // draw my own "pictures"
-            foreach (Drawable d in visuals.Keys) draw.Draw(d.Texture, visuals[d], Color.White);
-
-            // draw my own text
-            foreach (Text t in texts)
-            {
-                draw.DrawString(Font, t.Line, t.Position, t.Color);
-            }
-
-            // draw the children on top
-            foreach (GUIElement e in children) e.Draw(draw);
         }
 
         public override void Update(GameTime gameTime)
