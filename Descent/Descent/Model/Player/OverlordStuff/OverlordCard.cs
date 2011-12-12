@@ -1,20 +1,38 @@
-﻿namespace Descent.Model.Player.Overlord
+﻿namespace Descent.Model.Player.OverlordStuff
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
+    #region Enum
 
+    /// <summary>
+    /// An enum of all overlord types
+    /// </summary>
     public enum OverlordCardType
     {
+        /// <summary>
+        /// A card that will let the overlord spawn more monsters
+        /// </summary>
         Spawn,
+        
+        /// <summary>
+        /// A card that will let the overlord create traps for the heroes
+        /// </summary>
         Trap,
+
+        /// <summary>
+        /// A card that will let the overlord gain new continous powers
+        /// </summary>
         Power,
+
+        /// <summary>
+        /// A card that will let the overlords 
+        /// monsters gain one time abilities
+        /// </summary>
         Event
     }
 
+    #endregion
+
     /// <summary>
-    /// TODO: Update summary.
+    /// Cards that the overlord draws each turn
     /// </summary>
     /// <author>
     /// Martin Marcher, Jonas Breindahl
@@ -116,6 +134,12 @@
                 sellPrice = value;
             }
         }
+
+        /// <summary>
+        /// Gets or sets the type of overlord card the card is
+        /// </summary>
+        public OverlordCardType Type { get; protected set; }
+
         #endregion
 
         #region Initialization
@@ -138,13 +162,17 @@
         /// <param name="sellPrice">
         /// The sell price of the card
         /// </param>
-        public OverlordCard(int id, string name, string description, int playPrice, int sellPrice)
+        /// <param name="type">
+        /// The type of overlordcard
+        /// </param>
+        public OverlordCard(int id, string name, string description, int playPrice, int sellPrice, OverlordCardType type)
         {
             this.id = id;
             this.name = name;
             this.description = description;
             this.playPrice = playPrice;
             this.sellPrice = sellPrice;
+            this.Type = type;
         }
 
         #endregion

@@ -9,6 +9,9 @@ namespace Descent.Model.Player.Figure.HeroStuff
     /// A Skill is an ability with a type.
     /// These skills come from special decks of the given type.
     /// </summary>
+    /// <author>
+    /// Jonas Breindahl (jobre@itu.dk)
+    /// </author>
     public class Skill
     {
         #region Fields

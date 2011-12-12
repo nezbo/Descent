@@ -1,20 +1,18 @@
-﻿using System.Diagnostics.Contracts;
-using Descent.Messaging.Events;
-using Descent.Model;
-using Descent.Model.Player;
-using Descent.Model.Player.Figure;
-using Descent.Model.Player.Figure.HeroStuff;
-using Descent.Model.Player.Overlord;
-
-namespace Descent.State
+﻿namespace Descent.State
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.Contracts;
     using System.Linq;
-    using System.Text;
 
+    using Descent.Messaging.Events;
+    using Descent.Model;
     using Descent.Model.Board.Marker;
     using Descent.Model.Event;
+    using Descent.Model.Player;
+    using Descent.Model.Player.Figure;
+    using Descent.Model.Player.Figure.HeroStuff;
+    using Descent.Model.Player.OverlordStuff;
 
     public delegate T Bonus<T>();
 

@@ -2,14 +2,9 @@
 namespace Descent.Model.Event
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
 
-    using Descent.Messaging.Events;
     using Descent.Model.Player;
     using Descent.Model.Player.Figure;
-    using Descent.State;
 
     public enum AbilityBonus
     {
@@ -40,6 +35,9 @@ namespace Descent.Model.Event
     /// <summary>
     /// Any ability, that have an effect on figures, heroes and the overlord.
     /// </summary>
+    /// <author>
+    /// Jonas Breindahl (jobre@itu.dk)
+    /// </author>
     public class Ability
     {
         #region Static
@@ -47,8 +45,12 @@ namespace Descent.Model.Event
         /// <summary>
         /// Creates an ability by parsing a string
         /// </summary>
-        /// <param name="ability"></param>
-        /// <returns></returns>
+        /// <param name="abilityString">
+        /// An ability as a string
+        /// </param>
+        /// <returns>
+        /// An ability
+        /// </returns>
         public static Ability GetAbility(string abilityString)
         {
             string[] data = abilityString.Split(' ');
@@ -204,6 +206,12 @@ namespace Descent.Model.Event
 
         #region Initialization
 
+        /// <summary>
+        /// Applys the ability to a figure
+        /// </summary>
+        /// <param name="figure">
+        /// The figure to apply the figure to
+        /// </param>
         public void Apply(Figure figure)
         {
             this.figure = figure;

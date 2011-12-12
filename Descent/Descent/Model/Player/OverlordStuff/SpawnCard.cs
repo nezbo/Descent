@@ -1,13 +1,9 @@
-﻿namespace Descent.Model.Player.Overlord
+﻿namespace Descent.Model.Player.OverlordStuff
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using Figure;
+    using Descent.Model.Player.Figure;
 
     /// <summary>
-    /// TODO: Update summary.
+    /// A type of Overlord_Card that lets the overlord spawn more monsters
     /// </summary>
     /// <author>
     /// Martin Marcher
@@ -22,7 +18,7 @@
         }
 
         public SpawnCard(int id, string name, string description, int playPrice, int sellPrice, Monster[] spawnMonsters)
-            : base(id, name, description, playPrice, sellPrice)
+            : base(id, name, description, playPrice, sellPrice, OverlordCardType.Spawn)
         {
             monstersToSpawn = spawnMonsters;
         }

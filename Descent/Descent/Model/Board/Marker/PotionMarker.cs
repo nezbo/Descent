@@ -70,6 +70,7 @@ namespace Descent.Model.Board.Marker
         /// </exception>
         public override void PickUp(Hero hero)
         {
+            System.Diagnostics.Debug.WriteLine(hero.Inventory.CanEquipPotion);
             hero.Inventory.EquipPotion(potion);
         }
         

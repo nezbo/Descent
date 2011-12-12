@@ -1,11 +1,12 @@
 ﻿
 using Descent.Model.Player;
-using Descent.Model.Player.Overlord;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Descent.GUI.SubElements
 {
+    using Descent.Model.Player.OverlordStuff;
+
     class OverlordElement : GUIElement
     {
         private int oldHandSize = 0;

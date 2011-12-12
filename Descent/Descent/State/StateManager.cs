@@ -6,7 +6,7 @@ namespace Descent.State
     using System.Linq;
 
     using Descent.Model.Board.Marker;
-    using Descent.Model.Player.Overlord;
+    using Descent.Model.Player.OverlordStuff;
 
     using GUI;
     using Messaging.Events;
@@ -1629,22 +1629,6 @@ namespace Descent.State
         }
 
         #region MovementMethods
-
-        private void DrinkPotion(Potion potion)
-        {
-            Contract.Requires(CurrentState == State.WaitForPerformAction);
-            Contract.Requires(IsAHeroTurn());
-            // TODO Contract.Requires(currentHero.MovementLeft >= 1);
-            Contract.Ensures(CurrentState == State.WaitForPerformAction);
-
-            // Remove 1 movement
-            // Apply potion effect
-            // Remove potion from inventory
-
-            stateMachine.PlaceStates(State.DrinkPotion);
-            stateMachine.ChangeToNextState();
-            ActionDone();
-        }
 
         private void PickupToken()
         {

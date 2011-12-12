@@ -68,13 +68,12 @@ namespace Descent.Model.Player
         {
             eventManager = new EventManager();
             playerNicks = new string[5];
-            Overlord = new Overlord.Overlord();
+            Overlord = new Overlord();
             HeroParty = new HeroParty();
         }
 
         /// <summary>
         /// Gets the Player singleton instance
-        /// TODO: At the moment there is no instantiating of the Player object
         /// </summary>
         public static Player Instance
         {
@@ -107,7 +106,7 @@ namespace Descent.Model.Player
 
         public int OverlordId { get; set; }
 
-        public Overlord.Overlord Overlord { get; private set; }
+        public Overlord Overlord { get; private set; }
 
         /// <summary>
         /// Gets the Hero Party.

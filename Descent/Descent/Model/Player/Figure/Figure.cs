@@ -364,7 +364,6 @@
             }
         }
 
-
         public Texture2D Texture
         {
             get
@@ -421,8 +420,8 @@
             Contract.Requires(amount > 0);
             Contract.Ensures(
                 Contract.OldValue(health) + amount > MaxHealth ? 
-                Health == 0 : 
-                Health == Contract.OldValue(Health) + amount);
+                health == MaxHealth : 
+                health == Contract.OldValue(Health) + amount);
             health = (int)MathHelper.Clamp(Health + amount, 0, MaxHealth);
         }
 
@@ -441,6 +440,12 @@
             health = (int)MathHelper.Clamp(health - amount, 0, MaxHealth);
         }
 
+        /// <summary>
+        /// Sets the movement left equal to the amount.
+        /// </summary>
+        /// <param name="amount">
+        /// The amount of movement
+        /// </param>
         public void SetMovement(int amount)
         {
             Contract.Requires(amount >= 0);
@@ -478,6 +483,9 @@
         /// <summary>
         /// Sets how many attacks the hero has (without bonus). Used at the start of the hero's turn.
         /// </summary>
+        /// <param name="amount">
+        /// The amount of attacks
+        /// </param>
         public void SetAttacks(int amount)
         {
             Contract.Requires(amount >= 0);

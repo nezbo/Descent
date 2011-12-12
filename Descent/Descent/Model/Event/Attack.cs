@@ -13,10 +13,14 @@ namespace Descent.Model.Event
     using Microsoft.Xna.Framework;
 
     /// <summary>
-    /// An attack 
+    /// An instance of an attack, with all the data necessary
     /// </summary>
+    /// <author>
+    /// Jonas Breindahl (jobre@itu.dk)
+    /// </author>
     public class Attack
     {
+        #region Fields
         private Figure figure;
 
         private List<Dice> diceForAttack;
@@ -30,9 +34,12 @@ namespace Descent.Model.Event
         private int surges;
 
         private int pierce;
+        #endregion
+
+        #region Properties
 
         /// <summary>
-        /// Gets or sets the hero that is attacking
+        /// Gets the hero that is attacking
         /// </summary>
         public Figure AttackingFigure
         {
@@ -47,8 +54,14 @@ namespace Descent.Model.Event
             }
         }
 
+        /// <summary>
+        /// Gets the square which is being attacked
+        /// </summary>
         public Point TargetSquare { get; private set; }
 
+        /// <summary>
+        /// Gets the range that is needed to fullfill the attack
+        /// </summary>
         public int RangeNeeded
         {
             get
@@ -57,14 +70,29 @@ namespace Descent.Model.Event
             }
         }
 
+        /// <summary>
+        /// Gets or sets the damage bonus for this attack
+        /// </summary>
         public int DamageBonus { get; set; }
 
+        /// <summary>
+        /// Gets or sets the range bonus for this attack
+        /// </summary>
         public int RangeBonus { get; set; }
 
+        /// <summary>
+        /// Gets or sets the surge bonus for this attack
+        /// </summary>
         public int SurgeBonus { get; set; }
 
+        /// <summary>
+        /// Gets or sets the pierce bonus for this attack
+        /// </summary>
         public int PierceBonus { get; set; }
 
+        /// <summary>
+        /// Gets the total damage for this attack
+        /// </summary>
         public int Damage
         {
             get
@@ -78,6 +106,9 @@ namespace Descent.Model.Event
             }
         }
 
+        /// <summary>
+        /// Gets the total range for this attack
+        /// </summary>
         public int Range
         {
             get
@@ -91,6 +122,9 @@ namespace Descent.Model.Event
             }
         }
 
+        /// <summary>
+        /// Gets the total surges for this attack
+        /// </summary>
         public int Surge
         {
             get
@@ -104,6 +138,9 @@ namespace Descent.Model.Event
             }
         }
 
+        /// <summary>
+        /// Gets the total pierce for this attack
+        /// </summary>
         public int Pierce
         {
             get
@@ -117,8 +154,14 @@ namespace Descent.Model.Event
             }
         }
 
+        /// <summary>
+        /// Gets or sets the total number of used surges for this attack
+        /// </summary>
         public int UsedSurges { get; set; }
 
+        /// <summary>
+        /// Gets a list of dice that the attack will use when attacking
+        /// </summary>
         public List<Dice> DiceForAttack
         {
             get
@@ -126,7 +169,10 @@ namespace Descent.Model.Event
                 return diceForAttack;
             }
         }
-
+        
+        /// <summary>
+        /// Gets a list of surge abilities that can be bought for this attack
+        /// </summary>
         public List<SurgeAbility> SurgeAbilities
         {
             get
@@ -135,13 +181,23 @@ namespace Descent.Model.Event
             }
         }
 
+        /// <summary>
+        /// Gets a value indicating whether the attack is missed
+        /// </summary>
         public bool MissedAttack { get; private set; }
+
+        #endregion
+
+        #region Initialize
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Attack"/> class.
         /// </summary>
         /// <param name="attackingFigure">
         /// The attacking Figure.
+        /// </param>
+        /// <param name="targetSquare">
+        /// The square that is attacked
         /// </param>
         public Attack(Figure attackingFigure, Point targetSquare)
         {
@@ -152,10 +208,16 @@ namespace Descent.Model.Event
             MissedAttack = false;
         }
 
+        #endregion
+
+        #region Methods
+
         /// <summary>
         /// Sets all dice to the side of the array given
         /// </summary>
-        /// <param name="diceSides"></param>
+        /// <param name="diceSides">
+        /// An array indicating the values of the dice face
+        /// </param>
         public void SetDiceSides(int[] diceSides)
         {
             Contract.Requires(diceSides.Length == DiceForAttack.Count);
@@ -165,8 +227,12 @@ namespace Descent.Model.Event
             {
                 list[i].SideIndex = diceSides[i];
             }
+            this.CalculateStats();
         }
 
+        /// <summary>
+        /// Rolls all dice, and determines whether the attack is missed
+        /// </summary>
         public void RollDice()
         {
             foreach (Dice dice in DiceForAttack)
@@ -175,8 +241,12 @@ namespace Descent.Model.Event
             }
 
             MissedAttack = !DiceForAttack.All(d => d.ActiveSide[3] == 0);
+            this.CalculateStats();
         }
 
+        /// <summary>
+        /// Calculates the current values of range, damage, surges and pierce
+        /// </summary>
         private void CalculateStats()
         {
             Range = 0;
@@ -195,6 +265,12 @@ namespace Descent.Model.Event
             }
         }
 
+        /// <summary>
+        /// Gets the attack instance as a string
+        /// </summary>
+        /// <returns>
+        /// The string of the the attack
+        /// </returns>
         public override string ToString()
         {
             this.CalculateStats();
@@ -205,14 +281,16 @@ namespace Descent.Model.Event
                 "\nSurge: " + (Surge - UsedSurges);
         }
 
-
         /// <summary>
         /// Checks if a list from DiceForAttack is alike every time you call it
         /// </summary>
         [ContractInvariantMethod]
         private void ObjectInvariant()
         {
+            Contract.Invariant(DiceForAttack.Count > 0);
             //Contract.Invariant(DiceForAttack == null ? true : DiceForAttack.Count == DiceForAttack.Count && DiceF);
         }
+
+        #endregion
     }
 }

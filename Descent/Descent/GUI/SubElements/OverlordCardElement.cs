@@ -1,10 +1,11 @@
 ﻿using Descent.Messaging.Events;
-using Descent.Model.Player.Overlord;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Descent.GUI.SubElements
 {
+    using Descent.Model.Player.OverlordStuff;
+
     class OverlordCardElement : GUIElement
     {
         private static SpriteFont Font { get; set; }
