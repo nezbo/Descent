@@ -140,6 +140,7 @@ namespace Descent.GUI
         /// <param name="state">The new GUIElement of the State layer</param>
         public void ChangeStateGUI(GUIElement state)
         {
+            Contract.Ensures(layers[1] == state);
             layers[1] = state;
         }
 
@@ -151,6 +152,7 @@ namespace Descent.GUI
         /// <param name="role">The Role determining how much is visible on the board.</param>
         public void CreateBoardGUI(Board board, Role role)
         {
+            Contract.Ensures(layers[0] != null);
             layers[0] = GUIElementFactory.CreateBoardElement(Game, board, role);
         }
 
@@ -161,6 +163,7 @@ namespace Descent.GUI
         /// <param name="role">The Role that should be created a menu for.</param>
         public void CreateMenuGUI(Role role)
         {
+            Contract.Ensures(layers[2] != null);
             layers[2] = GUIElementFactory.CreateMenuElement(Game, role);
         }
 

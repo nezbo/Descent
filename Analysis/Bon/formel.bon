@@ -812,3 +812,239 @@ component
 				NextState /= Void;
 	end
 end
+
+static_diagram FORMEL_GUI
+component
+	class DRAWABLE
+		indexing
+			author: "Emil Juul Jacobsen";
+			created: "13-12-2011";
+			revised: "13-12-2011";
+		feature
+			getTexture: TEXTURE2D
+			setTexture
+				-> newTexture: TEXTURE2D
+				require
+					newTexture /= Void;
+				ensure
+					getTexture() = newTexture;
+			end
+	end
+	
+	class GUI
+		indexing
+			author: "Emil Juul Jacobsen";
+			created: "13-12-2011";
+			revised: "13-12-2011";
+		feature
+			getFont: SPRITEFONT
+			setFont
+				-> newFont: SPRITEFONT
+				require
+					newFont /= Void;
+				ensure
+					getFont() = newFont;
+			end
+			update
+				-> gametime: GAMETIME -- XNA method
+			changeStateGUI
+				-> stateGUI: GUI_ELEMENT
+			initiateBoardGUI
+				-> board: BOARD
+				-> role: ROLE
+			initiateMenuGUI
+				-> role: ROLE
+			markSquare
+				-> x: INTEGER
+				-> y: INTEGER
+				-> positive: BOOLEAN
+			clearMarks
+	end
+	
+	class GUI_ELEMENT
+		indexing
+			author: "Emil Juul Jacobsen";
+			created: "13-12-2011";
+			revised: "13-12-2011";
+		feature
+			getBounds: RECTANGLE
+			hasPoint: BOOLEAN
+				-> x: INTEGER
+				-> y: INTEGER
+			hasFocus: BOOLEAN
+			getName: STRING
+			drawsBackground: BOOLEAN
+			loseFocus
+				ensure
+					not hasFocus();
+			end
+			getFont: SPRITEFONT
+				ensure
+					Result /= Void;
+			end
+			setFont
+				-> newFont: SPRITEFONT
+				ensure
+					getFont() = newFont;
+			end
+			move
+				-> x: INTEGER
+				-> y: INTEGER
+			disable
+				ensure
+					not drawsBackground();
+			end
+			handleClick: BOOLEAN
+				-> x: INTEGER
+				-> y: INTEGER
+			handleKeyPress
+				-> key: KEYS
+			setClickAction
+				-> target: STRING
+				-> effect: ACTION
+				require
+					target /= Void;
+			end
+			addChild
+				-> child: GUI_ELEMENT
+				require
+					child /= Void;
+			end
+			clearChildren
+			addDrawableV
+				-> target: STRING
+				-> visual: DRAWABLE
+				-> position: VECTOR2
+				require
+					target /= Void;
+					visual /= Void;
+					position /= Void;
+			end
+			addDrawableR
+				-> target: STRING
+				-> visual: DRAWABLE
+				-> position: RECTANGLE
+				require
+					target /= Void;
+					visual /= Void;
+					position /= Void;
+			end
+			addText
+				-> target: STRING
+				-> text: STRING
+				-> position: VECTOR2
+				require
+					target /= Void;
+					text /= Void;
+					position /= Void;
+			end
+			addTextC
+				-> target: STRING
+				-> text: STRING
+				-> position: VECTOR2
+				-> color: COLOR
+				require
+					target /= Void;
+					text /= Void;
+					position /= Void;
+					color /= Void;
+			end
+			setDrawBackground
+				-> toDraw: BOOLEAN
+				ensure
+					toDraw = drawsBackground();
+			end
+			setBackground
+				-> newBG: STRING
+				ensure
+					drawsBackground;
+			end
+			draw
+				-> spriteBatch: SPRITEBATCH
+			update
+				-> gametime: GAMETIME
+	end
+	
+	class GUI_ELEMENT_FACTORY
+		indexing
+			author: "Emil Juul Jacobsen";
+			created: "13-12-2011";
+			revised: "13-12-2011";
+		feature
+			createBoardElement: GUI_ELEMENT
+				-> game: GAME
+				-> board: BOARD
+				-> role: ROLE
+				require
+					game /= Void;
+					board /= Void;
+					role /= Void;
+			end
+			createStateElement: GUI_ELEMENT
+				-> game: GAME
+				-> state: STATE
+				-> role: ROLE
+				-> gamestate: GAMESTATE
+				require
+					game /= Void;
+					board /= Void;
+					role /= Void;
+			end
+			createMenuElement: GUI_ELEMENT
+				-> game: GAME
+				-> role: ROLE
+				require
+					game /= Void;
+					role /= Void;
+			end
+			createEquipmentElement: EQUIPMENT_ELEMENT
+				-> game: GAME
+				-> x: INTEGER
+				-> y: INTEGER
+				-> slotName: STRING
+				-> equipment: EQUIPMENT
+				-> id: INTEGER
+				require
+					game /= Void;
+				ensure
+					Result.getId() = id;
+					Result.getEquipment() = equipment;
+			end
+			drawSurgeAbility
+				-> target: GUI_ELEMENT
+				-> ability: SURGE_ABILITY
+				-> x: INTEGER
+				-> y: INTEGER
+				-> small: BOOLEAN
+				require
+					target /= Void;
+					ability /= Void;
+					target.hasPoint(x,y);
+			end
+			drawDice
+				-> target: GUI_ELEMENT
+				-> dice: DICE
+				-> x: INTEGER
+				-> y: INTEGER
+				-> size: INTEGER
+				require
+					target /= Void;
+					dice /= Void;
+					target.hasPoint(x,y);
+					size > 0;
+			end
+	end
+	
+end
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
