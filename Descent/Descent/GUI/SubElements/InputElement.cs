@@ -1,4 +1,6 @@
-﻿namespace Descent.GUI
+﻿using System.Diagnostics.Contracts;
+
+namespace Descent.GUI
 {
     using System.Collections.Generic;
     using Microsoft.Xna.Framework;
@@ -27,6 +29,9 @@
         /// it will return an empty string if nothing found for the given key.</returns>
         public static string GetInputFrom(string key)
         {
+            Contract.Requires(key != null);
+            Contract.Ensures(Contract.Result<string>() != null);
+
             if (inputs.ContainsKey(key))
             {
                 return inputs[key];
@@ -41,6 +46,11 @@
         /// <param name="input">The new input for the given key.</param>
         public static void SetInput(string key, string input)
         {
+            Contract.Requires(key != null);
+            Contract.Requires(input != null);
+            Contract.Requires(key.Length > 0);
+            Contract.Ensures(GetInputFrom(key) == input);
+
             inputs[key] = input;
         }
 

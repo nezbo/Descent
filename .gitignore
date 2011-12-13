@@ -18,3 +18,7 @@ Descent/Descent.PexValidation/obj
 *.cachefile
 Descent/Descent/StyleCop.Cache
 *.stackdump
+.vsmdi
+DotCoverResults
+.testsettings
+
