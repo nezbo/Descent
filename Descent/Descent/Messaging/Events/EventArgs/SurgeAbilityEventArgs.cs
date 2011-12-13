@@ -13,7 +13,7 @@ namespace Descent.Messaging.Events
     {
         public SurgeAbilityEventArgs(int abilityId)
         {
-            Contract.Requires(abilityId >= 0;
+            Contract.Requires(abilityId >= 0);
             AbilityId = abilityId;
         }
 
