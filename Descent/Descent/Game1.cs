@@ -39,7 +39,6 @@ namespace Descent
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
             this.IsMouseVisible = true;
             InputElement.SetInput("nameInput", "Player");
             base.Initialize();
@@ -141,15 +140,6 @@ namespace Descent
         }
 
         /// <summary>
-        /// UnloadContent will be called once per game and is the place to unload
-        /// all content.
-        /// </summary>
-        protected override void UnloadContent()
-        {
-            // TODO: Unload any non ContentManager content here
-        }
-
-        /// <summary>
         /// Allows the game to run logic such as updating the world,
         /// checking for collisions, gathering input, and playing audio.
         /// </summary>
@@ -170,7 +160,6 @@ namespace Descent
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
 
-            // TODO: Add your update logic here
             gui.Update(gameTime);
             Player.Instance.EventManager.ProcessEventQueue();
 
@@ -185,12 +174,10 @@ namespace Descent
         {
             GraphicsDevice.Clear(Color.Black);
 
-            // TODO: Add your drawing code here
             gui.Draw(spriteBatch);
 
             numOfFrames++;
-            string header = "Descent - FPS = " + FPS + " - ";
-            //header += Player.Instance.Nickname ?? "Main Menu";
+            string header = "Descent - FPS " + FPS;
             Window.Title = header;
 
             base.Draw(gameTime);
