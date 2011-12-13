@@ -24,7 +24,7 @@
         protected static EventManager manager = Player.Instance.EventManager; //TODO: Where to find this?
         protected static Texture2D defaultBG;
 
-        public Rectangle Bound { get; set; }
+        public Rectangle Bound { get; protected set; }
 
         private string name;
         public string Name { get { return name; } }
@@ -32,7 +32,14 @@
         private bool drawBg = true;
         private Texture2D background = null;
         private SpriteFont font = null;
-        public SpriteFont Font { get { return font ?? GUI.Font; } }
+        public SpriteFont Font
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result<SpriteFont>() != null);
+                return font ?? GUI.Font;
+            }
+        }
 
         private bool focus;
 
@@ -89,6 +96,7 @@
         /// </summary>
         public void LostFocus()
         {
+            Contract.Ensures(!HasFocus());
             focus = false;
             foreach (GUIElement e in children) e.LostFocus();
         }
@@ -100,6 +108,7 @@
         /// <param name="newFont">The new font to draw with.</param>
         public void SetFont(SpriteFont newFont)
         {
+            Contract.Ensures(Font == newFont);
             font = newFont;
         }
 
@@ -207,13 +216,19 @@
         /// <param name="target">What to disable.</param>
         public void Disable(string target)
         {
+            Contract.Ensures(onClick == null);
+            Contract.Ensures(!DrawsBackground());
+            Contract.Ensures(texts.Count == 0);
+            Contract.Ensures(visuals.Count == 0);
+            Contract.Ensures(children.Count == 0);
+
             if (Name == target)
             {
                 SetDrawBackground(false);
                 texts.Clear();
                 visuals.Clear();
                 onClick = null;
-                children.Clear();
+                ClearChildren();
             }
             foreach (GUIElement e in children) e.Disable(target);
         }
@@ -240,6 +255,7 @@
         public void SetClickAction(string target, Action<Player, GUIElement> action)
         {
             Contract.Requires(target != "");
+            Contract.Ensures(target == Name ? onClick == action : true);
 
             if (this.Name == target)
             {
@@ -255,8 +271,11 @@
         /// <param name="child">The new child</param>
         public void AddChild(GUIElement child)
         {
+            Contract.Requires(child != null);
             Contract.Requires(child.Bound.X >= Bound.X);
             Contract.Requires(child.Bound.Y >= Bound.Y);
+            Contract.Ensures(Contract.OldValue<int>(children.Count) + 1 == children.Count);
+
             children.Add(child);
         }
 
@@ -265,6 +284,7 @@
         /// </summary>
         public void ClearChildren()
         {
+            Contract.Ensures(children.Count == 0);
             children.Clear();
         }
 
@@ -299,6 +319,8 @@
             Contract.Requires(rectangle.Y >= Bound.Y);
             Contract.Requires(rectangle.X + rectangle.Width <= Bound.X + Bound.Width);
             Contract.Requires(rectangle.Y + rectangle.Height <= Bound.Y + Bound.Height);
+
+            Contract.Ensures(target == Name ? Contract.OldValue<int>(visuals.Count) + 1 == visuals.Count : true);
             if (Name == target)
             {
                 visuals.Add(visual, rectangle);
@@ -333,6 +355,7 @@
         {
             Contract.Requires(target != null);
             Contract.Requires(text != null);
+            Contract.Ensures(target == Name ? Contract.OldValue<int>(texts.Count) + 1 == texts.Count : Contract.OldValue<int>(texts.Count) == texts.Count);
 
             if (Name == target)
             {

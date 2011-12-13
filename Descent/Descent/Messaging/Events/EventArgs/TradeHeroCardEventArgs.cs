@@ -18,7 +18,11 @@ namespace Descent.Messaging.Events
 
         public TradeHeroCardEventArgs(string[] stringArgs)
         {
-            Contract.Requires(stringArgs.Length >= 1);
+            Contract.Requires(stringArgs != null);
+            Contract.Requires(stringArgs.Length == 1);
+            int b;
+            Contract.Requires(int.TryParse(stringArgs[0], out b));
+
             PopulateWithArgs(stringArgs);
         }
 
@@ -26,7 +30,11 @@ namespace Descent.Messaging.Events
 
         public override void PopulateWithArgs(string[] stringArgs)
         {
-            Contract.Requires(stringArgs.Length >= 1);
+            Contract.Requires(stringArgs != null);
+            Contract.Requires(stringArgs.Length == 1);
+            int b;
+            Contract.Requires(int.TryParse(stringArgs[0], out b));
+
             CardId = int.Parse(stringArgs[0]);
         }
 

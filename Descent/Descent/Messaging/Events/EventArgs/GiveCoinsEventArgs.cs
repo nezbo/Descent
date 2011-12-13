@@ -14,6 +14,7 @@ namespace Descent.Messaging.Events
         public GiveCoinsEventArgs(int playerId, int numberOfCoins)
         {
             Contract.Requires(playerId > 0);
+            Contract.Requires(numberOfCoins > 0);
 
             PlayerId = playerId;
             NumberOfCoins = numberOfCoins;
@@ -21,7 +22,11 @@ namespace Descent.Messaging.Events
 
         public GiveCoinsEventArgs(string[] stringArgs)
         {
-            Contract.Requires(stringArgs.Length >= 2);
+            Contract.Requires(stringArgs != null);
+            Contract.Requires(stringArgs.Length == 2);
+            int b;
+            Contract.Requires(Contract.ForAll(stringArgs, s => int.TryParse(s, out b) && int.Parse(s) > 0));
+
             PopulateWithArgs(stringArgs);
         }
 
@@ -31,7 +36,10 @@ namespace Descent.Messaging.Events
 
         public override void PopulateWithArgs(string[] stringArgs)
         {
-            Contract.Requires(stringArgs.Length >= 1);
+            Contract.Requires(stringArgs != null);
+            Contract.Requires(stringArgs.Length == 2);
+            int b;
+            Contract.Requires(Contract.ForAll(stringArgs, s => int.TryParse(s, out b) && int.Parse(s) > 0));
 
             PlayerId = int.Parse(stringArgs[0]);
             NumberOfCoins = int.Parse(stringArgs[1]);

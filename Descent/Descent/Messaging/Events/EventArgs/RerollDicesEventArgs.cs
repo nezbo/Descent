@@ -14,13 +14,18 @@ namespace Descent.Messaging.Events
     {
         public RerollDicesEventArgs(int[] diceIds)
         {
+            Contract.Requires(diceIds != null);
             Contract.Requires(diceIds.Length > 0);
             DiceIds = diceIds;
         }
 
         public RerollDicesEventArgs(string[] stringArgs)
         {
+            Contract.Requires(stringArgs != null);
             Contract.Requires(stringArgs.Length > 0);
+            int b;
+            Contract.Requires(Contract.ForAll(stringArgs, s => int.TryParse(s, out b)));
+
             PopulateWithArgs(stringArgs);
         }
 
@@ -28,7 +33,10 @@ namespace Descent.Messaging.Events
 
         public override void PopulateWithArgs(string[] stringArgs)
         {
-            Contract.Requires(stringArgs.Length >= 3);
+            Contract.Requires(stringArgs != null);
+            Contract.Requires(stringArgs.Length > 0);
+            int b;
+            Contract.Requires(Contract.ForAll(stringArgs, s => int.TryParse(s, out b)));
 
             DiceIds = new int[stringArgs.Length];
 

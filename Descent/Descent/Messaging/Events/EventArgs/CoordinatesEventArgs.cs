@@ -19,7 +19,11 @@ namespace Descent.Messaging.Events
 
         public CoordinatesEventArgs(string[] stringArgs)
         {
+            Contract.Requires(stringArgs != null);
             Contract.Requires(stringArgs.Length == 2);
+            int b;
+            Contract.Requires(Contract.ForAll(stringArgs, s => int.TryParse(s, out b)));
+
             PopulateWithArgs(stringArgs);
         }
 
@@ -29,7 +33,11 @@ namespace Descent.Messaging.Events
 
         public override void PopulateWithArgs(string[] stringArgs)
         {
+            Contract.Requires(stringArgs != null);
             Contract.Requires(stringArgs.Length == 2);
+            int b;
+            Contract.Requires(Contract.ForAll(stringArgs, s => int.TryParse(s, out b)));
+
             X = int.Parse(stringArgs[0]);
             Y = int.Parse(stringArgs[1]);
         }

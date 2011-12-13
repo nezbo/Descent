@@ -2,6 +2,7 @@
 namespace Descent.Messaging.Events
 {
     using System;
+    using System.Diagnostics.Contracts;
 
     /// <summary>
     /// The standard event arguments class. Has sender id, event id, event type and a bool indicating whether the message needs a response.
@@ -24,8 +25,10 @@ namespace Descent.Messaging.Events
         /// <param name="needResponse">Does this event need a response from the other players?</param>
         public GameEventArgs(int senderID, string eventID, EventType eventType, bool needResponse)
         {
-            this.SenderId = senderID;
-            this.EventId = eventID;
+            Contract.Requires(senderID >= 1 && senderID <= 5);
+            Contract.Requires(eventID != null);
+            SenderId = senderID;
+            EventId = eventID;
             EventType = eventType;
             NeedResponse = needResponse;
         }

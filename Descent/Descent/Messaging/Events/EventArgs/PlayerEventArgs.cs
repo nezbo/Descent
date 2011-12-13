@@ -14,12 +14,16 @@ namespace Descent.Messaging.Events
         public PlayerEventArgs(int playerId)
         {
             Contract.Requires(playerId > 0);
+
             PlayerId = playerId;
         }
 
         public PlayerEventArgs(string[] stringArgs)
         {
+            Contract.Requires(stringArgs != null);
             Contract.Requires(stringArgs.Length == 1);
+            int b;
+            Contract.Requires(int.TryParse(stringArgs[0], out b));
             PopulateWithArgs(stringArgs);
         }
 
@@ -27,7 +31,10 @@ namespace Descent.Messaging.Events
 
         public override void PopulateWithArgs(string[] stringArgs)
         {
+            Contract.Requires(stringArgs != null);
             Contract.Requires(stringArgs.Length == 1);
+            int b;
+            Contract.Requires(int.TryParse(stringArgs[0], out b));
             PlayerId = int.Parse(stringArgs[0]);
         }
 

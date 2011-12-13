@@ -64,6 +64,8 @@ namespace Descent.GUI
         /// <returns>A Guielement that displays the board.</returns>
         public static GUIElement CreateBoardElement(Game game, Board board, Role role)
         {
+            Contract.Requires(game != null);
+            Contract.Requires(board != null);
             Contract.Ensures(Contract.Result<GUIElement>() != null);
             Contract.Ensures(Contract.Result<GUIElement>().Bound.X == 0);
             Contract.Ensures(Contract.Result<GUIElement>().Bound.Y == 0);
@@ -324,6 +326,7 @@ namespace Descent.GUI
 
         public static GUIElement CreateMenuElement(Game game, Role role)
         {
+            Contract.Requires(game != null);
             Contract.Ensures(Contract.Result<GUIElement>() != null);
             Contract.Ensures(Contract.Result<GUIElement>().Bound.X == 0);
             Contract.Ensures(Contract.Result<GUIElement>().Bound.Y == 0);
@@ -361,6 +364,10 @@ namespace Descent.GUI
         /// <returns>A GUIElement that visualizes the given Equipment and keeps up to date if something within it changes.</returns>
         public static EquipmentElement CreateEquipmentElement(Game game, int x, int y, string slotTitle, Equipment equipment, int id)
         {
+            Contract.Requires(game != null);
+            Contract.Ensures(Contract.Result<EquipmentElement>().Id == id);
+            Contract.Ensures(Contract.Result<EquipmentElement>().Equipment == equipment);
+
             return new EquipmentElement(game, x, y, RelW(game.GraphicsDevice.Viewport, 12), RelH(game.GraphicsDevice.Viewport, 16), slotTitle, equipment, id);
         }
 
@@ -375,6 +382,10 @@ namespace Descent.GUI
         /// <param name="small">True if the surge ability should be drawn as compact as possible, else false.</param>
         public static void DrawSurgeAbility(GUIElement target, SurgeAbility ability, int xPosition, int yPosition, bool small)
         {
+            Contract.Requires(target != null);
+            Contract.Requires(ability != null);
+            Contract.Requires(target.HasPoint(xPosition, yPosition));
+
             // icons
             int cost = ability.Cost;
             int costX = target.Bound.X + 5;
@@ -404,6 +415,11 @@ namespace Descent.GUI
         /// <param name="size">The width and height in pixels.</param>
         public static void DrawDice(GUIElement target, EDice dice, int x, int y, int size)
         {
+            Contract.Requires(target != null);
+            Contract.Requires(target.HasPoint(x, y));
+            Contract.Requires(size > 0);
+            Contract.Requires(x + size < target.Bound.X + target.Bound.Y);
+
             if (dicetinary == null) LoadDiceTextures(target.Game);
 
             target.AddDrawable(target.Name, new Image(dicetinary[dice]), new Rectangle(x, y, size, size));

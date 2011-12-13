@@ -16,6 +16,7 @@ namespace Descent.Messaging.Events
         public GiveHeroCardsEventArgs(int playerId, int[] heroCardIds)
         {
             Contract.Requires(playerId > 0);
+            Contract.Requires(heroCardIds != null);
             Contract.Requires(heroCardIds.Length > 0);
             PlayerId = playerId;
             HeroCardIds = heroCardIds;
@@ -23,7 +24,12 @@ namespace Descent.Messaging.Events
 
         public GiveHeroCardsEventArgs(string[] stringArgs)
         {
+            Contract.Requires(stringArgs != null);
             Contract.Requires(stringArgs.Length >= 3);
+            int b;
+            Contract.Requires(Contract.ForAll(stringArgs, s => int.TryParse(s, out b) && int.Parse(s) >= 1));
+            Contract.Requires(stringArgs.Skip(2).ToArray().Length == int.Parse(stringArgs[1]));
+
             PopulateWithArgs(stringArgs);
         }
 
@@ -33,7 +39,12 @@ namespace Descent.Messaging.Events
 
         public override void PopulateWithArgs(string[] stringArgs)
         {
+            Contract.Requires(stringArgs != null);
             Contract.Requires(stringArgs.Length >= 3);
+            int b;
+            Contract.Requires(Contract.ForAll(stringArgs, s => int.TryParse(s, out b) && int.Parse(s) >= 1));
+            Contract.Requires(stringArgs.Skip(2).ToArray().Length == int.Parse(stringArgs[1]));
+
             PlayerId = int.Parse(stringArgs[0]);
             int numberOfHeroCards = int.Parse(stringArgs[1]);
 
