@@ -388,7 +388,7 @@ namespace Descent.GUI
 
             // icons
             int cost = ability.Cost;
-            int costX = target.Bound.X + 5;
+            int costX = target.Bound.X + xPosition;
             while (cost > 0)
             {
                 Image img = new Image(target.Game.Content.Load<Texture2D>("Images/Other/surge"));

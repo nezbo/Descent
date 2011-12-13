@@ -57,7 +57,7 @@
                 GUIElement surgeBox = new GUIElement(game, "surge box", left ? xPos : xPos + surgeWidth, yPos, surgeWidth, surgeHeight);
                 surgeBox.SetBackground("boxbg");
 
-                GUIElementFactory.DrawSurgeAbility(surgeBox, surge, xPos, 10, false);
+                GUIElementFactory.DrawSurgeAbility(surgeBox, surge, 5, 10, false);
 
                 // click event
                 surgeBox.SetClickAction(surgeBox.Name, (n, g) =>
