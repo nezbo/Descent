@@ -3,6 +3,7 @@ namespace Descent.Messaging.AsyncSockets
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Net;
     using System.Net.Sockets;
@@ -32,6 +33,8 @@ namespace Descent.Messaging.AsyncSockets
         /// <param name="clientSocket">Socket of the client.</param>
         public ClientInfo(Socket clientSocket)
         {
+            Contract.Requires(clientSocket != null);
+
             socket = clientSocket;
             Id = nextId++;
         }
@@ -62,6 +65,8 @@ namespace Descent.Messaging.AsyncSockets
         /// <param name="message">String to send</param>
         public void Send(string message)
         {
+            Contract.Requires(message != null);
+
             // Sends through the socket. Appends <EOF> to indicate end of message.
             socket.Send(Encoding.UTF8.GetBytes(message + "<EOF>"));
         }

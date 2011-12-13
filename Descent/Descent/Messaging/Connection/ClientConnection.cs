@@ -2,6 +2,8 @@
 namespace Descent.Messaging.Connection
 {
     using System;
+    using System.Diagnostics.Contracts;
+
     using Descent.Messaging.AsyncSockets;
     using Descent.Messaging.Events;
     using Descent.Model.Player;
@@ -24,6 +26,9 @@ namespace Descent.Messaging.Connection
         /// <param name="port">Port of server.</param>
         public ClientConnection(string ip, int port)
         {
+            Contract.Requires(ip != null);
+            Contract.Requires(port > 0);
+
             RemoteIp = ip;
             RemotePort = port;
         }
@@ -88,7 +93,8 @@ namespace Descent.Messaging.Connection
             else
             {
                 // It was not a special message, pass it on to the event manager.
-                Player.Instance.EventManager.ParseAndFire(message, false);
+                //Player.Instance.EventManager.ParseAndFire(message, false);
+                Player.Instance.EventManager.QueueStringEvent(message, false);
             }
         }
     }
