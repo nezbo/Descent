@@ -10,7 +10,7 @@
     using Microsoft.Xna.Framework.Graphics;
 
     /// <summary>
-    /// TODO: Update summary.
+    /// Either rubble, water og pit, that can be on a square.
     /// </summary>
     /// <author>
     /// Jonas Breindahl (jobre@itu.dk)

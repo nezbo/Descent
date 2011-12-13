@@ -100,15 +100,12 @@ namespace Descent.State
             eventManager.DoAttackEvent += DoAttack;
 
             // initiate start
-            stateMachine = new StateMachine(new State[] { State.InLobby, State.Initiation, State.DrawOverlordCards, //TODO DrawSkillCards
+            stateMachine = new StateMachine(new State[] { State.InLobby, State.Initiation, State.DrawOverlordCards, 
                 State.AllBuyEquipment, State.AllEquip, State.WaitForChooseSquare, State.NewRound, State.NewRound });
             stateMachine.StateChanged += StateChanged;
 
             StateChanged();
         }
-
-
-        // stuff?
 
         [Pure]
         public GameState GameState
@@ -1261,11 +1258,9 @@ namespace Descent.State
         private void StartMonsterTurn(object sender, CoordinatesEventArgs eventArgs)
         {
             Contract.Requires(CurrentState == State.WaitForOverlordChooseAction);
-            // TODO Contract.Requires(monsterBag.contains(monster));
             Contract.Ensures(CurrentState == State.WaitForPerformAction);
 
             // Record monsterId
-            //currentMonster = (Monster)FullModel.Board.FiguresOnBoard.Single(pair => pair.Value.X == eventArgs.X && pair.Value.Y == eventArgs.Y).Key;
             currentMonster = (Monster)FullModel.Board[eventArgs.X, eventArgs.Y].Figure;
 
             stateMachine.PlaceStates(State.MonsterTurn);
@@ -1370,23 +1365,23 @@ namespace Descent.State
         }
 
         private void OverLordPlayCard(object sender, OverlordCardEventArgs eventArgs)
-        {/*
+        {
+            /* Not implemented yet
             Contract.Requires(CurrentState == State.WaitForPlayCard);
-            Contract.Ensures(CurrentState == State.WaitForPlayCard);*/
+            Contract.Ensures(CurrentState == State.WaitForPlayCard);
 
             // Check rules for playing cards
             // Play card and invoke changes
 
-            /* TODO if (card.Type == OverlordCardType.Spawn) */
-            /*
+            if (card.Type == OverlordCardType.Spawn)
+           
             {
                 //Add monsters to spawn bag
                 stateMachine.PlaceStates(State.SpawnMonsters);
             }
-             * */
-            /*
+            
             stateMachine.PlaceStates(State.ActivateMonsters);
-             * */
+             */
         }
 
         private void RemoveOverlordCard(object sender, OverlordCardEventArgs eventArgs)
@@ -1515,9 +1510,9 @@ namespace Descent.State
             if (!Player.Instance.IsOverlord &&
                 Player.Instance.Hero.Inventory.Shield != null &&
                 !Player.Instance.Hero.Inventory.Shield.Tapped &&
-                damage >= 1) // TODO get real armor value
+                damage >= 1) 
             {
-                damage -= 1; // TODO get real armor value
+                damage -= 1;
             }
             damage = damage < 0 ? 0 : damage;
 
@@ -1633,60 +1628,5 @@ namespace Descent.State
             stateMachine.PlaceStates(HeroPartyWon ? State.EndGameHeroParty : State.EndGameOverlord);
             stateMachine.ChangeToNextState();
         }
-
-        #region MovementMethods
-
-        private void PickupToken()
-        {
-            Contract.Requires(CurrentState == State.WaitForPerformAction);
-            Contract.Requires(IsAHeroTurn());
-            // TODO Contract.Requires(currentSquare.Token != null);
-            Contract.Ensures(CurrentState == State.WaitForPerformAction);
-
-            // Remove 0 movement
-            // Pickup token and invoke effects
-            // Remove token from board
-
-            stateMachine.PlaceStates(State.PickupToken);
-            stateMachine.ChangeToNextState();
-            ActionDone();
-        }
-
-        private void OpenChest()
-        {
-            Contract.Requires(CurrentState == State.WaitForPerformAction);
-            Contract.Requires(IsAHeroTurn());
-            // TODO Contract.Requires(currentSquare.hasChest);
-            // TODO  Contract.Requires(currentHero.MovementLeft >= 2);
-            Contract.Ensures(CurrentState == State.WaitForPerformAction);
-
-            // Remove 2 movement
-            // Open chest
-            // Remove chest from board
-
-            stateMachine.PlaceStates(State.OpenChest, State.ReceiveChestContents, State.WaitForPerformAction);
-            stateMachine.ChangeToNextState();
-            stateMachine.ChangeToNextState();
-            // TODO ReceiveChestContents(chest);
-        }
-
-        #region ChestMethods
-
-        private void ReceiveChestContents()// TODO Chest chest)
-        {
-            Contract.Requires(CurrentState == State.ReceiveChestContents);
-            // TODO Contract.Requires(chest != null);
-            Contract.Ensures(CurrentState == State.WaitForAllPlayersEquip);
-
-            // Give contents to all players
-            // Add all player to reequipBag
-
-            stateMachine.PlaceStates(State.WaitForAllPlayersEquip);
-            stateMachine.ChangeToNextState();
-        }
-
-        #endregion
-
-        #endregion
     }
 }
