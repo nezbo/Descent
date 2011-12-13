@@ -403,7 +403,7 @@ namespace Descent.State
                             eventManager.QueueEvent(EventType.MoveTo, new CoordinatesEventArgs(eventArgs.X, eventArgs.Y));
                         }
                         // Open door
-                        else if (FullModel.Board.CanOpenDoor(new Point(eventArgs.X, eventArgs.Y)) &&
+                        else if (figure is Hero && FullModel.Board.CanOpenDoor(new Point(eventArgs.X, eventArgs.Y)) &&
                             FullModel.Board.CanOpenDoor(standingPoint) && figure.MovementLeft >= 2)
                         {
                             eventManager.QueueEvent(EventType.OpenDoor, new CoordinatesEventArgs(eventArgs.X, eventArgs.Y));
@@ -666,7 +666,7 @@ namespace Descent.State
             Attack attack = gameState.CurrentAttack;
             Point targetSquare = attack.TargetSquare;
 
-            if (attack.MissedAttack || FullModel.Board.Distance(FullModel.Board.FiguresOnBoard[attack.AttackingFigure], targetSquare) > attack.Range)
+            if (attack.MissedAttack || (attack.AttackingFigure.AttackType != EAttackType.MELEE && FullModel.Board.Distance(FullModel.Board.FiguresOnBoard[attack.AttackingFigure], targetSquare) > attack.Range))
             {
                 eventManager.QueueEvent(EventType.MissedAttack, new GameEventArgs());
                 eventManager.QueueEvent(EventType.ChatMessage, new ChatMessageEventArgs(attack.AttackingFigure.Name + " missed the attack!"));
@@ -1168,6 +1168,9 @@ namespace Descent.State
             Contract.Ensures(CurrentState == State.AllEquip);
 
             Chest chest = gameState.getChest(eventArgs.ChestId);
+
+            // Remove movement
+            Player.Instance.HeroParty.Heroes[gameState.CurrentPlayer].RemoveMovement(2);
 
             // Give conquest tokens to the hero party
             Player.Instance.HeroParty.AddConquestTokens(chest.ConquestTokens);
