@@ -24,7 +24,7 @@ namespace Descent.State
     /// <summary>
     /// The handler of all states. Knows about the current state and what to do next.
     /// </summary>
-    /// <author>Martin Marcher & Emil Juul Jacobsen</author>
+    /// <author>Martin Marcher</author>
     public class StateManager
     {
         private readonly StateMachine stateMachine;
@@ -1510,7 +1510,7 @@ namespace Descent.State
             if (!Player.Instance.IsOverlord &&
                 Player.Instance.Hero.Inventory.Shield != null &&
                 !Player.Instance.Hero.Inventory.Shield.Tapped &&
-                damage >= 1) 
+                damage >= 1)
             {
                 damage -= 1;
             }

@@ -756,9 +756,12 @@ class_chart OTHER_MARKER
 		MARKER
 end
 
+-- GUI CLASSES
+
 class_chart DRAWABLE
 	indexing
 		author: "Emil Juul Jacobsen";
+		in_cluster: "GUI_CLUSTER";
 		created: "30-11-2011";
 		revised: "30-11-2011";
 	explanation
@@ -769,49 +772,52 @@ class_chart DRAWABLE
 		"It must have a visual representation"
 end
 
-class_chart IMAGE
-	indexing
-		author: "Emil Juul Jacobsen";
-		created: "06-12-2011";
-		revised: "06-12-2011";
-	explanation
-		"A simple implementation of a DRAWABLE to display a source image"
-	inherit
-		DRAWABLE
-end
-
 class_chart GUI
 	indexing
 		author: "Emil Juul Jacobsen";
+		in_cluster: "GUI_CLUSTER";
 		created: "27-11-2011";
-		revised: "06-12-2011"
+		revised: "13-12-2011"
 	explanation
 		"Handles the visual aspects of the game and input from the user"
+	query
+		"What font are you using?"
 	command
+		"Use this font!",
 		"Update yourself!",
 		"Change your state GUI_ELEMENT to this one!",
 		"Initiate the board GUI_ELEMENT!",
 		"Initiate the menu GUI_ELEMENT!",
-		"Draw everything!"
+		"Draw everything!",
+		"Mark this square at your BOARD_ELEMENT!",
+		"Clear all marks from your BOARD_ELEMENT!"
 end
 
 class_chart GUI_ELEMENT
 	indexing
 		author: "Emil Juul Jacobsen";
+		in_cluster: "GUI_CLUSTER";
 		created: "27-11-2011";
-		revised: "06-12-2011";
+		revised: "13-12-2011";
 	explanation
 		"A single element of the user interface that, itself, can contain sub-elements"
 	query
 		"What is your position?",
 		"What is your dimensions?",
 		"Is this point within your bondaries?",
-		"Are you focused?"
+		"Are you focused?",
+		"What is your name?",
+		"Do you have a background?"
 	command
+		"You've lost focus!",
+		"Use this font from now on!",
+		"Move this much!",
+		"Disable yourself and everything beneath you!",
 		"Handle this mouse click!",
 		"Handle this key press!",
 		"Do this when clicked",
 		"Add this GUI_ELEMENT to your collection of sub-elements!",
+		"Remove all your sub-elements!",
 		"Add this DRAWABLE to be displayed in you (or your children) at this position!",
 		"Add this text to be displayed in you (or your children) at this position!",
 		"From now on you should draw background!",
@@ -823,9 +829,72 @@ class_chart GUI_ELEMENT
 		"All sub-elements must be within the boundaries of this GUI_ELEMENT"
 end
 
+class_chart GUI_ELEMENT_FACTORY
+	indexing
+		author: "Emil Juul Jacobsen";
+		in_cluster: "GUI_CLUSTER";
+		created: "27-11-2011";
+		revised: "13-12-2011";
+	explanation
+		"Responsible of making hierarchies of GUIElements for two of the layers"
+	command
+		"Create the GUI_ELEMENT for the visualization of the board!",
+		"Create the GUI_ELEMENT for this State from this perspective!",
+		"Create the GUI_ELEMENT of the menus, chat and player board for this perspective!"
+		"Create an EQUIPMENT_ELEMENT for this EQUIPMENT at this position!",
+		"Draw this SURGE_ABILITY to this GUI_ELEMENT at this position!",
+		"Draw this DICE to this GUI_ELEMENT at this position!"
+	constraint
+		"The position of the root GUI_ELEMENTS must be 0,0",
+		"The width and height of the root GUI_ELEMENT must be the same as the game window"
+end
+
+class_chart IMAGE
+	indexing
+		author: "Emil Juul Jacobsen";
+		in_cluster: "GUI_CLUSTER";
+		created: "06-12-2011";
+		revised: "06-12-2011";
+	explanation
+		"A simple implementation of a DRAWABLE to display a source image"
+	inherit
+		DRAWABLE
+end
+
+class_chart TEXT
+	indexing
+		author: "Emil Juul Jacobsen";
+		in_cluster: "GUI_CLUSTER";
+		created: "04-12-2011";
+		revised: "13-12-2011";
+	explanation
+		"Information about a text to be displayed on the screen."
+	query
+		"What text do you contain?",
+		"At what position should you be drawn?",
+		"What is your color?"
+	constraint
+		"The drawn text should not exceed the width of it's enclosing GUI_ELEMENT"
+end
+
+-- GUI_SCREEN_CLUSTER
+
+class_chart ATTACK_ELEMENT
+	indexing
+		author: "Emil Juul Jacobsen";
+		in_cluster: "GUI_SCREENS_CLUSTER";
+		created: "13-12-2011";
+		revised: "13-12-2011";
+	inherit
+		GUI_ELEMENT
+	explanation
+		"Displays information about a combat with dice, target and sends the proper events."
+end
+
 class_chart BOARD_ELEMENT
 	indexing
 		author: "Emil Juul Jacobsen";
+		in_cluster: "GUI_SCREENS_CLUSTER";
 		created: "01-12-2011";
 		revised: "01-12-2011";
 	explanation
@@ -837,39 +906,48 @@ class_chart BOARD_ELEMENT
 		"Clear all marks!"
 end
 
-class_chart TEXT
+class_chart HERO_ELEMENT
 	indexing
 		author: "Emil Juul Jacobsen";
-		created: "04-12-2011";
-		revised: "04-12-2011";
+		in_cluster: "GUI_SCREENS_CLUSTER";
+		created: "13-12-2011";
+		revised: "13-12-2011";
+	inherit
+		GUI_ELEMENT
 	explanation
-		"Information about a text to be displayed on the screen."
-	query
-		"What text do you contain?",
-		"At what position should you be drawn?"
-	constraint
-		"The text should not exceed the width of it's enclosing GUI_ELEMENT"
+		"The information that a hero player sees about his hero."
 end
 
-class_chart GUI_ELEMENT_FACTORY
+class_chart OVERLORD_ELEMENT
 	indexing
 		author: "Emil Juul Jacobsen";
-		created: "27-11-2011";
-		revised: "30-11-2011";
+		in_cluster: "GUI_SCREENS_CLUSTER";
+		created: "13-12-2011";
+		revised: "13-12-2011";
+	inherit
+		GUI_ELEMENT
 	explanation
-		"Responsible of making hierarchies of GUIElements for two of the layers"
-	command
-		"Create the GUI_ELEMENT for the visualization of the board!",
-		"Create the GUI_ELEMENT for this State from this perspective!",
-		"Create the GUI_ELEMENT of the menus, chat and player board for this perspective!"
-	constraint
-		"The position of the root GUI_ELEMENTS must be 0,0",
-		"The width and height of the root GUI_ELEMENT must be the same as the game window"
+		"The information that the overlord player sees."
 end
+
+class_chart PLAYERS_ELEMENT
+	indexing
+		author: "Emil Juul Jacobsen";
+		in_cluster: "GUI_SCREENS_CLUSTER";
+		created: "13-12-2011";
+		revised: "13-12-2011";
+	inherit
+		GUI_ELEMENT
+	explanation
+		"The menu of short summaries of all other player's heroes and overlord."
+end
+
+-- GUI_SUB_ELEMENTS_CLUSTER
 
 class_chart CHAT_ELEMENT
 	indexing
 		author: "Emil Juul Jacobsen";
+		in_cluster: "GUI_SUB_ELEMENTS_CLUSTER";
 		created: "29-11-2011";
 		revised: "29-11-2011";
 	explanation
@@ -882,9 +960,50 @@ class_chart CHAT_ELEMENT
 		"The message should not be empty"
 end
 
+class_chart DICES_ELEMENT
+	indexing
+		author: "Emil Juul Jacobsen";
+		in_cluster: "GUI_SUB_ELEMENTS_CLUSTER";
+		created: "13-12-2011";
+		revised: "13-12-2011";
+	explanation
+		"A box that visualizes any number of dices with their currently rolled sides and automatic row management."
+end
+
+class_chart EQUIPMENT_ELEMENT
+	indexing
+		author: "Emil Juul Jacobsen";
+		in_cluster: "GUI_SUB_ELEMENTS_CLUSTER";
+		created: "13-12-2011";
+		revised: "13-12-2011";
+	explanation
+		"Visualizes a single EQUIPMENT depending on its type"
+end
+
+class_chart EQUIPMENT_PANEL
+	indexing
+		author: "Emil Juul Jacobsen";
+		in_cluster: "GUI_SUB_ELEMENTS_CLUSTER";
+		created: "13-12-2011";
+		revised: "13-12-2011";
+	explanation
+		"An element on the screen that can be hidden containing a number of equipments."
+end
+
+class_chart HERO_SUMMARY
+	indexing
+		author: "Emil Juul Jacobsen";
+		in_cluster: "GUI_SUB_ELEMENTS_CLUSTER";
+		created: "13-12-2011";
+		revised: "13-12-2011";
+	explanation
+		"A short summary of the information for a hero to be displayed at the right of the screen."
+end
+		
 class_chart INPUT_ELEMENT
 	indexing
 		author: "Emil Juul Jacobsen";
+		in_cluster: "GUI_SUB_ELEMENTS_CLUSTER";
 		created: "06-12-2011";
 		revised: "06-12-2011";
 	explanation
@@ -894,8 +1013,41 @@ class_chart INPUT_ELEMENT
 	query
 		"What text do you have at the moment?",
 	command
+		"Your current input should be this!",
 		"I just typed this!"
 end
+
+class_chart MONSTER_SUMMARY
+	indexing
+		author: "Emil Juul Jacobsen";
+		in_cluster: "GUI_SUB_ELEMENTS_CLUSTER";
+		created: "13-12-2011";
+		revised: "13-12-2011";
+	explanation
+		"A short summary of the information for a monster to be displayed as a mouseover and in combat."
+end
+
+class_chart OVERLORD_CARD_ELEMENT
+	indexing
+		author: "Emil Juul Jacobsen";
+		in_cluster: "GUI_SUB_ELEMENTS_CLUSTER";
+		created: "13-12-2011";
+		revised: "13-12-2011";
+	explanation
+		"Displays the content of an overlord card and sends the proper events when used."
+end
+
+class_chart OVERLORD_SUMMARY
+	indexing
+		author: "Emil Juul Jacobsen";
+		in_cluster: "GUI_SUB_ELEMENTS_CLUSTER";
+		created: "13-12-2011";
+		revised: "13-12-2011";
+	explanation
+		"A short summary of the information for the overlord, to be displayed at the right of the screen.."
+end
+
+-- End of GUI
 
 class_chart ASYNC_SOCKETS_CLIENT
 	indexing
