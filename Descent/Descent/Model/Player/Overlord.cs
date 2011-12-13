@@ -7,6 +7,9 @@ namespace Descent.Model.Player
     /// <summary>
     /// The role of a overlord, that a hero can be.
     /// </summary>
+    /// <author>
+    /// Jonas Breindahl (jobre@itu.dk)
+    /// </author>
     public class Overlord
     {
 
@@ -22,6 +25,9 @@ namespace Descent.Model.Player
  
         #endregion
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Overlord"/> class.
+        /// </summary>
         public Overlord()
         {
             hand = new List<OverlordCard>();

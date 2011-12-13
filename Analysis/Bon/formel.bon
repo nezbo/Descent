@@ -21,15 +21,18 @@ component
 		indexing
 			author: "Jonas Breindahl";
 			created: "28-11-2011";
-			revised: "01-12-2011";
+			revised: "12-12-2011";
 		feature
+			heroes: MAP[int, Hero] -- What heroes is in the party?
+			playerIds: SEQUENCE[int] -- What are the id's for all players?
+			runeKeys: SET[Color] -- What color of rune keys do the heroes have?
 			numberOfHeroes: INTEGER -- How many players are in the HeroParty?
+			allHeroes: SEQUENCE[HERO] -- All heroes playing the game?
 			conquestTokens: INTEGER -- How many conquest tokens do the players have?
 			isConquestPoolEmpty: BOOLEAN -- How many conquest tokens do the players have?
 				ensure
 					Result -> conquestTokens = 0;
 			end
-			heroes: MAP[int, Hero] -- What heroes is in the party?
 			removeConquestTokens: Void -- Remove 'this' number of conquest tokens from the pool of tokens!
 				-> tokens: INTEGER
 				require
@@ -44,23 +47,21 @@ component
 				ensure
 					conquestTokens = old conquestTokens + tokens;
 			end
-            hasRuneKey: BOOLEAN -- Do you have this rune key?
-                -> runeKey: RUNE_KEY
+			addHero: Void -- Add 'this' hero to the list of heroes in the HeroParty!
+				-> id: INTEGER
+				-> hero: Hero
+				require
+					hero /= Void;
+			end
             addRuneKey -- Add 'this' rune key!
                 -> runeKey: RUNE_KEY
                 ensure
                     hasRuneKey(runeKey);
             end
-		invariant
-			numberOfHeroes >= 2 and numberOfHeroes <= 4;
-			conquestTokens >= 0;
-	end
-	
-	class HERO_PLAYER
-		indexing
-			author: "Jonas Breindahl";
-		feature
-			hero: HERO -- What hero are you playing?
+            hasRuneKey: BOOLEAN -- Do you have this rune key?
+                -> runeKey: RUNE_KEY
+			getPlayerId: INTEGER -- Get the player id of the player that has 'this' hero
+				-> hero: Hero
 	end
 	
 	class OVERLORD -- The role of a overlord, that a hero can be
@@ -69,50 +70,39 @@ component
 			created: "28-11-2011";
 			revised: "30-11-2011";
 		feature
-			numberOfOverlordCardsInHand: INTEGER -- The role of a overlord, that a hero can be
-			threatTokens: INTEGER -- How many threat tokens do you have?
 			overlordCardsInHand: SEQUENCE[OVERLORD_CARD] -- What cards do you have?
 				ensure
 					Result.length = numberOfOverlordCardsInHand;
 			end
-			overlordCardsInDeck: INTEGER -- How many cards are in your overlord deck?
-			overlordCardsInDiscard: INTEGER -- How many cards are in your overlord discard?
-			drawOverlordCards: Void -- Draw 'this' many cards!
-				-> cards: INTERGER
-				require
-					cards > 0;
-				ensure
-					overlordCardsInHand = old overlordCardsInHand + cards;
-			end
-			shuffleOverlordDiscardIntoDeck: Void -- Shuffle the overlord discard into the deck!
-				require
-					overlordCardsInDeck = 0;
-				ensure
-					overlordCardsInDiscard = 0;
-					overlordCardsInDeck = old overlordCardsInDiscard;
-			end
-		invariant
-			-- When it is not the overlords turn, the overlord cannot have more than 7 cards in hand.
-			true;
+			overlordCardsInDeck: SEQUENCE[OVERLORD_CARD] -- What cards are in your library?
+			overlordCardsInGraveyard: INTEGER -- How many cards are in your overlord graveyard?
+			overlordPowers: SEQUENCE[OVERLORD_CARD] -- What overlord powers do you have in play?
+			threatTokens: INTEGER -- How many threat tokens do you have?
 	end	
 	
 	class FIGURE
 		indexing
 			author: "Jonas Breindahl";
 			created: "28-11-2011";
-			revised: "05-12-2011";
+			revised: "12-12-2011";
 		feature
 			uniqueID: INTEGER -- What is your unique figure ID?
 			name: STRING -- What is your name?
+			width: INTEGER -- How wide are you?
+			height: INTEGER -- How high are you?
+			orientation: Orientation -- Are you horizontal or vertical?
 			maxHealth: INTEGER -- What is your max health?
 			health: INTEGER -- What is your health right now?
 			armor: INTEGER -- What is your armor?
 			speed: INTEGER -- What is your speed?
-			speedLeft: INTEGER -- How much speed do you have left?
+			movementLeft: INTEGER -- How much speed do you have left?
 			attacksLeft: INTEGER -- How many attacks do you have left?
+			attackType: AttackType -- What kind of attack type do you attack with
 			diceForAttacks: SEQUENCE[DICE] -- What dice do you use to attack?
 			abilities: SEQUENCE[ABILITY] -- What abilities do you have?
+			surgeAbilities: SEQUENCE[SURGE_ABILITY] -- What surge abilities do you have?
 			effects: SEQUENCE[EFFECT] -- What effect are on you?
+			texture: Texture -- How are you drawn?
 			addHealth: Void -- Add 'this' amount of health!
 				-> INTEGER: healthAmount
 				require
@@ -129,21 +119,51 @@ component
 					old health - healthAmount < 0 -> health = 0;
 					old health - healthAmount >= 0 -> health = old health - healthAmount;
 			end
-			addSpeed: Void -- Add 'this' amount of speed!
+			setMovementLeft: Void -- Set movement left to 'this'
+				-> amount: INTEGER
+				require
+					amount >= 0;
+				ensure
+					movementLeft = amount;
+			end
+			addMovement: Void -- Add 'this' amount of speed!
 				-> INTEGER: speedAmount
 				require
 					speedAmount > 0;
 				ensure 
 					speed = old speed + speedAmount;
 			end
-			removeSpeed: Void -- Lose 'this' amount of speed!
+			removeMovement: Void -- Lose 'this' amount of speed!
 				-> INTEGER: speedAmount
 				require
 					speedAmount > 0;
+					speedAmount <= movementLeft;
 				ensure
-					old speed - speedAmount < 0 -> speed = 0;
-					old speed - speedAmount >= 0 -> speed = old speed - speedAmound;
+					movementLeft = old movementLeft - speedAmount;
 			end
+			setAttacks: Void -- Set the number of attacks to 'this'
+				-> amount: INTEGER
+				require
+					amount >= 0;
+				ensure
+					attacksLeft >= amount;
+			end
+			addAttack: Void -- Increase the number of attacks by one
+				ensure
+					attacksLeft = old attacksLeft + 1;
+			end
+			removeAttack: Void -- Decrease the number of attacks by one
+				ensure
+					attacksLeft = old attacksLeft - 1;
+			end
+			addAbility: Void -- Add 'this' ability to the list of abilities
+				-> ability: Ability
+				require
+					ability /= Void;
+				ensure
+					abilities.length = old abilities.length + 1
+			end
+			getAttack: Attack -- Can I have an attack, as you would make one right now?
 		invariant
 			name.length > 0;
 			maxHealth > 0;
@@ -152,7 +172,6 @@ component
 			armor >= 0;
 			speedLeft >= 0;
 			attacksLeft >= 0;
-			
 	end
 	
 	class HERO
@@ -160,14 +179,18 @@ component
 			author: "Jonas Breindahl";
 			created: "30-11-2011";
 			revised: "30-11-2011";
+		inherit
+			FIGURE
 		feature
 			maxFatique: INTEGER -- What is your max fatique?
 			fatique: INTEGER -- What is your fatique right now?
-			numberOfSkills: INTEGER -- How many skills do you have in MELEE/RANGED/MAGIC?
-				-> ATTACK_TYPE: type
-				require
-					type /= Void;
-			end
+			cost: INTEGER -- How many conquest tokens do you cost?
+			hands: INTEGER -- How many hands do you have?
+			coins: INTEGER -- How many coins do you have?
+			inventory: Inventory -- What is your inventory?
+			bigTexture: Texture -- What is your big texture?
+			trainingTokens: INTEGER -- How many training tokens do you have in MELEE/RANGED/MAGIC?
+				-> attackType: AttackType
 			addFatique: Void -- Add 'this' amount of fatique!
 				-> fatiqueAmount: INTEGER
 				require
@@ -185,6 +208,12 @@ component
 					old fatique + fatiqueAmount < 0 -> fatique = 0;
 					old fatique + fatiqueAmount >= 0 -> fatique = old fatique + fatiqueAmount;
 			end
+			addSkill: Void -- Add 'this' skill to your list of skills 
+				-> skill: Skill
+			removeSkill: Void -- Remove 'this' skill from your list of skills
+				-> skill: Skill
+			untapAll: Void -- Untap all cards!
+			endTurn: Void -- Reset movement left and attacks left!
 		invariant
 			fatique <= maxFatique;
 			fatique > 0;
@@ -197,8 +226,11 @@ component
 			revised: "02-12-2011";
 		inherit
 			FIGURE
+		feature
+			isMaster: BOOLEAN -- Are you are you a master monster?
+			clone: Monster -- Give me a clone of you!
+				-> newID: INTEGER
 	end
-			
 end
 
 static_diagram FORMAL_HERO_STUFF
@@ -207,14 +239,14 @@ component
 		indexing
 			author: "Jonas Breindahl";
 			created: "30-11-2011";
-			revised: "30-11-2011";
+			revised: "12-12-2011";
 		feature
-			skillType: ATTACK_TYPE -- What type of skill are you?
+			id: INTEGER -- What is your unique id?
 			name: STRING -- What is your name?
+			skillType: ATTACK_TYPE -- What type of skill are you?
+			skillDescription: STRING -- What is your description?
 			abilities: SEQUENCE[ABILITY] -- What are your abilities?
-		invariant
-			true;
-			-- A Skill cannot have more than one type
+			tapped: BOOLEAN -- Are you tapped right now?
 	end
 	
 	class INVENTORY
@@ -223,6 +255,8 @@ component
 			created: "30-11-2011";
 			revised: "30-11-2011";
 		feature
+			atIndex: EQUIPMENT -- What is in 'this' slot?
+				-> index: INTEGER
 			maxHands: INTEGER -- How many hands do you have?
 			freeHands: INTEGER -- How many hands do you have free?
             weaponEquipped: EQUIPMENT -- What weapons do you have in your hands?
