@@ -23,8 +23,8 @@ namespace Descent.Messaging.Events
         {
             Contract.Requires(stringArgs != null);
             Contract.Requires(stringArgs.Length > 0);
-            int b;
-            Contract.Requires(Contract.ForAll(stringArgs, s => int.TryParse(s, out b)));
+            
+            Contract.Requires(Contract.ForAll(stringArgs, s => EventContractHelper.TryParseInt(s)));
 
             PopulateWithArgs(stringArgs);
         }
@@ -35,8 +35,8 @@ namespace Descent.Messaging.Events
         {
             Contract.Requires(stringArgs != null);
             Contract.Requires(stringArgs.Length > 0);
-            int b;
-            Contract.Requires(Contract.ForAll(stringArgs, s => int.TryParse(s, out b)));
+            
+            Contract.Requires(Contract.ForAll(stringArgs, s => EventContractHelper.TryParseInt(s)));
 
             DiceIds = new int[stringArgs.Length];
 

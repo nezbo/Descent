@@ -34,8 +34,8 @@ namespace Descent.Messaging.Events
         {
             Contract.Requires(stringArgs != null);
             Contract.Requires(stringArgs.Length == 1);
-            int b;
-            Contract.Requires(int.TryParse(stringArgs[0], out b) && int.Parse(stringArgs[0]) > 0 && int.Parse(stringArgs[0]) < 4);
+            
+            Contract.Requires(EventContractHelper.TryParseInt(stringArgs[0]) && int.Parse(stringArgs[0]) > 0 && int.Parse(stringArgs[0]) < 4);
 
             PopulateWithArgs(stringArgs);
         }
@@ -46,8 +46,8 @@ namespace Descent.Messaging.Events
         {
             Contract.Requires(stringArgs != null);
             Contract.Requires(stringArgs.Length == 1);
-            int b;
-            Contract.Requires(int.TryParse(stringArgs[0], out b) && int.Parse(stringArgs[0]) > 0 && int.Parse(stringArgs[0]) < 4);
+            
+            Contract.Requires(EventContractHelper.TryParseInt(stringArgs[0]) && int.Parse(stringArgs[0]) > 0 && int.Parse(stringArgs[0]) < 4);
 
             ActionType = (ActionType)Enum.ToObject(typeof(ActionType), int.Parse(stringArgs[0]));
         }

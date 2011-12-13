@@ -22,8 +22,8 @@ namespace Descent.Messaging.Events
         {
             Contract.Requires(stringArgs != null);
             Contract.Requires(stringArgs.Length == 1);
-            int b;
-            Contract.Requires(int.TryParse(stringArgs[0], out b));
+            
+            Contract.Requires(EventContractHelper.TryParseInt(stringArgs[0]));
             
             PopulateWithArgs(stringArgs);
         }
@@ -34,8 +34,8 @@ namespace Descent.Messaging.Events
         {
             Contract.Requires(stringArgs != null);
             Contract.Requires(stringArgs.Length == 1);
-            int b;
-            Contract.Requires(int.TryParse(stringArgs[0], out b));
+            
+            Contract.Requires(EventContractHelper.TryParseInt(stringArgs[0]));
 
             TreasureId = int.Parse(stringArgs[0]);
         }

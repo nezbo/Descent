@@ -25,8 +25,8 @@
         {
             Contract.Requires(stringArgs != null);
             Contract.Requires(stringArgs.Length >= 1);
-            int b;
-            Contract.Requires(Contract.ForAll(stringArgs, s => int.TryParse(s, out b)));
+            
+            Contract.Requires(Contract.ForAll(stringArgs, s => EventContractHelper.TryParseInt(s)));
 
             PopulateWithArgs(stringArgs);
         }
@@ -38,8 +38,8 @@
         {
             Contract.Requires(stringArgs != null);
             Contract.Requires(stringArgs.Length >= 1);
-            int b;
-            Contract.Requires(Contract.ForAll(stringArgs, s => int.TryParse(s, out b)));
+            
+            Contract.Requires(Contract.ForAll(stringArgs, s => EventContractHelper.TryParseInt(s)));
 
             RolledSides = new int[stringArgs.Length];
 
