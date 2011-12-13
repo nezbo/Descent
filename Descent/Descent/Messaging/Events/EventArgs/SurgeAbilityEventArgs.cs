@@ -21,7 +21,7 @@ namespace Descent.Messaging.Events
         {
             Contract.Requires(stringArgs != null);
             Contract.Requires(stringArgs.Length == 1);
-            
+
             Contract.Requires(EventContractHelper.TryParseInt(stringArgs[0]));
 
             PopulateWithArgs(stringArgs);
@@ -33,7 +33,7 @@ namespace Descent.Messaging.Events
         {
             Contract.Requires(stringArgs != null);
             Contract.Requires(stringArgs.Length == 1);
-            
+
             Contract.Requires(EventContractHelper.TryParseInt(stringArgs[0]));
 
             AbilityId = int.Parse(stringArgs[0]);
