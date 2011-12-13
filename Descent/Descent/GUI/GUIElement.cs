@@ -409,6 +409,7 @@
         /// Does the element draw a background behind it.
         /// </summary>
         /// <returns>True if it draws background behind it, else false.</returns>
+        [Pure]
         public bool DrawsBackground()
         {
             return drawBg;

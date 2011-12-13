@@ -16,11 +16,6 @@
     {
         private static readonly int Height = 100;
 
-        private Texture2D deck;
-        private Texture2D discard;
-        private Texture2D hand;
-        private Texture2D threat;
-
         /// <summary>
         /// Creates a new summary of the overlords information for the given game and 
         /// displays it to the right of the screen, at the given y-coordinate (down 

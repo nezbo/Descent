@@ -138,7 +138,6 @@
             // Marks (if any)
             lock (markedSquares)
             {
-                Rectangle r;
                 foreach (Vector2 pos in markedSquares.Keys)
                 {
                     DrawMark(draw, (int)pos.X, (int)pos.Y, markedSquares[pos]);
