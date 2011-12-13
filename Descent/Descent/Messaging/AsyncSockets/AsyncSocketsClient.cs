@@ -38,5 +38,10 @@ namespace Descent.Messaging.AsyncSockets
         }
 
         public Socket Socket { get; private set; }
+
+        public void Close()
+        {
+            Socket.Close();
+        }
     }
 }

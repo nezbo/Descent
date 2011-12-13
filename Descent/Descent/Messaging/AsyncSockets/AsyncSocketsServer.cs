@@ -72,6 +72,15 @@
             socket.BeginAccept(new AsyncCallback(AcceptCallback), socket);
         }
 
+        public void Close()
+        {
+            foreach (ClientInfo clientInfo in clients.Values)
+            {
+                clientInfo.Close();
+            }
+            socket.Close();
+        }
+
         /// <summary>
         /// Broadcast a string to all connected clients.
         /// </summary>

@@ -30,6 +30,11 @@ namespace Descent.Messaging.Connection
         public abstract void Start();
 
         /// <summary>
+        /// Close the socket connection.
+        /// </summary>
+        public abstract void Close();
+
+        /// <summary>
         ///  Send a text string.
         /// </summary>
         /// <param name="message">String to send.</param>
