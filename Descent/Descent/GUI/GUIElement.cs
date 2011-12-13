@@ -217,11 +217,11 @@
         /// <param name="target">What to disable.</param>
         public void Disable(string target)
         {
-            Contract.Ensures(target == Name ? onClick == null : true);
-            Contract.Ensures(target == Name ? !DrawsBackground() : true);
-            Contract.Ensures(target == Name ? texts.Count == 0 : true);
-            Contract.Ensures(target == Name ? visuals.Count == 0 : true);
-            Contract.Ensures(target == Name ? children.Count == 0 : true);
+            Contract.Ensures(target != Name || onClick == null);
+            Contract.Ensures(target != Name || !DrawsBackground());
+            Contract.Ensures(target != Name || texts.Count == 0);
+            Contract.Ensures(target != Name || visuals.Count == 0);
+            Contract.Ensures(target != Name || children.Count == 0);
 
             if (Name == target)
             {
