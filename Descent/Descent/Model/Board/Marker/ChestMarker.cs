@@ -1,6 +1,8 @@
 ﻿
 namespace Descent.Model.Board.Marker
 {
+    using System.Diagnostics.Contracts;
+
     using Descent.Messaging.Events;
     using Descent.Model.Player;
     using Descent.Model.Player.Figure;
@@ -20,6 +22,9 @@ namespace Descent.Model.Board.Marker
 
         public ChestMarker(int id, string name, int movementCost, EquipmentRarity rarity, Texture2D texture) : base(id, name, texture, movementCost)
         {
+            Contract.Requires(name != null);
+            Contract.Requires(name.Length > 0);
+            Contract.Requires(movementCost >= 0);
             this.rarity = rarity;
         }
 
@@ -31,6 +36,8 @@ namespace Descent.Model.Board.Marker
         /// </param>
         public override void PickUp(Hero hero)
         {
+            Contract.Requires(hero != null);
+
             if (Player.Instance.StateManager.GameState.CurrentPlayer == Player.Instance.Id)
             {
                 // If I am the current player, I should pick the random chest to open and send the event.

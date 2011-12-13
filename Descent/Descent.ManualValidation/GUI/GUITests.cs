@@ -23,6 +23,12 @@ namespace Descent.ManualValidation.GUI
             Assert.That(childOne.HasFocus());
             Assert.That(!root.HasFocus());
             Assert.That(!childTwo.HasFocus());
+
+            root.HandleClick(25, 25);
+
+            Assert.That(!childOne.HasFocus());
+            Assert.That(root.HasFocus());
+            Assert.That(!childTwo.HasFocus());
         }
     }
 }
