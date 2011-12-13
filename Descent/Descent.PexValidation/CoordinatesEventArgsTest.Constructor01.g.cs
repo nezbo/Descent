@@ -21,48 +21,6 @@ namespace Descent.Messaging.Events
 [TestMethod]
 [PexGeneratedBy(typeof(CoordinatesEventArgsTest))]
 [PexRaisedContractException(PexExceptionState.Expected)]
-public void Constructor01ThrowsContractException452()
-{
-    try
-    {
-      CoordinatesEventArgs coordinatesEventArgs;
-      string[] ss = new string[2];
-      ss[0] = "-0";
-      ss[1] = "-";
-      coordinatesEventArgs = this.Constructor01(ss);
-      throw 
-        new AssertFailedException("expected an exception of type ContractException");
-    }
-    catch(Exception ex)
-    {
-      if (!PexContract.IsContractException(ex))
-        throw ex;
-    }
-}
-[TestMethod]
-[PexGeneratedBy(typeof(CoordinatesEventArgsTest))]
-[PexRaisedContractException(PexExceptionState.Expected)]
-public void Constructor01ThrowsContractException199()
-{
-    try
-    {
-      CoordinatesEventArgs coordinatesEventArgs;
-      string[] ss = new string[2];
-      ss[0] = "-00\0";
-      ss[1] = "\0";
-      coordinatesEventArgs = this.Constructor01(ss);
-      throw 
-        new AssertFailedException("expected an exception of type ContractException");
-    }
-    catch(Exception ex)
-    {
-      if (!PexContract.IsContractException(ex))
-        throw ex;
-    }
-}
-[TestMethod]
-[PexGeneratedBy(typeof(CoordinatesEventArgsTest))]
-[PexRaisedContractException(PexExceptionState.Expected)]
 public void Constructor01ThrowsContractException449()
 {
     try
@@ -124,48 +82,6 @@ public void Constructor01ThrowsContractException439()
 }
 [TestMethod]
 [PexGeneratedBy(typeof(CoordinatesEventArgsTest))]
-[PexRaisedContractException(PexExceptionState.Expected)]
-public void Constructor01ThrowsContractException978()
-{
-    try
-    {
-      CoordinatesEventArgs coordinatesEventArgs;
-      string[] ss = new string[2];
-      ss[0] = ":";
-      ss[1] = ":";
-      coordinatesEventArgs = this.Constructor01(ss);
-      throw 
-        new AssertFailedException("expected an exception of type ContractException");
-    }
-    catch(Exception ex)
-    {
-      if (!PexContract.IsContractException(ex))
-        throw ex;
-    }
-}
-[TestMethod]
-[PexGeneratedBy(typeof(CoordinatesEventArgsTest))]
-[PexRaisedContractException(PexExceptionState.Expected)]
-public void Constructor01ThrowsContractException431()
-{
-    try
-    {
-      CoordinatesEventArgs coordinatesEventArgs;
-      string[] ss = new string[2];
-      ss[0] = "-";
-      ss[1] = "-";
-      coordinatesEventArgs = this.Constructor01(ss);
-      throw 
-        new AssertFailedException("expected an exception of type ContractException");
-    }
-    catch(Exception ex)
-    {
-      if (!PexContract.IsContractException(ex))
-        throw ex;
-    }
-}
-[TestMethod]
-[PexGeneratedBy(typeof(CoordinatesEventArgsTest))]
 public void Constructor01952()
 {
     CoordinatesEventArgs coordinatesEventArgs;
@@ -186,27 +102,6 @@ public void Constructor01952()
 [TestMethod]
 [PexGeneratedBy(typeof(CoordinatesEventArgsTest))]
 [PexRaisedContractException(PexExceptionState.Expected)]
-public void Constructor01ThrowsContractException740()
-{
-    try
-    {
-      CoordinatesEventArgs coordinatesEventArgs;
-      string[] ss = new string[2];
-      ss[0] = "\u0001";
-      ss[1] = "\u0001";
-      coordinatesEventArgs = this.Constructor01(ss);
-      throw 
-        new AssertFailedException("expected an exception of type ContractException");
-    }
-    catch(Exception ex)
-    {
-      if (!PexContract.IsContractException(ex))
-        throw ex;
-    }
-}
-[TestMethod]
-[PexGeneratedBy(typeof(CoordinatesEventArgsTest))]
-[PexRaisedContractException(PexExceptionState.Expected)]
 public void Constructor01ThrowsContractException481()
 {
     try
@@ -215,46 +110,6 @@ public void Constructor01ThrowsContractException481()
       string[] ss = new string[2];
       ss[0] = "\0\0";
       ss[1] = "\0\0";
-      coordinatesEventArgs = this.Constructor01(ss);
-      throw 
-        new AssertFailedException("expected an exception of type ContractException");
-    }
-    catch(Exception ex)
-    {
-      if (!PexContract.IsContractException(ex))
-        throw ex;
-    }
-}
-[TestMethod]
-[PexGeneratedBy(typeof(CoordinatesEventArgsTest))]
-[PexRaisedContractException(PexExceptionState.Expected)]
-public void Constructor01ThrowsContractException851()
-{
-    try
-    {
-      CoordinatesEventArgs coordinatesEventArgs;
-      string[] ss = new string[2];
-      ss[0] = "";
-      ss[1] = "";
-      coordinatesEventArgs = this.Constructor01(ss);
-      throw 
-        new AssertFailedException("expected an exception of type ContractException");
-    }
-    catch(Exception ex)
-    {
-      if (!PexContract.IsContractException(ex))
-        throw ex;
-    }
-}
-[TestMethod]
-[PexGeneratedBy(typeof(CoordinatesEventArgsTest))]
-[PexRaisedContractException(PexExceptionState.Expected)]
-public void Constructor01ThrowsContractException510()
-{
-    try
-    {
-      CoordinatesEventArgs coordinatesEventArgs;
-      string[] ss = new string[2];
       coordinatesEventArgs = this.Constructor01(ss);
       throw 
         new AssertFailedException("expected an exception of type ContractException");
@@ -286,8 +141,24 @@ public void Constructor01ThrowsContractException955()
 }
 [TestMethod]
 [PexGeneratedBy(typeof(CoordinatesEventArgsTest))]
+public void Constructor205()
+{
+    CoordinatesEventArgs coordinatesEventArgs;
+    coordinatesEventArgs = this.Constructor(0, 0);
+    Assert.IsNotNull((object)coordinatesEventArgs);
+    Assert.AreEqual<int>(0, coordinatesEventArgs.X);
+    Assert.AreEqual<int>(0, coordinatesEventArgs.Y);
+    Assert.AreEqual<int>(0, ((GameEventArgs)coordinatesEventArgs).SenderId);
+    Assert.AreEqual<string>
+        ((string)null, ((GameEventArgs)coordinatesEventArgs).EventId);
+    Assert.AreEqual<EventType>
+        ((EventType)0, ((GameEventArgs)coordinatesEventArgs).EventType);
+    Assert.AreEqual<bool>(false, ((GameEventArgs)coordinatesEventArgs).NeedResponse);
+}
+[TestMethod]
+[PexGeneratedBy(typeof(CoordinatesEventArgsTest))]
 [PexRaisedContractException(PexExceptionState.Expected)]
-public void Constructor01ThrowsContractException73()
+public void Constructor01ThrowsContractException606()
 {
     try
     {
@@ -304,19 +175,169 @@ public void Constructor01ThrowsContractException73()
 }
 [TestMethod]
 [PexGeneratedBy(typeof(CoordinatesEventArgsTest))]
-public void Constructor205()
+[PexRaisedContractException(PexExceptionState.Expected)]
+public void Constructor01ThrowsContractException850()
 {
-    CoordinatesEventArgs coordinatesEventArgs;
-    coordinatesEventArgs = this.Constructor(0, 0);
-    Assert.IsNotNull((object)coordinatesEventArgs);
-    Assert.AreEqual<int>(0, coordinatesEventArgs.X);
-    Assert.AreEqual<int>(0, coordinatesEventArgs.Y);
-    Assert.AreEqual<int>(0, ((GameEventArgs)coordinatesEventArgs).SenderId);
-    Assert.AreEqual<string>
-        ((string)null, ((GameEventArgs)coordinatesEventArgs).EventId);
-    Assert.AreEqual<EventType>
-        ((EventType)0, ((GameEventArgs)coordinatesEventArgs).EventType);
-    Assert.AreEqual<bool>(false, ((GameEventArgs)coordinatesEventArgs).NeedResponse);
+    try
+    {
+      CoordinatesEventArgs coordinatesEventArgs;
+      string[] ss = new string[2];
+      ss[0] = "-00\0";
+      ss[1] = "\0";
+      coordinatesEventArgs = this.Constructor01(ss);
+      throw 
+        new AssertFailedException("expected an exception of type ContractException");
+    }
+    catch(Exception ex)
+    {
+      if (!PexContract.IsContractException(ex))
+        throw ex;
+    }
+}
+[TestMethod]
+[PexGeneratedBy(typeof(CoordinatesEventArgsTest))]
+[PexRaisedContractException(PexExceptionState.Expected)]
+public void Constructor01ThrowsContractException318()
+{
+    try
+    {
+      CoordinatesEventArgs coordinatesEventArgs;
+      string[] ss = new string[2];
+      ss[0] = "-";
+      ss[1] = "-";
+      coordinatesEventArgs = this.Constructor01(ss);
+      throw 
+        new AssertFailedException("expected an exception of type ContractException");
+    }
+    catch(Exception ex)
+    {
+      if (!PexContract.IsContractException(ex))
+        throw ex;
+    }
+}
+[TestMethod]
+[PexGeneratedBy(typeof(CoordinatesEventArgsTest))]
+[PexRaisedContractException(PexExceptionState.Expected)]
+public void Constructor01ThrowsContractException105()
+{
+    try
+    {
+      CoordinatesEventArgs coordinatesEventArgs;
+      string[] ss = new string[2];
+      ss[0] = "-0";
+      ss[1] = "-";
+      coordinatesEventArgs = this.Constructor01(ss);
+      throw 
+        new AssertFailedException("expected an exception of type ContractException");
+    }
+    catch(Exception ex)
+    {
+      if (!PexContract.IsContractException(ex))
+        throw ex;
+    }
+}
+[TestMethod]
+[PexGeneratedBy(typeof(CoordinatesEventArgsTest))]
+[PexRaisedContractException(PexExceptionState.Expected)]
+public void Constructor01ThrowsContractException837()
+{
+    try
+    {
+      CoordinatesEventArgs coordinatesEventArgs;
+      string[] ss = new string[2];
+      coordinatesEventArgs = this.Constructor01(ss);
+      throw 
+        new AssertFailedException("expected an exception of type ContractException");
+    }
+    catch(Exception ex)
+    {
+      if (!PexContract.IsContractException(ex))
+        throw ex;
+    }
+}
+[TestMethod]
+[PexGeneratedBy(typeof(CoordinatesEventArgsTest))]
+[PexRaisedContractException(PexExceptionState.Expected)]
+public void Constructor01ThrowsContractException548()
+{
+    try
+    {
+      CoordinatesEventArgs coordinatesEventArgs;
+      string[] ss = new string[2];
+      ss[0] = "\u0001";
+      ss[1] = "\u0001";
+      coordinatesEventArgs = this.Constructor01(ss);
+      throw 
+        new AssertFailedException("expected an exception of type ContractException");
+    }
+    catch(Exception ex)
+    {
+      if (!PexContract.IsContractException(ex))
+        throw ex;
+    }
+}
+[TestMethod]
+[PexGeneratedBy(typeof(CoordinatesEventArgsTest))]
+[PexRaisedContractException(PexExceptionState.Expected)]
+public void Constructor01ThrowsContractException722()
+{
+    try
+    {
+      CoordinatesEventArgs coordinatesEventArgs;
+      string[] ss = new string[2];
+      ss[0] = "";
+      ss[1] = "";
+      coordinatesEventArgs = this.Constructor01(ss);
+      throw 
+        new AssertFailedException("expected an exception of type ContractException");
+    }
+    catch(Exception ex)
+    {
+      if (!PexContract.IsContractException(ex))
+        throw ex;
+    }
+}
+[TestMethod]
+[PexGeneratedBy(typeof(CoordinatesEventArgsTest))]
+[PexRaisedContractException(PexExceptionState.Expected)]
+public void Constructor01ThrowsContractException172()
+{
+    try
+    {
+      CoordinatesEventArgs coordinatesEventArgs;
+      string[] ss = new string[2];
+      ss[0] = ":";
+      ss[1] = ":";
+      coordinatesEventArgs = this.Constructor01(ss);
+      throw 
+        new AssertFailedException("expected an exception of type ContractException");
+    }
+    catch(Exception ex)
+    {
+      if (!PexContract.IsContractException(ex))
+        throw ex;
+    }
+}
+[TestMethod]
+[PexGeneratedBy(typeof(CoordinatesEventArgsTest))]
+[PexRaisedContractException(PexExceptionState.Expected)]
+public void Constructor01ThrowsContractException589()
+{
+    try
+    {
+      CoordinatesEventArgs coordinatesEventArgs;
+      string[] ss = new string[2];
+      ss[0] = "-0\0";
+      ss[1] = "-\0";
+      coordinatesEventArgs = this.Constructor01(ss);
+      throw 
+        new AssertFailedException("expected an exception of type ContractException");
+    }
+    catch(Exception ex)
+    {
+      if (!PexContract.IsContractException(ex))
+        throw ex;
+    }
 }
     }
 }

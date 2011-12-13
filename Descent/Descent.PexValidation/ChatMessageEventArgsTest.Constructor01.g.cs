@@ -38,25 +38,6 @@ public void Constructor01191()
 [TestMethod]
 [PexGeneratedBy(typeof(ChatMessageEventArgsTest))]
 [PexRaisedContractException(PexExceptionState.Expected)]
-public void Constructor01ThrowsContractException128()
-{
-    try
-    {
-      ChatMessageEventArgs chatMessageEventArgs;
-      string[] ss = new string[1];
-      chatMessageEventArgs = this.Constructor01(ss);
-      throw 
-        new AssertFailedException("expected an exception of type ContractException");
-    }
-    catch(Exception ex)
-    {
-      if (!PexContract.IsContractException(ex))
-        throw ex;
-    }
-}
-[TestMethod]
-[PexGeneratedBy(typeof(ChatMessageEventArgsTest))]
-[PexRaisedContractException(PexExceptionState.Expected)]
 public void Constructor01ThrowsContractException717()
 {
     try
@@ -109,7 +90,25 @@ public void Constructor413()
 [TestMethod]
 [PexGeneratedBy(typeof(ChatMessageEventArgsTest))]
 [PexRaisedContractException(PexExceptionState.Expected)]
-public void ConstructorThrowsContractException19()
+public void ConstructorThrowsContractException230()
+{
+    try
+    {
+      ChatMessageEventArgs chatMessageEventArgs;
+      chatMessageEventArgs = this.Constructor((string)null);
+      throw 
+        new AssertFailedException("expected an exception of type ContractException");
+    }
+    catch(Exception ex)
+    {
+      if (!PexContract.IsContractException(ex))
+        throw ex;
+    }
+}
+[TestMethod]
+[PexGeneratedBy(typeof(ChatMessageEventArgsTest))]
+[PexRaisedContractException(PexExceptionState.Expected)]
+public void ConstructorThrowsContractException935()
 {
     try
     {
@@ -127,12 +126,13 @@ public void ConstructorThrowsContractException19()
 [TestMethod]
 [PexGeneratedBy(typeof(ChatMessageEventArgsTest))]
 [PexRaisedContractException(PexExceptionState.Expected)]
-public void ConstructorThrowsContractException230()
+public void Constructor01ThrowsContractException362()
 {
     try
     {
       ChatMessageEventArgs chatMessageEventArgs;
-      chatMessageEventArgs = this.Constructor((string)null);
+      string[] ss = new string[1];
+      chatMessageEventArgs = this.Constructor01(ss);
       throw 
         new AssertFailedException("expected an exception of type ContractException");
     }

@@ -33,7 +33,7 @@ public void Constructor368()
 [TestMethod]
 [PexGeneratedBy(typeof(GameEventArgsTest))]
 [PexRaisedContractException(PexExceptionState.Expected)]
-public void ConstructorThrowsContractException36()
+public void ConstructorThrowsContractException600()
 {
     try
     {
@@ -51,7 +51,7 @@ public void ConstructorThrowsContractException36()
 [TestMethod]
 [PexGeneratedBy(typeof(GameEventArgsTest))]
 [PexRaisedContractException(PexExceptionState.Expected)]
-public void ConstructorThrowsContractException120()
+public void ConstructorThrowsContractException379()
 {
     try
     {

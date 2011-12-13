@@ -111,5 +111,76 @@ public void PopulateWithArgsThrowsContractException304()
         throw ex;
     }
 }
+[TestMethod]
+[PexGeneratedBy(typeof(ChatMessageEventArgsTest))]
+[PexRaisedContractException(PexExceptionState.Expected)]
+public void PopulateWithArgsThrowsContractException370()
+{
+    try
+    {
+      ChatMessageEventArgs chatMessageEventArgs;
+      chatMessageEventArgs = new ChatMessageEventArgs("\0");
+      ((GameEventArgs)chatMessageEventArgs).SenderId = 0;
+      ((GameEventArgs)chatMessageEventArgs).EventId = (string)null;
+      ((GameEventArgs)chatMessageEventArgs).EventType = (EventType)0;
+      ((GameEventArgs)chatMessageEventArgs).NeedResponse = false;
+      this.PopulateWithArgs(chatMessageEventArgs, (string[])null);
+      throw 
+        new AssertFailedException("expected an exception of type ContractException");
+    }
+    catch(Exception ex)
+    {
+      if (!PexContract.IsContractException(ex))
+        throw ex;
+    }
+}
+[TestMethod]
+[PexGeneratedBy(typeof(ChatMessageEventArgsTest))]
+[PexRaisedContractException(PexExceptionState.Expected)]
+public void PopulateWithArgsThrowsContractException975()
+{
+    try
+    {
+      ChatMessageEventArgs chatMessageEventArgs;
+      chatMessageEventArgs = new ChatMessageEventArgs("\0");
+      ((GameEventArgs)chatMessageEventArgs).SenderId = 0;
+      ((GameEventArgs)chatMessageEventArgs).EventId = (string)null;
+      ((GameEventArgs)chatMessageEventArgs).EventType = (EventType)0;
+      ((GameEventArgs)chatMessageEventArgs).NeedResponse = false;
+      string[] ss = new string[0];
+      this.PopulateWithArgs(chatMessageEventArgs, ss);
+      throw 
+        new AssertFailedException("expected an exception of type ContractException");
+    }
+    catch(Exception ex)
+    {
+      if (!PexContract.IsContractException(ex))
+        throw ex;
+    }
+}
+[TestMethod]
+[PexGeneratedBy(typeof(ChatMessageEventArgsTest))]
+[PexRaisedContractException(PexExceptionState.Expected)]
+public void PopulateWithArgsThrowsContractException410()
+{
+    try
+    {
+      ChatMessageEventArgs chatMessageEventArgs;
+      chatMessageEventArgs = new ChatMessageEventArgs("\0");
+      ((GameEventArgs)chatMessageEventArgs).SenderId = 0;
+      ((GameEventArgs)chatMessageEventArgs).EventId = (string)null;
+      ((GameEventArgs)chatMessageEventArgs).EventType = (EventType)0;
+      ((GameEventArgs)chatMessageEventArgs).NeedResponse = false;
+      string[] ss = new string[1];
+      this.PopulateWithArgs(chatMessageEventArgs, ss);
+      throw 
+        new AssertFailedException("expected an exception of type ContractException");
+    }
+    catch(Exception ex)
+    {
+      if (!PexContract.IsContractException(ex))
+        throw ex;
+    }
+}
     }
 }

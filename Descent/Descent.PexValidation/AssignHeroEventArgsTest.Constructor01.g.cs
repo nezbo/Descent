@@ -40,27 +40,6 @@ public void Constructor01414()
 [TestMethod]
 [PexGeneratedBy(typeof(AssignHeroEventArgsTest))]
 [PexRaisedContractException(PexExceptionState.Expected)]
-public void Constructor01ThrowsContractException281()
-{
-    try
-    {
-      AssignHeroEventArgs assignHeroEventArgs;
-      string[] ss = new string[2];
-      ss[0] = "-0";
-      ss[1] = "-0";
-      assignHeroEventArgs = this.Constructor01(ss);
-      throw 
-        new AssertFailedException("expected an exception of type ContractException");
-    }
-    catch(Exception ex)
-    {
-      if (!PexContract.IsContractException(ex))
-        throw ex;
-    }
-}
-[TestMethod]
-[PexGeneratedBy(typeof(AssignHeroEventArgsTest))]
-[PexRaisedContractException(PexExceptionState.Expected)]
 public void Constructor01ThrowsContractException924()
 {
     try
@@ -69,69 +48,6 @@ public void Constructor01ThrowsContractException924()
       string[] ss = new string[2];
       ss[0] = "-\0";
       ss[1] = "-\0";
-      assignHeroEventArgs = this.Constructor01(ss);
-      throw 
-        new AssertFailedException("expected an exception of type ContractException");
-    }
-    catch(Exception ex)
-    {
-      if (!PexContract.IsContractException(ex))
-        throw ex;
-    }
-}
-[TestMethod]
-[PexGeneratedBy(typeof(AssignHeroEventArgsTest))]
-[PexRaisedContractException(PexExceptionState.Expected)]
-public void Constructor01ThrowsContractException824()
-{
-    try
-    {
-      AssignHeroEventArgs assignHeroEventArgs;
-      string[] ss = new string[2];
-      ss[0] = "0\0";
-      ss[1] = "0\0";
-      assignHeroEventArgs = this.Constructor01(ss);
-      throw 
-        new AssertFailedException("expected an exception of type ContractException");
-    }
-    catch(Exception ex)
-    {
-      if (!PexContract.IsContractException(ex))
-        throw ex;
-    }
-}
-[TestMethod]
-[PexGeneratedBy(typeof(AssignHeroEventArgsTest))]
-[PexRaisedContractException(PexExceptionState.Expected)]
-public void Constructor01ThrowsContractException813()
-{
-    try
-    {
-      AssignHeroEventArgs assignHeroEventArgs;
-      string[] ss = new string[2];
-      ss[0] = "-";
-      ss[1] = "-";
-      assignHeroEventArgs = this.Constructor01(ss);
-      throw 
-        new AssertFailedException("expected an exception of type ContractException");
-    }
-    catch(Exception ex)
-    {
-      if (!PexContract.IsContractException(ex))
-        throw ex;
-    }
-}
-[TestMethod]
-[PexGeneratedBy(typeof(AssignHeroEventArgsTest))]
-[PexRaisedContractException(PexExceptionState.Expected)]
-public void Constructor01ThrowsContractException25()
-{
-    try
-    {
-      AssignHeroEventArgs assignHeroEventArgs;
-      string[] ss = new string[2];
-      ss[0] = ":";
-      ss[1] = ":";
       assignHeroEventArgs = this.Constructor01(ss);
       throw 
         new AssertFailedException("expected an exception of type ContractException");
@@ -166,27 +82,6 @@ public void Constructor01ThrowsContractException74()
 [TestMethod]
 [PexGeneratedBy(typeof(AssignHeroEventArgsTest))]
 [PexRaisedContractException(PexExceptionState.Expected)]
-public void Constructor01ThrowsContractException101()
-{
-    try
-    {
-      AssignHeroEventArgs assignHeroEventArgs;
-      string[] ss = new string[2];
-      ss[0] = "\u0001";
-      ss[1] = "\u0001";
-      assignHeroEventArgs = this.Constructor01(ss);
-      throw 
-        new AssertFailedException("expected an exception of type ContractException");
-    }
-    catch(Exception ex)
-    {
-      if (!PexContract.IsContractException(ex))
-        throw ex;
-    }
-}
-[TestMethod]
-[PexGeneratedBy(typeof(AssignHeroEventArgsTest))]
-[PexRaisedContractException(PexExceptionState.Expected)]
 public void Constructor01ThrowsContractException871()
 {
     try
@@ -195,46 +90,6 @@ public void Constructor01ThrowsContractException871()
       string[] ss = new string[2];
       ss[0] = "\0\0";
       ss[1] = "\0\0";
-      assignHeroEventArgs = this.Constructor01(ss);
-      throw 
-        new AssertFailedException("expected an exception of type ContractException");
-    }
-    catch(Exception ex)
-    {
-      if (!PexContract.IsContractException(ex))
-        throw ex;
-    }
-}
-[TestMethod]
-[PexGeneratedBy(typeof(AssignHeroEventArgsTest))]
-[PexRaisedContractException(PexExceptionState.Expected)]
-public void Constructor01ThrowsContractException780()
-{
-    try
-    {
-      AssignHeroEventArgs assignHeroEventArgs;
-      string[] ss = new string[2];
-      ss[0] = "";
-      ss[1] = "";
-      assignHeroEventArgs = this.Constructor01(ss);
-      throw 
-        new AssertFailedException("expected an exception of type ContractException");
-    }
-    catch(Exception ex)
-    {
-      if (!PexContract.IsContractException(ex))
-        throw ex;
-    }
-}
-[TestMethod]
-[PexGeneratedBy(typeof(AssignHeroEventArgsTest))]
-[PexRaisedContractException(PexExceptionState.Expected)]
-public void Constructor01ThrowsContractException386()
-{
-    try
-    {
-      AssignHeroEventArgs assignHeroEventArgs;
-      string[] ss = new string[2];
       assignHeroEventArgs = this.Constructor01(ss);
       throw 
         new AssertFailedException("expected an exception of type ContractException");
@@ -319,12 +174,157 @@ public void ConstructorThrowsContractException843()
 [TestMethod]
 [PexGeneratedBy(typeof(AssignHeroEventArgsTest))]
 [PexRaisedContractException(PexExceptionState.Expected)]
-public void ConstructorThrowsContractException243()
+public void ConstructorThrowsContractException149()
 {
     try
     {
       AssignHeroEventArgs assignHeroEventArgs;
       assignHeroEventArgs = this.Constructor(0, 0);
+      throw 
+        new AssertFailedException("expected an exception of type ContractException");
+    }
+    catch(Exception ex)
+    {
+      if (!PexContract.IsContractException(ex))
+        throw ex;
+    }
+}
+[TestMethod]
+[PexGeneratedBy(typeof(AssignHeroEventArgsTest))]
+[PexRaisedContractException(PexExceptionState.Expected)]
+public void Constructor01ThrowsContractException396()
+{
+    try
+    {
+      AssignHeroEventArgs assignHeroEventArgs;
+      string[] ss = new string[2];
+      ss[0] = ":";
+      ss[1] = ":";
+      assignHeroEventArgs = this.Constructor01(ss);
+      throw 
+        new AssertFailedException("expected an exception of type ContractException");
+    }
+    catch(Exception ex)
+    {
+      if (!PexContract.IsContractException(ex))
+        throw ex;
+    }
+}
+[TestMethod]
+[PexGeneratedBy(typeof(AssignHeroEventArgsTest))]
+[PexRaisedContractException(PexExceptionState.Expected)]
+public void Constructor01ThrowsContractException57()
+{
+    try
+    {
+      AssignHeroEventArgs assignHeroEventArgs;
+      string[] ss = new string[2];
+      ss[0] = "\u0001";
+      ss[1] = "\u0001";
+      assignHeroEventArgs = this.Constructor01(ss);
+      throw 
+        new AssertFailedException("expected an exception of type ContractException");
+    }
+    catch(Exception ex)
+    {
+      if (!PexContract.IsContractException(ex))
+        throw ex;
+    }
+}
+[TestMethod]
+[PexGeneratedBy(typeof(AssignHeroEventArgsTest))]
+[PexRaisedContractException(PexExceptionState.Expected)]
+public void Constructor01ThrowsContractException811()
+{
+    try
+    {
+      AssignHeroEventArgs assignHeroEventArgs;
+      string[] ss = new string[2];
+      ss[0] = "-0";
+      ss[1] = "-0";
+      assignHeroEventArgs = this.Constructor01(ss);
+      throw 
+        new AssertFailedException("expected an exception of type ContractException");
+    }
+    catch(Exception ex)
+    {
+      if (!PexContract.IsContractException(ex))
+        throw ex;
+    }
+}
+[TestMethod]
+[PexGeneratedBy(typeof(AssignHeroEventArgsTest))]
+[PexRaisedContractException(PexExceptionState.Expected)]
+public void Constructor01ThrowsContractException835()
+{
+    try
+    {
+      AssignHeroEventArgs assignHeroEventArgs;
+      string[] ss = new string[2];
+      assignHeroEventArgs = this.Constructor01(ss);
+      throw 
+        new AssertFailedException("expected an exception of type ContractException");
+    }
+    catch(Exception ex)
+    {
+      if (!PexContract.IsContractException(ex))
+        throw ex;
+    }
+}
+[TestMethod]
+[PexGeneratedBy(typeof(AssignHeroEventArgsTest))]
+[PexRaisedContractException(PexExceptionState.Expected)]
+public void Constructor01ThrowsContractException152()
+{
+    try
+    {
+      AssignHeroEventArgs assignHeroEventArgs;
+      string[] ss = new string[2];
+      ss[0] = "";
+      ss[1] = "";
+      assignHeroEventArgs = this.Constructor01(ss);
+      throw 
+        new AssertFailedException("expected an exception of type ContractException");
+    }
+    catch(Exception ex)
+    {
+      if (!PexContract.IsContractException(ex))
+        throw ex;
+    }
+}
+[TestMethod]
+[PexGeneratedBy(typeof(AssignHeroEventArgsTest))]
+[PexRaisedContractException(PexExceptionState.Expected)]
+public void Constructor01ThrowsContractException756()
+{
+    try
+    {
+      AssignHeroEventArgs assignHeroEventArgs;
+      string[] ss = new string[2];
+      ss[0] = "-";
+      ss[1] = "-";
+      assignHeroEventArgs = this.Constructor01(ss);
+      throw 
+        new AssertFailedException("expected an exception of type ContractException");
+    }
+    catch(Exception ex)
+    {
+      if (!PexContract.IsContractException(ex))
+        throw ex;
+    }
+}
+[TestMethod]
+[PexGeneratedBy(typeof(AssignHeroEventArgsTest))]
+[PexRaisedContractException(PexExceptionState.Expected)]
+public void Constructor01ThrowsContractException131()
+{
+    try
+    {
+      AssignHeroEventArgs assignHeroEventArgs;
+      string[] ss = new string[2];
+      ss[0] = "0\0";
+      ss[1] = "0\0";
+      assignHeroEventArgs = this.Constructor01(ss);
       throw 
         new AssertFailedException("expected an exception of type ContractException");
     }

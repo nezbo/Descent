@@ -178,6 +178,7 @@
 
             protected set
             {
+                Contract.Requires(value > 0);
                 maxHealth = value;
             }
         }
@@ -207,6 +208,7 @@
 
             protected set
             {
+                Contract.Requires(value >= 0);
                 armor = value;
             }
         }
@@ -225,6 +227,7 @@
 
             protected set
             {
+                Contract.Requires(value >= 0);
                 speed = value;
             }
         }
@@ -241,6 +244,7 @@
 
             private set
             {
+                Contract.Requires(value >= 0);
                 movementLeft = value;
             }
         }
@@ -274,12 +278,13 @@
                     }
                 }
 
-                total.AddRange(this.diceForAttacks);
+                total.AddRange(diceForAttacks ?? new List<Dice>());
                 return total;
             }
 
             protected set
             {
+                Contract.Requires(value != null);
                 diceForAttacks = value;
             }
         } 
@@ -307,6 +312,7 @@
 
             protected set
             {
+                Contract.Requires(value != null);
                 abilities = value;
             }
         }
@@ -334,6 +340,7 @@
 
             protected set
             {
+                Contract.Requires(value != null);
                 surgeAbilities = value;
             }
         }
@@ -360,6 +367,7 @@
 
             protected set
             {
+                Contract.Requires(value != null);
                 effects = value;
             }
         }
@@ -390,8 +398,14 @@
         /// <param name="name">
         /// The name of the figure
         /// </param>
+        /// <param name="size">
+        /// The size of the figure
+        /// </param>
         public Figure(int id, string name, Rectangle size)
         {
+            Contract.Requires(name.Length > 0);
+            Contract.Requires(size.Width > 0 && size.Height > 0);
+
             this.uniqueID = id;
             this.name = name;
             this.size = size;

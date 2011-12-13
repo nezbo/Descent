@@ -21,27 +21,6 @@ namespace Descent.Messaging.Events
 [TestMethod]
 [PexGeneratedBy(typeof(DiceEventArgsTest))]
 [PexRaisedContractException(PexExceptionState.Expected)]
-public void Constructor01ThrowsContractException819()
-{
-    try
-    {
-      DiceEventArgs diceEventArgs;
-      string[] ss = new string[2];
-      ss[0] = "-0";
-      ss[1] = "-9\0";
-      diceEventArgs = this.Constructor01(ss);
-      throw 
-        new AssertFailedException("expected an exception of type ContractException");
-    }
-    catch(Exception ex)
-    {
-      if (!PexContract.IsContractException(ex))
-        throw ex;
-    }
-}
-[TestMethod]
-[PexGeneratedBy(typeof(DiceEventArgsTest))]
-[PexRaisedContractException(PexExceptionState.Expected)]
 public void Constructor01ThrowsContractException868()
 {
     try
@@ -50,27 +29,6 @@ public void Constructor01ThrowsContractException868()
       string[] ss = new string[2];
       ss[0] = "-0\0";
       ss[1] = "\0";
-      diceEventArgs = this.Constructor01(ss);
-      throw 
-        new AssertFailedException("expected an exception of type ContractException");
-    }
-    catch(Exception ex)
-    {
-      if (!PexContract.IsContractException(ex))
-        throw ex;
-    }
-}
-[TestMethod]
-[PexGeneratedBy(typeof(DiceEventArgsTest))]
-[PexRaisedContractException(PexExceptionState.Expected)]
-public void Constructor01ThrowsContractException332()
-{
-    try
-    {
-      DiceEventArgs diceEventArgs;
-      string[] ss = new string[2];
-      ss[0] = "-0";
-      ss[1] = "-9";
       diceEventArgs = this.Constructor01(ss);
       throw 
         new AssertFailedException("expected an exception of type ContractException");
@@ -102,90 +60,6 @@ public void Constructor0147()
 [TestMethod]
 [PexGeneratedBy(typeof(DiceEventArgsTest))]
 [PexRaisedContractException(PexExceptionState.Expected)]
-public void Constructor01ThrowsContractException58()
-{
-    try
-    {
-      DiceEventArgs diceEventArgs;
-      string[] ss = new string[2];
-      ss[0] = "-\0";
-      ss[1] = "-\0";
-      diceEventArgs = this.Constructor01(ss);
-      throw 
-        new AssertFailedException("expected an exception of type ContractException");
-    }
-    catch(Exception ex)
-    {
-      if (!PexContract.IsContractException(ex))
-        throw ex;
-    }
-}
-[TestMethod]
-[PexGeneratedBy(typeof(DiceEventArgsTest))]
-[PexRaisedContractException(PexExceptionState.Expected)]
-public void Constructor01ThrowsContractException905()
-{
-    try
-    {
-      DiceEventArgs diceEventArgs;
-      string[] ss = new string[2];
-      ss[0] = ":";
-      ss[1] = ":";
-      diceEventArgs = this.Constructor01(ss);
-      throw 
-        new AssertFailedException("expected an exception of type ContractException");
-    }
-    catch(Exception ex)
-    {
-      if (!PexContract.IsContractException(ex))
-        throw ex;
-    }
-}
-[TestMethod]
-[PexGeneratedBy(typeof(DiceEventArgsTest))]
-[PexRaisedContractException(PexExceptionState.Expected)]
-public void Constructor01ThrowsContractException719()
-{
-    try
-    {
-      DiceEventArgs diceEventArgs;
-      string[] ss = new string[2];
-      ss[0] = "-";
-      ss[1] = "-";
-      diceEventArgs = this.Constructor01(ss);
-      throw 
-        new AssertFailedException("expected an exception of type ContractException");
-    }
-    catch(Exception ex)
-    {
-      if (!PexContract.IsContractException(ex))
-        throw ex;
-    }
-}
-[TestMethod]
-[PexGeneratedBy(typeof(DiceEventArgsTest))]
-[PexRaisedContractException(PexExceptionState.Expected)]
-public void Constructor01ThrowsContractException175()
-{
-    try
-    {
-      DiceEventArgs diceEventArgs;
-      string[] ss = new string[2];
-      ss[0] = "\u0001";
-      ss[1] = "\u0001";
-      diceEventArgs = this.Constructor01(ss);
-      throw 
-        new AssertFailedException("expected an exception of type ContractException");
-    }
-    catch(Exception ex)
-    {
-      if (!PexContract.IsContractException(ex))
-        throw ex;
-    }
-}
-[TestMethod]
-[PexGeneratedBy(typeof(DiceEventArgsTest))]
-[PexRaisedContractException(PexExceptionState.Expected)]
 public void Constructor01ThrowsContractException325()
 {
     try
@@ -194,46 +68,6 @@ public void Constructor01ThrowsContractException325()
       string[] ss = new string[2];
       ss[0] = "\0\0";
       ss[1] = "\0\0";
-      diceEventArgs = this.Constructor01(ss);
-      throw 
-        new AssertFailedException("expected an exception of type ContractException");
-    }
-    catch(Exception ex)
-    {
-      if (!PexContract.IsContractException(ex))
-        throw ex;
-    }
-}
-[TestMethod]
-[PexGeneratedBy(typeof(DiceEventArgsTest))]
-[PexRaisedContractException(PexExceptionState.Expected)]
-public void Constructor01ThrowsContractException679()
-{
-    try
-    {
-      DiceEventArgs diceEventArgs;
-      string[] ss = new string[2];
-      ss[0] = "";
-      ss[1] = "";
-      diceEventArgs = this.Constructor01(ss);
-      throw 
-        new AssertFailedException("expected an exception of type ContractException");
-    }
-    catch(Exception ex)
-    {
-      if (!PexContract.IsContractException(ex))
-        throw ex;
-    }
-}
-[TestMethod]
-[PexGeneratedBy(typeof(DiceEventArgsTest))]
-[PexRaisedContractException(PexExceptionState.Expected)]
-public void Constructor01ThrowsContractException815()
-{
-    try
-    {
-      DiceEventArgs diceEventArgs;
-      string[] ss = new string[2];
       diceEventArgs = this.Constructor01(ss);
       throw 
         new AssertFailedException("expected an exception of type ContractException");
@@ -283,8 +117,23 @@ public void Constructor01ThrowsContractException852()
 }
 [TestMethod]
 [PexGeneratedBy(typeof(DiceEventArgsTest))]
+public void Constructor285()
+{
+    DiceEventArgs diceEventArgs;
+    diceEventArgs = this.Constructor(0, 0);
+    Assert.IsNotNull((object)diceEventArgs);
+    Assert.AreEqual<int>(0, diceEventArgs.DiceId);
+    Assert.AreEqual<int>(0, diceEventArgs.SideId);
+    Assert.AreEqual<int>(0, ((GameEventArgs)diceEventArgs).SenderId);
+    Assert.AreEqual<string>((string)null, ((GameEventArgs)diceEventArgs).EventId);
+    Assert.AreEqual<EventType>
+        ((EventType)0, ((GameEventArgs)diceEventArgs).EventType);
+    Assert.AreEqual<bool>(false, ((GameEventArgs)diceEventArgs).NeedResponse);
+}
+[TestMethod]
+[PexGeneratedBy(typeof(DiceEventArgsTest))]
 [PexRaisedContractException(PexExceptionState.Expected)]
-public void ConstructorThrowsContractException425()
+public void ConstructorThrowsContractException305()
 {
     try
     {
@@ -301,18 +150,169 @@ public void ConstructorThrowsContractException425()
 }
 [TestMethod]
 [PexGeneratedBy(typeof(DiceEventArgsTest))]
-public void Constructor285()
+[PexRaisedContractException(PexExceptionState.Expected)]
+public void Constructor01ThrowsContractException291()
 {
-    DiceEventArgs diceEventArgs;
-    diceEventArgs = this.Constructor(0, 0);
-    Assert.IsNotNull((object)diceEventArgs);
-    Assert.AreEqual<int>(0, diceEventArgs.DiceId);
-    Assert.AreEqual<int>(0, diceEventArgs.SideId);
-    Assert.AreEqual<int>(0, ((GameEventArgs)diceEventArgs).SenderId);
-    Assert.AreEqual<string>((string)null, ((GameEventArgs)diceEventArgs).EventId);
-    Assert.AreEqual<EventType>
-        ((EventType)0, ((GameEventArgs)diceEventArgs).EventType);
-    Assert.AreEqual<bool>(false, ((GameEventArgs)diceEventArgs).NeedResponse);
+    try
+    {
+      DiceEventArgs diceEventArgs;
+      string[] ss = new string[2];
+      ss[0] = "-\0";
+      ss[1] = "-\0";
+      diceEventArgs = this.Constructor01(ss);
+      throw 
+        new AssertFailedException("expected an exception of type ContractException");
+    }
+    catch(Exception ex)
+    {
+      if (!PexContract.IsContractException(ex))
+        throw ex;
+    }
+}
+[TestMethod]
+[PexGeneratedBy(typeof(DiceEventArgsTest))]
+[PexRaisedContractException(PexExceptionState.Expected)]
+public void Constructor01ThrowsContractException57()
+{
+    try
+    {
+      DiceEventArgs diceEventArgs;
+      string[] ss = new string[2];
+      ss[0] = "\u0001";
+      ss[1] = "\u0001";
+      diceEventArgs = this.Constructor01(ss);
+      throw 
+        new AssertFailedException("expected an exception of type ContractException");
+    }
+    catch(Exception ex)
+    {
+      if (!PexContract.IsContractException(ex))
+        throw ex;
+    }
+}
+[TestMethod]
+[PexGeneratedBy(typeof(DiceEventArgsTest))]
+[PexRaisedContractException(PexExceptionState.Expected)]
+public void Constructor01ThrowsContractException618()
+{
+    try
+    {
+      DiceEventArgs diceEventArgs;
+      string[] ss = new string[2];
+      ss[0] = "-0";
+      ss[1] = "-9";
+      diceEventArgs = this.Constructor01(ss);
+      throw 
+        new AssertFailedException("expected an exception of type ContractException");
+    }
+    catch(Exception ex)
+    {
+      if (!PexContract.IsContractException(ex))
+        throw ex;
+    }
+}
+[TestMethod]
+[PexGeneratedBy(typeof(DiceEventArgsTest))]
+[PexRaisedContractException(PexExceptionState.Expected)]
+public void Constructor01ThrowsContractException588()
+{
+    try
+    {
+      DiceEventArgs diceEventArgs;
+      string[] ss = new string[2];
+      ss[0] = "";
+      ss[1] = "";
+      diceEventArgs = this.Constructor01(ss);
+      throw 
+        new AssertFailedException("expected an exception of type ContractException");
+    }
+    catch(Exception ex)
+    {
+      if (!PexContract.IsContractException(ex))
+        throw ex;
+    }
+}
+[TestMethod]
+[PexGeneratedBy(typeof(DiceEventArgsTest))]
+[PexRaisedContractException(PexExceptionState.Expected)]
+public void Constructor01ThrowsContractException583()
+{
+    try
+    {
+      DiceEventArgs diceEventArgs;
+      string[] ss = new string[2];
+      ss[0] = "-";
+      ss[1] = "-";
+      diceEventArgs = this.Constructor01(ss);
+      throw 
+        new AssertFailedException("expected an exception of type ContractException");
+    }
+    catch(Exception ex)
+    {
+      if (!PexContract.IsContractException(ex))
+        throw ex;
+    }
+}
+[TestMethod]
+[PexGeneratedBy(typeof(DiceEventArgsTest))]
+[PexRaisedContractException(PexExceptionState.Expected)]
+public void Constructor01ThrowsContractException264()
+{
+    try
+    {
+      DiceEventArgs diceEventArgs;
+      string[] ss = new string[2];
+      diceEventArgs = this.Constructor01(ss);
+      throw 
+        new AssertFailedException("expected an exception of type ContractException");
+    }
+    catch(Exception ex)
+    {
+      if (!PexContract.IsContractException(ex))
+        throw ex;
+    }
+}
+[TestMethod]
+[PexGeneratedBy(typeof(DiceEventArgsTest))]
+[PexRaisedContractException(PexExceptionState.Expected)]
+public void Constructor01ThrowsContractException849()
+{
+    try
+    {
+      DiceEventArgs diceEventArgs;
+      string[] ss = new string[2];
+      ss[0] = "-0";
+      ss[1] = "-9\0";
+      diceEventArgs = this.Constructor01(ss);
+      throw 
+        new AssertFailedException("expected an exception of type ContractException");
+    }
+    catch(Exception ex)
+    {
+      if (!PexContract.IsContractException(ex))
+        throw ex;
+    }
+}
+[TestMethod]
+[PexGeneratedBy(typeof(DiceEventArgsTest))]
+[PexRaisedContractException(PexExceptionState.Expected)]
+public void Constructor01ThrowsContractException677()
+{
+    try
+    {
+      DiceEventArgs diceEventArgs;
+      string[] ss = new string[2];
+      ss[0] = ":";
+      ss[1] = ":";
+      diceEventArgs = this.Constructor01(ss);
+      throw 
+        new AssertFailedException("expected an exception of type ContractException");
+    }
+    catch(Exception ex)
+    {
+      if (!PexContract.IsContractException(ex))
+        throw ex;
+    }
 }
     }
 }

@@ -259,6 +259,9 @@
         /// </param>
         public void AddSkill(Skill skill)
         {
+            Contract.Requires(skill != null);
+            if(!skills.ContainsKey(skill.Type))
+                skills[skill.Type] = new List<Skill>();
             skills[skill.Type].Add(skill);
         }
 
@@ -271,6 +274,9 @@
         /// </param>
         public void RemoveSkill(Skill skill)
         {
+            Contract.Requires(skill != null);
+            if (!skills.ContainsKey(skill.Type))
+                skills[skill.Type] = new List<Skill>();
             skills[skill.Type].Remove(skill);
         }
 

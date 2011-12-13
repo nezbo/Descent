@@ -297,5 +297,265 @@ public void PopulateWithArgsThrowsContractException213()
         throw ex;
     }
 }
+[TestMethod]
+[PexGeneratedBy(typeof(ChooseActionEventArgsTest))]
+[PexRaisedContractException(PexExceptionState.Expected)]
+public void PopulateWithArgsThrowsContractException482()
+{
+    try
+    {
+      ChooseActionEventArgs s0 = new ChooseActionEventArgs((ActionType)0);
+      ((GameEventArgs)s0).SenderId = 0;
+      ((GameEventArgs)s0).EventId = (string)null;
+      ((GameEventArgs)s0).EventType = (EventType)0;
+      ((GameEventArgs)s0).NeedResponse = false;
+      this.PopulateWithArgs(s0, (string[])null);
+      throw 
+        new AssertFailedException("expected an exception of type ContractException");
+    }
+    catch(Exception ex)
+    {
+      if (!PexContract.IsContractException(ex))
+        throw ex;
+    }
+}
+[TestMethod]
+[PexGeneratedBy(typeof(ChooseActionEventArgsTest))]
+[PexRaisedContractException(PexExceptionState.Expected)]
+public void PopulateWithArgsThrowsContractException398()
+{
+    try
+    {
+      ChooseActionEventArgs s0 = new ChooseActionEventArgs((ActionType)0);
+      ((GameEventArgs)s0).SenderId = 0;
+      ((GameEventArgs)s0).EventId = (string)null;
+      ((GameEventArgs)s0).EventType = (EventType)0;
+      ((GameEventArgs)s0).NeedResponse = false;
+      string[] ss = new string[0];
+      this.PopulateWithArgs(s0, ss);
+      throw 
+        new AssertFailedException("expected an exception of type ContractException");
+    }
+    catch(Exception ex)
+    {
+      if (!PexContract.IsContractException(ex))
+        throw ex;
+    }
+}
+[TestMethod]
+[PexGeneratedBy(typeof(ChooseActionEventArgsTest))]
+[PexRaisedContractException(PexExceptionState.Expected)]
+public void PopulateWithArgsThrowsContractException7()
+{
+    try
+    {
+      ChooseActionEventArgs s0 = new ChooseActionEventArgs((ActionType)0);
+      ((GameEventArgs)s0).SenderId = 0;
+      ((GameEventArgs)s0).EventId = (string)null;
+      ((GameEventArgs)s0).EventType = (EventType)0;
+      ((GameEventArgs)s0).NeedResponse = false;
+      string[] ss = new string[1];
+      this.PopulateWithArgs(s0, ss);
+      throw 
+        new AssertFailedException("expected an exception of type ContractException");
+    }
+    catch(Exception ex)
+    {
+      if (!PexContract.IsContractException(ex))
+        throw ex;
+    }
+}
+[TestMethod]
+[PexGeneratedBy(typeof(ChooseActionEventArgsTest))]
+[PexRaisedContractException(PexExceptionState.Expected)]
+public void PopulateWithArgsThrowsContractException418()
+{
+    try
+    {
+      ChooseActionEventArgs s0 = new ChooseActionEventArgs((ActionType)0);
+      ((GameEventArgs)s0).SenderId = 0;
+      ((GameEventArgs)s0).EventId = (string)null;
+      ((GameEventArgs)s0).EventType = (EventType)0;
+      ((GameEventArgs)s0).NeedResponse = false;
+      string[] ss = new string[1];
+      ss[0] = "";
+      this.PopulateWithArgs(s0, ss);
+      throw 
+        new AssertFailedException("expected an exception of type ContractException");
+    }
+    catch(Exception ex)
+    {
+      if (!PexContract.IsContractException(ex))
+        throw ex;
+    }
+}
+[TestMethod]
+[PexGeneratedBy(typeof(ChooseActionEventArgsTest))]
+[PexRaisedContractException(PexExceptionState.Expected)]
+public void PopulateWithArgsThrowsContractException147()
+{
+    try
+    {
+      ChooseActionEventArgs s0 = new ChooseActionEventArgs((ActionType)0);
+      ((GameEventArgs)s0).SenderId = 0;
+      ((GameEventArgs)s0).EventId = (string)null;
+      ((GameEventArgs)s0).EventType = (EventType)0;
+      ((GameEventArgs)s0).NeedResponse = false;
+      string[] ss = new string[1];
+      ss[0] = "\0";
+      this.PopulateWithArgs(s0, ss);
+      throw 
+        new AssertFailedException("expected an exception of type ContractException");
+    }
+    catch(Exception ex)
+    {
+      if (!PexContract.IsContractException(ex))
+        throw ex;
+    }
+}
+[TestMethod]
+[PexGeneratedBy(typeof(ChooseActionEventArgsTest))]
+[PexRaisedContractException(PexExceptionState.Expected)]
+public void PopulateWithArgsThrowsContractException203()
+{
+    try
+    {
+      ChooseActionEventArgs s0 = new ChooseActionEventArgs((ActionType)0);
+      ((GameEventArgs)s0).SenderId = 0;
+      ((GameEventArgs)s0).EventId = (string)null;
+      ((GameEventArgs)s0).EventType = (EventType)0;
+      ((GameEventArgs)s0).NeedResponse = false;
+      string[] ss = new string[1];
+      ss[0] = "-";
+      this.PopulateWithArgs(s0, ss);
+      throw 
+        new AssertFailedException("expected an exception of type ContractException");
+    }
+    catch(Exception ex)
+    {
+      if (!PexContract.IsContractException(ex))
+        throw ex;
+    }
+}
+[TestMethod]
+[PexGeneratedBy(typeof(ChooseActionEventArgsTest))]
+[PexRaisedContractException(PexExceptionState.Expected)]
+public void PopulateWithArgsThrowsContractException351()
+{
+    try
+    {
+      ChooseActionEventArgs s0 = new ChooseActionEventArgs((ActionType)0);
+      ((GameEventArgs)s0).SenderId = 0;
+      ((GameEventArgs)s0).EventId = (string)null;
+      ((GameEventArgs)s0).EventType = (EventType)0;
+      ((GameEventArgs)s0).NeedResponse = false;
+      string[] ss = new string[1];
+      ss[0] = "0";
+      this.PopulateWithArgs(s0, ss);
+      throw 
+        new AssertFailedException("expected an exception of type ContractException");
+    }
+    catch(Exception ex)
+    {
+      if (!PexContract.IsContractException(ex))
+        throw ex;
+    }
+}
+[TestMethod]
+[PexGeneratedBy(typeof(ChooseActionEventArgsTest))]
+[PexRaisedContractException(PexExceptionState.Expected)]
+public void PopulateWithArgsThrowsContractException603()
+{
+    try
+    {
+      ChooseActionEventArgs s0 = new ChooseActionEventArgs((ActionType)0);
+      ((GameEventArgs)s0).SenderId = 0;
+      ((GameEventArgs)s0).EventId = (string)null;
+      ((GameEventArgs)s0).EventType = (EventType)0;
+      ((GameEventArgs)s0).NeedResponse = false;
+      string[] ss = new string[1];
+      ss[0] = ":";
+      this.PopulateWithArgs(s0, ss);
+      throw 
+        new AssertFailedException("expected an exception of type ContractException");
+    }
+    catch(Exception ex)
+    {
+      if (!PexContract.IsContractException(ex))
+        throw ex;
+    }
+}
+[TestMethod]
+[PexGeneratedBy(typeof(ChooseActionEventArgsTest))]
+[PexRaisedContractException(PexExceptionState.Expected)]
+public void PopulateWithArgsThrowsContractException621()
+{
+    try
+    {
+      ChooseActionEventArgs s0 = new ChooseActionEventArgs((ActionType)0);
+      ((GameEventArgs)s0).SenderId = 0;
+      ((GameEventArgs)s0).EventId = (string)null;
+      ((GameEventArgs)s0).EventType = (EventType)0;
+      ((GameEventArgs)s0).NeedResponse = false;
+      string[] ss = new string[1];
+      ss[0] = "0\0";
+      this.PopulateWithArgs(s0, ss);
+      throw 
+        new AssertFailedException("expected an exception of type ContractException");
+    }
+    catch(Exception ex)
+    {
+      if (!PexContract.IsContractException(ex))
+        throw ex;
+    }
+}
+[TestMethod]
+[PexGeneratedBy(typeof(ChooseActionEventArgsTest))]
+[PexRaisedContractException(PexExceptionState.Expected)]
+public void PopulateWithArgsThrowsContractException984()
+{
+    try
+    {
+      ChooseActionEventArgs s0 = new ChooseActionEventArgs((ActionType)0);
+      ((GameEventArgs)s0).SenderId = 0;
+      ((GameEventArgs)s0).EventId = (string)null;
+      ((GameEventArgs)s0).EventType = (EventType)0;
+      ((GameEventArgs)s0).NeedResponse = false;
+      string[] ss = new string[1];
+      ss[0] = "-\0";
+      this.PopulateWithArgs(s0, ss);
+      throw 
+        new AssertFailedException("expected an exception of type ContractException");
+    }
+    catch(Exception ex)
+    {
+      if (!PexContract.IsContractException(ex))
+        throw ex;
+    }
+}
+[TestMethod]
+[PexGeneratedBy(typeof(ChooseActionEventArgsTest))]
+[PexRaisedContractException(PexExceptionState.Expected)]
+public void PopulateWithArgsThrowsContractException430()
+{
+    try
+    {
+      ChooseActionEventArgs s0 = new ChooseActionEventArgs((ActionType)0);
+      ((GameEventArgs)s0).SenderId = 0;
+      ((GameEventArgs)s0).EventId = (string)null;
+      ((GameEventArgs)s0).EventType = (EventType)0;
+      ((GameEventArgs)s0).NeedResponse = false;
+      string[] ss = new string[1];
+      ss[0] = "-0";
+      this.PopulateWithArgs(s0, ss);
+      throw 
+        new AssertFailedException("expected an exception of type ContractException");
+    }
+    catch(Exception ex)
+    {
+      if (!PexContract.IsContractException(ex))
+        throw ex;
+    }
+}
     }
 }

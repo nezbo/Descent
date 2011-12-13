@@ -407,5 +407,373 @@ public void PopulateWithArgsThrowsContractException291()
         throw ex;
     }
 }
+[TestMethod]
+[PexGeneratedBy(typeof(CoordinatesEventArgsTest))]
+[PexRaisedContractException(PexExceptionState.Expected)]
+public void PopulateWithArgsThrowsContractException5()
+{
+    try
+    {
+      CoordinatesEventArgs s0 = new CoordinatesEventArgs(0, 0);
+      ((GameEventArgs)s0).SenderId = 0;
+      ((GameEventArgs)s0).EventId = (string)null;
+      ((GameEventArgs)s0).EventType = (EventType)0;
+      ((GameEventArgs)s0).NeedResponse = false;
+      this.PopulateWithArgs(s0, (string[])null);
+      throw 
+        new AssertFailedException("expected an exception of type ContractException");
+    }
+    catch(Exception ex)
+    {
+      if (!PexContract.IsContractException(ex))
+        throw ex;
+    }
+}
+[TestMethod]
+[PexGeneratedBy(typeof(CoordinatesEventArgsTest))]
+[PexRaisedContractException(PexExceptionState.Expected)]
+public void PopulateWithArgsThrowsContractException787()
+{
+    try
+    {
+      CoordinatesEventArgs s0 = new CoordinatesEventArgs(0, 0);
+      ((GameEventArgs)s0).SenderId = 0;
+      ((GameEventArgs)s0).EventId = (string)null;
+      ((GameEventArgs)s0).EventType = (EventType)0;
+      ((GameEventArgs)s0).NeedResponse = false;
+      string[] ss = new string[0];
+      this.PopulateWithArgs(s0, ss);
+      throw 
+        new AssertFailedException("expected an exception of type ContractException");
+    }
+    catch(Exception ex)
+    {
+      if (!PexContract.IsContractException(ex))
+        throw ex;
+    }
+}
+[TestMethod]
+[PexGeneratedBy(typeof(CoordinatesEventArgsTest))]
+[PexRaisedContractException(PexExceptionState.Expected)]
+public void PopulateWithArgsThrowsContractException628()
+{
+    try
+    {
+      CoordinatesEventArgs s0 = new CoordinatesEventArgs(0, 0);
+      ((GameEventArgs)s0).SenderId = 0;
+      ((GameEventArgs)s0).EventId = (string)null;
+      ((GameEventArgs)s0).EventType = (EventType)0;
+      ((GameEventArgs)s0).NeedResponse = false;
+      string[] ss = new string[2];
+      this.PopulateWithArgs(s0, ss);
+      throw 
+        new AssertFailedException("expected an exception of type ContractException");
+    }
+    catch(Exception ex)
+    {
+      if (!PexContract.IsContractException(ex))
+        throw ex;
+    }
+}
+[TestMethod]
+[PexGeneratedBy(typeof(CoordinatesEventArgsTest))]
+[PexRaisedContractException(PexExceptionState.Expected)]
+public void PopulateWithArgsThrowsContractException854()
+{
+    try
+    {
+      CoordinatesEventArgs s0 = new CoordinatesEventArgs(0, 0);
+      ((GameEventArgs)s0).SenderId = 0;
+      ((GameEventArgs)s0).EventId = (string)null;
+      ((GameEventArgs)s0).EventType = (EventType)0;
+      ((GameEventArgs)s0).NeedResponse = false;
+      string[] ss = new string[2];
+      ss[0] = "";
+      ss[1] = "";
+      this.PopulateWithArgs(s0, ss);
+      throw 
+        new AssertFailedException("expected an exception of type ContractException");
+    }
+    catch(Exception ex)
+    {
+      if (!PexContract.IsContractException(ex))
+        throw ex;
+    }
+}
+[TestMethod]
+[PexGeneratedBy(typeof(CoordinatesEventArgsTest))]
+[PexRaisedContractException(PexExceptionState.Expected)]
+public void PopulateWithArgsThrowsContractException160()
+{
+    try
+    {
+      CoordinatesEventArgs s0 = new CoordinatesEventArgs(0, 0);
+      ((GameEventArgs)s0).SenderId = 0;
+      ((GameEventArgs)s0).EventId = (string)null;
+      ((GameEventArgs)s0).EventType = (EventType)0;
+      ((GameEventArgs)s0).NeedResponse = false;
+      string[] ss = new string[2];
+      ss[0] = "\0";
+      ss[1] = "\0";
+      this.PopulateWithArgs(s0, ss);
+      throw 
+        new AssertFailedException("expected an exception of type ContractException");
+    }
+    catch(Exception ex)
+    {
+      if (!PexContract.IsContractException(ex))
+        throw ex;
+    }
+}
+[TestMethod]
+[PexGeneratedBy(typeof(CoordinatesEventArgsTest))]
+[PexRaisedContractException(PexExceptionState.Expected)]
+public void PopulateWithArgsThrowsContractException758()
+{
+    try
+    {
+      CoordinatesEventArgs s0 = new CoordinatesEventArgs(0, 0);
+      ((GameEventArgs)s0).SenderId = 0;
+      ((GameEventArgs)s0).EventId = (string)null;
+      ((GameEventArgs)s0).EventType = (EventType)0;
+      ((GameEventArgs)s0).NeedResponse = false;
+      string[] ss = new string[2];
+      ss[0] = "-";
+      ss[1] = "-";
+      this.PopulateWithArgs(s0, ss);
+      throw 
+        new AssertFailedException("expected an exception of type ContractException");
+    }
+    catch(Exception ex)
+    {
+      if (!PexContract.IsContractException(ex))
+        throw ex;
+    }
+}
+[TestMethod]
+[PexGeneratedBy(typeof(CoordinatesEventArgsTest))]
+[PexRaisedContractException(PexExceptionState.Expected)]
+public void PopulateWithArgsThrowsContractException913()
+{
+    try
+    {
+      CoordinatesEventArgs s0 = new CoordinatesEventArgs(0, 0);
+      ((GameEventArgs)s0).SenderId = 0;
+      ((GameEventArgs)s0).EventId = (string)null;
+      ((GameEventArgs)s0).EventType = (EventType)0;
+      ((GameEventArgs)s0).NeedResponse = false;
+      string[] ss = new string[2];
+      ss[0] = "\u0001";
+      ss[1] = "\u0001";
+      this.PopulateWithArgs(s0, ss);
+      throw 
+        new AssertFailedException("expected an exception of type ContractException");
+    }
+    catch(Exception ex)
+    {
+      if (!PexContract.IsContractException(ex))
+        throw ex;
+    }
+}
+[TestMethod]
+[PexGeneratedBy(typeof(CoordinatesEventArgsTest))]
+[PexRaisedContractException(PexExceptionState.Expected)]
+public void PopulateWithArgsThrowsContractException208()
+{
+    try
+    {
+      CoordinatesEventArgs s0 = new CoordinatesEventArgs(0, 0);
+      ((GameEventArgs)s0).SenderId = 0;
+      ((GameEventArgs)s0).EventId = (string)null;
+      ((GameEventArgs)s0).EventType = (EventType)0;
+      ((GameEventArgs)s0).NeedResponse = false;
+      string[] ss = new string[2];
+      ss[0] = ":";
+      ss[1] = ":";
+      this.PopulateWithArgs(s0, ss);
+      throw 
+        new AssertFailedException("expected an exception of type ContractException");
+    }
+    catch(Exception ex)
+    {
+      if (!PexContract.IsContractException(ex))
+        throw ex;
+    }
+}
+[TestMethod]
+[PexGeneratedBy(typeof(CoordinatesEventArgsTest))]
+[PexRaisedContractException(PexExceptionState.Expected)]
+public void PopulateWithArgsThrowsContractException509()
+{
+    try
+    {
+      CoordinatesEventArgs s0 = new CoordinatesEventArgs(0, 0);
+      ((GameEventArgs)s0).SenderId = 0;
+      ((GameEventArgs)s0).EventId = (string)null;
+      ((GameEventArgs)s0).EventType = (EventType)0;
+      ((GameEventArgs)s0).NeedResponse = false;
+      string[] ss = new string[2];
+      ss[0] = "-\0";
+      ss[1] = "-\0";
+      this.PopulateWithArgs(s0, ss);
+      throw 
+        new AssertFailedException("expected an exception of type ContractException");
+    }
+    catch(Exception ex)
+    {
+      if (!PexContract.IsContractException(ex))
+        throw ex;
+    }
+}
+[TestMethod]
+[PexGeneratedBy(typeof(CoordinatesEventArgsTest))]
+[PexRaisedContractException(PexExceptionState.Expected)]
+public void PopulateWithArgsThrowsContractException963()
+{
+    try
+    {
+      CoordinatesEventArgs s0 = new CoordinatesEventArgs(0, 0);
+      ((GameEventArgs)s0).SenderId = 0;
+      ((GameEventArgs)s0).EventId = (string)null;
+      ((GameEventArgs)s0).EventType = (EventType)0;
+      ((GameEventArgs)s0).NeedResponse = false;
+      string[] ss = new string[2];
+      ss[0] = "0\0";
+      ss[1] = "";
+      this.PopulateWithArgs(s0, ss);
+      throw 
+        new AssertFailedException("expected an exception of type ContractException");
+    }
+    catch(Exception ex)
+    {
+      if (!PexContract.IsContractException(ex))
+        throw ex;
+    }
+}
+[TestMethod]
+[PexGeneratedBy(typeof(CoordinatesEventArgsTest))]
+[PexRaisedContractException(PexExceptionState.Expected)]
+public void PopulateWithArgsThrowsContractException193()
+{
+    try
+    {
+      CoordinatesEventArgs s0 = new CoordinatesEventArgs(0, 0);
+      ((GameEventArgs)s0).SenderId = 0;
+      ((GameEventArgs)s0).EventId = (string)null;
+      ((GameEventArgs)s0).EventType = (EventType)0;
+      ((GameEventArgs)s0).NeedResponse = false;
+      string[] ss = new string[2];
+      ss[0] = "-0\0";
+      ss[1] = "-";
+      this.PopulateWithArgs(s0, ss);
+      throw 
+        new AssertFailedException("expected an exception of type ContractException");
+    }
+    catch(Exception ex)
+    {
+      if (!PexContract.IsContractException(ex))
+        throw ex;
+    }
+}
+[TestMethod]
+[PexGeneratedBy(typeof(CoordinatesEventArgsTest))]
+[PexRaisedContractException(PexExceptionState.Expected)]
+public void PopulateWithArgsThrowsContractException980()
+{
+    try
+    {
+      CoordinatesEventArgs s0 = new CoordinatesEventArgs(0, 0);
+      ((GameEventArgs)s0).SenderId = 0;
+      ((GameEventArgs)s0).EventId = (string)null;
+      ((GameEventArgs)s0).EventType = (EventType)0;
+      ((GameEventArgs)s0).NeedResponse = false;
+      string[] ss = new string[2];
+      ss[0] = "00\0";
+      ss[1] = "-";
+      this.PopulateWithArgs(s0, ss);
+      throw 
+        new AssertFailedException("expected an exception of type ContractException");
+    }
+    catch(Exception ex)
+    {
+      if (!PexContract.IsContractException(ex))
+        throw ex;
+    }
+}
+[TestMethod]
+[PexGeneratedBy(typeof(CoordinatesEventArgsTest))]
+[PexRaisedContractException(PexExceptionState.Expected)]
+public void PopulateWithArgsThrowsContractException103()
+{
+    try
+    {
+      CoordinatesEventArgs s0 = new CoordinatesEventArgs(0, 0);
+      ((GameEventArgs)s0).SenderId = 0;
+      ((GameEventArgs)s0).EventId = (string)null;
+      ((GameEventArgs)s0).EventType = (EventType)0;
+      ((GameEventArgs)s0).NeedResponse = false;
+      string[] ss = new string[2];
+      ss[0] = "00\0";
+      ss[1] = "--";
+      this.PopulateWithArgs(s0, ss);
+      throw 
+        new AssertFailedException("expected an exception of type ContractException");
+    }
+    catch(Exception ex)
+    {
+      if (!PexContract.IsContractException(ex))
+        throw ex;
+    }
+}
+[TestMethod]
+[PexGeneratedBy(typeof(CoordinatesEventArgsTest))]
+[PexRaisedContractException(PexExceptionState.Expected)]
+public void PopulateWithArgsThrowsContractException115()
+{
+    try
+    {
+      CoordinatesEventArgs s0 = new CoordinatesEventArgs(0, 0);
+      ((GameEventArgs)s0).SenderId = 0;
+      ((GameEventArgs)s0).EventId = (string)null;
+      ((GameEventArgs)s0).EventType = (EventType)0;
+      ((GameEventArgs)s0).NeedResponse = false;
+      string[] ss = new string[2];
+      ss[0] = "-0\0";
+      ss[1] = "\0";
+      this.PopulateWithArgs(s0, ss);
+      throw 
+        new AssertFailedException("expected an exception of type ContractException");
+    }
+    catch(Exception ex)
+    {
+      if (!PexContract.IsContractException(ex))
+        throw ex;
+    }
+}
+[TestMethod]
+[PexGeneratedBy(typeof(CoordinatesEventArgsTest))]
+[PexRaisedContractException(PexExceptionState.Expected)]
+public void PopulateWithArgsThrowsContractException912()
+{
+    try
+    {
+      CoordinatesEventArgs s0 = new CoordinatesEventArgs(0, 0);
+      ((GameEventArgs)s0).SenderId = 0;
+      ((GameEventArgs)s0).EventId = (string)null;
+      ((GameEventArgs)s0).EventType = (EventType)0;
+      ((GameEventArgs)s0).NeedResponse = false;
+      string[] ss = new string[2];
+      ss[0] = "-0";
+      ss[1] = "-\0";
+      this.PopulateWithArgs(s0, ss);
+      throw 
+        new AssertFailedException("expected an exception of type ContractException");
+    }
+    catch(Exception ex)
+    {
+      if (!PexContract.IsContractException(ex))
+        throw ex;
+    }
+}
     }
 }

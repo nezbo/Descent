@@ -77,6 +77,15 @@
         public Monster(int id, string name, bool master, int speed, int health, int armor, EAttackType type, List<Dice> dice, Rectangle size, Texture2D texture)
             : base(id, name, size)
         {
+            Contract.Requires(name != null);
+            Contract.Requires(name.Length > 0);
+            Contract.Requires(size.Width > 0 && size.Height > 0);
+            Contract.Requires(speed > 0);
+            Contract.Requires(health > 0);
+            Contract.Requires(armor >= 0);
+            Contract.Requires(type != EAttackType.NONE);
+            Contract.Requires(dice != null);
+
             isMaster = master;
             Speed = speed;
             MaxHealth = health;
