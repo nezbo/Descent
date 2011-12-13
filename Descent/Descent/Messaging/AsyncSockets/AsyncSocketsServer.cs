@@ -3,6 +3,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Net;
     using System.Net.Sockets;
@@ -35,6 +36,7 @@
         /// </param>
         public AsyncSocketsServer(int port)
         {
+            Contract.Requires(port > 0);
             this.port = port;
 
             socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
