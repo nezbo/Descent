@@ -128,7 +128,7 @@
                             GUIElementFactory.DrawDice(this, dice, xDice, yDice, 15);
                             if (xDice + 15 > Bound.X + Bound.Width)
                             {
-                                xDice = Bound.X + xHand + 20;
+                                xDice = Bound.X + xHand;
                                 yDice -= 15;
                             }
                             xDice += 15;
