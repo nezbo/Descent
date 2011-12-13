@@ -981,11 +981,11 @@ class_chart EQUIPMENT_ELEMENT
 		revised: "13-12-2011";
 	explanation
 		"Visualizes a single EQUIPMENT depending on its type"
+	inherit
+		GUI_ELEMENT
 	query
 		"What EQUIPMENT do you display?",
 		"What is your id?"
-	inherit
-		GUI_ELEMENT
 end
 
 class_chart EQUIPMENT_PANEL
