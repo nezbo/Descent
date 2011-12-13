@@ -21,6 +21,5 @@ Descent/Descent.ManualValidation/obj
 Descent/Descent/StyleCop.Cache
 *.stackdump
 .vsmdi
-DotCoverResults
 .testsettings
-
+*.dcvr.settings
