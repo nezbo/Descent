@@ -445,7 +445,7 @@ class_chart EQUIPMENT
 		"What is your price?",
 		"How many hands do you use?",
 		"What are your abilities?",
-		"What dice do you use for attacks?"
+		"What dice do you use for attacks?",
 		"Are you equipped?",
 		"Is this piece of equipment the same as 'this'?"
 	command
@@ -483,7 +483,7 @@ class_chart TREASURE
 		"What equipment do you have?",
 		"How many coins do you have?",
 		"Are you a treasure cache or an equipment?"
-	invariant
+	constraint
 		"There must always be 0 or more coins in the treasure"
 end
 		
@@ -648,7 +648,7 @@ class_chart BOARD
 		"What is the distance from 'here' to there'?",
 		"What door, if there is one, at 'this' point?",
 		"Can a door be opened at 'this' point?",
-		"Can I have a list of all points where 'this' figure is standing?"
+		"Can I have a list of all points where 'this' figure is standing?",
 		"Can 'this' figure move to 'this' point?",
 		"Is this square standable?",
 		"Can the overlord spawn here?",
@@ -689,7 +689,7 @@ class_chart MARKER
 		"How many movement points does it cost to interact with the marker?"
 	command
 		"Pick up, or interact with the marker!"
-	invariant
+	constraint
 		"The cost of interacting is always larger or equal to zero."
 end
 
@@ -728,7 +728,7 @@ end
 
 class_chart TREASURE_CHEST
 	indexing
-		author: "Jonas Breindahl"
+		author: "Jonas Breindahl";
 		in_cluster: "MARKER";
 		created: "12-12-2011";
 		revised: "12-12-2011";
@@ -832,7 +832,7 @@ class_chart GUI_ELEMENT
 		"All sub-elements must be within the boundaries of this GUI_ELEMENT"
 end
 
-class_chart BOARD_GUI_ELEMENT
+class_chart BOARD_ELEMENT
 	indexing
 		author: "Emil Juul Jacobsen";
 		created: "01-12-2011";
@@ -876,7 +876,7 @@ class_chart GUI_ELEMENT_FACTORY
 		"The width and height of the root GUI_ELEMENT must be the same as the game window"
 end
 
-class_chart CHAT
+class_chart CHAT_ELEMENT
 	indexing
 		author: "Emil Juul Jacobsen";
 		created: "29-11-2011";
