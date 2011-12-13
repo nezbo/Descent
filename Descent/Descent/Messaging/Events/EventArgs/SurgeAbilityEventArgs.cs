@@ -13,7 +13,7 @@ namespace Descent.Messaging.Events
     {
         public SurgeAbilityEventArgs(int abilityId)
         {
-            Contract.Requires(abilityId >= 0;
+            Contract.Requires(abilityId >= 0);
             AbilityId = abilityId;
         }
 
@@ -21,7 +21,7 @@ namespace Descent.Messaging.Events
         {
             Contract.Requires(stringArgs != null);
             Contract.Requires(stringArgs.Length == 1);
-            
+
             Contract.Requires(EventContractHelper.TryParseInt(stringArgs[0]));
 
             PopulateWithArgs(stringArgs);
@@ -33,7 +33,7 @@ namespace Descent.Messaging.Events
         {
             Contract.Requires(stringArgs != null);
             Contract.Requires(stringArgs.Length == 1);
-            
+
             Contract.Requires(EventContractHelper.TryParseInt(stringArgs[0]));
 
             AbilityId = int.Parse(stringArgs[0]);
