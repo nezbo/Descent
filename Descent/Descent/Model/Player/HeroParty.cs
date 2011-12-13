@@ -1,12 +1,11 @@
 ﻿
-using Descent.Model.Board;
-
 namespace Descent.Model.Player
 {
     using System.Collections.Generic;
     using System.Diagnostics.Contracts;
     using System.Linq;
 
+    using Descent.Model.Board;
     using Descent.Model.Player.Figure;
 
     using Microsoft.Xna.Framework;
@@ -180,14 +179,6 @@ namespace Descent.Model.Player
             return -1;
         }
 
-        /// <summary>
-        /// The invariant of the HeroParty class
-        /// </summary>
-        [ContractInvariantMethod]
-        private void ObjectInvariant()
-        {
-            // Contract.Invariant(NumberOfHeroes >= 0 && NumberOfHeroes <= 4); TODO Breaks because at the beginning, all players are heroes (until OverlordIs event)
-        }
         #endregion
     }
 }

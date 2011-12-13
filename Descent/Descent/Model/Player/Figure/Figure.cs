@@ -30,7 +30,7 @@
     /// A generic figure, either a hero or a monster
     /// </summary>
     /// <author>
-    /// Jonas Breindahl (jobre@itu.dk)
+    /// Jonas Breindahl (jobre@itu.dk) & Martin Marcher
     /// </author>
     public abstract class Figure : Drawable
     {
@@ -518,6 +518,8 @@
         /// </param>
         public void AddAbility(Ability ability)
         {
+            Contract.Requires(ability != null);
+            Contract.Ensures(abilities.Count == Contract.OldValue(abilities.Count) + 1);
             abilities.Add(ability);
         }
 

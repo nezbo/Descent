@@ -1,10 +1,19 @@
-﻿using System.Collections.Generic;
-using Descent.Model.Player;
-using Descent.Model.Player.Figure;
-using Microsoft.Xna.Framework;
-
-namespace Descent.GUI.SubElements
+﻿namespace Descent.GUI.Screens
 {
+    using System.Collections.Generic;
+    using Descent.GUI.SubElements;
+    using Descent.Model.Player;
+    using Descent.Model.Player.Figure;
+    using Microsoft.Xna.Framework;
+
+    /// <summary>
+    /// This menu displays some compact information about the other players
+    /// in the game. The heroes will see the overlord and the other players'
+    /// heroes and the overlord will see the entire hero party.
+    /// </summary>
+    /// <author>
+    /// Emil Juul Jacobsen
+    /// </author>
     class PlayersElement : GUIElement
     {
         /// <summary>

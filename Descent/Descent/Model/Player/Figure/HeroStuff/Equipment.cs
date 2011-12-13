@@ -160,6 +160,17 @@ namespace Descent.Model.Player.Figure.HeroStuff
         }
 
         /// <summary>
+        /// Gets the list of abilities on the equipment
+        /// </summary>
+        public List<Ability> Abilities
+        {
+            get
+            {
+                return abilities;
+            }
+        }
+
+        /// <summary>
         /// Gets the surge abilities that the weapon has
         /// </summary>
         public List<SurgeAbility> SurgeAbilities
@@ -193,17 +204,6 @@ namespace Descent.Model.Player.Figure.HeroStuff
         }
 
         /// <summary>
-        /// Gets the list of abilities on the equipment
-        /// </summary>
-        public List<Ability> Abilities
-        {
-            get
-            {
-                return abilities;
-            }
-        }
-
-        /// <summary>
         /// Gets the list of dice that the weapon supplies.
         /// This is used when drawing the GUI of the weapon.
         /// </summary>
@@ -219,6 +219,7 @@ namespace Descent.Model.Player.Figure.HeroStuff
         /// Gets a value indicating whether the equipment
         /// is equipped to a hero.
         /// </summary>
+        [Pure]
         public bool Equipped
         {
             get

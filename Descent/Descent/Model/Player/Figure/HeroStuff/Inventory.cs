@@ -46,7 +46,7 @@ namespace Descent.Model.Player.Figure.HeroStuff
     /// The inventory of a hero
     /// </summary>
     /// <author>
-    /// Jonas Breindahl (jobre@itu.dk)
+    /// Jonas Breindahl (jobre@itu.dk) & Martin MArcher
     /// </author>
     public class Inventory
     {
@@ -250,28 +250,6 @@ namespace Descent.Model.Player.Figure.HeroStuff
         }
 
         /// <summary>
-        /// Places a potion in the first 
-        /// </summary>
-        /// <param name="potion">
-        /// The potion to be equipped
-        /// </param>
-        public void EquipPotion(Equipment potion)
-        {
-            Contract.Requires(potion != null);
-            Contract.Requires(CanEquipPotion);
-            Contract.Requires(potion.Type == EquipmentType.Potion);
-
-            for (int n = (int)EquipmentSlot.Potion; n < (int)EquipmentSlot.Potion + 6; n++)
-            {
-                if (this[n] == null)
-                {
-                    this[n] = potion;
-                    return;
-                }
-            }
-        }
-
-        /// <summary>
         /// Equip a weapon
         /// </summary>
         /// <param name="weapon">
@@ -340,6 +318,27 @@ namespace Descent.Model.Player.Figure.HeroStuff
             item.EquipToHero(hero);
         }
 
+        /// <summary>
+        /// Places a potion in the first 
+        /// </summary>
+        /// <param name="potion">
+        /// The potion to be equipped
+        /// </param>
+        public void EquipPotion(Equipment potion)
+        {
+            Contract.Requires(potion != null);
+            Contract.Requires(CanEquipPotion);
+            Contract.Requires(potion.Type == EquipmentType.Potion);
+
+            for (int n = (int)EquipmentSlot.Potion; n < (int)EquipmentSlot.Potion + 6; n++)
+            {
+                if (this[n] == null)
+                {
+                    this[n] = potion;
+                    return;
+                }
+            }
+        }
         /// <summary>
         /// Equip an item to backpack.
         /// </summary>

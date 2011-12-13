@@ -1,14 +1,20 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Descent.Model;
-using Descent.Model.Event;
-using Descent.Model.Player;
-using Descent.Model.Player.Figure.HeroStuff;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-
-namespace Descent.GUI
+﻿namespace Descent.GUI.SubElements
 {
+    using System.Collections.Generic;
+    using System.Linq;
+    using Descent.Model;
+    using Descent.Model.Event;
+    using Descent.Model.Player;
+    using Descent.Model.Player.Figure.HeroStuff;
+    using Microsoft.Xna.Framework;
+    using Microsoft.Xna.Framework.Graphics;
+
+    /// <summary>
+    /// Displays a single Equipment to the screen.
+    /// </summary>
+    /// <author>
+    /// Emil Juul Jacobsen
+    /// </author>
     public class EquipmentElement : GUIElement
     {
         private static string Marked;
@@ -19,9 +25,27 @@ namespace Descent.GUI
         private Image Coin;
         private Texture2D Hand;
 
+        /// <summary>
+        /// The Equipment that this element displays.
+        /// </summary>
         public Equipment Equipment { get; internal set; }
+
+        /// <summary>
+        /// The Id of the Equipment that this element displays.
+        /// </summary>
         public int Id { get; internal set; }
 
+        /// <summary>
+        /// Creates a new Equipment element to display the given Equipment at the given position.
+        /// </summary>
+        /// <param name="game">The current Game object.</param>
+        /// <param name="posX">The top-left x-coordinate of this element.</param>
+        /// <param name="posY">The top-left y-coordinate of this element.</param>
+        /// <param name="width">The width of this element.</param>
+        /// <param name="height">The height of this element.</param>
+        /// <param name="slotTitle">The title of this slot, in case the Equipment isn't there (null).</param>
+        /// <param name="eq">The Equipment to visualize.</param>
+        /// <param name="id">The Id of the given Equipment.</param>
         public EquipmentElement(Game game, int posX, int posY, int width, int height, string slotTitle, Equipment eq, int id)
             : base(game, "item", posX, posY, width, height)
         {
@@ -104,7 +128,7 @@ namespace Descent.GUI
                             GUIElementFactory.DrawDice(this, dice, xDice, yDice, 15);
                             if (xDice + 15 > Bound.X + Bound.Width)
                             {
-                                xDice = Bound.X + xHand + 20;
+                                xDice = Bound.X + xHand;
                                 yDice -= 15;
                             }
                             xDice += 15;

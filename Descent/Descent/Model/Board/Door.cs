@@ -16,7 +16,7 @@ namespace Descent.Model.Board
     /// A door, that can b
     /// </summary>
     /// <author>
-    /// Jonas Breindahl (jobre@itu.dk)
+    /// Jonas Breindahl (jobre@itu.dk) & Martin Marcher
     /// </author>
     public class Door : Drawable
     {

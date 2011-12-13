@@ -1,13 +1,5 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="Player.cs" company="">
-// TODO: Update copyright text.
-// </copyright>
-// -----------------------------------------------------------------------
-
-namespace Descent.Model.Player
+﻿namespace Descent.Model.Player
 {
-    using System.Diagnostics.Contracts;
-
     using Descent.Messaging.Connection;
     using Descent.Messaging.Events;
     using Descent.Model.Player.Figure;
@@ -144,7 +136,7 @@ namespace Descent.Model.Player
         /// <summary>
         /// Are you client or server?
         /// </summary>
-        public bool IsServer { get; internal set; }
+        public bool IsServer{ get; internal set; }
 
         public void SetPlayerNick(int id, string nickname)
         {

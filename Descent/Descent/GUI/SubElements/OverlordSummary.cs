@@ -1,18 +1,28 @@
-﻿using Descent.Model.Player;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-
-namespace Descent.GUI.SubElements
+﻿namespace Descent.GUI.SubElements
 {
+    using Descent.Model.Player;
+    using Microsoft.Xna.Framework;
+    using Microsoft.Xna.Framework.Graphics;
+
+    /// <summary>
+    /// A short summary of the overlords information, including threat tokens,
+    /// deck size, discard size, hand size and the heroes remaining conquest
+    /// tokens.
+    /// </summary>
+    /// <author>
+    /// Emil Juul Jacobsen
+    /// </author>
     class OverlordSummary : GUIElement
     {
         private static readonly int Height = 100;
 
-        private Texture2D deck;
-        private Texture2D discard;
-        private Texture2D hand;
-        private Texture2D threat;
-
+        /// <summary>
+        /// Creates a new summary of the overlords information for the given game and 
+        /// displays it to the right of the screen, at the given y-coordinate (down 
+        /// from the top).
+        /// </summary>
+        /// <param name="game">The current Game object.</param>
+        /// <param name="y">How far down the screen this HeroSummary should be located.</param>
         public OverlordSummary(Game game, int y)
             : base(game, "overlord summary", (int)(game.GraphicsDevice.Viewport.Width * (3 / 4.0)), y, game.GraphicsDevice.Viewport.Width / 4, Height)
         {

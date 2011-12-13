@@ -1,5 +1,5 @@
-﻿
-namespace Descent.Messaging.Events
+
+﻿namespace Descent.Messaging.Events
 {
     using System.Diagnostics.Contracts;
 

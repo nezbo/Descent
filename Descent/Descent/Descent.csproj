@@ -105,9 +105,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Game1.cs" />
-    <Compile Include="GUI\SubElements\AttackElement.cs" />
-    <Compile Include="GUI\SubElements\BoardGUIElement.cs" />
-    <Compile Include="GUI\SubElements\Chat.cs" />
+    <Compile Include="GUI\Screens\AttackElement.cs" />
+    <Compile Include="GUI\Screens\BoardElement.cs" />
+    <Compile Include="GUI\SubElements\ChatElement.cs" />
     <Compile Include="GUI\Drawable.cs" />
     <Compile Include="GUI\SubElements\DicesElement.cs" />
     <Compile Include="GUI\SubElements\EquipmentElement.cs" />
@@ -116,13 +116,13 @@
     <Compile Include="GUI\GUIElementFactory.cs" />
     <Compile Include="GUI\Image.cs" />
     <Compile Include="GUI\SubElements\EquipmentPanel.cs" />
-    <Compile Include="GUI\SubElements\HeroElement.cs" />
+    <Compile Include="GUI\Screens\HeroElement.cs" />
     <Compile Include="GUI\SubElements\InputElement.cs" />
     <Compile Include="GUI\SubElements\MonsterSummary.cs" />
     <Compile Include="GUI\SubElements\OverlordCardElement.cs" />
-    <Compile Include="GUI\SubElements\OverlordElement.cs" />
+    <Compile Include="GUI\Screens\OverlordElement.cs" />
     <Compile Include="GUI\SubElements\OverlordSummary.cs" />
-    <Compile Include="GUI\SubElements\PlayersElement.cs" />
+    <Compile Include="GUI\Screens\PlayersElement.cs" />
     <Compile Include="GUI\SubElements\HeroSummary.cs" />
     <Compile Include="GUI\Text.cs" />
     <Compile Include="Messaging\AsyncSockets\AsyncSocketsClient.cs" />

@@ -1,10 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="Hero.cs" company="">
-// TODO: Update copyright text.
-// </copyright>
-// -----------------------------------------------------------------------
-
-namespace Descent.Model.Player.Figure
+﻿namespace Descent.Model.Player.Figure
 {
     using System.Collections.Generic;
     using System.Diagnostics.Contracts;
@@ -19,7 +13,7 @@ namespace Descent.Model.Player.Figure
     /// A hero, made from a hero-sheet
     /// </summary>
     /// <author>
-    /// Jonas Breindahl (jobre@itu.dk)
+    /// Jonas Breindahl (jobre@itu.dk) & Martin Marcher
     /// </author>
     public class Hero : Figure
     {

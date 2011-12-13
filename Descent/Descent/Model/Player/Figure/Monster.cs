@@ -1,19 +1,7 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="Monster.cs" company="">
-// TODO: Update copyright text.
-// </copyright>
-// -----------------------------------------------------------------------
-
-using Descent.Model.Board;
-
-namespace Descent.Model.Player.Figure
+﻿namespace Descent.Model.Player.Figure
 {
-    using System;
     using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using Descent.GUI;
-
+    using System.Diagnostics.Contracts;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
 
@@ -102,8 +90,18 @@ namespace Descent.Model.Player.Figure
 
         #region Methods
 
+        /// <summary>
+        /// Returns a clone of the monster, but with a new unique ID
+        /// </summary>
+        /// <param name="newID">
+        /// The new id of the monser
+        /// </param>
+        /// <returns>
+        /// A copy of the monster, with a new ID
+        /// </returns>
         public Monster Clone(int newID)
         {
+            Contract.Requires(newID >= 0);
             return new Monster(newID, Name, isMaster, Speed, MaxHealth, Armor, attackType, new List<Dice>(DiceForAttack), Size, Texture);
         }
 

@@ -1,17 +1,33 @@
-﻿using System.Linq;
-using System.Text;
-using Descent.Model;
-using Descent.Model.Event;
-using Descent.Model.Player;
-using Descent.Model.Player.Figure;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-
-namespace Descent.GUI.SubElements
+﻿namespace Descent.GUI.SubElements
 {
+    using System.Linq;
+    using System.Text;
+    using Descent.Model;
+    using Descent.Model.Event;
+    using Descent.Model.Player;
+    using Descent.Model.Player.Figure;
+    using Microsoft.Xna.Framework;
+    using Microsoft.Xna.Framework.Graphics;
+
+    /// <summary>
+    /// The summary of a monsters information to be displayed as a
+    /// mouseover effect on the board and when attacking a specific
+    /// monster.
+    /// </summary>
+    /// <author>
+    /// Emil Juul Jacobsen
+    /// </author>
     class MonsterSummary : GUIElement
     {
 
+        /// <summary>
+        /// Creates a new monster summary element to display information about
+        /// the given monster starting from the given coordinates.
+        /// </summary>
+        /// <param name="game">The current Game object.</param>
+        /// <param name="x">The top-left x-coordinate of the element.</param>
+        /// <param name="y">The top-left y-coordinate of the element.</param>
+        /// <param name="monster">The Monster to display information for.</param>
         public MonsterSummary(Game game, int x, int y, Monster monster)
             : base(game, "monster summary", x, y, 125, 175)
         {

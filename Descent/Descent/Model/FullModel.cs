@@ -1,5 +1,4 @@
-﻿
-namespace Descent.Model
+﻿namespace Descent.Model
 {
     using System;
     using System.Collections.Generic;
@@ -8,14 +7,13 @@ namespace Descent.Model
     using System.IO;
     using System.Linq;
 
-    using Descent.Model.Board;
-    using Descent.Model.Board.Marker;
-    using Descent.Model.Event;
-    using Descent.Model.Player;
-    using Descent.Model.Player.Figure;
-    using Descent.Model.Player.Figure.HeroStuff;
-    using Descent.Model.Player.OverlordStuff;
-
+    using Board;
+    using Board.Marker;
+    using Event;
+    using Player;
+    using Player.Figure;
+    using Player.Figure.HeroStuff;
+    using Player.OverlordStuff;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
 
@@ -431,6 +429,43 @@ namespace Descent.Model
             LoadChests(game, reader);
         }
 
+
+        /// <summary>
+        /// Loads a marker by taking a name and another string
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        [Pure]
+        private static Marker GetMarker(string name, string other)
+        {
+            switch (name)
+            {
+                case "glyph":
+                    return new GlyphMarker(markersOnBoard++, name + "-" + other, game.Content.Load<Texture2D>("Images/Board/portal-closed"), 0, other.Equals("open"), game.Content.Load<Texture2D>("Images/Board/portal-open"));
+                case "treasure":
+                    EquipmentRarity rarity;
+                    EquipmentRarity.TryParse(other, true, out rarity);
+                    return new ChestMarker(markersOnBoard++, name + "-" + other, 2, rarity, game.Content.Load<Texture2D>("Images/Board/" + name + "-" + other));
+                case "gold":
+                    return new MoneyMarker(markersOnBoard++, name, game.Content.Load<Texture2D>("Images/Board/" + name), 0);
+                case "rock":
+                    return new OtherMarkers(markersOnBoard++, name, game.Content.Load<Texture2D>("Images/Board/rock1"), 0);
+                case "pit":
+                    return new OtherMarkers(markersOnBoard++, name, game.Content.Load<Texture2D>("Images/Board/pit1"), 0);
+                case "potion":
+                    return new PotionMarker(markersOnBoard++, name + "-" + other, game.Content.Load<Texture2D>("Images/Board/" + name + "-" + other), 0, other.Contains("health") ? GetEquipment(11) : GetEquipment(12));
+                case "rune":
+                    RuneKey color;
+                    RuneKey.TryParse(other, true, out color);
+                    return new RuneMarker(markersOnBoard++, name + "-" + other, game.Content.Load<Texture2D>("Images/Board/" + name + "-" + other), 0, color);
+                default:
+                    break;
+            }
+            System.Diagnostics.Debug.Assert(false);
+            return null;
+        }
+
         /// <summary>
         /// </summary>
         /// <param name="game">
@@ -691,6 +726,16 @@ namespace Descent.Model
             return AllEquipment.First(equipment => equipment.Id == id).Clone();
         }
 
+        /// <summary>
+        /// Gets the treasure with the id
+        /// </summary>
+        /// <param name="id">
+        /// The id of the treasure
+        /// </param>
+        /// <returns>
+        /// The treasure with that treasure
+        /// </returns>
+        [Pure]
         public static Treasure GetTreasure(int id)
         {
             return AllTreasures.Single(t => t.Id == id);
@@ -743,42 +788,6 @@ namespace Descent.Model
             EDice d;
             Enum.TryParse(dice, false, out d);
             return GetDice(d);
-        }
-
-        /// <summary>
-        /// TODO: Should be changed.. 
-        /// </summary>
-        /// <param name="name"></param>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        [Pure]
-        private static Marker GetMarker(string name, string other)
-        {
-            switch (name)
-            {
-                case "glyph":
-                    return new GlyphMarker(markersOnBoard++, name + "-" + other, game.Content.Load<Texture2D>("Images/Board/portal-closed"), 0, other.Equals("open"), game.Content.Load<Texture2D>("Images/Board/portal-open"));
-                case "treasure":
-                    EquipmentRarity rarity;
-                    EquipmentRarity.TryParse(other, true, out rarity);
-                    return new ChestMarker(markersOnBoard++, name + "-" + other, 2, rarity, game.Content.Load<Texture2D>("Images/Board/" + name + "-" + other));
-                case "gold":
-                    return new MoneyMarker(markersOnBoard++, name, game.Content.Load<Texture2D>("Images/Board/" + name), 0);
-                case "rock":
-                    return new OtherMarkers(markersOnBoard++, name, game.Content.Load<Texture2D>("Images/Board/rock1"), 0);
-                case "pit":
-                    return new OtherMarkers(markersOnBoard++, name, game.Content.Load<Texture2D>("Images/Board/pit1"), 0);
-                case "potion":
-                    return new PotionMarker(markersOnBoard++, name + "-" + other, game.Content.Load<Texture2D>("Images/Board/" + name + "-" + other), 0, other.Contains("health") ? GetEquipment(11) : GetEquipment(12));
-                case "rune":
-                    RuneKey color;
-                    RuneKey.TryParse(other, true, out color);
-                    return new RuneMarker(markersOnBoard++, name + "-" + other, game.Content.Load<Texture2D>("Images/Board/" + name + "-" + other), 0, color);
-                default:
-                    break;
-            }
-            System.Diagnostics.Debug.Assert(false);
-            return null;
         }
 
         /// <summary>

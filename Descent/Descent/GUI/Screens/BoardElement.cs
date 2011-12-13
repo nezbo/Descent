@@ -1,18 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.Contracts;
-using Descent.GUI.SubElements;
-using Descent.Messaging.Events;
-using Descent.Model.Board;
-using Descent.Model.Player;
-using Microsoft.Xna.Framework.Input;
-
-namespace Descent.GUI
+﻿namespace Descent.GUI.Screens
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics.Contracts;
+    using Descent.GUI.SubElements;
+    using Descent.Messaging.Events;
+    using Descent.Model.Board;
+    using Descent.Model.Player;
     using Descent.Model.Player.Figure;
-
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
+    using Microsoft.Xna.Framework.Input;
 
     /// <summary>
     /// The element on the screen that visualizes the game board and marking
@@ -21,7 +19,7 @@ namespace Descent.GUI
     /// <author>
     /// Emil Juul Jacobsen
     /// </author>
-    class BoardGUIElement : GUIElement
+    class BoardElement : GUIElement
     {
         private static readonly int TileSize = 95;
         private static readonly int BorderTiles = 2;
@@ -35,7 +33,13 @@ namespace Descent.GUI
         private int xDisp, yDisp;
         private Dictionary<Vector2, bool> markedSquares;
 
-        public BoardGUIElement(Game game, Board board, Role role)
+        /// <summary>
+        /// Creates a new BoardGUIElement for the given parameters.
+        /// </summary>
+        /// <param name="game">The current Game object.</param>
+        /// <param name="board">The Board to visualize.</param>
+        /// <param name="role">The Role determines how much of the Board is visible.</param>
+        public BoardElement(Game game, Board board, Role role)
             : base(game, "board", 0, 0, (int)(game.GraphicsDevice.Viewport.Width * (3 / 4.0)), game.GraphicsDevice.Viewport.Height)
         {
             this.board = board;
@@ -134,7 +138,6 @@ namespace Descent.GUI
             // Marks (if any)
             lock (markedSquares)
             {
-                Rectangle r;
                 foreach (Vector2 pos in markedSquares.Keys)
                 {
                     DrawMark(draw, (int)pos.X, (int)pos.Y, markedSquares[pos]);
@@ -178,7 +181,7 @@ namespace Descent.GUI
 
         private bool RightPosition(Figure f, Point toTest)
         {
-            return board.FiguresOnBoard.ContainsKey(f) ? board.FiguresOnBoard[f].Equals(toTest) : false;
+            return board.FiguresOnBoard.ContainsKey(f) && board.FiguresOnBoard[f].Equals(toTest);
         }
 
         private void DrawMark(SpriteBatch draw, int boardX, int boardY, bool positiveMark)
