@@ -108,7 +108,6 @@
             Random r = new Random(DateTime.Now.Millisecond);
             int n = chestsLeft.Count(c => c.Rarity == rarity);
             Chest chest = chestsLeft.Where(c1 => c1.Rarity == rarity).ToArray()[r.Next(n)];
-            // TODO Make sure that the chest is removed from the list of chests left at all clients
             return chest.Id;
         }
 
@@ -123,12 +122,6 @@
             Chest c = FullModel.AllChests.Single(i => i.Id == chestId);
             chestsLeft.Remove(c);
             return c;
-        }
-
-        public Treasure getTreasure(int treasureId)
-        {
-            //TODO
-            return null;
         }
 
         public Treasure[] getTreasures(int numberOfTreasures, EquipmentRarity rarity)
@@ -154,7 +147,7 @@
             heroes.Remove(FullModel.GetHero(heroId));
         }
 
-        /* TODO
+        /* 
         public void RemoveTreasure(int treasureId)
         {
             Contract.Requires(FullModel.GetTreasure(treasureId) != null);

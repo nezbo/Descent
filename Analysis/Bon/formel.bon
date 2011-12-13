@@ -253,26 +253,31 @@ component
 		indexing
 			author: "Jonas Breindahl";
 			created: "30-11-2011";
-			revised: "30-11-2011";
+			revised: "12-12-2011";
 		feature
 			atIndex: EQUIPMENT -- What is in 'this' slot?
 				-> index: INTEGER
+			length: INTEGER -- How many slots do you have?
 			maxHands: INTEGER -- How many hands do you have?
 			freeHands: INTEGER -- How many hands do you have free?
             weaponEquipped: EQUIPMENT -- What weapons do you have in your hands?
-			armorEquipped: EQUIPMENT -- What armor do you have equipped?
 			shieldEquipped: EQUIPMENT -- What shield do you have equipped?
+			armorEquipped: EQUIPMENT -- What armor do you have equipped?
 			otherItemsEquipped: SEQUENCE[EQUIPMENT] -- What other items do you have equipped?
 			potionsEquipped: SEQUENCE[EQUIPMENT] -- What potions do you have equipped?
 			equipmentInBackpack: SEQUENCE[EQUIPMENT] -- What equipment do you have in your backpack?
             maxPotions: INTEGER -- How many potions can you hold?
             maxInBackpack: INTEGER -- How many items can you hold in your backpack?
             maxOtherItems: INTEGER -- How many other items can you hold?
+			canEquipWeapon: BOOLEAN -- Can you equip 'this' weapon?
+				-> equipment: EQUIPMENT
+			canEquipPotion: BOOLEAN -- Can you equip a potion right now?
 			equipWeapon: Void -- Equip 'this' weapon!
 				-> weapon: EQUIPMENT
 				require
                     weapon /= Void;
 					freeHands <= weapon.hands();
+					weapon.type = Weapon;
 				ensure
 					weaponEquipped = weapon;
                     freeHands = old freeHands - weapon.hands();
@@ -313,6 +318,7 @@ component
                 -> index: INTEGER
 				-> equipment: EQUIPMENT
 				require
+					equipment /= Void;
 					spaceInBackpack > 0;
 				ensure
 					spaceInBackpack = old spaceInBackpack - 1;
@@ -367,6 +373,9 @@ component
                     backpackEquipped.get(index) = Void;
                     Result = old backpackEquipped.get(index);
             end
+			canEquipAtInde: BOOLEAN -- Can you equip 'this' weapon at 'this' index?
+				-> slot: INTEGER
+				-> equipment: EQUIPMENT
 		invariant
             0 < freeHands and freeHands < maxHands;
 	end
@@ -375,17 +384,45 @@ component
 		indexing
 			author: "Jonas Breindahl";
 			created: "30-11-2011";
-			revised: "05-12-2011";
+			revised: "12-12-2011";
 		feature
+			id: INTEGER -- What is your unique ID?
 			tapped BOOLEAN -- Are you tapped right now?
 			name: STRING -- What is your name?
 			equipmentType: EQUIPMENT_TYPE -- What type of equipment are you?
+			attackType: ATTACK_TYPE -- What type of attack are you?
+			rarity: EQUIPMENT_RARITY -- What rarity are you?
+			abilities: SEQUENCE[ABILITY] -- What are your abilities?
+			surgeAbilities: SEQUENCE[SURGE_ABILITY] -- What are your surge abilities?
+			hands: INTEGER -- How many hands do you take to wield
 			buyPrice: INTEGER -- What is your price?
-			abilities: SEQUENCE[SURGE_ABILITY] -- What are your abilities?
-			handsToWield: INTEGER -- How many hands do you use?
-		invariant
-			-- "An equipment may only be tapped one time per round"
-			true;
+			dice: SEQUENCE[DICE] -- What dice do you give for attack?
+			equipped: BOOLEAN -- Are you equipped?
+			tapEquipment: Void -- Tap yourself
+				require
+					!tapped;
+				ensure
+					tapped;
+			untapEquipment: Void -- Untap yourself
+				ensure
+					!tapped;
+			equipToHero: Void -- Equip to 'this' hero!
+				-> hero: Hero
+				require
+					!equipped;
+				ensure
+					equipped;
+			end
+			unequipFromHero: Void -- Unequip from 'this' hero!
+				-> hero: Hero
+				require
+					equipped;
+				ensure
+					!equipped;
+			end
+			clone: Equipment -- Give me a copy of yourself
+			equals: BOOLEAN -- Are you equal to 'this' object?
+				-> obj: Object
 	end
 	
 	class SURGE_ABILITY -- A surge power on a piece of equipment
@@ -400,25 +437,22 @@ component
 			cost >= 0;
 			ability /= Void;
 	end
-		
-	class TRAINING_TOKEN -- A token that give extra dice in a specific kind of attack
-		indexing
-			author: "Jonas Breindahl";
-			created: "30-11-2011";
-			revised: "30-11-2011";
-		feature
-			type: ATTACK_TYPE -- What attack do you grant bonus to?
-	end
 	
-	class POTION -- A potion, that can either be on a square, or equipped on a Hero
+	class TREASURE -- A treasure that can be in a chest
 		indexing
 			author: "Jonas Breindahl";
-			created: "30-11-2011";
-			revised: "30-11-2011";
-		inherit
-			EQUIPMENT
+			created: "13-12-2011";
+			revised: "13-12-2011";
 		feature
-			type POTION_TYPE -- What kind of potion are you?
+			id: INTEGER -- What is your unique ID?
+			name: STRING -- What is your name?
+			rarity: EQUIPMENT_RARITY -- What is your rarity?
+			equipment: EQUPMENT -- What equipment do you have?
+			coins: INTEGEr -- How many coins do you have?
+			isTreasureCache: BOOLEAN -- Are you a treasure cache?
+		invariant
+			coins >= 0;
+			equipment = Void -> isTreasureCache
 	end
 end
 
@@ -430,12 +464,14 @@ component
 			created: "30-11-2011";
 			revised: "30-11-2011";
 		feature
+			id: INTEGER -- What is your unique id?
 			name: STRING -- What is your name? Your name is 'this'!
 			cardDescription: STRING -- What is your description? Your description is 'this'!
 			type: OVERLORD_CARD_TYPE -- What type of overlord card are you?"
-			abilities: SEQUENCE[ABILITY] -- What abilities do you have?
             playPrice: INT -- How many threat tokens does it take to play you?
             sellPrice: INT -- How many threat tokens do I get selling you?
+			deferred playCard: Void -- Play this card
+			canPlay: BOOLEAN -- Can this card be played right now?
 	end
     
     class SPAWN_CARD
@@ -445,6 +481,7 @@ component
             OVERLORD_CARD
         feature
             monstersToSpawn: SEQUENCE[MONSTER] -- Can I have a list of all monsters that can be spawned with this card?
+			effective playCard: Void -- Let the overlord spawn the list of monsters that are on the card
     end
 end
 
@@ -456,9 +493,28 @@ component
 			created: "30-11-2011";
 			revised: "30-11-2011";
 		feature
+			triggered: BOOLEAN -- Are you triggered or not?
 			canBeUsedNow: BOOLEAN -- Can this ability be used now?
-				-> GAME_STATE
+			toString: STRING -- Can I have you as a string?			
 	end
+	
+	class ATTACK
+		indexing
+			author: "Jonas Breindahl";
+			created: "13-12-2011";
+			revised: "12-13-2011";
+		feature
+			attackingFigure: Figure -- What figure is attacking?
+			targetSquare: Point -- What point on the board is attacked?
+			rangeNeeded: INTEGER -- What range is needed to reach the target
+			damageBonus: INTEGER -- What is the bonus to damage for the attack?
+			rangeBonus: INTEGER -- What is the bonus to range for the attack?
+			pierceBonus: INTEGER -- What is the bonus to pierce for the attack?
+			surgeBonus: INTEGER -- What is the bonus to surge for the attack?
+			totalDamage: INTEGER -- What is the total damage for the attack?
+			totalRange: INTEGER -- What is the total range for the attack?
+			totalPierce: INTEGER -- What is the total pierce for the attack?
+			totalSurge: INTEGER -- What is the total surge for the attack?
 end
 
 static_diagram FORMAL_BOARD_CLUSTER

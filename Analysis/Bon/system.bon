@@ -611,15 +611,6 @@ class_chart ATTACK
 		"Roll all dice!"
 end
 
-class_chart EVENT
-	indexing
-		author: "Jonas Breindahl";
-		created: "23-11-2011";
-		revised: "23-11-2011"
-	explanation
-		"A event that will make something happen"
-end
-
 class_chart BOARD
 	indexing
 		author: "Jonas Breindahl";
