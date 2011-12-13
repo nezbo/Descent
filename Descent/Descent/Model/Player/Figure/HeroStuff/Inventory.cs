@@ -46,7 +46,7 @@ namespace Descent.Model.Player.Figure.HeroStuff
     /// The inventory of a hero
     /// </summary>
     /// <author>
-    /// Jonas Breindahl (jobre@itu.dk)
+    /// Jonas Breindahl (jobre@itu.dk) & Martin MArcher
     /// </author>
     public class Inventory
     {

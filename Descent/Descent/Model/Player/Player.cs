@@ -136,7 +136,7 @@
         /// <summary>
         /// Are you client or server?
         /// </summary>
-        public bool IsServer { get; internal set; }
+        public bool IsServer{ get; internal set; }
 
         public void SetPlayerNick(int id, string nickname)
         {

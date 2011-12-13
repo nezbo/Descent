@@ -15,7 +15,7 @@ namespace Descent.Model.Event
     /// An instance of an attack, with all the data necessary
     /// </summary>
     /// <author>
-    /// Jonas Breindahl (jobre@itu.dk)
+    /// Jonas Breindahl (jobre@itu.dk) & Martin MArcher
     /// </author>
     public class Attack
     {
