@@ -1,4 +1,6 @@
-﻿namespace Descent.GUI
+﻿using Descent.GUI.Screens;
+
+namespace Descent.GUI
 {
     using System;
     using System.Collections.Generic;
