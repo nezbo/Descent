@@ -21,7 +21,7 @@ namespace Descent.Messaging.Events
         public ChatMessageEventArgs(string[] stringArgs)
         {
             Contract.Requires(stringArgs != null);
-            Contract.Requires(stringArgs.Length >= 1)
+            Contract.Requires(stringArgs.Length >= 1);
             Contract.Requires(stringArgs[0] != null);
             PopulateWithArgs(stringArgs);
         }
