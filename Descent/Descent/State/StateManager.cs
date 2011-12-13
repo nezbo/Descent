@@ -123,14 +123,6 @@ namespace Descent.State
             get { return stateMachine.CurrentState; }
         }
 
-        [Pure]
-        public State[] PreviousStates(int count)
-        {
-            Contract.Requires(count > 0);
-            Contract.Ensures(Contract.Result<State[]>().Length <= count);
-            return stateMachine.PreviousStates(count);
-        }
-
         // Helper methods for the game
         [Pure]
         public bool HasTurn()
