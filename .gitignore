@@ -10,6 +10,8 @@ MessagingTest/bin
 MessagingTest/obj
 Descent/Descent.PexValidation/bin
 Descent/Descent.PexValidation/obj
+Descent/Descent.ManualValidation/bin
+Descent/Descent.ManualValidation/obj
 *.dotCover
 *.ReSharper.user
 *.suo
@@ -21,4 +23,4 @@ Descent/Descent/StyleCop.Cache
 .vsmdi
 DotCoverResults
 .testsettings
-
+*.dcvr.settings
