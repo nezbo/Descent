@@ -69,6 +69,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="HeroTest.AddFatigue.g.cs">
+      <DependentUpon>HeroTest.cs</DependentUpon>
+    </Compile>
     <Compile Include="HeroTest.cs" />
     <Compile Include="Model\Event\AbilityTest.Apply.g.cs">
       <DependentUpon>AbilityTest.cs</DependentUpon>

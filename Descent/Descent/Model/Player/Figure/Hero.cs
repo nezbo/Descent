@@ -332,6 +332,7 @@
         [ContractInvariantMethod]
         private void ObjectInvariant()
         {
+            Contract.Invariant(inventory != null);
             Contract.Invariant(fatigue >= 0 && fatigue <= MaxFatigue);
         }
         #endregion
