@@ -110,16 +110,19 @@ namespace Descent.State
 
         // stuff?
 
+        [Pure]
         public GameState GameState
         {
             get { return gameState; }
         }
 
+        [Pure]
         public State CurrentState
         {
             get { return stateMachine.CurrentState; }
         }
 
+        [Pure]
         public State[] PreviousStates(int count)
         {
             Contract.Requires(count > 0);
@@ -128,12 +131,13 @@ namespace Descent.State
         }
 
         // Helper methods for the game
-
+        [Pure]
         public bool HasTurn()
         {
             return gameState.CurrentPlayer == Player.Instance.Id;
         }
 
+        [Pure]
         public bool IsAHeroTurn()
         {
             return Player.Instance.HeroParty.Heroes.Keys.Contains(gameState.CurrentPlayer);

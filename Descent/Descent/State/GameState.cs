@@ -86,6 +86,7 @@
             return heroes.OrderBy(x => System.Guid.NewGuid()).First();
         }
 
+        [Pure]
         public Equipment[] UnequippedEquipment(int playerId)
         {
             Contract.Requires(playerId > 0);
