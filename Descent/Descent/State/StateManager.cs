@@ -1055,7 +1055,7 @@ namespace Descent.State
 
             if (Player.Instance.IsServer)
             {
-                eventManager.QueueEvent(EventType.ChatMessage, new ChatMessageEventArgs(Player.Instance.GetPlayerNick(eventArgs.SenderId) + " has started his turn."));
+                eventManager.QueueEvent(EventType.ChatMessage, new ChatMessageEventArgs(Player.Instance.GetPlayerNick(eventArgs.PlayerId) + " has started his turn."));
             }
 
             Player.Instance.HeroParty.Heroes[gameState.CurrentPlayer].UntapAll();
