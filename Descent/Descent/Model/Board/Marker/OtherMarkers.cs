@@ -1,10 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="OtherMarkers.cs" company="">
-// TODO: Update copyright text.
-// </copyright>
-// -----------------------------------------------------------------------
-
-namespace Descent.Model.Board.Marker
+﻿namespace Descent.Model.Board.Marker
 {
     using System;
     using System.Collections.Generic;

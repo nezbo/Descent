@@ -51,7 +51,7 @@ namespace Descent.Model
     #endregion
 
     /// <summary>
-    /// TODO: Update summary.
+    /// Dice are used when figures attack to calculate success, damage, etc.
     /// </summary>
     /// <author>
     /// Jonas Breindahl (jobre@itu.dk)
