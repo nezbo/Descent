@@ -1268,7 +1268,7 @@ component
 				stringEvent /= Void
 			end
 			queueEvent
-				-> eventType: EVENTTYPE
+				-> eventType: EVENT_TYPE
 				-> eventArgs: GAME_EVENT_ARGS
 			end
 			processEventQueue
@@ -1278,9 +1278,19 @@ component
 			author: "Simon Westh Henriksen";
 		feature
 			senderId: INTEGER,
-			eventId: INTEGER,
+			eventId: STRING,
 			eventType: EVENT_TYPE,
 			needResponse: BOOLEAN
+			MAKE
+				-> senderId: INTEGER
+				-> eventId: STRING
+				-> eventType: EVENT_TYPE
+				-> needResponse: BOOLEAN
+				
+		require
+			senderId >= 1 AND senderId <= 5;
+			eventId /= Void;
+		end
 	end
 end
 	
