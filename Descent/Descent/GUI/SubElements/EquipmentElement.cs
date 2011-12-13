@@ -1,4 +1,4 @@
-﻿namespace Descent.GUI
+﻿namespace Descent.GUI.SubElements
 {
     using System.Collections.Generic;
     using System.Linq;
