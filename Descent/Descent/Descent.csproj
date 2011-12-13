@@ -91,7 +91,6 @@
     <StartupObject>Descent.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.Pex.Framework, Version=0.94.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
     <Reference Include="Microsoft.Xna.Framework.Game, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
     <Reference Include="Microsoft.Xna.Framework.Graphics, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
@@ -207,8 +206,9 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DescentContent\DescentContent.contentproj">
-      <Name>DescentContent</Name>
+      <Name>DescentContent %28Content%29</Name>
       <XnaReferenceType>Content</XnaReferenceType>
+      <Project>{5FD4631E-EB28-4020-8D1B-7D68CB1B674C}</Project>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

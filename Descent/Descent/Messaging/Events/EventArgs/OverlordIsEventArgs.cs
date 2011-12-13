@@ -19,7 +19,11 @@ namespace Descent.Messaging.Events
 
         public OverlordIsEventArgs(string[] stringArgs)
         {
-            Contract.Requires(stringArgs.Length >= 1);
+            Contract.Requires(stringArgs != null);
+            Contract.Requires(stringArgs.Length == 1);
+            int b;
+            Contract.Requires(int.TryParse(stringArgs[0], out b));
+
             PopulateWithArgs(stringArgs);
         }
 
@@ -27,8 +31,12 @@ namespace Descent.Messaging.Events
 
         public override void PopulateWithArgs(string[] stringArgs)
         {
-            Contract.Requires(stringArgs.Length >= 1);
-            this.PlayerId = int.Parse(stringArgs[0]);
+            Contract.Requires(stringArgs != null);
+            Contract.Requires(stringArgs.Length == 1);
+            int b;
+            Contract.Requires(int.TryParse(stringArgs[0], out b));
+
+            PlayerId = int.Parse(stringArgs[0]);
         }
 
         public override string ToString()
