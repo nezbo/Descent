@@ -1,4 +1,6 @@
-﻿namespace Descent.GUI.SubElements
+﻿using System.Diagnostics.Contracts;
+
+namespace Descent.GUI.SubElements
 {
     using System.Collections.Generic;
     using Descent.Messaging.Events;
@@ -97,6 +99,9 @@
         // events from outside to chat
         private void GetMessage(object sender, ChatMessageEventArgs eventArgs)
         {
+            Contract.Requires(eventArgs != null);
+            Contract.Requires(eventArgs.ToString().Length > 0);
+
             FormatAndAdd(eventArgs.ToString());
         }
 

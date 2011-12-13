@@ -84,7 +84,7 @@
             int yPos = 2;
             this.AddText(this.Name, Equipment.Name, new Vector2(4, yPos));
 
-            Vector2 nameSize = this.Font.MeasureString(texts[0].Line);
+            Vector2 nameSize = this.Font.MeasureString(texts[0].Message);
             yPos += (int)nameSize.Y + 5;
 
             this.AddText(this.Name, Equipment.Type.ToString(), new Vector2(4, yPos));
@@ -110,7 +110,7 @@
                         foreach (SurgeAbility ability in Equipment.SurgeAbilities)
                         {
                             GUIElementFactory.DrawSurgeAbility(this, ability, 2, yPos, true);
-                            yPos += (int)Font.MeasureString(texts[texts.Count - 1].Line).Y;
+                            yPos += (int)Font.MeasureString(texts[texts.Count - 1].Message).Y;
                         }
 
                         int xHand = 45;

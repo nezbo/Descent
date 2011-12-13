@@ -469,7 +469,7 @@
             // draw my own text
             foreach (Text t in texts)
             {
-                draw.DrawString(Font, t.Line, t.Position, t.Color);
+                draw.DrawString(Font, t.Message, t.Position, t.Color);
             }
 
             // draw the children on top
