@@ -13,12 +13,17 @@ namespace Descent.Messaging.Events
     {
         public SurgeAbilityEventArgs(int abilityId)
         {
+            Contract.Requires(abilityId > 1);
             AbilityId = abilityId;
         }
 
         public SurgeAbilityEventArgs(string[] stringArgs)
         {
+            Contract.Requires(stringArgs != null);
             Contract.Requires(stringArgs.Length == 1);
+            int b;
+            Contract.Requires(int.TryParse(stringArgs[0], out b));
+
             PopulateWithArgs(stringArgs);
         }
 
@@ -26,7 +31,11 @@ namespace Descent.Messaging.Events
 
         public override void PopulateWithArgs(string[] stringArgs)
         {
+            Contract.Requires(stringArgs != null);
             Contract.Requires(stringArgs.Length == 1);
+            int b;
+            Contract.Requires(int.TryParse(stringArgs[0], out b));
+
             AbilityId = int.Parse(stringArgs[0]);
         }
 

@@ -1,6 +1,7 @@
 ﻿
 namespace Descent.Messaging.Events
 {
+    using System;
     using System.Diagnostics.Contracts;
 
     /// <summary>
@@ -21,7 +22,12 @@ namespace Descent.Messaging.Events
 
         public AssignHeroEventArgs(string[] stringArgs)
         {
-            Contract.Requires(stringArgs.Length >= 2);
+            Contract.Requires(stringArgs != null);
+            Contract.Requires(stringArgs.Length == 2);
+            int b;
+            Contract.Requires(Contract.ForAll(stringArgs, s => int.TryParse(s, out b) && int.Parse(s) > 0));
+            Contract.Ensures(PlayerId > 0);
+            Contract.Ensures(HeroId > 0);
             PopulateWithArgs(stringArgs);
         }
 
@@ -31,9 +37,16 @@ namespace Descent.Messaging.Events
 
         public override void PopulateWithArgs(string[] stringArgs)
         {
-            Contract.Requires(stringArgs.Length >= 2);
+            Contract.Requires(stringArgs != null);
+            Contract.Requires(stringArgs.Length == 2);
+            int b;
+            Contract.Requires(Contract.ForAll(stringArgs, s => int.TryParse(s, out b) && int.Parse(s) > 0));
+            Contract.Ensures(PlayerId > 0);
+            Contract.Ensures(HeroId > 0);
+
             PlayerId = int.Parse(stringArgs[0]);
             HeroId = int.Parse(stringArgs[1]);
+
         }
 
         public override string ToString()

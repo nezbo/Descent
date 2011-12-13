@@ -30,13 +30,20 @@ namespace Descent.Messaging.Events
         {
             Contract.Requires(playersIngame != null);
             Contract.Requires(playersIngame.Length > 0);
+
             NumberOfPlayers = playersIngame.Length;
             Players = playersIngame;
         }
 
         public PlayersInGameEventArgs(string[] stringArgs)
         {
-            Contract.Requires(stringArgs.Length >= 1);
+            Contract.Requires(stringArgs != null);
+            Contract.Requires(stringArgs.Length >= 3);
+            int b;
+            Contract.Requires(Contract.ForAll(stringArgs, s => int.TryParse(s, out b)));
+            Contract.Requires(stringArgs.Length == (int.Parse(stringArgs[0]) * 2) + 1);
+            Contract.Requires(int.Parse(stringArgs[0]) >= 1);
+
             PopulateWithArgs(stringArgs);
         }
 
@@ -46,9 +53,13 @@ namespace Descent.Messaging.Events
 
         public override void PopulateWithArgs(string[] stringArgs)
         {
-            Contract.Requires(stringArgs.Length >= 2);
-            Contract.Requires(int.Parse(stringArgs[0]) >= 1);
+            Contract.Requires(stringArgs != null);
+            Contract.Requires(stringArgs.Length >= 3);
+            int b;
+            Contract.Requires(Contract.ForAll(stringArgs, s => int.TryParse(s, out b)));
             Contract.Requires(stringArgs.Length == (int.Parse(stringArgs[0]) * 2) + 1);
+            Contract.Requires(int.Parse(stringArgs[0]) >= 1);
+
 
             NumberOfPlayers = int.Parse(stringArgs[0]);
             Players = new PlayerInGame[NumberOfPlayers];
