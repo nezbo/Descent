@@ -73,19 +73,45 @@ cluster_chart GUI_CLUSTER
 	indexing
 		author: "Emil Juul Jacobsen";
 		created: "27-11-2011";
-		revised: "30-11-2011"
+		revised: "13-12-2011"
 	class DRAWABLE description "Something that should be able to get drawn"
 	class IMAGE description "A simple holder for a source image"
 	class GUI description "The overall visual representation of the game"
 	class GUI_ELEMENT description "A visual element on the user interface"
-	class BOARD_GUI_ELEMENT description "The visualization of the squares of the board"
 	class TEXT description "A single line of text"
 	class GUI_ELEMENT_FACTORY description "Responsible for creating hierarchies of GUIElements"
-	class BOARD_GUI_ELEMENT description "The element on the screen that visualizes the game board."
-    class CHAT description "Lists chat messages and useful game events on the screen"
-	class INPUT_ELEMENT description "A box on the screen where you can input text"
+	cluster GUI_SCREENS_CLUSTER description "The major specific parts of the gui"
+	cluster GUI_SUB_ELEMENTS_CLUSTER description "The smaller elements that can be used in serveral different situations."
 end
 
+cluster_chart GUI_SCREENS_CLUSTER
+	indexing
+		author: "Emil Juul Jacobsen";
+		created: "13-12-2011";
+		revised: "13-12-2011";
+	class ATTACK_ELEMENT description "Displays information about a combat with dice, target etc."
+	class BOARD_ELEMENT description "The element on the screen that visualizes the game board."
+	class HERO_ELEMENT description "The information that a hero player sees about his hero."
+	class OVERLORD_ELEMENT description "The information that the overlord player sees."
+	class PLAYERS_ELEMENT description "The menu of short summaries of all other player's heroes and overlord."
+end
+
+cluster_chart GUI_SUB_ELEMENTS_CLUSTER
+	indexing
+		author: "Emil Juul Jacobsen";
+		created: "13-12-2011";
+		revised: "13-12-2011";
+	class CHAT_ELEMENT description "Lists chat messages and useful game events on the screen"
+	class DICES_ELEMENT description "A box that visualizes any number of dices with their currently rolled sides."
+	class EQUIPMENT_ELEMENT description "Visualizes a single equipment."
+	class EQUIPMENT_PANEL description "An element on the screen that can be hidden containing a number of equipments."
+	class HERO_SUMMARY description "A short summary of the information for a hero."
+	class INPUT_ELEMENT description "A box on the screen where you can input text"
+	class MONSTER_SUMMARY description "A short summary of the information for a monster."
+	class OVERLORD_CARD_ELEMENT description "Displays the content of an overlord card and sends the proper events when used."
+	class OVERLORD_SUMMARY description "A short summary of the information for the overlord."
+end
+	
 cluster_chart MESSAGING
 	indexing
 		author: "Simon Westh Henriksen";
