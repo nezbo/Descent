@@ -1138,7 +1138,151 @@ component
 			end
 	end
 end
-	
+
+static_diagram FORMEL_MESSAGING
+component
+    class ASYNC_SOCKETS_CLIENT
+        indexing
+            author: "Simon Westh Henriksen";
+        feature
+			MAKE: ASYNC_SOCKETS_CLIENT
+				-> address: STRING
+				-> port: INTEGER
+			require
+				address /= Void;
+				-- address includes 3 '.''s.
+				port > 0;
+			ensure
+				Socket /= Void
+			end
+			setSocket
+				-> socket: SOCKET
+			require
+				socket /= Void
+			end
+			getSocket: SOCKET
+			end
+	end
+	class ASYNC_SOCKETS_SERVER
+		indexing
+			author: "Simon Westh Henriksen";
+		feature
+			MAKE: ASYNC_SOCKETS_SERVER
+				-> port: INTEGER
+			require
+				port > 0;
+			ensure
+				Socket /= Void;
+			end
+			ips: SEQUENCE[STRING]
+			ensure
+				Result /= Void;
+			end
+			start
+			require
+				Socket /= Void;
+			end
+			broadcast
+				-> message: STRING
+			end
+			broadcastExceptClient
+				-> message: STRING,
+				-> clientId: INTEGER
+			end
+	end
+	class CLIENT_INFO
+		indexing
+			author: "Simon Westh Henriksen";
+		feature
+			id: INTEGER
+			ip: STRING
+			MAKE: CLIENT_INFO
+				-> clientSocket: SOCKET
+			require
+				clientSocket /= Void
+			ensure
+				id /= Void
+			end
+			send
+				-> message: STRING
+			require
+				message /= Void
+			end
+			beginReceive
+			require
+				socket /= Void
+			end
+	end
+	deferred class CONNECTION
+		indexing
+			author: "Simon Westh Henriksen";
+		feature
+			id: INTEGER,
+			ips: SEQUENCE[INTEGER]
+			deferred start
+			deferred sendString
+				-> message: STRING
+			end
+	end
+	effective class CLIENT_CONNECTION
+		indexing
+			author: "Simon Westh Henriksen";
+		inherit
+			CONNECTION
+		feature
+			MAKE: CLIENT_CONNECTION
+				-> ip: STRING,
+				-> port: INTEGER
+			require
+				ip /= Void,
+				port > 0
+			end
+			effective start
+			end
+			effective sendString
+				-> message: STRING
+			end
+	end
+	effective class SERVER_CONNECTION
+		indexing
+			author: "Simon Westh Henriksen";
+		inherit
+			CONNECTION
+		feature
+			MAKE: SERVER_CONNECTION
+				-> ip: STRING,
+				-> port: INTEGER
+			effective start
+			end
+			effective sendString
+				-> message: STRING
+	end
+	class EVENT_MANAGER
+		indexing
+			author: "Simon Westh Henriksen";
+		feature
+			queueStringEvent
+				-> stringEvent: STRING
+				-> broadcast: BOOLEAN
+			require
+				stringEvent /= Void
+			end
+			queueEvent
+				-> eventType: EVENTTYPE
+				-> eventArgs: GAME_EVENT_ARGS
+			end
+			processEventQueue
+	end
+	class GAME_EVENT_ARGS
+		indexing
+			author: "Simon Westh Henriksen";
+		feature
+			senderId: INTEGER,
+			eventId: INTEGER,
+			eventType: EVENT_TYPE,
+			needResponse: BOOLEAN
+	end
+end
 	
 	
 	

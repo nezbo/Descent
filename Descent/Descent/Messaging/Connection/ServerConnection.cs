@@ -92,10 +92,8 @@
                 newClient.Send("ASSIGNID," + newClient.Id); // Send back the ID to the player.
                 return true;
             }
-            else
-            {
-                return false;
-            }
+
+            return false;
         }
     }
 }

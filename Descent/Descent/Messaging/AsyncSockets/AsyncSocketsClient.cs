@@ -3,6 +3,7 @@ namespace Descent.Messaging.AsyncSockets
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Net;
     using System.Net.Sockets;
@@ -27,6 +28,10 @@ namespace Descent.Messaging.AsyncSockets
         /// <param name="port">Port of the server to connect to.</param>
         public AsyncSocketsClient(string address, int port)
         {
+            Contract.Requires(address != null && address.Count(f => f == '.') == 3);
+            Contract.Requires(port > 0);
+            Contract.Ensures(Socket != null);
+
             IPAddress host = Dns.GetHostAddresses(address)[0];
             Socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             Socket.Connect(new IPEndPoint(host, port));
