@@ -1199,20 +1199,26 @@ class_chart GAME_STATE
     indexing
         author: "Simon Henriksen & Martin Marcher";
     query
-        "Show me all your equipment.",
+        "Who is the current player?",
+        "Can I have the current attack?",
+        "Can I see all your equipment?",
         "Can I buy 'this' equipment?",
-        "Give me 'n' Overlord Cards.",
-        "Give me a Hero.",
+        "Can I have 'n' Overlord Cards?",
+        "Can I have a Hero?",
+        "Can I have a random chest?",
         "What is in 'this' chest?",
-        "Give me 'this kind' of treasure.",
+        "Can I have 'this kind' of treasure?",
         "What has 'this Hero' not equipped?"
     command
-        "Notify me when the Overlord deck is empty!",
+        "This is the current player!",
+        "This is the current attack!",
         "Remove 'this' equipment!",
         "Remove 'these' Overlord Cards!",
         "Remove 'this' Hero!",
         "Remove 'this' treasure card!",
-        "'This Hero' unequipped 'this Equipment'!"
+        "'This Hero' unequipped 'this Equipment'!",
+        "'This Hero' un-unequipped 'this Equipment'!",
+        "Remove all unequipped equipment from 'This Hero'!"
 end
 
 class_chart STATE_MANAGER
@@ -1221,15 +1227,11 @@ class_chart STATE_MANAGER
 	explanation
 		"The handler of all states. Knows about the current state and what to do next."
 	query
-		"Can I have the unique object of this class?",
 		"What is the current state?",
-		"What was the previous 'n' states?",
-		"What are the next possible state(s)?"
-	command
-		""
+        "Can I have the GameState object?",
+        "Does this client have turn?"
 	constraint
-		"After game initiation, there must always be a current state",
-		"You can only go from 'current state' to a state part of 'current state's next possible states."
+		"There must always be a current state"
 end
 
 class_chart STATE_MACHINE
@@ -1240,8 +1242,7 @@ class_chart STATE_MACHINE
 	query
 		"What is the current state?",
 		"What is the next state?",
-		"What was the previous 'n' states?",
-		"Going back, do I find this one before that?"
+		"Going back, do I find 'this state' before 'that state'?"
 	command
 		"Change to next state!",
 		"Place these states after the current state!"
