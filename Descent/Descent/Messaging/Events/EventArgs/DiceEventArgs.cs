@@ -1,4 +1,5 @@
-﻿namespace Descent.Messaging.Events
+﻿
+namespace Descent.Messaging.Events
 {
     using System.Diagnostics.Contracts;
 
@@ -21,7 +22,12 @@
 
         public DiceEventArgs(string[] stringArgs)
         {
+            Contract.Requires(stringArgs != null);
             Contract.Requires(stringArgs.Length == 2);
+            int b;
+            Contract.Requires(Contract.ForAll(stringArgs, s => int.TryParse(s, out b)));
+            Contract.Requires(int.Parse(stringArgs[0]) >= 0);
+            Contract.Requires(int.Parse(stringArgs[1]) >= 0 && int.Parse(stringArgs[1]) <= 7);
             PopulateWithArgs(stringArgs);
         }
 
@@ -31,7 +37,12 @@
 
         public override void PopulateWithArgs(string[] stringArgs)
         {
-            Contract.Requires(stringArgs.Length >= 1);
+            Contract.Requires(stringArgs != null);
+            Contract.Requires(stringArgs.Length == 2);
+            int b;
+            Contract.Requires(Contract.ForAll(stringArgs, s => int.TryParse(s, out b)));
+            Contract.Requires(int.Parse(stringArgs[0]) >= 0);
+            Contract.Requires(int.Parse(stringArgs[1]) >= 0 && int.Parse(stringArgs[1]) <= 7);
 
             DiceId = int.Parse(stringArgs[0]);
             SideId = int.Parse(stringArgs[1]);

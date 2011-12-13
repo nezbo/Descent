@@ -24,7 +24,14 @@ namespace Descent.Messaging.Events
 
         public GiveEquipmentEventArgs(string[] stringArgs)
         {
-            Contract.Requires(stringArgs.Length >= 2);
+            Contract.Requires(stringArgs != null);
+            Contract.Requires(stringArgs.Length == 3);
+            int b;
+            Contract.Requires(Contract.ForAll(stringArgs, s => int.TryParse(s, out b)));
+            Contract.Requires(int.Parse(stringArgs[0]) > 0);
+            Contract.Requires(int.Parse(stringArgs[1]) > 0);
+            Contract.Requires(int.Parse(stringArgs[0]) == 0 || int.Parse(stringArgs[0]) == 1);
+
             PopulateWithArgs(stringArgs);
         }
 
@@ -36,7 +43,13 @@ namespace Descent.Messaging.Events
 
         public override void PopulateWithArgs(string[] stringArgs)
         {
-            Contract.Requires(stringArgs.Length >= 1);
+            Contract.Requires(stringArgs != null);
+            Contract.Requires(stringArgs.Length == 3);
+            int b;
+            Contract.Requires(Contract.ForAll(stringArgs, s => int.TryParse(s, out b)));
+            Contract.Requires(int.Parse(stringArgs[0]) > 0);
+            Contract.Requires(int.Parse(stringArgs[1]) > 0);
+            Contract.Requires(int.Parse(stringArgs[0]) == 0 || int.Parse(stringArgs[0]) == 1);
 
             PlayerId = int.Parse(stringArgs[0]);
             EquipmentId = int.Parse(stringArgs[1]);

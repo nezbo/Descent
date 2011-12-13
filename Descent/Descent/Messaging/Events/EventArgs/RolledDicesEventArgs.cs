@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="PlayerJoinedEventArgs.cs" company="">
-// TODO: Update copyright text.
-// </copyright>
-// -----------------------------------------------------------------------
-
+﻿
 namespace Descent.Messaging.Events
 {
     using System.Diagnostics.Contracts;
@@ -19,13 +14,19 @@ namespace Descent.Messaging.Events
     {
         public RolledDicesEventArgs(int[] rolledSides)
         {
+            Contract.Requires(rolledSides != null);
             Contract.Requires(rolledSides.Length > 0);
+
             RolledSides = rolledSides;
         }
 
         public RolledDicesEventArgs(string[] stringArgs)
         {
+            Contract.Requires(stringArgs != null);
             Contract.Requires(stringArgs.Length >= 1);
+            int b;
+            Contract.Requires(Contract.ForAll(stringArgs, s => int.TryParse(s, out b)));
+
             PopulateWithArgs(stringArgs);
         }
 
@@ -34,7 +35,10 @@ namespace Descent.Messaging.Events
 
         public override void PopulateWithArgs(string[] stringArgs)
         {
+            Contract.Requires(stringArgs != null);
             Contract.Requires(stringArgs.Length >= 1);
+            int b;
+            Contract.Requires(Contract.ForAll(stringArgs, s => int.TryParse(s, out b)));
 
             RolledSides = new int[stringArgs.Length];
 

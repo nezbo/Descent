@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="PlayerJoinedEventArgs.cs" company="">
-// TODO: Update copyright text.
-// </copyright>
-// -----------------------------------------------------------------------
-
+﻿
 namespace Descent.Messaging.Events
 {
     using System.Diagnostics.Contracts;
@@ -24,7 +19,11 @@ namespace Descent.Messaging.Events
 
         public RequestBuyEquipmentEventArgs(string[] stringArgs)
         {
-            Contract.Requires(stringArgs.Length >= 1);
+            Contract.Requires(stringArgs != null);
+            Contract.Requires(stringArgs.Length == 1);
+            int b;
+            Contract.Requires(int.TryParse(stringArgs[0], out b));
+
             PopulateWithArgs(stringArgs);
         }
 
@@ -32,7 +31,11 @@ namespace Descent.Messaging.Events
 
         public override void PopulateWithArgs(string[] stringArgs)
         {
-            Contract.Requires(stringArgs.Length >= 1);
+            Contract.Requires(stringArgs != null);
+            Contract.Requires(stringArgs.Length == 1);
+            int b;
+            Contract.Requires(int.TryParse(stringArgs[0], out b));
+
             EquipmentId = int.Parse(stringArgs[0]);
         }
 
