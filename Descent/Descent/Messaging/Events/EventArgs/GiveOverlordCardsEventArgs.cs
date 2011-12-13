@@ -15,13 +15,18 @@ namespace Descent.Messaging.Events
     {
         public GiveOverlordCardsEventArgs(int[] overlordCardIds)
         {
+            Contract.Requires(overlordCardIds != null);
             Contract.Requires(overlordCardIds.Length > 0);
             OverlordCardIds = overlordCardIds;
         }
 
         public GiveOverlordCardsEventArgs(string[] stringArgs)
         {
+            Contract.Requires(stringArgs != null);
             Contract.Requires(stringArgs.Length >= 2);
+            int b;
+            Contract.Requires(Contract.ForAll(stringArgs, s => int.TryParse(s, out b) && int.Parse(s) > 0));
+            Contract.Requires(stringArgs.Skip(1).ToArray().Length == int.Parse(stringArgs[0]));
             PopulateWithArgs(stringArgs);
         }
 
@@ -29,7 +34,12 @@ namespace Descent.Messaging.Events
 
         public override void PopulateWithArgs(string[] stringArgs)
         {
+            Contract.Requires(stringArgs != null);
             Contract.Requires(stringArgs.Length >= 2);
+            int b;
+            Contract.Requires(Contract.ForAll(stringArgs, s => int.TryParse(s, out b) && int.Parse(s) > 0));
+            Contract.Requires(stringArgs.Skip(1).ToArray().Length == int.Parse(stringArgs[0]));
+
             int numberOfOverlordCards = int.Parse(stringArgs[0]);
 
             OverlordCardIds = new int[numberOfOverlordCards];

@@ -72,10 +72,6 @@
 
     public delegate void GiveEquipmentHandler(object sender, GiveEquipmentEventArgs eventArgs);
 
-    public delegate void RequestBuyPotionHandler(object sender, RequestBuyPotionEventArgs eventArgs);
-
-    public delegate void GivePotionHandler(object sender, GivePotionEventArgs eventArgs);
-
     public delegate void DenyBuyHandler(object sender, PlayerEventArgs eventArgs);
 
     public delegate void FinishedBuyHandler(object sender, GameEventArgs eventArgs);
@@ -272,10 +268,6 @@
         public event RequestBuyEquipmentHandler RequestBuyEquipmentEvent;
 
         public event GiveEquipmentHandler GiveEquipmentEvent;
-
-        public event RequestBuyPotionHandler RequestBuyPotionEvent;
-
-        public event GivePotionHandler GivePotionEvent;
 
         public event DenyBuyHandler DenyBuyEvent;
 
@@ -571,12 +563,6 @@
                 case EventType.GiveEquipment:
                     if (GiveEquipmentEvent != null) GiveEquipmentEvent(this, (GiveEquipmentEventArgs)eventArgs);
                     break;
-                case EventType.RequestBuyPotion:
-                    if (RequestBuyPotionEvent != null) RequestBuyPotionEvent(this, (RequestBuyPotionEventArgs)eventArgs);
-                    break;
-                case EventType.GivePotion:
-                    if (GivePotionEvent != null) GivePotionEvent(this, (GivePotionEventArgs)eventArgs);
-                    break;
                 case EventType.DenyBuy:
                     if (DenyBuyEvent != null) DenyBuyEvent(this, (PlayerEventArgs)eventArgs);
                     break;
@@ -832,10 +818,6 @@
                     return new RequestBuyEquipmentEventArgs(args);
                 case EventType.GiveEquipment:
                     return new GiveEquipmentEventArgs(args);
-                case EventType.RequestBuyPotion:
-                    return new GiveEquipmentEventArgs(args);
-                case EventType.GivePotion:
-                    return new GivePotionEventArgs(args);
                 case EventType.DenyBuy:
                     return new PlayerEventArgs(args);
                 case EventType.GiveConquestTokens:

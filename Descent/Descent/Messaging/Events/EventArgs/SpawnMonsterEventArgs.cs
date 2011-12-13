@@ -16,6 +16,7 @@ namespace Descent.Messaging.Events
             Contract.Requires(x >= 0);
             Contract.Requires(y >= 0);
             Contract.Requires(monsterId >= 0);
+
             X = x;
             Y = y;
             MonsterId = monsterId;
@@ -23,7 +24,11 @@ namespace Descent.Messaging.Events
 
         public SpawnMonsterEventArgs(string[] stringArgs)
         {
+            Contract.Requires(stringArgs != null);
             Contract.Requires(stringArgs.Length == 3);
+            int b;
+            Contract.Requires(Contract.ForAll(stringArgs, s => int.TryParse(s, out b) && int.Parse(s) >= 0));
+
             PopulateWithArgs(stringArgs);
         }
 
@@ -35,7 +40,11 @@ namespace Descent.Messaging.Events
 
         public override void PopulateWithArgs(string[] stringArgs)
         {
+            Contract.Requires(stringArgs != null);
             Contract.Requires(stringArgs.Length == 3);
+            int b;
+            Contract.Requires(Contract.ForAll(stringArgs, s => int.TryParse(s, out b) && int.Parse(s) >= 0));
+
             X = int.Parse(stringArgs[0]);
             Y = int.Parse(stringArgs[1]);
             MonsterId = int.Parse(stringArgs[2]);

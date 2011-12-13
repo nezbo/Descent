@@ -13,6 +13,7 @@ namespace Descent.Messaging.Events
             Contract.Requires(playerId > 0);
             Contract.Requires(x >= 0);
             Contract.Requires(y >= 0);
+
             PlayerId = playerId;
             X = x;
             Y = y;
@@ -20,7 +21,12 @@ namespace Descent.Messaging.Events
 
         public PlaceHeroEventArgs(string[] stringArgs)
         {
+            Contract.Requires(stringArgs != null);
             Contract.Requires(stringArgs.Length == 3);
+            int b;
+            Contract.Requires(Contract.ForAll(stringArgs, s => int.TryParse(s, out b) && int.Parse(s) >= 0));
+            Contract.Requires(int.Parse(stringArgs[0]) > 0);
+
             PopulateWithArgs(stringArgs);
         }
 
@@ -32,7 +38,12 @@ namespace Descent.Messaging.Events
 
         public override void PopulateWithArgs(string[] stringArgs)
         {
+            Contract.Requires(stringArgs != null);
             Contract.Requires(stringArgs.Length == 3);
+            int b;
+            Contract.Requires(Contract.ForAll(stringArgs, s => int.TryParse(s, out b) && int.Parse(s) >= 0));
+            Contract.Requires(int.Parse(stringArgs[0]) > 0);
+
             PlayerId = int.Parse(stringArgs[0]);
             X = int.Parse(stringArgs[1]);
             Y = int.Parse(stringArgs[2]);

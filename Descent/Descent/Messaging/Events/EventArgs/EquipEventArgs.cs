@@ -1,23 +1,27 @@
-﻿namespace Descent.Messaging.Events
+﻿
+namespace Descent.Messaging.Events
 {
     using System.Diagnostics.Contracts;
 
     /// <summary>
     /// The event arguments for events about equipping and unequipping equipments at a special inventory fields.
     /// </summary>
-    /// <author>
-    /// Simon Westh Henriksen
-    /// </author>
-    public sealed class InventoryFieldEventArgs : GameEventArgs
+    public sealed class EquipEventArgs : GameEventArgs
     {
-        public InventoryFieldEventArgs(int inventoryField)
+        public EquipEventArgs(int equipmentId, int inventoryField)
         {
+            Contract.Requires(equipmentId > 0);
+            Contract.Requires(inventoryField >= 0 && inventoryField <= 10);
+            EquipmentId = equipmentId;
             InventoryField = inventoryField;
         }
 
-        public InventoryFieldEventArgs(string[] stringArgs)
+        public EquipEventArgs(string[] stringArgs)
         {
-            Contract.Requires(stringArgs.Length == 1);
+            Contract.Requires(stringArgs != null);
+            Contract.Requires(stringArgs.Length == 2);
+            int b;
+            Contract.Requires(Contract.ForAll(stringArgs, s => int.TryParse(s, out b)));
             PopulateWithArgs(stringArgs);
         }
 
@@ -27,13 +31,18 @@
 
         public override void PopulateWithArgs(string[] stringArgs)
         {
-            Contract.Requires(stringArgs.Length == 1);
-            InventoryField = int.Parse(stringArgs[0]);
+            Contract.Requires(stringArgs != null);
+            Contract.Requires(stringArgs.Length == 2);
+            int b;
+            Contract.Requires(Contract.ForAll(stringArgs, s => int.TryParse(s, out b)));
+
+            EquipmentId = int.Parse(stringArgs[0]);
+            InventoryField = int.Parse(stringArgs[1]);
         }
 
         public override string ToString()
         {
-            return InventoryField.ToString();
+            return string.Join(",", EquipmentId, InventoryField);
         }
     }
 }
