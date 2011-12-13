@@ -23,4 +23,4 @@ Descent/Descent/StyleCop.Cache
 .vsmdi
 DotCoverResults
 .testsettings
-
+*.dcvr.settings
