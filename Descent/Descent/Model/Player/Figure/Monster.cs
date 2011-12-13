@@ -101,7 +101,7 @@
         /// </returns>
         public Monster Clone(int newID)
         {
-            Contract.Requires(newID > 0);
+            Contract.Requires(newID >= 0);
             return new Monster(newID, Name, isMaster, Speed, MaxHealth, Armor, attackType, new List<Dice>(DiceForAttack), Size, Texture);
         }
 

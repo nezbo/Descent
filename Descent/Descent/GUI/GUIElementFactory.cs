@@ -84,7 +84,6 @@ namespace Descent.GUI
         public static GUIElement CreateStateElement(Game game, State state, Role role, GameState gameState)
         {
             Contract.Requires(game != null);
-            Contract.Requires(gameState != null);
             Contract.Ensures(Contract.Result<GUIElement>() != null);
             Contract.Ensures(Contract.Result<GUIElement>().Bound.X == 0);
             Contract.Ensures(Contract.Result<GUIElement>().Bound.Y == 0);
