@@ -1,10 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="GlyphMarker.cs" company="">
-// TODO: Update copyright text.
-// </copyright>
-// -----------------------------------------------------------------------
-
-namespace Descent.Model.Board.Marker
+﻿namespace Descent.Model.Board.Marker
 {
     using System;
     using System.Collections.Generic;
@@ -17,7 +11,7 @@ namespace Descent.Model.Board.Marker
     using Microsoft.Xna.Framework.Graphics;
 
     /// <summary>
-    /// TODO: Update summary.
+    /// A glyph is a portal and a valid starting point.
     /// </summary>
     /// <author>
     /// Jonas Breindahl (jobre@itu.dk)

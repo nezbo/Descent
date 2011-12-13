@@ -1,20 +1,7 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="Monster.cs" company="">
-// TODO: Update copyright text.
-// </copyright>
-// -----------------------------------------------------------------------
-
-using Descent.Model.Board;
-
-namespace Descent.Model.Player.Figure
+﻿namespace Descent.Model.Player.Figure
 {
-    using System;
     using System.Collections.Generic;
     using System.Diagnostics.Contracts;
-    using System.IO;
-    using System.Linq;
-    using Descent.GUI;
-
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
 

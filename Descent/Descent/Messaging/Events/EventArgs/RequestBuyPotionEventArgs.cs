@@ -1,10 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="PlayerJoinedEventArgs.cs" company="">
-// TODO: Update copyright text.
-// </copyright>
-// -----------------------------------------------------------------------
-
-namespace Descent.Messaging.Events
+﻿namespace Descent.Messaging.Events
 {
     using System;
     using System.Diagnostics.Contracts;
