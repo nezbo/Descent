@@ -7,14 +7,13 @@
     using System.IO;
     using System.Linq;
 
-    using Descent.Model.Board;
-    using Descent.Model.Board.Marker;
-    using Descent.Model.Event;
-    using Descent.Model.Player;
-    using Descent.Model.Player.Figure;
-    using Descent.Model.Player.Figure.HeroStuff;
-    using Descent.Model.Player.OverlordStuff;
-
+    using Board;
+    using Board.Marker;
+    using Event;
+    using Player;
+    using Player.Figure;
+    using Player.Figure.HeroStuff;
+    using Player.OverlordStuff;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
 

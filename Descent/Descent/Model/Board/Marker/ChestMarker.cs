@@ -1,4 +1,5 @@
-﻿namespace Descent.Model.Board.Marker
+﻿
+namespace Descent.Model.Board.Marker
 {
     using Descent.Messaging.Events;
     using Descent.Model.Player;

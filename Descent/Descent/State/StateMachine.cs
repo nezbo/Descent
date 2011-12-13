@@ -1,13 +1,10 @@
-﻿using Descent.Messaging.Events;
-using Descent.Model.Player;
-
-namespace Descent.State
+﻿namespace Descent.State
 {
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.Contracts;
-    using System.Linq;
-    using System.Text;
+    using Messaging.Events;
+    using Model.Player;
 
     public delegate void StateChanged();
 
@@ -20,14 +17,14 @@ namespace Descent.State
         private readonly List<State> _states = new List<State>();
         private int currentIndex;
 
-        public event StateChanged StateChanged;
-
         public StateMachine(State[] startStates)
         {
             Contract.Requires(startStates != null && startStates.Length > 1);
             currentIndex = 0;
             _states.AddRange(startStates);
         }
+
+        public event StateChanged StateChanged;
 
         public State CurrentState
         {
@@ -43,10 +40,14 @@ namespace Descent.State
         {
             Contract.Ensures(currentIndex < _states.Count);
             currentIndex++;
+
+            #if DEBUG 
             if (Player.Instance.IsServer)
             {
-                //Player.Instance.EventManager.QueueEvent(EventType.ChatMessage, new ChatMessageEventArgs("Changed state: "+CurrentState.ToString()));
+                Player.Instance.EventManager.QueueEvent(EventType.ChatMessage, new ChatMessageEventArgs("Changed state: " + CurrentState.ToString()));
             }
+            #endif
+
             StateChanged();
         }
 
@@ -85,12 +86,15 @@ namespace Descent.State
                 {
                     return true;
                 }
-                else if (_states[index] == other)
+
+                if (_states[index] == other)
                 {
                     return false;
                 }
+
                 index--;
             }
+
             return false; // there were no "one" at all
         }
 

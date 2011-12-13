@@ -13,7 +13,7 @@
     /// A hero, made from a hero-sheet
     /// </summary>
     /// <author>
-    /// Jonas Breindahl (jobre@itu.dk)
+    /// Jonas Breindahl (jobre@itu.dk) & Martin Marcher
     /// </author>
     public class Hero : Figure
     {

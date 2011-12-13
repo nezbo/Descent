@@ -7,8 +7,8 @@ namespace Descent.State
     using System.Diagnostics.Contracts;
     using System.Linq;
 
-    using Descent.Model.Board.Marker;
-    using Descent.Model.Player.OverlordStuff;
+    using Model.Board.Marker;
+    using Model.Player.OverlordStuff;
 
     using GUI;
     using Messaging.Events;
@@ -93,15 +93,19 @@ namespace Descent.State
             eventManager.RemoveMovementEvent += RemoveMovement;
 
             // Internal events
-            eventManager.SquareMarkedEvent += new SquareMarkedHandler(SquareMarked);
-            eventManager.InventoryFieldMarkedEvent += new InventoryFieldMarkedHandler(InventoryFieldMarked);
-            eventManager.FatigueClickedEvent += new FatigueClickedHandler(FatiqueClicked);
-            eventManager.DiceClickedEvent += new DiceClickedHandler(DiceClicked);
+            eventManager.SquareMarkedEvent += SquareMarked;
+            eventManager.InventoryFieldMarkedEvent += InventoryFieldMarked;
+            eventManager.FatigueClickedEvent += FatiqueClicked;
+            eventManager.DiceClickedEvent += DiceClicked;
             eventManager.DoAttackEvent += DoAttack;
 
             // initiate start
-            stateMachine = new StateMachine(new State[] { State.InLobby, State.Initiation, State.DrawOverlordCards, 
-                State.AllBuyEquipment, State.AllEquip, State.WaitForChooseSquare, State.NewRound, State.NewRound });
+            stateMachine = new StateMachine(new State[]
+                                                {
+                                                    State.InLobby, State.Initiation, State.DrawOverlordCards,
+                                                    State.AllBuyEquipment, State.AllEquip, State.WaitForChooseSquare,
+                                                    State.NewRound, State.NewRound
+                                                });
             stateMachine.StateChanged += StateChanged;
 
             StateChanged();
