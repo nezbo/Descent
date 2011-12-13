@@ -196,6 +196,7 @@
         {
             Contract.Ensures(Bound.X == Contract.OldValue<int>(Bound.X) + x);
             Contract.Ensures(Bound.Y == Contract.OldValue<int>(Bound.Y) + y);
+
             Bound = new Rectangle(Bound.X + x, Bound.Y + y, Bound.Width, Bound.Height);
             foreach (GUIElement e in children) e.Move(x, y);
             foreach (Text t in texts) t.Position = new Vector2(t.Position.X + x, t.Position.Y + y);
