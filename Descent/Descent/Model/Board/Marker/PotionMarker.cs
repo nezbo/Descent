@@ -1,5 +1,7 @@
 ﻿namespace Descent.Model.Board.Marker
 {
+    using System.Diagnostics.Contracts;
+
     using Descent.Model.Player.Figure;
     using Descent.Model.Player.Figure.HeroStuff;
 
@@ -42,6 +44,11 @@
         public PotionMarker(int id, string name, Texture2D texture, int movementPoints, Equipment potion)
             : base(id, name, texture, movementPoints)
         {
+            Contract.Requires(name != null);
+            Contract.Requires(name.Length > 0);
+            Contract.Requires(movementPoints >= 0);
+            Contract.Requires(potion != null);
+
             this.potion = potion;
         }
         
@@ -57,6 +64,8 @@
         /// </param>
         public override void PickUp(Hero hero)
         {
+            Contract.Requires(hero != null);  
+
             hero.Inventory.EquipPotion(potion);
         }
         

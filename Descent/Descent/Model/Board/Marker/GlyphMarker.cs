@@ -1,10 +1,6 @@
 ﻿namespace Descent.Model.Board.Marker
 {
-    using System;
-    using System.Collections.Generic;
     using System.Diagnostics.Contracts;
-    using System.Linq;
-    using System.Text;
 
     using Descent.Model.Player.Figure;
 
@@ -25,6 +21,10 @@
         public GlyphMarker(int id, string name, Texture2D texture, int movementPoints, bool open, Texture2D openTexture)
             : base(id, name, texture, movementPoints)
         {
+            Contract.Requires(name != null);
+            Contract.Requires(name.Length > 0);
+            Contract.Requires(movementPoints >= 0);
+
             this.Open = open;
             if (open) this.Texture = openTexture;
             this.openTexture = openTexture;

@@ -243,10 +243,7 @@
         {
             Contract.Requires(amount > 0);
             Contract.Requires(amount <= Fatigue);
-            Contract.Ensures(
-                Contract.OldValue(fatigue) - amount < 0 ?
-                fatigue == 0 :
-                fatigue == Contract.OldValue(fatigue) - amount);
+            Contract.Ensures(fatigue == 0 || (fatigue == (Contract.OldValue(fatigue) - amount)));
             fatigue = (int)MathHelper.Clamp(fatigue - amount, 0, MaxFatigue);
         }
 
