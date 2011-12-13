@@ -1,6 +1,7 @@
 ﻿namespace Descent.Model.Player.Figure
 {
     using System.Collections.Generic;
+    using System.Diagnostics.Contracts;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
 
@@ -89,8 +90,18 @@
 
         #region Methods
 
+        /// <summary>
+        /// Returns a clone of the monster, but with a new unique ID
+        /// </summary>
+        /// <param name="newID">
+        /// The new id of the monser
+        /// </param>
+        /// <returns>
+        /// A copy of the monster, with a new ID
+        /// </returns>
         public Monster Clone(int newID)
         {
+            Contract.Requires(newID > 0);
             return new Monster(newID, Name, isMaster, Speed, MaxHealth, Armor, attackType, new List<Dice>(DiceForAttack), Size, Texture);
         }
 
