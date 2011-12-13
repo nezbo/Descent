@@ -8,6 +8,9 @@
 
     using Descent.Model.Player;
 
+    /// <summary>
+    /// Used to represent elements in the eventqueue.
+    /// </summary>
     public struct QueuedEvent
     {
         public string EventString;
@@ -441,7 +444,7 @@
         /// </summary>
         /// <param name="eventString">The event string.</param>
         /// <param name="sendOnNetwork">Should this event be sent to the other players?</param>
-        public void ParseAndFire(string eventString, bool sendOnNetwork)
+        private void ParseAndFire(string eventString, bool sendOnNetwork)
         {
             // Required parts
             string[] messageParts = eventString.Split(",".ToCharArray());
@@ -735,28 +738,8 @@
         }
 
         /// <summary>
-        /// Log a response to an event that requires responses.
-        /// TODO: This method is not correct - FIX IT!
+        /// TODO: This method is not curently used. Should be used for methods requiring responses - like MoveTo and attacks in the future.
         /// </summary>
-        /// <param name="eventId">The event id of response.</param>
-        private void AddResponse(string eventId)
-        {
-
-            // We should only take action if we have prepared to receive the responses by putting the key into the dictionary.
-            // If we see the key in there, we know we're supposed to collect responses.
-            if (responses.ContainsKey(eventId))
-            {
-                responses[eventId]++;
-
-                // If we have received responses from everyone but the player itself, we can fire the event and delete from the dictionary.
-                if (responses[eventId] >= Player.Instance.NumberOfPlayers - 1)
-                {
-                    AllRespondedNoActionEvent(this, new EventArgs());
-                    responses.Remove(eventId);
-                }
-            }
-        }
-
         private void AddResponse()
         {
 

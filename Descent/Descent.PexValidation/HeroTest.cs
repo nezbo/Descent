@@ -14,5 +14,11 @@ namespace Descent.Model.Player.Figure
     [PexAllowedExceptionFromTypeUnderTest(typeof(InvalidOperationException))]
     public partial class HeroTest
     {
+        [PexMethod, PexAllowedException("Descent", "System.Diagnostics.Contracts.__ContractsRuntime+ContractException")]
+        public void AddFatigue([PexAssumeUnderTest]Hero target, int amount)
+        {
+            target.AddFatigue(amount);
+            // TODO: add assertions to method HeroTest.AddFatigue(Hero, Int32)
+        }
     }
 }

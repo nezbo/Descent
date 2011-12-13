@@ -39,13 +39,13 @@ namespace Descent.Messaging.Events
         {
             Contract.Requires(stringArgs != null);
             Contract.Requires(stringArgs.Length >= 3);
-            int b;
-            Contract.Requires(Contract.ForAll(stringArgs, s => int.TryParse(s, out b)));
-            Contract.Requires(stringArgs.Length == (int.Parse(stringArgs[0]) * 2) + 1);
-            Contract.Requires(int.Parse(stringArgs[0]) >= 1);
+            
+            Contract.Requires(EventContractHelper.TryParseInt(stringArgs[0]) && int.Parse(stringArgs[0]) >= 1);
+            Contract.Requires(Contract.ForAll(1, stringArgs.Length, i => (i % 2 == 1) ? EventContractHelper.TryParseInt(stringArgs[i]) : true));
 
             PopulateWithArgs(stringArgs);
         }
+        
 
         public int NumberOfPlayers { get; set; }
 
@@ -55,10 +55,9 @@ namespace Descent.Messaging.Events
         {
             Contract.Requires(stringArgs != null);
             Contract.Requires(stringArgs.Length >= 3);
-            int b;
-            Contract.Requires(Contract.ForAll(stringArgs, s => int.TryParse(s, out b)));
-            Contract.Requires(stringArgs.Length == (int.Parse(stringArgs[0]) * 2) + 1);
-            Contract.Requires(int.Parse(stringArgs[0]) >= 1);
+            
+            Contract.Requires(EventContractHelper.TryParseInt(stringArgs[0]) && int.Parse(stringArgs[0]) >= 1);
+            Contract.Requires(Contract.ForAll(1, stringArgs.Length, i => (i % 2 == 1) ? EventContractHelper.TryParseInt(stringArgs[i]) : true));
 
 
             NumberOfPlayers = int.Parse(stringArgs[0]);

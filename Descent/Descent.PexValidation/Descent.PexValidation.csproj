@@ -69,6 +69,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="HeroTest.cs" />
     <Compile Include="Model\Event\AbilityTest.Apply.g.cs">
       <DependentUpon>AbilityTest.cs</DependentUpon>
     </Compile>

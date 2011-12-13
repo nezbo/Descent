@@ -1,25 +1,21 @@
-using Descent.GUI.SubElements;
-
 namespace Descent.State
 {
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.Contracts;
     using System.Linq;
-
-    using Model.Board.Marker;
-    using Model.Player.OverlordStuff;
-
     using GUI;
+    using GUI.SubElements;
     using Messaging.Events;
-
     using Microsoft.Xna.Framework;
     using Model;
     using Model.Board;
+    using Model.Board.Marker;
     using Model.Event;
     using Model.Player;
     using Model.Player.Figure;
     using Model.Player.Figure.HeroStuff;
+    using Model.Player.OverlordStuff;
 
     /// <summary>
     /// The handler of all states. Knows about the current state and what to do next.
@@ -29,14 +25,14 @@ namespace Descent.State
     {
         private readonly StateMachine stateMachine;
         private readonly GUI gui;
-        private EventManager eventManager = Player.Instance.EventManager;
-        private GameState gameState = new GameState();
+        private readonly EventManager eventManager = Player.Instance.EventManager;
+        private readonly GameState gameState = new GameState();
 
         // fields for different game logic variables
-        private Monster currentMonster;
         private readonly List<int> playersRemainingTurn = new List<int>();
         private readonly List<int> playersRemainingEquip = new List<int>();
         private readonly List<Point> damageTargetsRemaining = new List<Point>();
+        private Monster currentMonster;
 
         private List<Monster> monstersRemaining = new List<Monster>();
 
@@ -100,12 +96,12 @@ namespace Descent.State
             eventManager.DoAttackEvent += DoAttack;
 
             // initiate start
-            stateMachine = new StateMachine(new State[]
-                                                {
-                                                    State.InLobby, State.Initiation, State.DrawOverlordCards,
-                                                    State.AllBuyEquipment, State.AllEquip, State.WaitForChooseSquare,
-                                                    State.NewRound, State.NewRound
-                                                });
+            stateMachine = new StateMachine(new[]
+                                            {
+                                                State.InLobby, State.Initiation, State.DrawOverlordCards,
+                                                State.AllBuyEquipment, State.AllEquip, State.WaitForChooseSquare,
+                                                State.NewRound, State.NewRound
+                                            });
             stateMachine.StateChanged += StateChanged;
 
             StateChanged();
@@ -131,19 +127,23 @@ namespace Descent.State
         }
 
         [Pure]
-        public bool IsAHeroTurn()
+        private bool IsAHeroTurn()
         {
             return Player.Instance.HeroParty.Heroes.Keys.Contains(gameState.CurrentPlayer);
         }
 
         private Role DetermineRole()
         {
-            if (Player.Instance.IsOverlord) return Role.Overlord;
+            if (Player.Instance.IsOverlord)
+            {
+                return Role.Overlord;
+            }
 
             if (IsAHeroTurn())
             {
                 return Player.Instance.Id == gameState.CurrentPlayer ? Role.ActiveHero : Role.InactiveHero;
             }
+
             return Role.InactiveHero; // its not the hero's turns so they are all inactive
         }
 
@@ -169,170 +169,179 @@ namespace Descent.State
                         {
                             root.AddText("player" + i, Player.Instance.GetPlayerNick(i) ?? "", new Vector2(5, 50));
                         }
+
                         if (Player.Instance.IsServer)
                         {
-                            root.SetClickAction("start", (n, g) =>
-                                                             {
+                            root.SetClickAction(
+                                "start", 
+                                (n, g) =>
+                                {
 #if DEBUG
-                                                                 if (n.NumberOfPlayers > 1)
+                                    if (n.NumberOfPlayers > 1)
 #else 
-                                                                     if (n.NumberOfPlayers >= 3)
+                                        if (n.NumberOfPlayers >= 3)
 #endif
-                                                                 {
-                                                                     n.EventManager.QueueEvent(
-                                                                         EventType.BeginGame, new GameEventArgs());
-                                                                     n.EventManager.QueueEvent(EventType.OverlordIs, new OverlordIsEventArgs(Player.Instance.Id));
-                                                                 }
-                                                                 System.Diagnostics.Debug.WriteLine("Start clicked!");
-                                                             });
+                                    {
+                                        n.EventManager.QueueEvent(
+                                            EventType.BeginGame, new GameEventArgs());
+                                        n.EventManager.QueueEvent(EventType.OverlordIs, new OverlordIsEventArgs(Player.Instance.Id));
+                                    }
+
+                                    System.Diagnostics.Debug.WriteLine("Start clicked!");
+                                });
                         }
 
                         break;
                     }
+
                 case State.AllBuyEquipment:
                 case State.BuyEquipment:
                     {
                         if (role != Role.Overlord && ((CurrentState == State.AllBuyEquipment && playersRemainingTurn.Contains(Player.Instance.Id)) || (CurrentState == State.BuyEquipment && HasTurn())))
                         {
-
-                            root.SetClickAction("done", (n, g) =>
-                                                            {
-                                                                n.EventManager.QueueEvent(EventType.FinishedBuy,
-                                                                                          new GameEventArgs());
-                                                            });
-                            root.SetClickAction("item", (n, g) =>
-                                                            {
-                                                                if (g is EquipmentElement)
-                                                                {
-                                                                    EquipmentElement eq = (EquipmentElement)g;
-                                                                    n.EventManager.QueueEvent(
-                                                                    EventType.RequestBuyEquipment,
-                                                                    new RequestBuyEquipmentEventArgs(eq.Equipment.Id));
-                                                                }
-                                                            });
-
+                            root.SetClickAction(
+                                "done", 
+                                (n, g) => n.EventManager.QueueEvent(EventType.FinishedBuy, new GameEventArgs()));
+                            root.SetClickAction(
+                                "item", 
+                                (n, g) =>
+                                {
+                                    if (g is EquipmentElement)
+                                    {
+                                        EquipmentElement eq = (EquipmentElement)g;
+                                        n.EventManager.QueueEvent(
+                                        EventType.RequestBuyEquipment,
+                                        new RequestBuyEquipmentEventArgs(eq.Equipment.Id));
+                                    }
+                                });
                         }
                         else
                         {
                             root.Disable(root.Name);
                         }
+
                         break;
                     }
+
                 case State.AllEquip:
                 case State.Equip:
                     {
                         if (role != Role.Overlord && ((CurrentState == State.AllEquip && playersRemainingEquip.Contains(Player.Instance.Id)) || (CurrentState == State.Equip && HasTurn())))
                         {
-
-                            root.SetClickAction("item", (n, g) =>
-                                                            {
-                                                                if (g is EquipmentElement)
-                                                                {
-                                                                    int id = ((EquipmentElement)g).Id;
-                                                                    n.EventManager.QueueEvent(EventType.InventoryFieldMarked, new InventoryFieldEventArgs(id));
-                                                                }
-                                                            });
-                            root.SetClickAction("done", (n, g) =>
-                                                            {
-                                                                n.EventManager.QueueEvent(EventType.FinishedReequip, new GameEventArgs());
-                                                            });
+                            root.SetClickAction(
+                                "item", 
+                                (n, g) =>
+                                {
+                                    if (g is EquipmentElement)
+                                    {
+                                        int id = ((EquipmentElement)g).Id;
+                                        n.EventManager.QueueEvent(EventType.InventoryFieldMarked, new InventoryFieldEventArgs(id));
+                                    }
+                                });
+                            root.SetClickAction(
+                                "done", 
+                                (n, g) => n.EventManager.QueueEvent(EventType.FinishedReequip, new GameEventArgs()));
                         }
                         else
                         {
                             root.Disable("root");
                         }
+
                         break;
                     }
+
                 case State.WaitForHeroTurn:
                     {
                         if (role != Role.Overlord)
                         {
                             if (playersRemainingTurn.Contains(Player.Instance.Id))
                             {
-                                root.SetClickAction("take turn", (n, g) =>
-                                                                     {
-                                                                         n.EventManager.QueueEvent(
-                                                                             EventType.RequestTurn, new GameEventArgs());
-                                                                     });
+                                root.SetClickAction(
+                                    "take turn", 
+                                    (n, g) => n.EventManager.QueueEvent(EventType.RequestTurn, new GameEventArgs()));
                             }
                             else
                             {
                                 root.Disable("take turn");
                             }
                         }
+
                         break;
                     }
+
                 case State.WaitForChooseAction:
                     {
                         if (role == Role.ActiveHero)
                         {
-                            root.SetClickAction("advance", (n, g) =>
-                                                               {
-                                                                   n.EventManager.QueueEvent(EventType.ChooseAction, new ChooseActionEventArgs(ActionType.Advance));
-                                                               });
-                            root.SetClickAction("run", (n, g) =>
-                            {
-                                n.EventManager.QueueEvent(EventType.ChooseAction, new ChooseActionEventArgs(ActionType.Run));
-                            });
-                            root.SetClickAction("battle", (n, g) =>
-                            {
-                                n.EventManager.QueueEvent(EventType.ChooseAction, new ChooseActionEventArgs(ActionType.Battle));
-                            });
+                            root.SetClickAction(
+                                "advance", 
+                                (n, g) => n.EventManager.QueueEvent(EventType.ChooseAction, new ChooseActionEventArgs(ActionType.Advance)));
+                            root.SetClickAction(
+                                "run", 
+                                (n, g) => n.EventManager.QueueEvent(EventType.ChooseAction, new ChooseActionEventArgs(ActionType.Run)));
+                            root.SetClickAction(
+                                "battle", 
+                                (n, g) => n.EventManager.QueueEvent(EventType.ChooseAction, new ChooseActionEventArgs(ActionType.Battle)));
                         }
+
                         break;
                     }
+
                 case State.WaitForPerformAction:
                     {
                         if (role == Role.ActiveHero)
                         {
-                            root.SetClickAction("end", (n, g) =>
-                            {
-                                n.EventManager.QueueEvent(EventType.FinishedTurn, new GameEventArgs());
-                            });
+                            root.SetClickAction(
+                                "end", 
+                                (n, g) => n.EventManager.QueueEvent(EventType.FinishedTurn, new GameEventArgs()));
                         }
                         else if (role == Role.Overlord && HasTurn())
                         {
-                            root.SetClickAction("end", (n, g) =>
-                                                           {
-                                                               n.EventManager.QueueEvent(EventType.EndMonsterTurn, new GameEventArgs());
-                                                           });
+                            root.SetClickAction(
+                                "end", 
+                                (n, g) => n.EventManager.QueueEvent(EventType.EndMonsterTurn, new GameEventArgs()));
                         }
 
                         break;
                     }
+
                 case State.WaitForOverlordChooseAction:
                     {
                         if (role == Role.Overlord)
                         {
-                            root.SetClickAction("end", (n, g) =>
-                              {
-                                  n.EventManager.QueueEvent(EventType.FinishedTurn, new GameEventArgs());
-                              });
+                            root.SetClickAction(
+                                "end", 
+                                (n, g) => n.EventManager.QueueEvent(EventType.FinishedTurn, new GameEventArgs()));
                         }
 
                         break;
                     }
+
                 case State.WaitForRollDice:
                     {
                         if (gameState.CurrentPlayer == Player.Instance.Id)
                         {
-                            root.SetClickAction("roll", (n, g) =>
-                                                            {
-                                                                gameState.CurrentAttack.RollDice();
-                                                                n.EventManager.QueueEvent(EventType.RolledDices, new RolledDicesEventArgs(gameState.CurrentAttack.DiceForAttack.Select(d => d.SideIndex).ToArray()));
-                                                            });
+                            root.SetClickAction(
+                                "roll", 
+                                (n, g) =>
+                                {
+                                    gameState.CurrentAttack.RollDice();
+                                    n.EventManager.QueueEvent(EventType.RolledDices, new RolledDicesEventArgs(gameState.CurrentAttack.DiceForAttack.Select(d => d.SideIndex).ToArray()));
+                                });
                         }
+
                         break;
                     }
+
                 case State.WaitForDiceChoice:
                     {
                         if (gameState.CurrentPlayer == Player.Instance.Id)
                         {
-                            root.SetClickAction("finish", (n, g) =>
-                                                              {
-                                                                  n.EventManager.QueueEvent(EventType.DoAttack, new GameEventArgs());
-                                                              });
+                            root.SetClickAction(
+                                "finish", 
+                                (n, g) => n.EventManager.QueueEvent(EventType.DoAttack, new GameEventArgs()));
                         }
+
                         break;
                     }
             }
@@ -362,6 +371,7 @@ namespace Descent.State
             {
                 return;
             }
+
             switch (CurrentState)
             {
                 case State.WaitForChooseSquare:
@@ -381,19 +391,18 @@ namespace Descent.State
                     {
                         figure = Player.Instance.Hero;
                     }
+
                     Point standingPoint = FullModel.Board.FiguresOnBoard[figure];
 
                     if (FullModel.Board.IsSquareWithinBoard(new Point(eventArgs.X, eventArgs.Y)) && FullModel.Board.Distance(standingPoint, new Point(eventArgs.X, eventArgs.Y)) == 1)
                     {
-                        //if(FullModel.Board[eventArgs.X, eventArgs.Y].Marker != null && figure.Size.Equals(new Rectangle(0, 0, 1, 1)) && FullModel.Board[eventArgs.X, eventArgs.Y].Marker.Name.Equals("pit"))
-                        //{
-                        //  
                         // Move to adjecent
                         // If a an entire figure can move to the square
                         if (FullModel.Board.CanFigureMoveToPoint(figure, new Point(eventArgs.X, eventArgs.Y)) && figure.MovementLeft >= 1)
                         {
                             eventManager.QueueEvent(EventType.MoveTo, new CoordinatesEventArgs(eventArgs.X, eventArgs.Y));
                         }
+
                         // Open door
                         else if (figure is Hero && FullModel.Board.CanOpenDoor(new Point(eventArgs.X, eventArgs.Y)) &&
                             FullModel.Board.CanOpenDoor(standingPoint) && figure.MovementLeft >= 2)
@@ -411,6 +420,7 @@ namespace Descent.State
                             {
                                 if (!Player.Instance.Hero.Inventory.CanEquipPotion) return;
                             }
+
                             eventManager.QueueEvent(EventType.PickupMarker, new CoordinatesEventArgs(eventArgs.X, eventArgs.Y));
                         }
                     }
@@ -422,7 +432,6 @@ namespace Descent.State
                         FullModel.Board.IsThereLineOfSight(figure, FullModel.Board[eventArgs.X, eventArgs.Y].Figure, false))))
                     {
                         // A figure is trying to attack another figure.
-
                         if (Player.Instance.HeroParty.Heroes.ContainsKey(eventArgs.SenderId))
                         {
                             // A player is attacking
@@ -453,10 +462,6 @@ namespace Descent.State
                                 // If attack type is magic or ranged, always allow attack.
                                 eventManager.QueueEvent(EventType.AttackSquare, new CoordinatesEventArgs(eventArgs.X, eventArgs.Y));
                             }
-                            else
-                            {
-                                // Attack type is not melee, magic or ranged - do not perform attack.
-                            }
                         }
                         else
                         {
@@ -478,10 +483,6 @@ namespace Descent.State
                             {
                                 // If attack type is magic or ranged, always allow attack.
                                 eventManager.QueueEvent(EventType.AttackSquare, new CoordinatesEventArgs(eventArgs.X, eventArgs.Y));
-                            }
-                            else
-                            {
-                                // Attack type is not melee, magic or ranged - do not perform attack.
                             }
                         }
                     }
@@ -517,13 +518,13 @@ namespace Descent.State
                     {
                         break;
                     }
+
                     if (inventoryFieldMarked == -1)
                     {
                         inventoryFieldMarked = eventArgs.InventoryField;
                     }
                     else
                     {
-
                         int realId1 = inventoryFieldMarked,
                             realId2 = eventArgs.InventoryField,
                             parsedId1 = (realId1 > 99) ? realId1 - 100 : realId1,
@@ -537,7 +538,6 @@ namespace Descent.State
                             {
                                 equipment1 = gameState.UnequippedEquipment(eventArgs.SenderId)[parsedId1];
                             }
-
                         }
                         else
                         {
@@ -550,7 +550,6 @@ namespace Descent.State
                             {
                                 equipment2 = gameState.UnequippedEquipment(eventArgs.SenderId)[parsedId2];
                             }
-
                         }
                         else
                         {
@@ -565,6 +564,7 @@ namespace Descent.State
 
                         inventoryFieldMarked = -1;
                     }
+
                     break;
                 case State.WaitForPerformAction:
                     if (eventArgs.InventoryField >= 5 && eventArgs.InventoryField <= 7 && hero.MovementLeft >= 1)
@@ -590,7 +590,6 @@ namespace Descent.State
                                 eventManager.QueueEvent(EventType.RemoveMovement, new PointsEventArgs(1));
                                 inventory[eventArgs.InventoryField] = null;
                             }
-
                         }
                     }
 
@@ -618,6 +617,7 @@ namespace Descent.State
                         dice.RollDice();
                         eventManager.QueueEvent(EventType.BoughtDice, new DiceEventArgs(100000, dice.SideIndex)); // Dice Id is not used
                     }
+
                     break;
             }
         }
@@ -628,7 +628,10 @@ namespace Descent.State
             Contract.Ensures(CurrentState == Contract.OldValue(CurrentState));
 
             // Do not act on dice click if it's not the players turn.
-            if (!HasTurn()) return;
+            if (!HasTurn())
+            {
+                return;
+            }
 
             Dice dice = gameState.CurrentAttack.DiceForAttack[eventArgs.DiceId];
             if (dice.Color == EDice.B)
@@ -670,18 +673,20 @@ namespace Descent.State
             eventManager.QueueEvent(EventType.InflictWounds, new InflictWoundsEventArgs(targetSquare.X, targetSquare.Y, attack.Damage, attack.Pierce));
         }
 
-
         #endregion
 
         // event handlers
-
         private void PlayerJoined(object sender, PlayerJoinedEventArgs eventArgs)
         {
             Contract.Requires(CurrentState == State.InLobby);
             Contract.Ensures(CurrentState == State.InLobby);
 
             Player.Instance.SetPlayerNick(eventArgs.PlayerId, eventArgs.PlayerNick);
-            if (Player.Instance.IsServer) eventManager.FirePlayersInGameEvent();
+            if (Player.Instance.IsServer)
+            {
+                eventManager.FirePlayersInGameEvent();
+            }
+
             StateChanged();
         }
 
@@ -695,6 +700,7 @@ namespace Descent.State
                 Player.Instance.SetPlayerNick(p.Id, p.Nickname);
                 Player.Instance.HeroParty.Heroes[p.Id] = null;
             }
+
             StateChanged();
         }
 
@@ -732,8 +738,7 @@ namespace Descent.State
         {
             Contract.Requires(CurrentState == State.DrawOverlordCards || CurrentState == State.OverlordTurn);
             Contract.Ensures(CurrentState == (Contract.OldValue(CurrentState) == State.DrawOverlordCards ? State.DrawHeroCard : State.WaitForOverlordChooseAction));
-            // Contract.Ensures(CurrentState == (Contract.OldValue(CurrentState) == State.DrawOverlordCards ? State.DrawHeroCard : State.ActivateMonstersInitiation));
-
+            
             foreach (int overlordCardId in eventArgs.OverlordCardIds)
             {
                 Player.Instance.Overlord.Hand.Add(FullModel.GetOverlordCard(overlordCardId));
@@ -754,7 +759,7 @@ namespace Descent.State
             stateMachine.ChangeToNextState();
         }
 
-        //Helper method
+        // Helper method
         private void DrawHeroCards()
         {
             Contract.Requires(CurrentState == State.DrawOverlordCards);
@@ -793,7 +798,6 @@ namespace Descent.State
             }
 
             stateMachine.ChangeToNextState();
-
         }
 
         private void RequestBuyEquipment(object sender, RequestBuyEquipmentEventArgs eventArgs)
@@ -808,12 +812,13 @@ namespace Descent.State
 
             if (gameState.CanBuyEquipment(eventArgs.EquipmentId) && Player.Instance.HeroParty.Heroes[eventArgs.SenderId].Coins >= FullModel.GetEquipment(eventArgs.EquipmentId).BuyPrice)
             {
-                eventManager.QueueEvent(EventType.GiveEquipment, new GiveEquipmentEventArgs(eventArgs.SenderId, eventArgs.EquipmentId, false));
+                eventManager.QueueEvent(EventType.GiveEquipment, new GiveEquipmentEventArgs(eventArgs.SenderId, eventArgs.EquipmentId));
             }
             else
             {
                 System.Diagnostics.Debug.WriteLine("Buy denied!");
             }
+
             StateChanged();
         }
 
@@ -842,6 +847,7 @@ namespace Descent.State
                 AllPlayersRemainEquip();
                 stateMachine.ChangeToNextState();
             }
+
             StateChanged();
         }
 
@@ -868,7 +874,6 @@ namespace Descent.State
                 hero.Inventory[parsedId2] = null;
             }
 
-
             if (realId1 > 99)
             {
                 gameState.RemoveFromUnequippedEquipment(eventArgs.SenderId, equipment1);
@@ -878,6 +883,7 @@ namespace Descent.State
             {
                 hero.Inventory[parsedId1] = equipment2;
             }
+
             if (realId2 > 99)
             {
                 gameState.RemoveFromUnequippedEquipment(eventArgs.SenderId, equipment2);
@@ -916,8 +922,10 @@ namespace Descent.State
                 {
                     AllPlayersRemainTurn();
                 }
+
                 stateMachine.ChangeToNextState();
             }
+
             StateChanged();
         }
 
@@ -1151,7 +1159,6 @@ namespace Descent.State
             {
                 FullModel.Board[eventArgs.X, eventArgs.Y].Marker = null;
             }
-
         }
 
         private void OpenChest(object sender, ChestEventArgs eventArgs)
@@ -1200,10 +1207,16 @@ namespace Descent.State
         private void GiveTreasure(int playerId, Treasure treasure)
         {
             // Treasure may have coins
-            if (treasure.Coins > 0) eventManager.QueueEvent(EventType.GiveCoins, new GiveCoinsEventArgs(playerId, treasure.Coins));
+            if (treasure.Coins > 0)
+            {
+                eventManager.QueueEvent(EventType.GiveCoins, new GiveCoinsEventArgs(playerId, treasure.Coins));
+            }
 
             // Treasure may have equipment
-            if (treasure.Equipment != null) eventManager.QueueEvent(EventType.GiveEquipment, new GiveEquipmentEventArgs(playerId, treasure.Equipment.Id, true));
+            if (treasure.Equipment != null)
+            {
+                eventManager.QueueEvent(EventType.GiveEquipment, new GiveEquipmentEventArgs(playerId, treasure.Equipment.Id, true));
+            }
 
             if (treasure.IsTreasureCache)
             {
@@ -1358,9 +1371,7 @@ namespace Descent.State
                         gui.MarkSquare(monsterpoint.X, monsterpoint.Y, true);
                     }
                 }
-
             }
-
         }
 
         private void OverLordPlayCard(object sender, OverlordCardEventArgs eventArgs)
@@ -1513,6 +1524,7 @@ namespace Descent.State
             {
                 damage -= 1;
             }
+
             damage = damage < 0 ? 0 : damage;
 
             string status = figure.Name + " ";
@@ -1526,6 +1538,7 @@ namespace Descent.State
                 eventManager.QueueEvent(EventType.DamageTaken, new DamageTakenEventArgs(eventArgs.X, eventArgs.Y, damage));
                 status += "lost " + damage + " health!";
             }
+
             eventManager.QueueEvent(EventType.ChatMessage, new ChatMessageEventArgs(status));
         }
 
@@ -1554,7 +1567,7 @@ namespace Descent.State
 
             if (figure is Hero)
             {
-                Hero hero = (Hero)figure;
+                var hero = (Hero)figure;
                 hero.Initialize();
                 hero.Coins = (int)Math.Floor((double)hero.Coins / 2 / 25) * 25; // Floor to nearest % 25;
                 Player.Instance.HeroParty.RemoveConquestTokens(hero.Cost);
@@ -1614,17 +1627,17 @@ namespace Descent.State
 
         #endregion
 
-        private void GameWon(bool HeroPartyWon)
+        private void GameWon(bool heroPartyWon)
         {
             Contract.Requires(CurrentState == State.InflictWounds);
             Contract.Ensures(CurrentState == State.EndGameHeroParty || CurrentState == State.EndGameOverlord);
 
             if (Player.Instance.IsServer)
             {
-                eventManager.QueueEvent(EventType.ChatMessage, new ChatMessageEventArgs("The " + (HeroPartyWon ? "hero party" : "overlord") + " wins!!!"));
+                eventManager.QueueEvent(EventType.ChatMessage, new ChatMessageEventArgs("The " + (heroPartyWon ? "hero party" : "overlord") + " wins!!!"));
             }
 
-            stateMachine.PlaceStates(HeroPartyWon ? State.EndGameHeroParty : State.EndGameOverlord);
+            stateMachine.PlaceStates(heroPartyWon ? State.EndGameHeroParty : State.EndGameOverlord);
             stateMachine.ChangeToNextState();
         }
     }

@@ -1,6 +1,5 @@
 ﻿namespace Descent.State
 {
-    using System;
     using System.Collections.Generic;
     using System.Diagnostics.Contracts;
     using Messaging.Events;
@@ -36,6 +35,9 @@
             get { return _states[currentIndex + 1]; }
         }
 
+        /// <summary>
+        /// Go to the next state.
+        /// </summary>
         public void ChangeToNextState()
         {
             Contract.Ensures(currentIndex < _states.Count);
@@ -51,6 +53,10 @@
             StateChanged();
         }
 
+        /// <summary>
+        /// Inserts states right after the CurrentState.
+        /// </summary>
+        /// <param name="states">All states to insert</param>
         public void PlaceStates(params State[] states)
         {
             Contract.Requires(states != null && states.Length > 0);

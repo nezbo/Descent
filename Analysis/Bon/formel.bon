@@ -400,16 +400,18 @@ component
 			equipped: BOOLEAN -- Are you equipped?
 			tapEquipment: Void -- Tap yourself
 				require
-					!tapped;
+					 nottapped;
 				ensure
 					tapped;
+            end
 			untapEquipment: Void -- Untap yourself
 				ensure
-					!tapped;
+					not tapped;
+            end
 			equipToHero: Void -- Equip to 'this' hero!
 				-> hero: Hero
 				require
-					!equipped;
+					not equipped;
 				ensure
 					equipped;
 			end
@@ -418,7 +420,7 @@ component
 				require
 					equipped;
 				ensure
-					!equipped;
+					not equipped;
 			end
 			clone: Equipment -- Give me a copy of yourself
 			equals: BOOLEAN -- Are you equal to 'this' object?
@@ -458,7 +460,7 @@ end
 
 static_diagram FORMAL_OVERLORD_STUFF
 component
-	class OVERLORD_CARD
+	deferred class OVERLORD_CARD
 		indexing
 			author: "Jonas Breindahl";
 			created: "30-11-2011";
@@ -559,8 +561,6 @@ component
 				-> points: SEQUENCE[POINT]
 				require
 					points /= Void;
-				ensure
-					Result = for_all point : Point such_that points.contains(point) it_holds withinBoard(point)
 			end
 			canOverlordSpawn: BOOLEAN -- Can the overlord spawn here?
 				-> coord: POINT
@@ -576,7 +576,7 @@ component
 					here /= Void;
 					there /= Void;
 			end
-			lineOfSight: BOOLEAN -- Is there line of sight from 'this' figure to 'that' figure?
+			lineOfSight2: BOOLEAN -- Is there line of sight from 'this' figure to 'that' figure?
 				-> this: Figure
 				-> that: Figure
 				-> monstersBlock: BOOLEAN -- not included monsters?
@@ -629,14 +629,9 @@ component
 			end
 			visibleSquare: BOOLEAN -- Is this square visible by players?
 			addDoor: Void -- Add 'this' door to the map!
-				-> door: Door;
+				-> door: Door
 				require
 					door /= Void;
-			end
-			openDoor: Void -- Open the door adjacent to this square
-				-> point: Point
-				require 
-					canDoorBeOpend(point);
 			end
 			moveFigure: Void -- Move 'this' figure to 'that' square on the bord
 				-> figure: Figure
@@ -646,7 +641,7 @@ component
 					point /= Void;
 					canFigureMoveToPoint(figure, point);
 				ensure
-					figuresOnBoard[figure] = point;
+					figuresOnBoard(figure) = point;
 			end
 			placeFigure: Void -- Place 'this' figure at 'this' square on the board
 				-> figure: Figure
@@ -655,7 +650,7 @@ component
 					figure /= Void;
 					point /= Void;
 				ensure
-					figuresOnBoard[figure] = point;
+					figuresOnBoard(figure) = point;
 			end
 			removeFigure: Void -- Remove the figure at 'this' point from the board!
 				-> point: Point
@@ -688,7 +683,7 @@ end
 
 static_diagram BOARD_MARKER_CLUSTER
 component
-	class
+	class MARKER
 		indexing
 			author: "Jonas Breindahl";
 			created: "13-12-2011";
@@ -710,7 +705,13 @@ component
         indexing
             author: "Simon Henriksen & Martin Marcher";
         feature
-            allEquipment: SEQUENCE[EQUIPMENT] -- Show me all your equipment
+            currentPlayer: INTEGER -- Who is the current player?
+            setCurrentPlayer -- This is the current player!
+                -> playerId: INTEGER
+            currentAttack: ATTACK -- Can I have the current attack?
+            setCurrentAttack -- This is the current attack!
+                -> attack: ATTACK
+            allEquipment: SEQUENCE[EQUIPMENT] -- Can I see all your equipment?
             canBuyEquipment: BOOLEAN -- Can I buy 'this' equipment?
                 -> equipment: EQUIPMENT
                 require
@@ -718,20 +719,21 @@ component
                 ensure
                     Result -> allEquipment.contains(equipment);
             end
-            getOverlordCards: SEQUENCE[OVERLORD_CARD] -- Give me 'n' Overlord Cards.
+            getOverlordCards: SEQUENCE[OVERLORD_CARD] -- Can I have 'n' Overlord Cards?
                 -> count: INTEGER
                 require
                     count > 0;
                 ensure
                     Result.length = count;
             end
-            getHero: HERO -- Give me a Hero.
+            getHero: HERO -- Can I have a Hero?
+            getRandomChest: CHEST -- Can I have a random chest?
             getChestContents: SEQUENCE[INTEGER] -- What is in 'this' chest?
                 -> chestId: INTEGER
                 ensure
                     Result.length = 4;
             end
-            getTreasure: TREASURE -- Give me 'this kind' of treasure.
+            getTreasure: TREASURE -- Can I have 'this kind' of treasure?
                 -> type: TREASURE_TYPE
                 ensure
                     Result.type = type;
@@ -770,22 +772,29 @@ component
                 ensure
                     not unequippedEquipment(hero).contains(equipment);
             end
+            removeFromUnequippedEquipment -- 'This Hero' un-unequipped 'this Equipment'!
+                -> hero: HERO
+                -> equipment: EQUIPMENT
+                require
+                    hero /= Void;
+                ensure
+                    not unequippedEquipment(hero).contains(equipment)
+            end
+            removeAllUnequippedEquipment -- Remove all unequipped equipment from 'This Hero'!
+                -> hero: HERO
+                require
+                    hero /= Void;
+            end
     end
 	class STATE_MANAGER
 		indexing 
 			author: "Martin Marcher";
 		feature
-			GetInstance: STATE_MANAGER -- Can I have the unique object of this class?
-			CurrentState: STATE -- What is the current state?
-			PreviousStates: SEQUENCE[STATE] -- What was the previous 'n' states?
-				-> count: INTEGER
-				require
-					count > 0;
-				ensure
-					Result.length <= count;
-			end
-			NextPossibleStates: SEQUENCE[STATE] -- What are the next possible states?
+			currentState: STATE -- What is the current state?
+            gameState: GAME_STATE -- Can I have the GameState object?
+            hasTurn: BOOL -- Does this client have turn?
 	end
+    
 	class STATE_MACHINE
 		indexing
 			author: "Martin Marcher";
@@ -1087,6 +1096,7 @@ component
 				require
 					eventArgs /= Void;
 					eventArgs.ToString().Length() > 0;
+            end
 	end
 	
 	class EQUIPMENT_ELEMENT
@@ -1128,7 +1138,151 @@ component
 			end
 	end
 end
-	
+
+static_diagram FORMEL_MESSAGING
+component
+    class ASYNC_SOCKETS_CLIENT
+        indexing
+            author: "Simon Westh Henriksen";
+        feature
+			MAKE: ASYNC_SOCKETS_CLIENT
+				-> address: STRING
+				-> port: INTEGER
+			require
+				address /= Void;
+				-- address includes 3 '.''s.
+				port > 0;
+			ensure
+				Socket /= Void
+			end
+			setSocket
+				-> socket: SOCKET
+			require
+				socket /= Void
+			end
+			getSocket: SOCKET
+			end
+	end
+	class ASYNC_SOCKETS_SERVER
+		indexing
+			author: "Simon Westh Henriksen";
+		feature
+			MAKE: ASYNC_SOCKETS_SERVER
+				-> port: INTEGER
+			require
+				port > 0;
+			ensure
+				Socket /= Void;
+			end
+			ips: SEQUENCE[STRING]
+			ensure
+				Result /= Void;
+			end
+			start
+			require
+				Socket /= Void;
+			end
+			broadcast
+				-> message: STRING
+			end
+			broadcastExceptClient
+				-> message: STRING,
+				-> clientId: INTEGER
+			end
+	end
+	class CLIENT_INFO
+		indexing
+			author: "Simon Westh Henriksen";
+		feature
+			id: INTEGER
+			ip: STRING
+			MAKE: CLIENT_INFO
+				-> clientSocket: SOCKET
+			require
+				clientSocket /= Void
+			ensure
+				id /= Void
+			end
+			send
+				-> message: STRING
+			require
+				message /= Void
+			end
+			beginReceive
+			require
+				socket /= Void
+			end
+	end
+	deferred class CONNECTION
+		indexing
+			author: "Simon Westh Henriksen";
+		feature
+			id: INTEGER,
+			ips: SEQUENCE[INTEGER]
+			deferred start
+			deferred sendString
+				-> message: STRING
+			end
+	end
+	effective class CLIENT_CONNECTION
+		indexing
+			author: "Simon Westh Henriksen";
+		inherit
+			CONNECTION
+		feature
+			MAKE: CLIENT_CONNECTION
+				-> ip: STRING,
+				-> port: INTEGER
+			require
+				ip /= Void,
+				port > 0
+			end
+			effective start
+			end
+			effective sendString
+				-> message: STRING
+			end
+	end
+	effective class SERVER_CONNECTION
+		indexing
+			author: "Simon Westh Henriksen";
+		inherit
+			CONNECTION
+		feature
+			MAKE: SERVER_CONNECTION
+				-> ip: STRING,
+				-> port: INTEGER
+			effective start
+			end
+			effective sendString
+				-> message: STRING
+	end
+	class EVENT_MANAGER
+		indexing
+			author: "Simon Westh Henriksen";
+		feature
+			queueStringEvent
+				-> stringEvent: STRING
+				-> broadcast: BOOLEAN
+			require
+				stringEvent /= Void
+			end
+			queueEvent
+				-> eventType: EVENTTYPE
+				-> eventArgs: GAME_EVENT_ARGS
+			end
+			processEventQueue
+	end
+	class GAME_EVENT_ARGS
+		indexing
+			author: "Simon Westh Henriksen";
+		feature
+			senderId: INTEGER,
+			eventId: INTEGER,
+			eventType: EVENT_TYPE,
+			needResponse: BOOLEAN
+	end
+end
 	
 	
 	

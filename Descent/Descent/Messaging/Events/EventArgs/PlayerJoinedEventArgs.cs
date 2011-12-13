@@ -23,8 +23,8 @@ namespace Descent.Messaging.Events
         {
             Contract.Requires(stringArgs != null);
             Contract.Requires(stringArgs.Length == 2);
-            int b;
-            Contract.Requires(int.TryParse(stringArgs[0], out b) && int.Parse(stringArgs[0]) > 0);
+            
+            Contract.Requires(EventContractHelper.TryParseInt(stringArgs[0]) && int.Parse(stringArgs[0]) > 0);
             PopulateWithArgs(stringArgs);
         }
 
@@ -36,8 +36,8 @@ namespace Descent.Messaging.Events
         {
             Contract.Requires(stringArgs != null);
             Contract.Requires(stringArgs.Length == 2);
-            int b;
-            Contract.Requires(int.TryParse(stringArgs[0], out b) && int.Parse(stringArgs[0]) > 0);
+            
+            Contract.Requires(EventContractHelper.TryParseInt(stringArgs[0]) && int.Parse(stringArgs[0]) > 0);
             PlayerId = int.Parse(stringArgs[0]);
             PlayerNick = stringArgs[1];
         }

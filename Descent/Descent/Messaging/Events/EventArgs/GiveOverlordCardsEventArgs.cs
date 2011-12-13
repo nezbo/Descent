@@ -24,8 +24,8 @@ namespace Descent.Messaging.Events
         {
             Contract.Requires(stringArgs != null);
             Contract.Requires(stringArgs.Length >= 2);
-            int b;
-            Contract.Requires(Contract.ForAll(stringArgs, s => int.TryParse(s, out b) && int.Parse(s) > 0));
+            
+            Contract.Requires(Contract.ForAll(stringArgs, s => EventContractHelper.TryParseInt(s) && int.Parse(s) > 0));
             Contract.Requires(stringArgs.Skip(1).ToArray().Length == int.Parse(stringArgs[0]));
             PopulateWithArgs(stringArgs);
         }
@@ -36,8 +36,8 @@ namespace Descent.Messaging.Events
         {
             Contract.Requires(stringArgs != null);
             Contract.Requires(stringArgs.Length >= 2);
-            int b;
-            Contract.Requires(Contract.ForAll(stringArgs, s => int.TryParse(s, out b) && int.Parse(s) > 0));
+            
+            Contract.Requires(Contract.ForAll(stringArgs, s => EventContractHelper.TryParseInt(s) && int.Parse(s) > 0));
             Contract.Requires(stringArgs.Skip(1).ToArray().Length == int.Parse(stringArgs[0]));
 
             int numberOfOverlordCards = int.Parse(stringArgs[0]);

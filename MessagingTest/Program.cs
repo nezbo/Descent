@@ -84,7 +84,7 @@ namespace MessagingTest
             while (true)
             {
                 string eventString = Console.ReadLine();
-                eventManager.ParseAndFire(eventString, true);
+                eventManager.QueueStringEvent(eventString, true);
             }
 
             /*

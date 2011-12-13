@@ -161,6 +161,7 @@
     <Compile Include="Messaging\Events\EventArgs\GameEventArgs.cs" />
     <Compile Include="Messaging\Events\EventArgs\PlayerJoinedEventArgs.cs" />
     <Compile Include="Messaging\Events\EventArgs\TreasureEventArgs.cs" />
+    <Compile Include="Messaging\Events\EventContractHelper.cs" />
     <Compile Include="Messaging\Events\EventManager.cs" />
     <Compile Include="Messaging\Events\EventType.cs" />
     <Compile Include="Model\Board\Board.cs" />

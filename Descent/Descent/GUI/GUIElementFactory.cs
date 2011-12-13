@@ -384,7 +384,7 @@ namespace Descent.GUI
         {
             Contract.Requires(target != null);
             Contract.Requires(ability != null);
-            Contract.Requires(target.HasPoint(xPosition, yPosition));
+            Contract.Requires(target.HasPoint(target.Bound.X + xPosition, target.Bound.Y + yPosition));
 
             // icons
             int cost = ability.Cost;
@@ -418,7 +418,7 @@ namespace Descent.GUI
             Contract.Requires(target != null);
             Contract.Requires(target.HasPoint(x, y));
             Contract.Requires(size > 0);
-            Contract.Requires(x + size < target.Bound.X + target.Bound.Y);
+            Contract.Requires(x + size < target.Bound.X + target.Bound.Width);
 
             if (dicetinary == null) LoadDiceTextures(target.Game);
 

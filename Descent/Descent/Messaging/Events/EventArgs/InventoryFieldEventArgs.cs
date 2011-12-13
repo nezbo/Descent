@@ -20,8 +20,8 @@
         {
             Contract.Requires(stringArgs != null);
             Contract.Requires(stringArgs.Length == 1);
-            int b;
-            Contract.Requires(Contract.ForAll(stringArgs, s => int.TryParse(s, out b)));
+            
+            Contract.Requires(Contract.ForAll(stringArgs, s => EventContractHelper.TryParseInt(s)));
             Contract.Requires(int.Parse(stringArgs[0]) >= 0);
 
             PopulateWithArgs(stringArgs);
@@ -35,8 +35,8 @@
         {
             Contract.Requires(stringArgs != null);
             Contract.Requires(stringArgs.Length == 1);
-            int b;
-            Contract.Requires(Contract.ForAll(stringArgs, s => int.TryParse(s, out b)));
+            
+            Contract.Requires(Contract.ForAll(stringArgs, s => EventContractHelper.TryParseInt(s)));
             Contract.Requires(int.Parse(stringArgs[0]) >= 0);
             InventoryField = int.Parse(stringArgs[0]);
         }
