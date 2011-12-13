@@ -827,7 +827,7 @@ class_chart GUI_ELEMENT
 	constraint
 		"The position must be within the window boundaries",
 		"The dimensions combined with the position must not go beyond the window boundaries",
-		"All sub-elements must be within the boundaries of this GUI_ELEMENT"
+		"All sub-elements must start within the boundaries of this GUI_ELEMENT"
 end
 
 class_chart GUI_ELEMENT_FACTORY
@@ -981,6 +981,9 @@ class_chart EQUIPMENT_ELEMENT
 		revised: "13-12-2011";
 	explanation
 		"Visualizes a single EQUIPMENT depending on its type"
+	query
+		"What EQUIPMENT do you display?",
+		"What is your id?"
 	inherit
 		GUI_ELEMENT
 end

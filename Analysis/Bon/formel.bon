@@ -848,6 +848,77 @@ component
 			update
 				-> gametime: GAMETIME
 	end
+	
+	class GUI_ELEMENT_FACTORY
+		indexing
+			author: "Emil Juul Jacobsen";
+			created: "13-12-2011";
+			revised: "13-12-2011";
+		feature
+			createBoardElement: GUI_ELEMENT
+				-> game: GAME
+				-> board: BOARD
+				-> role: ROLE
+				require
+					game /= Void;
+					board /= Void;
+					role /= Void;
+			end
+			createStateElement: GUI_ELEMENT
+				-> game: GAME
+				-> state: STATE
+				-> role: ROLE
+				-> gamestate: GAMESTATE
+				require
+					game /= Void;
+					board /= Void;
+					role /= Void;
+			end
+			createMenuElement: GUI_ELEMENT
+				-> game: GAME
+				-> role: ROLE
+				require
+					game /= Void;
+					role /= Void;
+			end
+			createEquipmentElement: EQUIPMENT_ELEMENT
+				-> game: GAME
+				-> x: INTEGER
+				-> y: INTEGER
+				-> slotName: STRING
+				-> equipment: EQUIPMENT
+				-> id: INTEGER
+				require
+					game /= Void;
+				ensure
+					Result.getId() = id;
+					Result.getEquipment() = equipment;
+			end
+			drawSurgeAbility
+				-> target: GUI_ELEMENT
+				-> ability: SURGE_ABILITY
+				-> x: INTEGER
+				-> y: INTEGER
+				-> small: BOOLEAN
+				require
+					target /= Void;
+					ability /= Void;
+					target.hasPoint(x,y);
+			end
+			drawDice
+				-> target: GUI_ELEMENT
+				-> dice: DICE
+				-> x: INTEGER
+				-> y: INTEGER
+				-> size: INTEGER
+				require
+					target /= Void;
+					dice /= Void;
+					target.hasPoint(x,y);
+					size > 0;
+			end
+	end
+	
 end
 	
 	
