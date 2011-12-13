@@ -17,7 +17,7 @@
     public delegate T Bonus<T>();
 
     /// <summary>
-    /// TODO: Update summary.
+    /// Holds state relevant to the playing game a has game logic.
     /// </summary>
     /// <author>
     /// Simon Henriksen & Martin Marcher
