@@ -206,8 +206,8 @@
         /// <param name="positive">True if the highlight should indicate a eligible. False if it should indicate inaccessibility.</param>
         public void MarkSquare(int x, int y, bool positive)
         {
-            Contract.Requires(x >= 0);
-            Contract.Requires(y >= 0);
+            Contract.Ensures(markedSquares.ContainsKey(new Vector2(x, y)));
+            Contract.Ensures(markedSquares[new Vector2(x, y)] == positive);
 
             lock (markedSquares)
             {
@@ -220,6 +220,7 @@
         /// </summary>
         public void ClearMarks()
         {
+            Contract.Ensures(markedSquares.Count == 0);
             lock (markedSquares)
             {
                 markedSquares.Clear();

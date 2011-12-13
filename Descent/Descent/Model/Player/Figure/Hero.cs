@@ -260,7 +260,7 @@
         public void AddSkill(Skill skill)
         {
             Contract.Requires(skill != null);
-            if(!skills.ContainsKey(skill.Type))
+            if (!skills.ContainsKey(skill.Type))
                 skills[skill.Type] = new List<Skill>();
             skills[skill.Type].Add(skill);
         }
@@ -292,6 +292,7 @@
                     inventory[i].UntapEquipment();
                 }
             }
+
             foreach (EAttackType attackType in skills.Keys)
             {
                 foreach (Skill skill in skills[attackType])

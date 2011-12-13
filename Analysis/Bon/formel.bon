@@ -1035,6 +1035,98 @@ component
 			end
 	end
 	
+	class IMAGE
+		indexing
+			author: "Emil Juul Jacobsen";
+			created: "13-12-2011";
+			revised: "13-12-2011";
+		inherit
+			DRAWABLE
+	end
+	
+	class TEXT
+		indexing
+			author: "Emil Juul Jacobsen";
+			created: "13-12-2011";
+			revised: "13-12-2011";
+		feature
+			getMessage: STRING
+			getPosition: VECTOR2
+			getColor: COLOR
+	end
+	
+	-- I have only made formal bon for the sub-classes 
+	-- that introduce anything new.
+	
+	class BOARD_ELEMENT
+		indexing
+			author: "Emil Juul Jacobsen";
+			created: "13-12-2011";
+			revised: "13-12-2011";
+		inherit
+			GUI_ELEMENT
+		feature
+			markSquare
+				-> x: INTEGER
+				-> y: INTEGER
+				-> positive: BOOLEAN
+			clearMarks
+	end
+	
+	class CHAT_ELEMENT
+		indexing
+			author: "Emil Juul Jacobsen";
+			created: "13-12-2011";
+			revised: "13-12-2011";
+		inherit
+			GUI_ELEMENT
+		feature
+			getMessage
+				-> obj: OBJECT
+				-> eventArgs: CHAT_MESSAGE_EVENT_ARGS
+				require
+					eventArgs /= Void;
+					eventArgs.ToString().Length() > 0;
+	end
+	
+	class EQUIPMENT_ELEMENT
+		indexing
+			author: "Emil Juul Jacobsen";
+			created: "13-12-2011";
+			revised: "13-12-2011";
+		inherit
+			GUI_ELEMENT
+		feature
+			getEquipment: EQUIPMENT
+			getId: INTEGER
+	end
+	
+	class INPUT_ELEMENT
+		indexing
+			author: "Emil Juul Jacobsen";
+			created: "13-12-2011";
+			revised: "13-12-2011";
+		inherit
+			GUI_ELEMENT
+		feature
+			getInput: STRING
+				-> key: STRING
+				require
+					key /= Void;
+				ensure
+					Result /= Void;
+			end
+			setInput
+				-> key: STRING
+				-> value: STRING
+				require
+					key /= Void;
+					value /= Void;
+					key.Length() > 0;
+				ensure
+					getInput(key) = value;
+			end
+	end
 end
 	
 	

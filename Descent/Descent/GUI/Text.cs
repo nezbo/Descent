@@ -13,7 +13,7 @@
         /// <summary>
         /// The string that the text consists of.
         /// </summary>
-        public string Line { get; internal set; }
+        public string Message { get; internal set; }
 
         /// <summary>
         /// The position to display the text.
@@ -31,9 +31,9 @@
         /// <param name="line">The string to be displayed as a line on the screen.</param>
         /// <param name="position">The position for the upper-left corner of the drawn text.</param>
         /// <param name="color">The color to draw the text in.</param>
-        public Text(string line, Vector2 position, Color color)
+        public Text(string message, Vector2 position, Color color)
         {
-            this.Line = line;
+            this.Message = message;
             this.Position = position;
             this.Color = color;
         }
