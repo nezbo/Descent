@@ -822,7 +822,8 @@ class_chart GUI_ELEMENT
 		"Add this text to be displayed in you (or your children) at this position!",
 		"From now on you should draw background!",
 		"Your background should be this!",
-		"Draw yourself!"
+		"Draw yourself (and all your children)!",
+		"Update yourself (and all your children)!"
 	constraint
 		"The position must be within the window boundaries",
 		"The dimensions combined with the position must not go beyond the window boundaries",
