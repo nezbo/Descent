@@ -518,6 +518,8 @@
         /// </param>
         public void AddAbility(Ability ability)
         {
+            Contract.Requires(ability != null);
+            Contract.Ensures(abilities.Count == Contract.OldValue(abilities.Count) + 1);
             abilities.Add(ability);
         }
 

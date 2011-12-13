@@ -1,10 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="Hero.cs" company="">
-// TODO: Update copyright text.
-// </copyright>
-// -----------------------------------------------------------------------
-
-namespace Descent.Model.Player.Figure
+﻿namespace Descent.Model.Player.Figure
 {
     using System.Collections.Generic;
     using System.Diagnostics.Contracts;
