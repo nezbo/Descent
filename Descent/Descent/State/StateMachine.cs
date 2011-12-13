@@ -61,16 +61,6 @@
             }
         }
 
-        public State[] PreviousStates(int count)
-        {
-            Contract.Requires(count > 0);
-            Contract.Ensures(Contract.Result<State[]>().Length <= count);
-            count = Math.Min(count, currentIndex);
-            var states = _states.GetRange(currentIndex - count, currentIndex);
-            states.Reverse();
-            return states.ToArray();
-        }
-
         /// <summary>
         /// Performs backwards search beginning at the current state, searching for two different States.
         /// </summary>
