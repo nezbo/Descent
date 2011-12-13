@@ -1,0 +1,25 @@
+24
+1,melee,Battle Cry,When you declare a Battle action, you may immediately restore 1 fatigue to yourself and all adjacent heroes.
+2,melee,Able Warrior,When you declare an Advance action, you may immediately spend 2 fatigue to make 2 attacks this turn instead of 1.
+3,melee,Tough,Your maximum wounds are increased by 4.
+4,melee,Enduring,Armor does not reduce your speed. In addition, if you are not wearing Armor, you gain +1 Armor.
+5,melee,Parry,You gain +1 Armor against Melee attacks.
+6,melee,Relentless,When you declare an Advance action, you may immediately recover 1 fatigue.
+7,melee,Mighty,When making a Melee attack, you gain +2 Damage.
+8,melee,Weapon Mastery,When making a Melee attack, you gain 2 free surges.
+9,ranged,Swift,Your speed is increased by 2. Any speed reduction from armor is applied before this bonus
+10,ranged,Crack Shot,When making a Ranged or Magic attack, you may trace line of sight from any empty space that is adjacent to you.
+11,ranged,Cautious,The overlord receives 1 fewer threat tokens each turn. In addition, Trap cards always deal 1 less wound to you (minimum 0)
+//12,ranged,Precision,You may ignore 1 figure or obstacle when tracing line of sight for a Ranged or Magic attack.
+13,ranged,Master Archer,When making a Ranged attack, you gain 2 free surges.
+14,ranged,Skilled,Your maximum fatigue is increased by 2.
+15,ranged,Marksman,When making a Ranged or Magic attack, you gain +3 Range.
+16,ranged,Deflect Arrows,You gain +1 armor against Ranged attacks.
+17,ranged,Rapid Fire,After making a Ranged attack, you may immediately spend 2 fatigue to make 1 additional attack with the same weapon this turn. You may use this ability multiple times, paying its cost each time.
+18,magic,Wild Talent,You have the Sorcery 1 ability.\n\nIn addition, you always roll 1 extra power dice when rolling power dice to avoid or reduce the effect of Trap cards.
+19,magic,Blessing,You have the Command ability.
+20,magic,Quick Casting,After making a Magic attack, you may immediately spend 2 fatigue and exhaust this card to make 1 additional attack with the same weapon this turn.
+21,magic,Willpower,You gain +1 Armor against Magic attacks.
+22,magic,Prodigy,When making a Magic attack, you gain 2 free surges.
+23,magic,Inner Fire,When making a Ranged or Magic attack, you gain +2 Range and +1 Damage.
+24,magic,Divine Retribution,When you are killed by an enemy figure, all unnamed enemy figures within 3 spaces of you are immediately killed as well. This ability ignores the Undying ability.
