@@ -840,7 +840,7 @@ class_chart GUI_ELEMENT_FACTORY
 	command
 		"Create the GUI_ELEMENT for the visualization of the board!",
 		"Create the GUI_ELEMENT for this State from this perspective!",
-		"Create the GUI_ELEMENT of the menus, chat and player board for this perspective!"
+		"Create the GUI_ELEMENT of the menus, chat and player board for this perspective!",
 		"Create an EQUIPMENT_ELEMENT for this EQUIPMENT at this position!",
 		"Draw this SURGE_ABILITY to this GUI_ELEMENT at this position!",
 		"Draw this DICE to this GUI_ELEMENT at this position!"
@@ -885,10 +885,10 @@ class_chart ATTACK_ELEMENT
 		in_cluster: "GUI_SCREENS_CLUSTER";
 		created: "13-12-2011";
 		revised: "13-12-2011";
-	inherit
-		GUI_ELEMENT
 	explanation
 		"Displays information about a combat with dice, target and sends the proper events."
+	inherit
+		GUI_ELEMENT
 end
 
 class_chart BOARD_ELEMENT
@@ -912,10 +912,10 @@ class_chart HERO_ELEMENT
 		in_cluster: "GUI_SCREENS_CLUSTER";
 		created: "13-12-2011";
 		revised: "13-12-2011";
-	inherit
-		GUI_ELEMENT
 	explanation
 		"The information that a hero player sees about his hero."
+	inherit
+		GUI_ELEMENT
 end
 
 class_chart OVERLORD_ELEMENT
@@ -924,10 +924,10 @@ class_chart OVERLORD_ELEMENT
 		in_cluster: "GUI_SCREENS_CLUSTER";
 		created: "13-12-2011";
 		revised: "13-12-2011";
-	inherit
-		GUI_ELEMENT
 	explanation
 		"The information that the overlord player sees."
+	inherit
+		GUI_ELEMENT
 end
 
 class_chart PLAYERS_ELEMENT
@@ -936,10 +936,10 @@ class_chart PLAYERS_ELEMENT
 		in_cluster: "GUI_SCREENS_CLUSTER";
 		created: "13-12-2011";
 		revised: "13-12-2011";
-	inherit
-		GUI_ELEMENT
 	explanation
 		"The menu of short summaries of all other player's heroes and overlord."
+	inherit
+		GUI_ELEMENT
 end
 
 -- GUI_SUB_ELEMENTS_CLUSTER
@@ -968,6 +968,8 @@ class_chart DICES_ELEMENT
 		revised: "13-12-2011";
 	explanation
 		"A box that visualizes any number of dices with their currently rolled sides and automatic row management."
+	inherit
+		GUI_ELEMENT
 end
 
 class_chart EQUIPMENT_ELEMENT
@@ -978,6 +980,8 @@ class_chart EQUIPMENT_ELEMENT
 		revised: "13-12-2011";
 	explanation
 		"Visualizes a single EQUIPMENT depending on its type"
+	inherit
+		GUI_ELEMENT
 end
 
 class_chart EQUIPMENT_PANEL
@@ -988,6 +992,8 @@ class_chart EQUIPMENT_PANEL
 		revised: "13-12-2011";
 	explanation
 		"An element on the screen that can be hidden containing a number of equipments."
+	inherit
+		GUI_ELEMENT
 end
 
 class_chart HERO_SUMMARY
@@ -998,6 +1004,8 @@ class_chart HERO_SUMMARY
 		revised: "13-12-2011";
 	explanation
 		"A short summary of the information for a hero to be displayed at the right of the screen."
+	inherit
+		GUI_ELEMENT
 end
 		
 class_chart INPUT_ELEMENT
@@ -1025,6 +1033,8 @@ class_chart MONSTER_SUMMARY
 		revised: "13-12-2011";
 	explanation
 		"A short summary of the information for a monster to be displayed as a mouseover and in combat."
+	inherit
+		GUI_ELEMENT
 end
 
 class_chart OVERLORD_CARD_ELEMENT
@@ -1035,6 +1045,8 @@ class_chart OVERLORD_CARD_ELEMENT
 		revised: "13-12-2011";
 	explanation
 		"Displays the content of an overlord card and sends the proper events when used."
+	inherit
+		GUI_ELEMENT
 end
 
 class_chart OVERLORD_SUMMARY
@@ -1045,6 +1057,8 @@ class_chart OVERLORD_SUMMARY
 		revised: "13-12-2011";
 	explanation
 		"A short summary of the information for the overlord, to be displayed at the right of the screen.."
+	inherit
+		GUI_ELEMENT
 end
 
 -- End of GUI
