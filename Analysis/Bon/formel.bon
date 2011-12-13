@@ -515,6 +515,18 @@ component
 			totalRange: INTEGER -- What is the total range for the attack?
 			totalPierce: INTEGER -- What is the total pierce for the attack?
 			totalSurge: INTEGER -- What is the total surge for the attack?
+			usedSurges: INTEGER -- How many surges have already been used?
+			dice: SEQUENCE[DICE] -- What dice is used for the attack?
+			surgeAbilities: SEQUENCE[SURGE_ABILITY] -- What surgeabilities are able for the attack?
+			missed: BOOLEAN -- Is the attack missed?
+			toString: STRING -- What is this attack as a string?
+			setSides: Void -- Set all sides of all dice to 'these' specific sides!
+				-> diceSides: SEQUENCE[INTEGER]
+				require
+					dice.length = diceSides.length;
+			end
+			rollDice: Void -- Roll all dice!
+	end
 end
 
 static_diagram FORMAL_BOARD_CLUSTER
@@ -523,12 +535,18 @@ component
 		indexing
 			author: "Jonas Breindahl";
 			created: "30-11-2011";
-			revised: "02-12-2011";
+			revised: "13-12-2011";
 		feature
+            get: SQUARE -- Can I have the square object for this coordinate?
+                -> x: INTEGER
+                -> y: INTEGER
 			width: INTEGER -- What is your width?
 			height: INTEGER -- What is your height?
 			heroesInTown: SEQUENCE[HERO] -- What heroes are currently in town?
-			heroesOnBoard: MAP[HERO, POINT] -- Where are the heroes on the board?
+			figuresOnBoard: MAP[HERO, POINT] -- Where are the heroes on the board?
+			texture: Texture -- What is the floor texture of the board?
+			allDoors: SEQUENCE[DOOR] -- Where are all the doors on the map?
+			relevantDoors: SEQUENCE[DOOR] -- Where are all the relevant doors on the map?
             withinBoard: BOOLEAN -- Is the coordinate (x/y) within the board?
 				-> coord: POINT
 				require 
@@ -537,17 +555,19 @@ component
 					Result = coord.x >= 0 and coord.x < width 
 					and coord.y >= 0 and coord.y < height;
 			end
-			standable: BOOLEAN -- Is this square standable?
-				-> coord: POINT
+			allWithinBoard: BOOLEAN -- Are all these coordinates within the board?
+				-> points: SEQUENCE[POINT]
 				require
-					withinBoard(coord.x, coord.y);
-					coord /= Void;
+					points /= Void;
+				ensure
+					Result = for_all point : Point such_that points.contains(point) it_holds withinBoard(point)
 			end
 			canOverlordSpawn: BOOLEAN -- Can the overlord spawn here?
 				-> coord: POINT
 				require
 					coord /= Void;
 			end
+			validStartPoint: BOOLEAN -- Is this square next to a glyph?
 			lineOfSight: BOOLEAN -- Is there line of sight from 'here' to 'there'?
 				-> here: POINT
 				-> there: POINT
@@ -556,24 +576,102 @@ component
 					here /= Void;
 					there /= Void;
 			end
+			lineOfSight: BOOLEAN -- Is there line of sight from 'this' figure to 'that' figure?
+				-> this: Figure
+				-> that: Figure
+				-> monstersBlock: BOOLEAN -- not included monsters?
+				require
+					this /= Void;
+					that /= Void;
+			end
 			squareVisiblyByPlayers: BOOLEAN -- Is this space visible by players?
             distance: INTEGER -- What is the distance between these squares?
                 -> here: POINT
                 -> there: POINT
-            openDoor -- Open the door adjecent to this square!
+				require
+					here /= Void;
+					there /= Void;
+			end
+			doorNextToPoint: Door -- what door, if there is one, is at 'this' point?
+				-> point: Point
+				require
+					point /= Void;
+			end
+			canDoorBeOpend: BOOLEAN -- Can a door be opened at 'this' point?
+				-> point: Point
+				require
+					point /= Void;
+			end
+            openDoor: Void -- Open the door adjecent to this square!
                 -> point: POINT
-            get: SQUARE -- Can I have the square object for this coordinate?
-                -> x: INTEGER
-                -> y: INTEGER
-            
+				require
+					point /= Void;
+            end
+			squaresForFigure: SEQUENCE[POINT] -- Can I have a list of points where 'this' figure is standing?
+				-> figure: Figure
+				require
+					figure /= Void;
+				ensure
+					Result.length > 1;
+			end
+			canFigureMoveToPoint: BOOLEAN -- Can 'this' figure move to 'this' point?
+				-> figure: Figure
+				-> point: Point
+				require
+					figure /= Void;
+					point /= Void;
+			end
+			standable: BOOLEAN -- Is this square standable?
+				-> coord: POINT
+				require
+					withinBoard(coord.x, coord.y);
+					coord /= Void;
+			end
+			visibleSquare: BOOLEAN -- Is this square visible by players?
+			addDoor: Void -- Add 'this' door to the map!
+				-> door: Door;
+				require
+					door /= Void;
+			end
+			openDoor: Void -- Open the door adjacent to this square
+				-> point: Point
+				require 
+					canDoorBeOpend(point);
+			end
+			moveFigure: Void -- Move 'this' figure to 'that' square on the bord
+				-> figure: Figure
+				-> point Point
+				require
+					figure /= Void;
+					point /= Void;
+					canFigureMoveToPoint(figure, point);
+				ensure
+					figuresOnBoard[figure] = point;
+			end
+			placeFigure: Void -- Place 'this' figure at 'this' square on the board
+				-> figure: Figure
+				-> point: Point
+				require
+					figure /= Void;
+					point /= Void;
+				ensure
+					figuresOnBoard[figure] = point;
+			end
+			removeFigure: Void -- Remove the figure at 'this' point from the board!
+				-> point: Point
+				require
+					point /= Void;
+					get(point.X, point.Y).Figure /= Void;
+			end
 	end
 	
 	class SQUARE -- A single square of the board
 		indexing
 			author: "Jonas Breindahl";
 			created: "30-11-2011";
-			revised: "30-11-2011";
+			revised: "13-12-2011";
 		feature
+			area: INTEGER -- What area is this square in?
 			marker: MARKER -- What marker is on this square?
 			figure: FIGURE -- What figure is on this square?
 	end
@@ -585,6 +683,24 @@ component
 			revised: "30-11-2011";
 		feature
 			heroesInTown: SEQUENCE[HERO] -- What heroes are in town right now
+	end
+end
+
+static_diagram BOARD_MARKER_CLUSTER
+component
+	class
+		indexing
+			author: "Jonas Breindahl";
+			created: "13-12-2011";
+			revised: "13-12-2011";
+		feature
+			id: INTEGER -- What is your unique id?
+			name: STRING -- What is your name?
+			texture: Texture -- How are you drawn?
+			movementPoints: INTEGER -- How many movement points does it cost to interact with the marker?
+			puckUp: Void -- Pick up, or interact with the marker!
+		invariant
+			movementPoints >= 0;
 	end
 end
 

@@ -143,9 +143,17 @@
         /// </returns>
         public Square this[int x, int y]
         {
-            get { return board[x, y]; }
+            get
+            {
+                Contract.Requires(x >= 0 && y >= 0 && x < Width && y < Height);
+                return board[x, y];
+            }
 
-            set { board[x, y] = value; }
+            set
+            {
+                Contract.Requires(x >= 0 && y >= 0 && x < Width && y < Height);
+                board[x, y] = value;
+            }
         }
 
         /// <summary>
@@ -159,9 +167,17 @@
         /// </returns>
         public Square this[Point p]
         {
-            get { return board[p.X, p.Y]; }
+            get
+            {
+                Contract.Requires(p.X >= 0 && p.Y >= 0 && p.X < Width && p.Y < Height);
+                return board[p.X, p.Y];
+            }
 
-            set { board[p.X, p.Y] = value; }
+            set
+            {
+                Contract.Requires(p.X >= 0 && p.Y >= 0 && p.X < Width && p.Y < Height);
+                board[p.X, p.Y] = value;
+            }
         }
 
         #endregion
@@ -182,9 +198,10 @@
         /// </param>
         public Board(int width, int height, Texture2D floorTexture)
         {
+            Contract.Requires(width > 1 && height > 1);
             bounds = new Rectangle(0, 0, width, height);
-            board = new Square[width,height];
-            canSpawn = new bool[width,height];
+            board = new Square[width, height];
+            canSpawn = new bool[width, height];
             this.floorTexture = floorTexture;
             revealedAreas.Add(0);
         }
@@ -237,6 +254,7 @@
         /// <returns></returns>
         public bool IsSquareWithinBoard(Point[] points)
         {
+            Contract.Requires(points != null);
             return points.All(IsSquareWithinBoard);
         }
 
@@ -265,6 +283,7 @@
         /// <returns></returns>
         public bool IsStandable(Point[] points)
         {
+            Contract.Requires(points != null);
             return points.All(p => IsStandable(p.X, p.Y));
         }
 
@@ -279,6 +298,7 @@
         /// </returns>
         public bool CanOverlordSpawn(Point point)
         {
+            Contract.Requires(point.X >= 0 && point.Y >= 0 && point.X < Width && point.Y < Height);
             if (boardChanged)
             {
                 UpdateCanSpawn();
@@ -307,6 +327,7 @@
                     }
                 }
             }
+
             boardChanged = false;
         }
 
@@ -378,6 +399,8 @@
         /// <returns></returns>
         public bool IsThereLineOfSight(Figure from, Figure to, bool ignoreMonsters)
         {
+            Contract.Requires(from != null);
+            Contract.Requires(to != null);
             Point[] fromPoints = FullModel.Board.FigureSquares(from);
             Point[] toPoints = FullModel.Board.FigureSquares(to);
             foreach (Point fromPoint in fromPoints)
@@ -542,6 +565,8 @@
         {
             Contract.Requires(here != null);
             Contract.Requires(there != null);
+            Contract.Requires(here.X >= 0 && here.Y >= 0);
+            Contract.Requires(there.X >= 0 && there.Y >= 0);
             return Math.Max(Math.Abs(here.X - there.X), Math.Abs(here.Y - there.Y));
         }
 
@@ -612,6 +637,7 @@
         /// </param>
         public void MoveFigure(Figure figure, Point point)
         {
+            Contract.Requires(figure != null);
             Contract.Requires(this.CanFigureMoveToPoint(figure, point));
 
             // Remove monsters from old position
@@ -628,8 +654,6 @@
                 }
             }
 
-            //this[FiguresOnBoard[figure]].Figure = null;
-
             for (int x = point.X;
                  x < point.X + (figure.Orientation.Equals(Orientation.V) ? figure.Size.Width : figure.Size.Height);
                  x++)
@@ -641,7 +665,6 @@
                     board[x, y].Figure = figure;
                 }
             }
-            //this[point].Figure = figure;
 
             figuresOnBoard[figure] = point;
             boardChanged = true;
@@ -658,6 +681,9 @@
         /// </param>
         public void PlaceFigure(Figure figure, Point point)
         {
+            Contract.Requires(figure != null);
+            Contract.Requires(point.X >= 0 && point.Y >= 0 && point.X < Width && point.Y < Height);
+
             for (int x = point.X;
                  x < point.X + (figure.Orientation.Equals(Orientation.V) ? figure.Size.Width : figure.Size.Height);
                  x++)
@@ -684,6 +710,7 @@
         /// </returns>
         public Point[] FigureSquares(Figure figure)
         {
+            Contract.Requires(figure != null);
             List<Point> list = new List<Point>();
             Point point = this.FiguresOnBoard[figure];
             for (int x = point.X;
@@ -714,6 +741,7 @@
         /// </returns>
         public bool CanFigureMoveToPoint(Figure figure, Point point)
         {
+            Contract.Requires(figure != null);
             if (figure.Size.Width == 1 && figure.Size.Height == 1) return IsStandable(point.X, point.Y);
 
             bool canMove = true;
