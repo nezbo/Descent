@@ -86,12 +86,8 @@
         /// </param>
         public static void LoadContent(Game game)
         {
-            Contract.Requires(game != null);
 
-            if (FullModel.game != null)
-            {
-                Debug.Assert(false, "Content was loaded more than one time");
-            }
+            Contract.Requires(game != null);
 
             FullModel.game = game;
             heroParty = new HeroParty();
