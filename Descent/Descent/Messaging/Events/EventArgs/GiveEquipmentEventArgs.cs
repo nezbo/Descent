@@ -26,11 +26,11 @@ namespace Descent.Messaging.Events
         {
             Contract.Requires(stringArgs != null);
             Contract.Requires(stringArgs.Length == 3);
-            
+
             Contract.Requires(Contract.ForAll(stringArgs, s => EventContractHelper.TryParseInt(s)));
             Contract.Requires(int.Parse(stringArgs[0]) > 0);
             Contract.Requires(int.Parse(stringArgs[1]) > 0);
-            Contract.Requires(int.Parse(stringArgs[0]) == 0 || int.Parse(stringArgs[0]) == 1);
+            Contract.Requires(int.Parse(stringArgs[2]) == 0 || int.Parse(stringArgs[2]) == 1);
 
             PopulateWithArgs(stringArgs);
         }
@@ -45,11 +45,11 @@ namespace Descent.Messaging.Events
         {
             Contract.Requires(stringArgs != null);
             Contract.Requires(stringArgs.Length == 3);
-            
+
             Contract.Requires(Contract.ForAll(stringArgs, s => EventContractHelper.TryParseInt(s)));
             Contract.Requires(int.Parse(stringArgs[0]) > 0);
             Contract.Requires(int.Parse(stringArgs[1]) > 0);
-            Contract.Requires(int.Parse(stringArgs[0]) == 0 || int.Parse(stringArgs[0]) == 1);
+            Contract.Requires(int.Parse(stringArgs[2]) == 0 || int.Parse(stringArgs[2]) == 1);
 
             PlayerId = int.Parse(stringArgs[0]);
             EquipmentId = int.Parse(stringArgs[1]);

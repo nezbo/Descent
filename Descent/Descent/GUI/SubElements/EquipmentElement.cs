@@ -120,17 +120,20 @@
                             xHand += 15;
                         }
 
+                        int xStart = Bound.X + xHand;
                         int yDice = Bound.Y + Bound.Height - 19;
-                        int xDice = Bound.X + xHand;
+                        int xDice = xStart;
                         EDice[] dices = Equipment.DiceForAttack.Select(n => n.Color).ToArray();
                         foreach (EDice dice in dices)
                         {
-                            GUIElementFactory.DrawDice(this, dice, xDice, yDice, 15);
                             if (xDice + 15 >= Bound.X + Bound.Width)
                             {
-                                xDice = Bound.X + xHand;
+                                xDice = xStart;
                                 yDice -= 15;
                             }
+
+                            GUIElementFactory.DrawDice(this, dice, xDice, yDice, 15);
+
                             xDice += 15;
                         }
 
