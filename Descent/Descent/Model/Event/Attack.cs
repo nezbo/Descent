@@ -200,6 +200,10 @@ namespace Descent.Model.Event
         /// </param>
         public Attack(Figure attackingFigure, Point targetSquare)
         {
+            Contract.Requires(attackingFigure != null);
+            Contract.Requires(FullModel.Board.IsSquareWithinBoard(targetSquare));
+            Contract.Requires(attackingFigure.DiceForAttack != null && attackingFigure.DiceForAttack.Count > 0);
+
             this.figure = attackingFigure;
             diceForAttack = figure.DiceForAttack;
             surgeAbilities = figure.SurgeAbilities;
@@ -219,6 +223,7 @@ namespace Descent.Model.Event
         /// </param>
         public void SetDiceSides(int[] diceSides)
         {
+            Contract.Requires(diceSides != null);
             Contract.Requires(diceSides.Length == DiceForAttack.Count);
 
             List<Dice> list = DiceForAttack;
@@ -287,6 +292,8 @@ namespace Descent.Model.Event
         private void ObjectInvariant()
         {
             Contract.Invariant(DiceForAttack.Count > 0);
+            Contract.Invariant(figure != null);
+            Contract.Invariant(FullModel.Board.IsSquareWithinBoard(TargetSquare));
             //Contract.Invariant(DiceForAttack == null ? true : DiceForAttack.Count == DiceForAttack.Count && DiceF);
         }
 

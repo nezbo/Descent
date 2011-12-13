@@ -114,6 +114,26 @@
             return new Monster(newID, Name, isMaster, Speed, MaxHealth, Armor, attackType, new List<Dice>(DiceForAttack), Size, Texture);
         }
 
+        [ContractInvariantMethod]
+        private void ObjectInvariant()
+        {
+            Contract.Invariant(Name.Length > 0);
+            Contract.Invariant(MaxHealth > 0);
+            Contract.Invariant(Health >= 0 && Health <= MaxHealth);
+            Contract.Invariant(Speed > 0);
+            Contract.Invariant(Armor >= 0);
+            Contract.Invariant(MovementLeft >= 0);
+            Contract.Invariant(AttacksLeft >= 0);
+            //Contract.Invariant(name != null);
+            //Contract.Invariant(name.Length > 0);
+            //Contract.Invariant(Size.Width > 0 && Size.Height > 0);
+            //Contract.Invariant(speed > 0);
+            //Contract.Invariant(health > 0);
+            //Contract.Invariant(armor >= 0);
+            //Contract.Invariant(attackType != EAttackType.NONE);
+            //Contract.Invariant(diceForAttacks != null);
+        }
+
         #endregion
     }
 }

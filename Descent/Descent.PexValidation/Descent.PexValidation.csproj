@@ -38,6 +38,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Descent.Moles, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.ExtendedReflection, Version=0.94.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Moles.Framework, Version=0.94.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
@@ -68,6 +69,208 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\Event\AbilityTest.Apply.g.cs">
+      <DependentUpon>AbilityTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Event\AbilityTest.AvailableGet.g.cs">
+      <DependentUpon>AbilityTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Event\AbilityTest.Constructor.g.cs">
+      <DependentUpon>AbilityTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Event\AbilityTest.cs" />
+    <Compile Include="Model\Event\AbilityTest.GetAbility.g.cs">
+      <DependentUpon>AbilityTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Event\AbilityTest.ToString01.g.cs">
+      <DependentUpon>AbilityTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Event\AbilityTest.TriggeredGet.g.cs">
+      <DependentUpon>AbilityTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Board\Marker\ChestMarkerTest.Constructor.g.cs">
+      <DependentUpon>ChestMarkerTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Board\Marker\ChestMarkerTest.cs" />
+    <Compile Include="Model\Board\Marker\ChestMarkerTest.PickUp.g.cs">
+      <DependentUpon>ChestMarkerTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Board\Marker\ChestTest.CoinGet.g.cs">
+      <DependentUpon>ChestTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Board\Marker\ChestTest.ConquestTokensGet.g.cs">
+      <DependentUpon>ChestTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Board\Marker\ChestTest.Constructor.g.cs">
+      <DependentUpon>ChestTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Board\Marker\ChestTest.cs" />
+    <Compile Include="Model\Board\Marker\ChestTest.CursesGet.g.cs">
+      <DependentUpon>ChestTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Board\Marker\ChestTest.IdGet.g.cs">
+      <DependentUpon>ChestTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Board\Marker\ChestTest.RarityGet.g.cs">
+      <DependentUpon>ChestTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Board\Marker\ChestTest.TreasuresGet.g.cs">
+      <DependentUpon>ChestTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Board\Marker\GlyphMarkerTest.Constructor.g.cs">
+      <DependentUpon>GlyphMarkerTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Board\Marker\GlyphMarkerTest.cs" />
+    <Compile Include="Model\Board\Marker\GlyphMarkerTest.PickUp.g.cs">
+      <DependentUpon>GlyphMarkerTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Board\Marker\MarkerTest.cs" />
+    <Compile Include="Model\Board\Marker\MarkerTest.IdGet.g.cs">
+      <DependentUpon>MarkerTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Board\Marker\MarkerTest.MovementPointsGet.g.cs">
+      <DependentUpon>MarkerTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Board\Marker\MarkerTest.NameGet.g.cs">
+      <DependentUpon>MarkerTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Board\Marker\MarkerTest.PickUp.g.cs">
+      <DependentUpon>MarkerTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Board\Marker\MarkerTest.TextureGet.g.cs">
+      <DependentUpon>MarkerTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Board\BoardTest.AddDoor.g.cs">
+      <DependentUpon>BoardTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Board\BoardTest.AllDoorsGet.g.cs">
+      <DependentUpon>BoardTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Board\BoardTest.CanFigureMoveToPoint.g.cs">
+      <DependentUpon>BoardTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Board\BoardTest.CanOpenDoor.g.cs">
+      <DependentUpon>BoardTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Board\BoardTest.CanOverlordSpawn.g.cs">
+      <DependentUpon>BoardTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Board\BoardTest.Constructor.g.cs">
+      <DependentUpon>BoardTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Board\BoardTest.cs" />
+    <Compile Include="Model\Board\BoardTest.Distance.g.cs">
+      <DependentUpon>BoardTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Board\BoardTest.FiguresOnBoardGet.g.cs">
+      <DependentUpon>BoardTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Board\BoardTest.FigureSquares.g.cs">
+      <DependentUpon>BoardTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Board\BoardTest.FloorTextureGet.g.cs">
+      <DependentUpon>BoardTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Board\BoardTest.HeightGet.g.cs">
+      <DependentUpon>BoardTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Board\BoardTest.HeroesInTownGet.g.cs">
+      <DependentUpon>BoardTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Board\BoardTest.IsSquareWithinBoard01.g.cs">
+      <DependentUpon>BoardTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Board\BoardTest.IsSquareWithinBoard02.g.cs">
+      <DependentUpon>BoardTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Board\BoardTest.IsStandable01.g.cs">
+      <DependentUpon>BoardTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Board\BoardTest.IsThereLineOfSight01.g.cs">
+      <DependentUpon>BoardTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Board\BoardTest.IsValidStartSquare.g.cs">
+      <DependentUpon>BoardTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Board\BoardTest.ItemGet01.g.cs">
+      <DependentUpon>BoardTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Board\BoardTest.ItemSet01.g.cs">
+      <DependentUpon>BoardTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Board\BoardTest.MoveFigure.g.cs">
+      <DependentUpon>BoardTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Board\BoardTest.OpenDoor.g.cs">
+      <DependentUpon>BoardTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Board\BoardTest.PlaceFigure.g.cs">
+      <DependentUpon>BoardTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Board\BoardTest.RelevantDoorsGet.g.cs">
+      <DependentUpon>BoardTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Board\BoardTest.RespawnDeadHeroes.g.cs">
+      <DependentUpon>BoardTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Board\BoardTest.SquareVisibleByPlayers.g.cs">
+      <DependentUpon>BoardTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Board\BoardTest.WidthGet.g.cs">
+      <DependentUpon>BoardTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Board\DoorTest.AreasGet.g.cs">
+      <DependentUpon>DoorTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Board\DoorTest.Constructor.g.cs">
+      <DependentUpon>DoorTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Board\DoorTest.cs" />
+    <Compile Include="Model\Board\DoorTest.IsAdjecentSquare.g.cs">
+      <DependentUpon>DoorTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Board\DoorTest.IsRuneDoorGet.g.cs">
+      <DependentUpon>DoorTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Board\DoorTest.KeyColorGet.g.cs">
+      <DependentUpon>DoorTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Board\DoorTest.OpenedGet.g.cs">
+      <DependentUpon>DoorTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Board\DoorTest.OpenedSet.g.cs">
+      <DependentUpon>DoorTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Board\DoorTest.OrientationGet.g.cs">
+      <DependentUpon>DoorTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Board\DoorTest.TextureGet.g.cs">
+      <DependentUpon>DoorTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Board\DoorTest.TopLeftCornerGet.g.cs">
+      <DependentUpon>DoorTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Board\Marker\MoneyMarkerTest.Constructor.g.cs">
+      <DependentUpon>MoneyMarkerTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Board\Marker\MoneyMarkerTest.cs" />
+    <Compile Include="Model\Board\Marker\MoneyMarkerTest.PickUp.g.cs">
+      <DependentUpon>MoneyMarkerTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Board\Marker\OtherMarkersTest.Constructor.g.cs">
+      <DependentUpon>OtherMarkersTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Board\Marker\OtherMarkersTest.cs" />
+    <Compile Include="Model\Board\Marker\OtherMarkersTest.PickUp.g.cs">
+      <DependentUpon>OtherMarkersTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Board\Marker\PotionMarkerTest.Constructor.g.cs">
+      <DependentUpon>PotionMarkerTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Board\Marker\PotionMarkerTest.cs" />
+    <Compile Include="Model\Board\Marker\PotionMarkerTest.PickUp.g.cs">
+      <DependentUpon>PotionMarkerTest.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Messaging\Events\AssignHeroEventArgsTest.Constructor01.g.cs" />
     <Compile Include="Properties\Messaging\Events\AssignHeroEventArgsTest.cs" />
@@ -201,9 +404,26 @@
     <Compile Include="Properties\Messaging\Events\TreasureEventArgsTest.PopulateWithArgs.g.cs" />
     <Compile Include="Properties\Messaging\Events\TreasureEventArgsTest.ToString01.g.cs" />
     <Compile Include="Properties\PexAssemblyInfo.cs" />
+    <Compile Include="Model\Board\SquareTest.AreaGet.g.cs">
+      <DependentUpon>SquareTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Board\SquareTest.Constructor.g.cs">
+      <DependentUpon>SquareTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Board\SquareTest.cs" />
+    <Compile Include="Model\Board\Marker\RuneMarkerTest.Constructor.g.cs">
+      <DependentUpon>RuneMarkerTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Board\Marker\RuneMarkerTest.cs" />
+    <Compile Include="Model\Board\Marker\RuneMarkerTest.PickUp.g.cs">
+      <DependentUpon>RuneMarkerTest.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Moles Include="Descent.moles" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Model\Player\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -96,6 +96,9 @@
         /// </param>
         public Marker(int id, string name, Texture2D texture, int movementPoints)
         {
+            Contract.Requires(name != null);
+            Contract.Requires(name.Length > 0);
+            Contract.Requires(movementPoints >= 0);
             this.name = name;
             this.texture = texture;
             this.movementPoints = movementPoints;

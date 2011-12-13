@@ -1,6 +1,5 @@
 ﻿namespace Descent.Model.Player.Figure
 {
-    using System;
     using System.Collections.Generic;
     using System.Diagnostics.Contracts;
     using System.Linq;
@@ -274,7 +273,8 @@
                 {
                     foreach (Bonus<List<Dice>> bonus in DiceContribution.GetInvocationList())
                     {
-                        total.AddRange(bonus.Invoke());
+                        if(bonus != null)
+                            total.AddRange(bonus.Invoke());
                     }
                 }
 
@@ -302,7 +302,8 @@
                 {
                     foreach (Bonus<List<Ability>> bonus in AbilityContribution.GetInvocationList())
                     {
-                        total.AddRange(bonus.Invoke());
+                        if(bonus != null)
+                            total.AddRange(bonus.Invoke());
                     }
                 }
 

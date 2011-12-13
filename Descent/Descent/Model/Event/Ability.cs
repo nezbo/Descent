@@ -53,8 +53,11 @@ namespace Descent.Model.Event
         /// </returns>
         public static Ability GetAbility(string abilityString)
         {
-            string[] data = abilityString.Split(' ');
             Ability ability = new Ability();
+
+            if (abilityString == null || abilityString == string.Empty) return ability;
+
+            string[] data = abilityString.Split(' ');
 
             for (int i = 0; i < data.Length; i++)
             {

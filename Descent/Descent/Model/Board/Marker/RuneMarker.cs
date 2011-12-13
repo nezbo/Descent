@@ -1,5 +1,7 @@
 ﻿namespace Descent.Model.Board.Marker
 {
+    using System.Diagnostics.Contracts;
+
     using Descent.Messaging.Events;
     using Descent.Model.Player;
     using Descent.Model.Player.Figure;
@@ -27,6 +29,11 @@
         public RuneMarker(int id, string name, Texture2D texture, int movementPoints, RuneKey color)
             : base(id, name, texture, movementPoints)
         {
+            Contract.Requires(name != null);
+            Contract.Requires(name.Length > 0);
+            Contract.Requires(movementPoints >= 0);
+            Contract.Requires(color != RuneKey.None);
+
             this.color = color;
         }
 
