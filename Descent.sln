@@ -16,7 +16,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		TraceAndTestImpact.testsettings = TraceAndTestImpact.testsettings
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Descent.ManualValidation", "Descent.ManualValidation\Descent.ManualValidation.csproj", "{39E3E894-E485-49B6-8927-702E1668F557}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Descent.ManualValidation", "Descent\Descent.ManualValidation\Descent.ManualValidation.csproj", "{39E3E894-E485-49B6-8927-702E1668F557}"
 EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution

@@ -68,333 +68,139 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AssignHeroEventArgsTest.Constructor01.g.cs">
-      <DependentUpon>AssignHeroEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="AssignHeroEventArgsTest.cs" />
-    <Compile Include="AssignHeroEventArgsTest.PopulateWithArgs.g.cs">
-      <DependentUpon>AssignHeroEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="AssignHeroEventArgsTest.ToString01.g.cs">
-      <DependentUpon>AssignHeroEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ChatMessageEventArgsTest.Constructor01.g.cs">
-      <DependentUpon>ChatMessageEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ChatMessageEventArgsTest.cs" />
-    <Compile Include="ChatMessageEventArgsTest.PopulateWithArgs.g.cs">
-      <DependentUpon>ChatMessageEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ChatMessageEventArgsTest.ToString01.g.cs">
-      <DependentUpon>ChatMessageEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ChestEventArgsTest.Constructor01.g.cs">
-      <DependentUpon>ChestEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ChestEventArgsTest.cs" />
-    <Compile Include="ChestEventArgsTest.PopulateWithArgs.g.cs">
-      <DependentUpon>ChestEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ChestEventArgsTest.ToString01.g.cs">
-      <DependentUpon>ChestEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ChooseActionEventArgsTest.Constructor01.g.cs">
-      <DependentUpon>ChooseActionEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ChooseActionEventArgsTest.cs" />
-    <Compile Include="ChooseActionEventArgsTest.PopulateWithArgs.g.cs">
-      <DependentUpon>ChooseActionEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ChooseActionEventArgsTest.ToString01.g.cs">
-      <DependentUpon>ChooseActionEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="CoordinatesEventArgsTest.Constructor01.g.cs">
-      <DependentUpon>CoordinatesEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="CoordinatesEventArgsTest.cs" />
-    <Compile Include="CoordinatesEventArgsTest.PopulateWithArgs.g.cs">
-      <DependentUpon>CoordinatesEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="CoordinatesEventArgsTest.ToString01.g.cs">
-      <DependentUpon>CoordinatesEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="DamageTakenEventArgsTest.Constructor01.g.cs">
-      <DependentUpon>DamageTakenEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="DamageTakenEventArgsTest.cs" />
-    <Compile Include="DamageTakenEventArgsTest.PopulateWithArgs.g.cs">
-      <DependentUpon>DamageTakenEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="DamageTakenEventArgsTest.ToString01.g.cs">
-      <DependentUpon>DamageTakenEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="DiceEventArgsTest.Constructor01.g.cs">
-      <DependentUpon>DiceEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="DiceEventArgsTest.cs" />
-    <Compile Include="DiceEventArgsTest.PopulateWithArgs.g.cs">
-      <DependentUpon>DiceEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="DiceEventArgsTest.ToString01.g.cs">
-      <DependentUpon>DiceEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="EquipEventArgsTest.Constructor01.g.cs">
-      <DependentUpon>EquipEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="EquipEventArgsTest.cs" />
-    <Compile Include="EquipEventArgsTest.PopulateWithArgs.g.cs">
-      <DependentUpon>EquipEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="EquipEventArgsTest.ToString01.g.cs">
-      <DependentUpon>EquipEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="EventManagerTest.Constructor.g.cs">
-      <DependentUpon>EventManagerTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="EventManagerTest.cs" />
-    <Compile Include="GameEventArgsTest.Constructor.g.cs">
-      <DependentUpon>GameEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="GameEventArgsTest.cs" />
-    <Compile Include="GameEventArgsTest.PopulateWithArgs.g.cs">
-      <DependentUpon>GameEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="GameEventArgsTest.ToString01.g.cs">
-      <DependentUpon>GameEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="GiveCoinsEventArgsTest.Constructor01.g.cs">
-      <DependentUpon>GiveCoinsEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="GiveCoinsEventArgsTest.cs" />
-    <Compile Include="GiveCoinsEventArgsTest.PopulateWithArgs.g.cs">
-      <DependentUpon>GiveCoinsEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="GiveCoinsEventArgsTest.ToString01.g.cs">
-      <DependentUpon>GiveCoinsEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="GiveEquipmentEventArgsTest.Constructor01.g.cs">
-      <DependentUpon>GiveEquipmentEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="GiveEquipmentEventArgsTest.cs" />
-    <Compile Include="GiveEquipmentEventArgsTest.PopulateWithArgs.g.cs">
-      <DependentUpon>GiveEquipmentEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="GiveEquipmentEventArgsTest.ToString01.g.cs">
-      <DependentUpon>GiveEquipmentEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="GiveHeroCardsEventArgsTest.Constructor01.g.cs">
-      <DependentUpon>GiveHeroCardsEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="GiveHeroCardsEventArgsTest.cs" />
-    <Compile Include="GiveHeroCardsEventArgsTest.PopulateWithArgs.g.cs">
-      <DependentUpon>GiveHeroCardsEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="GiveHeroCardsEventArgsTest.ToString01.g.cs">
-      <DependentUpon>GiveHeroCardsEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="GiveOverlordCardsEventArgsTest.Constructor01.g.cs">
-      <DependentUpon>GiveOverlordCardsEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="GiveOverlordCardsEventArgsTest.cs" />
-    <Compile Include="GiveOverlordCardsEventArgsTest.PopulateWithArgs.g.cs">
-      <DependentUpon>GiveOverlordCardsEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="GiveOverlordCardsEventArgsTest.ToString01.g.cs">
-      <DependentUpon>GiveOverlordCardsEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="InflictWoundsEventArgsTest.Constructor01.g.cs">
-      <DependentUpon>InflictWoundsEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="InflictWoundsEventArgsTest.cs" />
-    <Compile Include="InflictWoundsEventArgsTest.PopulateWithArgs.g.cs">
-      <DependentUpon>InflictWoundsEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="InflictWoundsEventArgsTest.ToString01.g.cs">
-      <DependentUpon>InflictWoundsEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="InventoryFieldEventArgsTest.Constructor01.g.cs">
-      <DependentUpon>InventoryFieldEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="InventoryFieldEventArgsTest.cs" />
-    <Compile Include="InventoryFieldEventArgsTest.PopulateWithArgs.g.cs">
-      <DependentUpon>InventoryFieldEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="InventoryFieldEventArgsTest.ToString01.g.cs">
-      <DependentUpon>InventoryFieldEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="OverlordCardEventArgsTest.Constructor01.g.cs">
-      <DependentUpon>OverlordCardEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="OverlordCardEventArgsTest.cs" />
-    <Compile Include="OverlordCardEventArgsTest.PopulateWithArgs.g.cs">
-      <DependentUpon>OverlordCardEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="OverlordCardEventArgsTest.ToString01.g.cs">
-      <DependentUpon>OverlordCardEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="OverlordIsEventArgsTest.Constructor01.g.cs">
-      <DependentUpon>OverlordIsEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="OverlordIsEventArgsTest.cs" />
-    <Compile Include="OverlordIsEventArgsTest.PopulateWithArgs.g.cs">
-      <DependentUpon>OverlordIsEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="OverlordIsEventArgsTest.ToString01.g.cs">
-      <DependentUpon>OverlordIsEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="PlaceHeroEventArgsTest.Constructor01.g.cs">
-      <DependentUpon>PlaceHeroEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="PlaceHeroEventArgsTest.cs" />
-    <Compile Include="PlaceHeroEventArgsTest.PopulateWithArgs.g.cs">
-      <DependentUpon>PlaceHeroEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="PlaceHeroEventArgsTest.ToString01.g.cs">
-      <DependentUpon>PlaceHeroEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="PlayerEventArgsTest.Constructor01.g.cs">
-      <DependentUpon>PlayerEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="PlayerEventArgsTest.cs" />
-    <Compile Include="PlayerEventArgsTest.PopulateWithArgs.g.cs">
-      <DependentUpon>PlayerEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="PlayerEventArgsTest.ToString01.g.cs">
-      <DependentUpon>PlayerEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="PlayerInGameTest.Constructor.g.cs">
-      <DependentUpon>PlayerInGameTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="PlayerInGameTest.cs" />
-    <Compile Include="PlayerJoinedEventArgsTest.Constructor01.g.cs">
-      <DependentUpon>PlayerJoinedEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="PlayerJoinedEventArgsTest.cs" />
-    <Compile Include="PlayerJoinedEventArgsTest.PopulateWithArgs.g.cs">
-      <DependentUpon>PlayerJoinedEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="PlayerJoinedEventArgsTest.ToString01.g.cs">
-      <DependentUpon>PlayerJoinedEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="PlayersInGameEventArgsTest.Constructor01.g.cs">
-      <DependentUpon>PlayersInGameEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="PlayersInGameEventArgsTest.cs" />
-    <Compile Include="PlayersInGameEventArgsTest.PopulateWithArgs.g.cs">
-      <DependentUpon>PlayersInGameEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="PlayersInGameEventArgsTest.ToString01.g.cs">
-      <DependentUpon>PlayersInGameEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="PointsEventArgsTest.Constructor01.g.cs">
-      <DependentUpon>PointsEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="PointsEventArgsTest.cs" />
-    <Compile Include="PointsEventArgsTest.PopulateWithArgs.g.cs">
-      <DependentUpon>PointsEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="PointsEventArgsTest.ToString01.g.cs">
-      <DependentUpon>PointsEventArgsTest.cs</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Messaging\Events\AssignHeroEventArgsTest.Constructor01.g.cs" />
+    <Compile Include="Properties\Messaging\Events\AssignHeroEventArgsTest.cs" />
+    <Compile Include="Properties\Messaging\Events\AssignHeroEventArgsTest.PopulateWithArgs.g.cs" />
+    <Compile Include="Properties\Messaging\Events\AssignHeroEventArgsTest.ToString01.g.cs" />
+    <Compile Include="Properties\Messaging\Events\ChatMessageEventArgsTest.Constructor01.g.cs" />
+    <Compile Include="Properties\Messaging\Events\ChatMessageEventArgsTest.cs" />
+    <Compile Include="Properties\Messaging\Events\ChatMessageEventArgsTest.PopulateWithArgs.g.cs" />
+    <Compile Include="Properties\Messaging\Events\ChatMessageEventArgsTest.ToString01.g.cs" />
+    <Compile Include="Properties\Messaging\Events\ChestEventArgsTest.Constructor01.g.cs" />
+    <Compile Include="Properties\Messaging\Events\ChestEventArgsTest.cs" />
+    <Compile Include="Properties\Messaging\Events\ChestEventArgsTest.PopulateWithArgs.g.cs" />
+    <Compile Include="Properties\Messaging\Events\ChestEventArgsTest.ToString01.g.cs" />
+    <Compile Include="Properties\Messaging\Events\ChooseActionEventArgsTest.Constructor01.g.cs" />
+    <Compile Include="Properties\Messaging\Events\ChooseActionEventArgsTest.cs" />
+    <Compile Include="Properties\Messaging\Events\ChooseActionEventArgsTest.PopulateWithArgs.g.cs" />
+    <Compile Include="Properties\Messaging\Events\ChooseActionEventArgsTest.ToString01.g.cs" />
+    <Compile Include="Properties\Messaging\Events\CoordinatesEventArgsTest.Constructor01.g.cs" />
+    <Compile Include="Properties\Messaging\Events\CoordinatesEventArgsTest.cs" />
+    <Compile Include="Properties\Messaging\Events\CoordinatesEventArgsTest.PopulateWithArgs.g.cs" />
+    <Compile Include="Properties\Messaging\Events\CoordinatesEventArgsTest.ToString01.g.cs" />
+    <Compile Include="Properties\Messaging\Events\DamageTakenEventArgsTest.Constructor01.g.cs" />
+    <Compile Include="Properties\Messaging\Events\DamageTakenEventArgsTest.cs" />
+    <Compile Include="Properties\Messaging\Events\DamageTakenEventArgsTest.PopulateWithArgs.g.cs" />
+    <Compile Include="Properties\Messaging\Events\DamageTakenEventArgsTest.ToString01.g.cs" />
+    <Compile Include="Properties\Messaging\Events\DiceEventArgsTest.Constructor01.g.cs" />
+    <Compile Include="Properties\Messaging\Events\DiceEventArgsTest.cs" />
+    <Compile Include="Properties\Messaging\Events\DiceEventArgsTest.PopulateWithArgs.g.cs" />
+    <Compile Include="Properties\Messaging\Events\DiceEventArgsTest.ToString01.g.cs" />
+    <Compile Include="Properties\Messaging\Events\EquipEventArgsTest.Constructor01.g.cs" />
+    <Compile Include="Properties\Messaging\Events\EquipEventArgsTest.cs" />
+    <Compile Include="Properties\Messaging\Events\EquipEventArgsTest.PopulateWithArgs.g.cs" />
+    <Compile Include="Properties\Messaging\Events\EquipEventArgsTest.ToString01.g.cs" />
+    <Compile Include="Properties\Messaging\Events\EventManagerTest.Constructor.g.cs" />
+    <Compile Include="Properties\Messaging\Events\EventManagerTest.cs" />
+    <Compile Include="Properties\Messaging\Events\GameEventArgsTest.Constructor.g.cs" />
+    <Compile Include="Properties\Messaging\Events\GameEventArgsTest.cs" />
+    <Compile Include="Properties\Messaging\Events\GameEventArgsTest.PopulateWithArgs.g.cs" />
+    <Compile Include="Properties\Messaging\Events\GameEventArgsTest.ToString01.g.cs" />
+    <Compile Include="Properties\Messaging\Events\GiveCoinsEventArgsTest.Constructor01.g.cs" />
+    <Compile Include="Properties\Messaging\Events\GiveCoinsEventArgsTest.cs" />
+    <Compile Include="Properties\Messaging\Events\GiveCoinsEventArgsTest.PopulateWithArgs.g.cs" />
+    <Compile Include="Properties\Messaging\Events\GiveCoinsEventArgsTest.ToString01.g.cs" />
+    <Compile Include="Properties\Messaging\Events\GiveEquipmentEventArgsTest.Constructor01.g.cs" />
+    <Compile Include="Properties\Messaging\Events\GiveEquipmentEventArgsTest.cs" />
+    <Compile Include="Properties\Messaging\Events\GiveEquipmentEventArgsTest.PopulateWithArgs.g.cs" />
+    <Compile Include="Properties\Messaging\Events\GiveEquipmentEventArgsTest.ToString01.g.cs" />
+    <Compile Include="Properties\Messaging\Events\GiveHeroCardsEventArgsTest.Constructor01.g.cs" />
+    <Compile Include="Properties\Messaging\Events\GiveHeroCardsEventArgsTest.cs" />
+    <Compile Include="Properties\Messaging\Events\GiveHeroCardsEventArgsTest.PopulateWithArgs.g.cs" />
+    <Compile Include="Properties\Messaging\Events\GiveHeroCardsEventArgsTest.ToString01.g.cs" />
+    <Compile Include="Properties\Messaging\Events\GiveOverlordCardsEventArgsTest.Constructor01.g.cs" />
+    <Compile Include="Properties\Messaging\Events\GiveOverlordCardsEventArgsTest.cs" />
+    <Compile Include="Properties\Messaging\Events\GiveOverlordCardsEventArgsTest.PopulateWithArgs.g.cs" />
+    <Compile Include="Properties\Messaging\Events\GiveOverlordCardsEventArgsTest.ToString01.g.cs" />
+    <Compile Include="Properties\Messaging\Events\InflictWoundsEventArgsTest.Constructor01.g.cs" />
+    <Compile Include="Properties\Messaging\Events\InflictWoundsEventArgsTest.cs" />
+    <Compile Include="Properties\Messaging\Events\InflictWoundsEventArgsTest.PopulateWithArgs.g.cs" />
+    <Compile Include="Properties\Messaging\Events\InflictWoundsEventArgsTest.ToString01.g.cs" />
+    <Compile Include="Properties\Messaging\Events\InventoryFieldEventArgsTest.Constructor01.g.cs" />
+    <Compile Include="Properties\Messaging\Events\InventoryFieldEventArgsTest.cs" />
+    <Compile Include="Properties\Messaging\Events\InventoryFieldEventArgsTest.PopulateWithArgs.g.cs" />
+    <Compile Include="Properties\Messaging\Events\InventoryFieldEventArgsTest.ToString01.g.cs" />
+    <Compile Include="Properties\Messaging\Events\OverlordCardEventArgsTest.Constructor01.g.cs" />
+    <Compile Include="Properties\Messaging\Events\OverlordCardEventArgsTest.cs" />
+    <Compile Include="Properties\Messaging\Events\OverlordCardEventArgsTest.PopulateWithArgs.g.cs" />
+    <Compile Include="Properties\Messaging\Events\OverlordCardEventArgsTest.ToString01.g.cs" />
+    <Compile Include="Properties\Messaging\Events\OverlordIsEventArgsTest.Constructor01.g.cs" />
+    <Compile Include="Properties\Messaging\Events\OverlordIsEventArgsTest.cs" />
+    <Compile Include="Properties\Messaging\Events\OverlordIsEventArgsTest.PopulateWithArgs.g.cs" />
+    <Compile Include="Properties\Messaging\Events\OverlordIsEventArgsTest.ToString01.g.cs" />
+    <Compile Include="Properties\Messaging\Events\PlaceHeroEventArgsTest.Constructor01.g.cs" />
+    <Compile Include="Properties\Messaging\Events\PlaceHeroEventArgsTest.cs" />
+    <Compile Include="Properties\Messaging\Events\PlaceHeroEventArgsTest.PopulateWithArgs.g.cs" />
+    <Compile Include="Properties\Messaging\Events\PlaceHeroEventArgsTest.ToString01.g.cs" />
+    <Compile Include="Properties\Messaging\Events\PlayerEventArgsTest.Constructor01.g.cs" />
+    <Compile Include="Properties\Messaging\Events\PlayerEventArgsTest.cs" />
+    <Compile Include="Properties\Messaging\Events\PlayerEventArgsTest.PopulateWithArgs.g.cs" />
+    <Compile Include="Properties\Messaging\Events\PlayerEventArgsTest.ToString01.g.cs" />
+    <Compile Include="Properties\Messaging\Events\PlayerInGameTest.Constructor.g.cs" />
+    <Compile Include="Properties\Messaging\Events\PlayerInGameTest.cs" />
+    <Compile Include="Properties\Messaging\Events\PlayerJoinedEventArgsTest.Constructor01.g.cs" />
+    <Compile Include="Properties\Messaging\Events\PlayerJoinedEventArgsTest.cs" />
+    <Compile Include="Properties\Messaging\Events\PlayerJoinedEventArgsTest.PopulateWithArgs.g.cs" />
+    <Compile Include="Properties\Messaging\Events\PlayerJoinedEventArgsTest.ToString01.g.cs" />
+    <Compile Include="Properties\Messaging\Events\PlayersInGameEventArgsTest.Constructor01.g.cs" />
+    <Compile Include="Properties\Messaging\Events\PlayersInGameEventArgsTest.cs" />
+    <Compile Include="Properties\Messaging\Events\PlayersInGameEventArgsTest.PopulateWithArgs.g.cs" />
+    <Compile Include="Properties\Messaging\Events\PlayersInGameEventArgsTest.ToString01.g.cs" />
+    <Compile Include="Properties\Messaging\Events\PointsEventArgsTest.Constructor01.g.cs" />
+    <Compile Include="Properties\Messaging\Events\PointsEventArgsTest.cs" />
+    <Compile Include="Properties\Messaging\Events\PointsEventArgsTest.PopulateWithArgs.g.cs" />
+    <Compile Include="Properties\Messaging\Events\PointsEventArgsTest.ToString01.g.cs" />
+    <Compile Include="Properties\Messaging\Events\QueuedEventTest.Constructor.g.cs" />
+    <Compile Include="Properties\Messaging\Events\QueuedEventTest.cs" />
+    <Compile Include="Properties\Messaging\Events\QueuedEventTest.ToString01.g.cs" />
+    <Compile Include="Properties\Messaging\Events\RequestBuyEquipmentEventArgsTest.Constructor01.g.cs" />
+    <Compile Include="Properties\Messaging\Events\RequestBuyEquipmentEventArgsTest.cs" />
+    <Compile Include="Properties\Messaging\Events\RequestBuyEquipmentEventArgsTest.PopulateWithArgs.g.cs" />
+    <Compile Include="Properties\Messaging\Events\RequestBuyEquipmentEventArgsTest.ToString01.g.cs" />
+    <Compile Include="Properties\Messaging\Events\RerollDicesEventArgsTest.Constructor01.g.cs" />
+    <Compile Include="Properties\Messaging\Events\RerollDicesEventArgsTest.cs" />
+    <Compile Include="Properties\Messaging\Events\RerollDicesEventArgsTest.PopulateWithArgs.g.cs" />
+    <Compile Include="Properties\Messaging\Events\RerollDicesEventArgsTest.ToString01.g.cs" />
+    <Compile Include="Properties\Messaging\Events\RolledDicesEventArgsTest.Constructor01.g.cs" />
+    <Compile Include="Properties\Messaging\Events\RolledDicesEventArgsTest.cs" />
+    <Compile Include="Properties\Messaging\Events\RolledDicesEventArgsTest.PopulateWithArgs.g.cs" />
+    <Compile Include="Properties\Messaging\Events\RolledDicesEventArgsTest.ToString01.g.cs" />
+    <Compile Include="Properties\Messaging\Events\SpawnMonsterEventArgsTest.Constructor01.g.cs" />
+    <Compile Include="Properties\Messaging\Events\SpawnMonsterEventArgsTest.cs" />
+    <Compile Include="Properties\Messaging\Events\SpawnMonsterEventArgsTest.PopulateWithArgs.g.cs" />
+    <Compile Include="Properties\Messaging\Events\SpawnMonsterEventArgsTest.ToString01.g.cs" />
+    <Compile Include="Properties\Messaging\Events\SurgeAbilityEventArgsTest.Constructor01.g.cs" />
+    <Compile Include="Properties\Messaging\Events\SurgeAbilityEventArgsTest.cs" />
+    <Compile Include="Properties\Messaging\Events\SurgeAbilityEventArgsTest.PopulateWithArgs.g.cs" />
+    <Compile Include="Properties\Messaging\Events\SurgeAbilityEventArgsTest.ToString01.g.cs" />
+    <Compile Include="Properties\Messaging\Events\SwitchItemsEventArgsTest.Constructor01.g.cs" />
+    <Compile Include="Properties\Messaging\Events\SwitchItemsEventArgsTest.cs" />
+    <Compile Include="Properties\Messaging\Events\SwitchItemsEventArgsTest.PopulateWithArgs.g.cs" />
+    <Compile Include="Properties\Messaging\Events\SwitchItemsEventArgsTest.ToString01.g.cs" />
+    <Compile Include="Properties\Messaging\Events\TokenEventArgsTest.Constructor01.g.cs" />
+    <Compile Include="Properties\Messaging\Events\TokenEventArgsTest.cs" />
+    <Compile Include="Properties\Messaging\Events\TokenEventArgsTest.PopulateWithArgs.g.cs" />
+    <Compile Include="Properties\Messaging\Events\TokenEventArgsTest.ToString01.g.cs" />
+    <Compile Include="Properties\Messaging\Events\TradeHeroCardEventArgsTest.Constructor01.g.cs" />
+    <Compile Include="Properties\Messaging\Events\TradeHeroCardEventArgsTest.cs" />
+    <Compile Include="Properties\Messaging\Events\TradeHeroCardEventArgsTest.PopulateWithArgs.g.cs" />
+    <Compile Include="Properties\Messaging\Events\TradeHeroCardEventArgsTest.ToString01.g.cs" />
+    <Compile Include="Properties\Messaging\Events\TreasureEventArgsTest.Constructor01.g.cs" />
+    <Compile Include="Properties\Messaging\Events\TreasureEventArgsTest.cs" />
+    <Compile Include="Properties\Messaging\Events\TreasureEventArgsTest.PopulateWithArgs.g.cs" />
+    <Compile Include="Properties\Messaging\Events\TreasureEventArgsTest.ToString01.g.cs" />
     <Compile Include="Properties\PexAssemblyInfo.cs" />
-    <Compile Include="QueuedEventTest.Constructor.g.cs">
-      <DependentUpon>QueuedEventTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="QueuedEventTest.cs" />
-    <Compile Include="QueuedEventTest.ToString01.g.cs">
-      <DependentUpon>QueuedEventTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="RequestBuyEquipmentEventArgsTest.Constructor01.g.cs">
-      <DependentUpon>RequestBuyEquipmentEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="RequestBuyEquipmentEventArgsTest.cs" />
-    <Compile Include="RequestBuyEquipmentEventArgsTest.PopulateWithArgs.g.cs">
-      <DependentUpon>RequestBuyEquipmentEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="RequestBuyEquipmentEventArgsTest.ToString01.g.cs">
-      <DependentUpon>RequestBuyEquipmentEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="RerollDicesEventArgsTest.Constructor01.g.cs">
-      <DependentUpon>RerollDicesEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="RerollDicesEventArgsTest.cs" />
-    <Compile Include="RerollDicesEventArgsTest.PopulateWithArgs.g.cs">
-      <DependentUpon>RerollDicesEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="RerollDicesEventArgsTest.ToString01.g.cs">
-      <DependentUpon>RerollDicesEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="RolledDicesEventArgsTest.Constructor01.g.cs">
-      <DependentUpon>RolledDicesEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="RolledDicesEventArgsTest.cs" />
-    <Compile Include="RolledDicesEventArgsTest.PopulateWithArgs.g.cs">
-      <DependentUpon>RolledDicesEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="RolledDicesEventArgsTest.ToString01.g.cs">
-      <DependentUpon>RolledDicesEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="SpawnMonsterEventArgsTest.Constructor01.g.cs">
-      <DependentUpon>SpawnMonsterEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="SpawnMonsterEventArgsTest.cs" />
-    <Compile Include="SpawnMonsterEventArgsTest.PopulateWithArgs.g.cs">
-      <DependentUpon>SpawnMonsterEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="SpawnMonsterEventArgsTest.ToString01.g.cs">
-      <DependentUpon>SpawnMonsterEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="SurgeAbilityEventArgsTest.Constructor01.g.cs">
-      <DependentUpon>SurgeAbilityEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="SurgeAbilityEventArgsTest.cs" />
-    <Compile Include="SurgeAbilityEventArgsTest.PopulateWithArgs.g.cs">
-      <DependentUpon>SurgeAbilityEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="SurgeAbilityEventArgsTest.ToString01.g.cs">
-      <DependentUpon>SurgeAbilityEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="SwitchItemsEventArgsTest.Constructor01.g.cs">
-      <DependentUpon>SwitchItemsEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="SwitchItemsEventArgsTest.cs" />
-    <Compile Include="SwitchItemsEventArgsTest.PopulateWithArgs.g.cs">
-      <DependentUpon>SwitchItemsEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="SwitchItemsEventArgsTest.ToString01.g.cs">
-      <DependentUpon>SwitchItemsEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="TokenEventArgsTest.Constructor01.g.cs">
-      <DependentUpon>TokenEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="TokenEventArgsTest.cs" />
-    <Compile Include="TokenEventArgsTest.PopulateWithArgs.g.cs">
-      <DependentUpon>TokenEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="TokenEventArgsTest.ToString01.g.cs">
-      <DependentUpon>TokenEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="TradeHeroCardEventArgsTest.Constructor01.g.cs">
-      <DependentUpon>TradeHeroCardEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="TradeHeroCardEventArgsTest.cs" />
-    <Compile Include="TradeHeroCardEventArgsTest.PopulateWithArgs.g.cs">
-      <DependentUpon>TradeHeroCardEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="TradeHeroCardEventArgsTest.ToString01.g.cs">
-      <DependentUpon>TradeHeroCardEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="TreasureEventArgsTest.Constructor01.g.cs">
-      <DependentUpon>TreasureEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="TreasureEventArgsTest.cs" />
-    <Compile Include="TreasureEventArgsTest.PopulateWithArgs.g.cs">
-      <DependentUpon>TreasureEventArgsTest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="TreasureEventArgsTest.ToString01.g.cs">
-      <DependentUpon>TreasureEventArgsTest.cs</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Moles Include="Descent.moles" />
