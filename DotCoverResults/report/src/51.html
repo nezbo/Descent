@@ -1,0 +1,76 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_51 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src51" class="dotCoverSource"><pre>namespace Descent.GUI.SubElements
+{
+    using Descent.Model.Player;
+    using Descent.Model.Player.Figure;
+    using Microsoft.Xna.Framework;
+    using Microsoft.Xna.Framework.Graphics;
+
+    /// &lt;summary&gt;
+    /// A small panel that shows the most essential information about a
+    /// hero in the game.
+    /// &lt;/summary&gt;
+    /// &lt;author&gt;
+    /// Emil Juul Jacobsen
+    /// &lt;/author&gt;
+    class HeroSummary : GUIElement
+    {
+        private static readonly int Height = 100;
+
+        private Hero me;
+
+        /// &lt;summary&gt;
+        /// Creates a new HeroSummary to display the given hero to the right of
+        /// the screen, at the given y-coordinate (down from the top).
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;game&quot;&gt;The current Game object.&lt;/param&gt;
+        /// &lt;param name=&quot;y&quot;&gt;How far down the screen this HeroSummary should be located.&lt;/param&gt;
+        /// &lt;param name=&quot;hero&quot;&gt;The hero to display.&lt;/param&gt;
+        public HeroSummary(Game game, int y, Hero hero)
+            : base(game, &quot;overlord summary&quot;, (int)(game.GraphicsDevice.Viewport.Width * (3 / 4.0)), y, game.GraphicsDevice.Viewport.Width / 4, Height)
+        {
+            this.me = hero;
+            this.SetBackground(&quot;playerbg&quot;);
+
+            AddDrawable(this.Name, new Image(game.Content.Load&lt;Texture2D&gt;(&quot;Images/Other/cost-small&quot;)), new Rectangle(Bound.X + (int)(Bound.Width * (3 / 4.0)), Bound.Y, Height / 4, Height / 4));
+            AddDrawable(this.Name, new Image(game.Content.Load&lt;Texture2D&gt;(&quot;Images/Other/500gold&quot;)), new Rectangle(Bound.X + (int)(Bound.Width * (3 / 4.0)), Bound.Y + Bound.Height / 4, Height / 4, Height / 4));
+
+            AddDrawable(this.Name, new Image(game.Content.Load&lt;Texture2D&gt;(&quot;Images/Other/health-small&quot;)), new Rectangle(Bound.X + Bound.Width / 2, Bound.Y + Height / 2, Height / 4, Height / 4));
+            AddDrawable(this.Name, new Image(game.Content.Load&lt;Texture2D&gt;(&quot;Images/Other/fatigue-small&quot;)), new Rectangle(Bound.X + Bound.Width / 2, Bound.Y + (int)(Height * (3 / 4.0)), Height / 4, Height / 4));
+            AddDrawable(this.Name, new Image(game.Content.Load&lt;Texture2D&gt;(&quot;Images/Other/movement-small&quot;)), new Rectangle(Bound.X + (int)(Bound.Width * (3 / 4.0)), Bound.Y + Height / 2, Height / 4, Height / 4));
+            AddDrawable(this.Name, new Image(game.Content.Load&lt;Texture2D&gt;(&quot;Images/Other/attacks-small&quot;)), new Rectangle(5 + Bound.X + (int)(Bound.Width * (2 / 3.0)), Bound.Y + (int)(Height * (3 / 4.0)), Height / 4, Height / 4));
+            AddDrawable(this.Name, new Image(game.Content.Load&lt;Texture2D&gt;(&quot;Images/Other/armor-small&quot;)), new Rectangle(5 + Bound.X + (int)(Bound.Width * (5 / 6.0)), Bound.Y + (int)(Height * (3 / 4.0)), Height / 4, Height / 4));
+        }
+
+        public override void Draw(SpriteBatch draw)
+        {
+            base.Draw(draw);
+
+            draw.Draw(me.Texture, new Rectangle(Bound.X, Bound.Y, 50, 50), Color.White);
+            draw.DrawString(GUI.Font, me.Name, new Vector2(Bound.X + 60, Bound.Y + 15), Color.Black);
+            draw.DrawString(GUI.Font, Player.Instance.GetPlayerNick(Player.Instance.HeroParty.GetPlayerId(me)), new Vector2(Bound.X + 5, Bound.Y + 65), Color.White);
+
+            draw.DrawString(GUI.Font, &quot;&quot; + me.Cost, new Vector2(Bound.X + (int)(Bound.Width * (3 / 4.0)) + 30, Bound.Y), Color.Black);
+            draw.DrawString(GUI.Font, &quot;&quot; + me.Coins, new Vector2(Bound.X + (int)(Bound.Width * (3 / 4.0)) + 30, Bound.Y + Bound.Height / 4), Color.Black);
+
+            draw.DrawString(GUI.Font, me.Health + &quot;/&quot; + me.MaxHealth, new Vector2(Bound.X + Bound.Width / 2 + 30, Bound.Y + Bound.Height / 2), Color.Black);
+            draw.DrawString(GUI.Font, me.Fatigue + &quot;/&quot; + me.MaxFatigue, new Vector2(Bound.X + Bound.Width / 2 + 30, Bound.Y + (int)(Bound.Height * (3 / 4.0))), Color.Black);
+            draw.DrawString(GUI.Font, me.MovementLeft + &quot;/&quot; + me.Speed, new Vector2(Bound.X + (int)(Bound.Width * (3 / 4.0)) + 30, Bound.Y + Bound.Height / 2), Color.Black);
+            draw.DrawString(GUI.Font, &quot;&quot; + me.AttacksLeft, new Vector2(5 + Bound.X + (int)(Bound.Width * (2 / 3.0)) + 30, Bound.Y + (int)(Bound.Height * (3 / 4.0))), Color.Black);
+            draw.DrawString(GUI.Font, &quot;&quot; + me.Armor, new Vector2(5 + Bound.X + (int)(Bound.Width * (5 / 6.0)) + 30, Bound.Y + (int)(Bound.Height * (3 / 4.0))), Color.Black);
+        }
+    }
+}
+</pre></code><script type="text/javascript">
+			applyranges('src51', RANGES_51)
+		</script>
+	</body>
+</html>

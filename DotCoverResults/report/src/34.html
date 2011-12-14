@@ -1,0 +1,123 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_34 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src34" class="dotCoverSource"><pre>
+namespace Descent.Messaging.Connection
+{
+    using System;
+    using System.Diagnostics.Contracts;
+
+    using Descent.Messaging.AsyncSockets;
+    using Descent.Messaging.Events;
+    using Descent.Model.Player;
+
+    /// &lt;summary&gt;
+    /// A TCP client connected to the host server. When sending a message, it will send only to the server at the other end of the connection.
+    /// &lt;/summary&gt;
+    /// &lt;author&gt;
+    /// Simon Westh Henriksen
+    /// &lt;/author&gt;
+    public class ClientConnection : Connection
+    {
+        private ClientInfo client;
+
+        /// &lt;summary&gt;
+        /// Initializes a new instance of the &lt;see cref=&quot;ClientConnection&quot;/&gt; class.
+        /// Responsible for client connections to the host/server.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;ip&quot;&gt;Ips of server.&lt;/param&gt;
+        /// &lt;param name=&quot;port&quot;&gt;Port of server.&lt;/param&gt;
+        public ClientConnection(string ip, int port)
+        {
+            Contract.Requires(ip != null);
+            Contract.Requires(port &gt; 0);
+
+            RemoteIp = ip;
+            RemotePort = port;
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the id of the client.
+        /// &lt;/summary&gt;
+        public override int Id { get { return client.Id; } }
+
+        /// &lt;summary&gt;
+        /// Gets the clients ip.
+        /// &lt;/summary&gt;
+        public override string[] Ips { get { return new string[] { client.Ip }; } }
+
+        /// &lt;summary&gt;
+        /// Gets or sets the remote ip this client is connected to.
+        /// &lt;/summary&gt;
+        private string RemoteIp { get; set; }
+
+        /// &lt;summary&gt;
+        /// Gets or sets the remote port this client is connected to.
+        /// &lt;/summary&gt;
+        private int RemotePort { get; set; }
+
+        /// &lt;summary&gt;
+        /// Beging the client connection. Will connect to specified host and begin receiving data.
+        /// &lt;/summary&gt;
+        public override void Start()
+        {
+            AsyncSocketsClient socketsClient = new AsyncSocketsClient(RemoteIp, RemotePort);
+            client = new ClientInfo(socketsClient.Socket);
+            client.MessageReceivedEvent += new MessageReceivedHandler(MessageReceived);
+            client.BeginReceive();
+        }
+
+        /// &lt;summary&gt;
+        /// Send a string to the host.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;message&quot;&gt;Message to send.&lt;/param&gt;
+        public override void SendString(string message)
+        {
+            client.Send(message);
+        }
+
+        /// &lt;summary&gt;
+        /// Close the socket connection.
+        /// &lt;/summary&gt;
+        public override void Close()
+        {
+            client.Close();
+        }
+
+        /// &lt;summary&gt;
+        /// Called when a message was received from the connection.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;clientInfo&quot;&gt;&lt;see cref=&quot;ClientInfo&quot;/&gt; object&lt;/param&gt;
+        /// &lt;param name=&quot;message&quot;&gt;String that was received.&lt;/param&gt;
+        private void MessageReceived(ClientInfo clientInfo, string message)
+        {
+            // Split up the message to check for special messages.
+            string[] split = message.Split(&quot;,&quot;.ToCharArray());
+
+            /// SPECIAL CASE: ASSIGN ID.
+            if (split[0].Equals(&quot;ASSIGNID&quot;))
+            {
+                client.Id = int.Parse(split[1]);
+                
+                Player.Instance.EventManager.QueueEvent(EventType.AcceptPlayer, new PlayerEventArgs(client.Id));
+            }
+            else
+            {
+                // It was not a special message, pass it on to the event manager.
+                //Player.Instance.EventManager.ParseAndFire(message, false);
+                Player.Instance.EventManager.QueueStringEvent(message, false);
+            }
+        }
+    }
+}
+</pre></code><script type="text/javascript">
+			applyranges('src34', RANGES_34)
+		</script>
+	</body>
+</html>

@@ -1,0 +1,89 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_79 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src79" class="dotCoverSource"><pre>
+namespace Descent.Messaging.Events
+{
+    using System.Diagnostics.Contracts;
+    using System.Linq;
+    using System.Text;
+
+    /// &lt;summary&gt;
+    /// The event arguments for the GiveHeroCards event.
+    /// &lt;/summary&gt;
+    /// &lt;author&gt;
+    /// Simon Westh Henriksen
+    /// &lt;/author&gt;
+    public sealed class GiveHeroCardsEventArgs : GameEventArgs
+    {
+        public GiveHeroCardsEventArgs(int playerId, int[] heroCardIds)
+        {
+            Contract.Requires(playerId &gt; 0);
+            Contract.Requires(heroCardIds != null);
+            Contract.Requires(heroCardIds.Length &gt; 0);
+            PlayerId = playerId;
+            HeroCardIds = heroCardIds;
+        }
+
+        public GiveHeroCardsEventArgs(string[] stringArgs)
+        {
+            Contract.Requires(stringArgs != null);
+            Contract.Requires(stringArgs.Length &gt;= 3);
+            
+            Contract.Requires(Contract.ForAll(stringArgs, s =&gt; EventContractHelper.TryParseInt(s) &amp;&amp; int.Parse(s) &gt;= 1));
+            Contract.Requires(stringArgs.Skip(2).ToArray().Length == int.Parse(stringArgs[1]));
+
+            PopulateWithArgs(stringArgs);
+        }
+
+        public int PlayerId { get; set; }
+
+        public int[] HeroCardIds { get; set; }
+
+        public override void PopulateWithArgs(string[] stringArgs)
+        {
+            Contract.Requires(stringArgs != null);
+            Contract.Requires(stringArgs.Length &gt;= 3);
+            
+            Contract.Requires(Contract.ForAll(stringArgs, s =&gt; EventContractHelper.TryParseInt(s) &amp;&amp; int.Parse(s) &gt;= 1));
+            Contract.Requires(stringArgs.Skip(2).ToArray().Length == int.Parse(stringArgs[1]));
+
+            PlayerId = int.Parse(stringArgs[0]);
+            int numberOfHeroCards = int.Parse(stringArgs[1]);
+
+            HeroCardIds = new int[numberOfHeroCards];
+            string[] cardStrings = stringArgs.Skip(2).ToArray();
+
+            for (int i = 0; i &lt; cardStrings.Length; i++)
+            {
+                HeroCardIds[i] = int.Parse(cardStrings[i]);
+            }
+        }
+
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append(PlayerId.ToString());
+            sb.Append(&quot;,&quot;);
+            sb.Append(HeroCardIds.Length);
+            foreach (int heroCardId in HeroCardIds)
+            {
+                sb.Append(&quot;,&quot;);
+                sb.Append(heroCardId);
+            }
+
+            return sb.ToString();
+        }
+    }
+}
+</pre></code><script type="text/javascript">
+			applyranges('src79', RANGES_79)
+		</script>
+	</body>
+</html>

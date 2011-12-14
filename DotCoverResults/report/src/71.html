@@ -1,0 +1,67 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_71 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src71" class="dotCoverSource"><pre>
+namespace Descent.Model.Board
+{
+    using Player.Figure;
+
+    /// &lt;summary&gt;
+    /// A single square of the board
+    /// &lt;/summary&gt;
+    /// &lt;author&gt;
+    /// Jonas Breindahl (jobre@itu.dk)
+    /// &lt;/author&gt;
+    public class Square
+    {
+        #region Fields
+
+        private readonly int area;
+
+        /// &lt;summary&gt;
+        /// Gets what area is this square in?
+        /// &lt;/summary&gt;
+        public int Area
+        {
+            get { return area; }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets or sets the marker on the square
+        /// &lt;/summary&gt;
+        public Marker.Marker Marker { get; set; }
+
+        /// &lt;summary&gt;
+        /// Gets or sets the figure on the square
+        /// &lt;/summary&gt;
+        public Figure Figure { get; set; }
+
+        #endregion
+
+        #region Initialization
+
+        /// &lt;summary&gt;
+        /// Initializes a new instance of the &lt;see cref=&quot;Square&quot;/&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;area&quot;&gt;
+        /// The area where the square is in
+        /// &lt;/param&gt;
+        public Square(int area)
+        {
+            this.area = area;
+        }
+
+        #endregion
+    }
+}
+</pre></code><script type="text/javascript">
+			applyranges('src71', RANGES_71)
+		</script>
+	</body>
+</html>

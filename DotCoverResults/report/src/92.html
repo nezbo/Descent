@@ -1,0 +1,67 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_92 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src92" class="dotCoverSource"><pre>
+namespace Descent.Messaging.Events
+{
+    using System.Diagnostics.Contracts;
+
+    /// &lt;summary&gt;
+    /// The event arguments for the GiveCoins event.
+    /// &lt;/summary&gt;
+    /// &lt;author&gt;
+    /// Simon Westh Henriksen
+    /// &lt;/author&gt;
+    public sealed class GiveCoinsEventArgs : GameEventArgs
+    {
+        public GiveCoinsEventArgs(int playerId, int numberOfCoins)
+        {
+            Contract.Requires(playerId &gt; 0);
+            Contract.Requires(numberOfCoins &gt; 0);
+
+            PlayerId = playerId;
+            NumberOfCoins = numberOfCoins;
+        }
+
+        public GiveCoinsEventArgs(string[] stringArgs)
+        {
+            Contract.Requires(stringArgs != null);
+            Contract.Requires(stringArgs.Length == 2);
+            
+            Contract.Requires(Contract.ForAll(stringArgs, s =&gt; EventContractHelper.TryParseInt(s) &amp;&amp; int.Parse(s) &gt; 0));
+
+            PopulateWithArgs(stringArgs);
+        }
+
+        public int PlayerId { get; set; }
+
+        public int NumberOfCoins { get; set; }
+
+        public override void PopulateWithArgs(string[] stringArgs)
+        {
+            Contract.Requires(stringArgs != null);
+            Contract.Requires(stringArgs.Length == 2);
+            
+            Contract.Requires(Contract.ForAll(stringArgs, s =&gt; EventContractHelper.TryParseInt(s) &amp;&amp; int.Parse(s) &gt; 0));
+
+            PlayerId = int.Parse(stringArgs[0]);
+            NumberOfCoins = int.Parse(stringArgs[1]);
+        }
+
+        public override string ToString()
+        {
+            return string.Join(&quot;,&quot;, PlayerId, NumberOfCoins);
+        }
+    }
+}
+</pre></code><script type="text/javascript">
+			applyranges('src92', RANGES_92)
+		</script>
+	</body>
+</html>

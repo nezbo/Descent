@@ -1,0 +1,110 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_76 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src76" class="dotCoverSource"><pre>namespace Descent.GUI.SubElements
+{
+    using System.Linq;
+    using System.Text;
+    using Descent.Model;
+    using Descent.Model.Event;
+    using Descent.Model.Player;
+    using Descent.Model.Player.Figure;
+    using Microsoft.Xna.Framework;
+    using Microsoft.Xna.Framework.Graphics;
+
+    /// &lt;summary&gt;
+    /// The summary of a monsters information to be displayed as a
+    /// mouseover effect on the board and when attacking a specific
+    /// monster.
+    /// &lt;/summary&gt;
+    /// &lt;author&gt;
+    /// Emil Juul Jacobsen
+    /// &lt;/author&gt;
+    class MonsterSummary : GUIElement
+    {
+
+        /// &lt;summary&gt;
+        /// Creates a new monster summary element to display information about
+        /// the given monster starting from the given coordinates.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;game&quot;&gt;The current Game object.&lt;/param&gt;
+        /// &lt;param name=&quot;x&quot;&gt;The top-left x-coordinate of the element.&lt;/param&gt;
+        /// &lt;param name=&quot;y&quot;&gt;The top-left y-coordinate of the element.&lt;/param&gt;
+        /// &lt;param name=&quot;monster&quot;&gt;The Monster to display information for.&lt;/param&gt;
+        public MonsterSummary(Game game, int x, int y, Monster monster)
+            : base(game, &quot;monster summary&quot;, x, y, 125, 175)
+        {
+            SetBackground(&quot;boxbg&quot;);
+
+            // top images
+            AddDrawable(this.Name, new Image(game.Content.Load&lt;Texture2D&gt;(&quot;Images/Other/movement-small&quot;)), new Rectangle(Bound.X, Bound.Y + 25, 25, 25));
+            AddDrawable(this.Name, new Image(game.Content.Load&lt;Texture2D&gt;(&quot;Images/Other/health-small&quot;)), new Rectangle(Bound.X + Bound.Width / 2, Bound.Y + 25, 25, 25));
+            AddDrawable(this.Name, new Image(game.Content.Load&lt;Texture2D&gt;(&quot;Images/Other/armor-small&quot;)), new Rectangle(Bound.X, Bound.Y + 55, 25, 25));
+
+            // top text
+            AddText(this.Name, monster.Name, new Vector2(0, 0));
+            AddText(this.Name, monster.MovementLeft + &quot;/&quot; + monster.Speed, new Vector2(30, 25));
+            AddText(this.Name, monster.Health + &quot;/&quot; + monster.MaxHealth, new Vector2(30 + Bound.Width / 2, 25));
+            AddText(this.Name, &quot;&quot; + monster.Armor, new Vector2(30, 55));
+
+            // icons part
+            Texture2D attackType;
+            switch (monster.AttackType)
+            {
+                case EAttackType.MAGIC:
+                    {
+                        attackType = game.Content.Load&lt;Texture2D&gt;(&quot;Images/Other/magic-icon&quot;);
+                        break;
+                    }
+
+                case EAttackType.RANGED:
+                    {
+                        attackType = game.Content.Load&lt;Texture2D&gt;(&quot;Images/Other/ranged-icon&quot;);
+                        break;
+                    }
+                default:
+                    {
+                        attackType = game.Content.Load&lt;Texture2D&gt;(&quot;Images/Other/melee-icon&quot;);
+                        break;
+                    }
+            }
+
+            AddDrawable(this.Name, new Image(attackType), new Rectangle(Bound.X + 5, Bound.Y + 85, 20, 20));
+            int xPos = Bound.X + 35;
+            int yPos = Bound.Y + 85;
+            foreach (EDice dice in monster.DiceForAttack.Select(n =&gt; n.Color))
+            {
+                if (xPos + 20 &gt;= (Bound.X + Bound.Width))
+                {
+                    yPos += 20;
+                    xPos = Bound.X + 35;
+                }
+
+                GUIElementFactory.DrawDice(this, dice, xPos, yPos, 20);
+                xPos += 20;
+            }
+
+            // abilities
+            StringBuilder builder = new StringBuilder();
+            foreach (Ability a in monster.Abilities)
+            {
+                builder.Append(a.ToString());
+                builder.Append(',');
+            }
+            if (builder.Length &gt; 2) builder.Remove(builder.Length - 2, 1);
+
+            AddText(this.Name, builder.ToString(), new Vector2(5, yPos + 25 - Bound.Y));
+        }
+    }
+}
+</pre></code><script type="text/javascript">
+			applyranges('src76', RANGES_76)
+		</script>
+	</body>
+</html>

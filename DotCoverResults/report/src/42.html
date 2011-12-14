@@ -1,0 +1,112 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_42 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src42" class="dotCoverSource"><pre>namespace Descent.GUI.Screens
+{
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using Descent.GUI.SubElements;
+    using Descent.Messaging.Events;
+    using Descent.Model;
+    using Descent.Model.Board;
+    using Descent.Model.Event;
+    using Descent.Model.Player.Figure;
+    using Descent.Model.Player.Figure.HeroStuff;
+    using Microsoft.Xna.Framework;
+    using Microsoft.Xna.Framework.Graphics;
+
+    /// &lt;summary&gt;
+    /// Displays the attack state with the dice used (and how they landed when rolled),
+    /// the target monster or hero and the possible surge abilities that can be used to
+    /// improve the result.
+    /// &lt;/summary&gt;
+    /// &lt;author&gt;
+    /// Emil Juul Jacobsen
+    /// &lt;/author&gt;
+    class AttackElement : GUIElement
+    {
+        private Attack attack;
+
+        /// &lt;summary&gt;
+        /// Creates a new AttackElement for the given parameters.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;game&quot;&gt;The current Game object.&lt;/param&gt;
+        /// &lt;param name=&quot;attack&quot;&gt;The Attack instance to visualize.&lt;/param&gt;
+        /// &lt;param name=&quot;x&quot;&gt;The top-left x-coordinate to start the attack box.&lt;/param&gt;
+        /// &lt;param name=&quot;y&quot;&gt;The top-left y-coordinate to start the attack box.&lt;/param&gt;
+        /// &lt;param name=&quot;width&quot;&gt;The width of the AttackElement.&lt;/param&gt;
+        /// &lt;param name=&quot;height&quot;&gt;The height of the AttackElement.&lt;/param&gt;
+        public AttackElement(Game game, Attack attack, int x, int y, int width, int height)
+            : base(game, &quot;attack&quot;, x, y, width, height)
+        {
+            this.attack = attack;
+
+            AddChild(new DicesElement(game, attack.DiceForAttack.ToArray(), Bound.X + (int)(Bound.Width * 0.4), Bound.Y, (int)(Bound.Width * 0.6), Bound.Height / 2));
+
+            List&lt;SurgeAbility&gt; surges = attack.SurgeAbilities;
+
+            int yPos = Bound.Y + Bound.Height / 2;
+            int xPos = Bound.X + (int)(Bound.Width * 0.4);
+            int surgeHeight = 50;
+            int surgeWidth = (int)(Bound.Width * 0.3);
+            bool left = true;
+
+            // Surge abilities
+            SurgeAbility surge;
+            for (int i = 0; i &lt; surges.Count; i++)
+            {
+                int id = i;
+                surge = surges[i];
+                GUIElement surgeBox = new GUIElement(game, &quot;surge box&quot;, left ? xPos : xPos + surgeWidth, yPos, surgeWidth, surgeHeight);
+                surgeBox.SetBackground(&quot;boxbg&quot;);
+
+                GUIElementFactory.DrawSurgeAbility(surgeBox, surge, 5, 10, false);
+
+                // click event
+                surgeBox.SetClickAction(surgeBox.Name, (n, g) =&gt;
+                {
+                    n.EventManager.QueueEvent(EventType.SurgeAbilityClicked, new SurgeAbilityEventArgs(id));
+                });
+
+                AddChild(surgeBox);
+
+                // ready for next ability
+                if (!left) yPos += height;
+                left = !left;
+            }
+
+            // target monster (if any)
+            Square square = FullModel.Board[attack.TargetSquare.X, attack.TargetSquare.Y];
+            if (square.Figure != null &amp;&amp; square.Figure is Monster)
+            {
+                GUIElement target = new MonsterSummary(game, Bound.X + (int)((Bound.Width * 0.4 - 125) / 2), Bound.Y + Bound.Height / 2 + (int)((Bound.Height / 2 - 175) / 2), (Monster)square.Figure);
+                AddChild(target);
+            }// target hero
+            else if (square.Figure != null &amp;&amp; square.Figure is Hero)
+            {
+                Image picture = new Image(((Hero)square.Figure).Texture);
+                AddDrawable(Name, picture, new Vector2(Bound.X + (int)((Bound.Width * 0.4 - picture.Texture.Width) / 2),
+                                                       Bound.Y + Bound.Height / 2 + (int)((Bound.Height / 2 - picture.Texture.Height) / 2)));
+            }
+        }
+
+        public override void Draw(SpriteBatch draw)
+        {
+            base.Draw(draw);
+            Collection&lt;GUIElement&gt; guiElements = children;
+
+            draw.DrawString(GUI.Font, attack.ToString(), new Vector2(Bound.X + 5, Bound.Y + 5), Color.Black);
+        }
+    }
+}
+</pre></code><script type="text/javascript">
+			applyranges('src42', RANGES_42)
+		</script>
+	</body>
+</html>

@@ -1,0 +1,55 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_8 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src8" class="dotCoverSource"><pre>namespace Descent.GUI
+{
+    using Microsoft.Xna.Framework;
+
+    /// &lt;summary&gt;
+    /// Information about a text to be displayed on the screen.
+    /// &lt;/summary&gt;
+    /// &lt;author&gt;
+    /// Emil Juul Jacobsen
+    /// &lt;/author&gt;
+    public class Text
+    {
+        /// &lt;summary&gt;
+        /// The string that the text consists of.
+        /// &lt;/summary&gt;
+        public string Message { get; internal set; }
+
+        /// &lt;summary&gt;
+        /// The position to display the text.
+        /// &lt;/summary&gt;
+        public Vector2 Position { get; internal set; }
+
+        /// &lt;summary&gt;
+        /// The Color to draw the text in.
+        /// &lt;/summary&gt;
+        public Color Color { get; internal set; }
+
+        /// &lt;summary&gt;
+        /// Creates a new Text object with all information present.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;line&quot;&gt;The string to be displayed as a line on the screen.&lt;/param&gt;
+        /// &lt;param name=&quot;position&quot;&gt;The position for the upper-left corner of the drawn text.&lt;/param&gt;
+        /// &lt;param name=&quot;color&quot;&gt;The color to draw the text in.&lt;/param&gt;
+        public Text(string message, Vector2 position, Color color)
+        {
+            this.Message = message;
+            this.Position = position;
+            this.Color = color;
+        }
+    }
+}
+</pre></code><script type="text/javascript">
+			applyranges('src8', RANGES_8)
+		</script>
+	</body>
+</html>

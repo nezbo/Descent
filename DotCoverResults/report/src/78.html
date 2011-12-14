@@ -1,0 +1,196 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_78 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src78" class="dotCoverSource"><pre>
+namespace Descent.Model
+{
+    using System;
+    using System.Diagnostics.Contracts;
+
+    using Descent.GUI;
+
+    using Microsoft.Xna.Framework.Graphics;
+
+    #region EDice Enum
+    /// &lt;summary&gt;
+    /// The 6 kinds of dice in the game
+    /// R = Red (Melee)
+    /// W = White (Magic)
+    /// U = blUe (Ranged)
+    /// G = Green
+    /// &lt;/summary&gt;
+    public enum EDice
+    {
+        /// &lt;summary&gt;
+        /// A Red dice
+        /// &lt;/summary&gt;
+        R,
+
+        /// &lt;summary&gt;
+        /// A White dice
+        /// &lt;/summary&gt;
+        W,
+
+        /// &lt;summary&gt;
+        /// A Blue dice
+        /// &lt;/summary&gt;
+        U,
+
+        /// &lt;summary&gt;
+        /// A Green dice
+        /// &lt;/summary&gt;
+        G,
+
+        /// &lt;summary&gt;
+        /// A Yellow dice
+        /// &lt;/summary&gt;
+        Y,
+
+        /// &lt;summary&gt;
+        /// A Black dice
+        /// &lt;/summary&gt;
+        B
+    }
+    #endregion
+
+    /// &lt;summary&gt;
+    /// Dice are used when figures attack to calculate success, damage, etc.
+    /// &lt;/summary&gt;
+    /// &lt;author&gt;
+    /// Jonas Breindahl (jobre@itu.dk)
+    /// &lt;/author&gt;
+    public class Dice : Drawable
+    {
+        #region Fields
+        private static Random random = new Random(DateTime.Now.Millisecond);
+
+        private int[][] sides;
+
+        private EDice color;
+
+        private int activeSideIndex;
+
+        private Texture2D[] textures;
+
+        #endregion
+
+        #region Properties
+
+        /// &lt;summary&gt;
+        /// Gets the up side of the dice
+        /// The 4 long array are these values:
+        /// Range, Damage, Surges, X&#180;s
+        /// &lt;/summary&gt;
+        public int[] ActiveSide
+        {
+            get
+            {
+                return sides[activeSideIndex];
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets or sets the index of the upside
+        /// &lt;/summary&gt;
+        public int SideIndex
+        {
+            get
+            {
+                return activeSideIndex;
+            }
+
+            set
+            {
+                Contract.Requires(value &gt; 5 ? Color == EDice.B : true);
+                activeSideIndex = value;
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the color of the dice
+        /// &lt;/summary&gt;
+        public EDice Color
+        {
+            get
+            {
+                return color;
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the texture of the current side of the dice
+        /// &lt;/summary&gt;
+        public Texture2D Texture
+        {
+            get
+            {
+                return textures[activeSideIndex];
+            }
+        }
+
+        #endregion
+
+        #region Initialization
+
+        /// &lt;summary&gt;
+        /// Initializes a new instance of the &lt;see cref=&quot;Dice&quot;/&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;color&quot;&gt;
+        /// The color.
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;sides&quot;&gt;
+        /// The sides.
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;textures&quot;&gt;
+        /// The textures.
+        /// &lt;/param&gt;
+        public Dice(EDice color, int[][] sides, Texture2D[] textures)
+        {
+            this.color = color;
+            this.sides = sides;
+            this.textures = textures;
+        }
+        #endregion
+
+        #region Method
+
+        /// &lt;summary&gt;
+        /// Rolls the dice to a random side
+        /// &lt;/summary&gt;
+        public void RollDice()
+        {
+            activeSideIndex = random.Next(6);
+        }
+
+
+        /// &lt;summary&gt;
+        /// Returns a copy of the Dice
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt;&lt;/returns&gt;
+        public Dice Clone()
+        {
+            return new Dice(color, sides, textures);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null || !(obj is Dice)) return false;
+            Dice d = (Dice)obj;
+            if (d.ActiveSide == ActiveSide &amp;&amp; d.Color == Color &amp;&amp; d.SideIndex == SideIndex) return true;
+            return false;
+        }
+
+        #endregion
+    }
+}
+</pre></code><script type="text/javascript">
+			applyranges('src78', RANGES_78)
+		</script>
+	</body>
+</html>

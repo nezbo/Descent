@@ -1,0 +1,499 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_9 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src9" class="dotCoverSource"><pre>namespace Descent.GUI
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Diagnostics.Contracts;
+    using System.Linq;
+    using System.Text;
+    using Descent.Messaging.Events;
+    using Descent.Model.Player;
+    using Microsoft.Xna.Framework;
+    using Microsoft.Xna.Framework.Graphics;
+    using Microsoft.Xna.Framework.Input;
+
+    /// &lt;summary&gt;
+    /// A single element of the user interface that, itself, 
+    /// can contain sub-elements
+    /// &lt;/summary&gt;
+    /// &lt;author&gt;
+    /// Emil Juul Jacobsen
+    /// &lt;/author&gt;
+    public class GUIElement : DrawableGameComponent
+    {
+        protected static EventManager manager = Player.Instance.EventManager; //TODO: Where to find this?
+        protected static Texture2D defaultBG;
+
+        public Rectangle Bound { get; protected set; }
+
+        private string name;
+        public string Name { get { return name; } }
+
+        private bool drawBg = true;
+        private Texture2D background = null;
+        private SpriteFont font = null;
+        public SpriteFont Font
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result&lt;SpriteFont&gt;() != null);
+                return font ?? GUI.Font;
+            }
+        }
+
+        private bool focus;
+
+        protected Collection&lt;GUIElement&gt; children;
+
+        private Dictionary&lt;Drawable, Rectangle&gt; visuals;
+        protected Collection&lt;Text&gt; texts;
+        private Action&lt;Player, GUIElement&gt; onClick = null;
+
+        /// &lt;summary&gt;
+        /// Creates a GUIElement with the given boundaries.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;name&quot;&gt;The name of the element&lt;/param&gt;
+        /// &lt;param name=&quot;x&quot;&gt;The x-coordinate of the upper-left corner&lt;/param&gt;
+        /// &lt;param name=&quot;y&quot;&gt;The y-coordinate of the upper-left corner&lt;/param&gt;
+        /// &lt;param name=&quot;width&quot;&gt;The width of the element&lt;/param&gt;
+        /// &lt;param name=&quot;height&quot;&gt;The height of the element&lt;/param&gt;
+        public GUIElement(Game game, string name, int x, int y, int width, int height)
+            : base(game)
+        {
+            this.name = name;
+            this.focus = false;
+            Bound = new Rectangle(x, y, width, height);
+            children = new Collection&lt;GUIElement&gt;();
+            visuals = new Dictionary&lt;Drawable, Rectangle&gt;();
+            texts = new Collection&lt;Text&gt;();
+
+            if (defaultBG == null) defaultBG = game.Content.Load&lt;Texture2D&gt;(&quot;darkboxbg&quot;);
+        }
+
+        /// &lt;summary&gt;
+        /// Checks if the given point is within the boundaries of the GUIElement.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;x&quot;&gt;The x-coordinate of the point&lt;/param&gt;
+        /// &lt;param name=&quot;y&quot;&gt;The y-coordinate of the point&lt;/param&gt;
+        /// &lt;returns&gt;True, if it contains the given point, else false.&lt;/returns&gt;
+        public bool HasPoint(int x, int y)
+        {
+            return Bound.Contains(x, y);
+        }
+
+        /// &lt;summary&gt;
+        /// Tells if the element handled the last click request.
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt;True if focused, else false.&lt;/returns&gt;
+        public virtual bool HasFocus()
+        {
+            return this.focus;
+        }
+
+        /// &lt;summary&gt;
+        /// Indicate to the element (and all its children) that it
+        /// has lost focus.
+        /// &lt;/summary&gt;
+        public void LostFocus()
+        {
+            Contract.Ensures(!HasFocus());
+            focus = false;
+            foreach (GUIElement e in children) e.LostFocus();
+        }
+
+        /// &lt;summary&gt;
+        /// Sets the font that this GUIElement draws its
+        /// texts with.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;newFont&quot;&gt;The new font to draw with.&lt;/param&gt;
+        public void SetFont(SpriteFont newFont)
+        {
+            Contract.Ensures(Font == newFont);
+            font = newFont;
+        }
+
+        /// &lt;summary&gt;
+        /// This memthod can be overwritten if you need to act
+        /// on clicks that are directly targetting this guielement
+        /// and not its sub-elements.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;x&quot;&gt;The x-coordinate of the direct click.&lt;/param&gt;
+        /// &lt;param name=&quot;y&quot;&gt;The y-coordinate of the direct click.&lt;/param&gt;
+        protected virtual void ActOnDirectClick(int x, int y)
+        {
+            // can be implemented if needed
+        }
+
+        /// &lt;summary&gt;
+        /// Determines if a click is within the GUIElement and acts
+        /// upon the click if possible.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;x&quot;&gt;The x-coordinate of the click&lt;/param&gt;
+        /// &lt;param name=&quot;y&quot;&gt;The y-coordinate of the click&lt;/param&gt;
+        public virtual bool HandleClick(int x, int y)
+        {
+            // is it within me?
+            if (this.HasPoint(x, y))
+            {
+                // is it within any of my children?
+                bool handled = false;
+                for (int i = children.Count - 1; i &gt;= 0; i--)
+                {
+                    if (!handled)
+                    {
+                        handled = children[i].HandleClick(x, y);
+                    }
+                    else
+                    {
+                        children[i].LostFocus();
+                    }
+                }
+                if (handled) // did someone take it?
+                {
+                    focus = false;
+                    return true;
+                }
+
+                // ok, its within me
+                ActOnDirectClick(x, y);
+
+                if (onClick != null)
+                {
+                    onClick(Player.Instance, this);
+                }
+
+                if (drawBg || VisualClicked(x, y))
+                {
+                    focus = true;
+                    return true;
+                }
+                focus = false;
+                return false;
+
+            }
+            // nope, wasnt me :(
+
+            // ill tell all my children that it has lost focus.
+            LostFocus();
+            return false;
+        }
+
+        private bool VisualClicked(int x, int y)
+        {
+            foreach (Rectangle r in visuals.Values)
+            {
+                if (r.Contains(x, y)) return true;
+            }
+            return false;
+        }
+
+        /// &lt;summary&gt;
+        /// Moves this element (and all sub-elements) by the specified amount.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;x&quot;&gt;The number of pixels it should be moved on the x-axis.&lt;/param&gt;
+        /// &lt;param name=&quot;y&quot;&gt;The number of pixels it should be moved on the y-axis.&lt;/param&gt;
+        public virtual void Move(int x, int y)
+        {
+            Contract.Ensures(Bound.X == Contract.OldValue&lt;int&gt;(Bound.X) + x);
+            Contract.Ensures(Bound.Y == Contract.OldValue&lt;int&gt;(Bound.Y) + y);
+
+            Bound = new Rectangle(Bound.X + x, Bound.Y + y, Bound.Width, Bound.Height);
+            foreach (GUIElement e in children) e.Move(x, y);
+            foreach (Text t in texts) t.Position = new Vector2(t.Position.X + x, t.Position.Y + y);
+
+            Drawable[] values = visuals.Keys.ToArray();
+            for (int i = 0; i &lt; values.Length; i++)
+            {
+                Rectangle old = visuals[values[i]];
+                visuals[values[i]] = new Rectangle(old.X + x, old.Y + y, old.Width, old.Height);
+            }
+
+        }
+
+        /// &lt;summary&gt;
+        /// Disables all elements below (and including) the target
+        /// element. They will not take inputs or display anything.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;target&quot;&gt;What to disable.&lt;/param&gt;
+        public void Disable(string target)
+        {
+            Contract.Ensures(target != Name || onClick == null);
+            Contract.Ensures(target != Name || !DrawsBackground());
+            Contract.Ensures(target != Name || texts.Count == 0);
+            Contract.Ensures(target != Name || visuals.Count == 0);
+            Contract.Ensures(target != Name || children.Count == 0);
+
+            if (Name == target)
+            {
+                SetDrawBackground(false);
+                texts.Clear();
+                visuals.Clear();
+                onClick = null;
+                ClearChildren();
+            }
+            foreach (GUIElement e in children) e.Disable(target);
+        }
+
+        /// &lt;summary&gt;
+        /// Reacts to the given key type if this GUIElement
+        /// is focused.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;key&quot;&gt;The key that has been pressed and wasn't pressed before&lt;/param&gt;
+        public virtual void HandleKeyPress(Keys key)
+        {
+            Contract.Requires(Keyboard.GetState().IsKeyDown(key));
+
+            foreach (GUIElement e in children) e.HandleKeyPress(key);
+            // this method can be overwritten if a GUIElement wants to react to keypresses.
+        }
+
+        /// &lt;summary&gt;
+        /// Replace (if any) the current On Click action with
+        /// the one given.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;target&quot;&gt;The target GUIElement for the action&lt;/param&gt;
+        /// &lt;param name=&quot;action&quot;&gt;The new On Click action&lt;/param&gt;
+        public void SetClickAction(string target, Action&lt;Player, GUIElement&gt; action)
+        {
+            Contract.Requires(target != &quot;&quot;);
+            Contract.Ensures(target == Name ? onClick == action : true);
+
+            if (this.Name == target)
+            {
+                this.onClick = action;
+            }
+            foreach (GUIElement e in children) e.SetClickAction(target, action);
+        }
+
+        /// &lt;summary&gt;
+        /// Adds the given GUIElement to the set of children within
+        /// this one.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;child&quot;&gt;The new child&lt;/param&gt;
+        public void AddChild(GUIElement child)
+        {
+            Contract.Requires(child != null);
+            Contract.Requires(child.Bound.X &gt;= Bound.X);
+            Contract.Requires(child.Bound.Y &gt;= Bound.Y);
+            Contract.Ensures(Contract.OldValue&lt;int&gt;(children.Count) + 1 == children.Count);
+
+            children.Add(child);
+        }
+
+        /// &lt;summary&gt;
+        /// Removes all children.
+        /// &lt;/summary&gt;
+        public void ClearChildren()
+        {
+            Contract.Ensures(children.Count == 0);
+            children.Clear();
+        }
+
+        /// &lt;summary&gt;
+        /// Add the drawable to be displayed at the given position
+        /// in this GUIElement.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;target&quot;&gt;The target GUIElement for the action&lt;/param&gt;
+        /// &lt;param name=&quot;visual&quot;&gt;The drawable to display&lt;/param&gt;
+        /// &lt;param name=&quot;position&quot;&gt;Where the upper-left corner of the drawable should be&lt;/param&gt;
+        public void AddDrawable(string target, Drawable visual, Vector2 position)
+        {
+            Contract.Requires(target != &quot;&quot;);
+            Contract.Requires(visual != null);
+            Contract.Requires(visual.Texture != null);
+            AddDrawable(target, visual, new Rectangle((int)position.X, (int)position.Y, visual.Texture.Width, visual.Texture.Height));
+        }
+
+        /// &lt;summary&gt;
+        /// Add the drawable to be displayed on the screen bounding the given rectangle.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;target&quot;&gt;The target GUIElement for the action&lt;/param&gt;
+        /// &lt;param name=&quot;visual&quot;&gt;The drawable to display&lt;/param&gt;
+        /// &lt;param name=&quot;rectangle&quot;&gt;The drawable should be stretched to be drawn at the rectangle&lt;/param&gt;
+        public void AddDrawable(string target, Drawable visual, Rectangle rectangle)
+        {
+            Contract.Requires(target != &quot;&quot;);
+            Contract.Requires(visual != null);
+            Contract.Requires(visual.Texture != null);
+
+            Contract.Requires(rectangle.X &gt;= Bound.X);
+            Contract.Requires(rectangle.Y &gt;= Bound.Y);
+            Contract.Requires(rectangle.X + rectangle.Width &lt;= Bound.X + Bound.Width);
+            Contract.Requires(rectangle.Y + rectangle.Height &lt;= Bound.Y + Bound.Height);
+
+            Contract.Ensures(target == Name ? Contract.OldValue&lt;int&gt;(visuals.Count) + 1 == visuals.Count : true);
+            if (Name == target)
+            {
+                visuals.Add(visual, rectangle);
+            }
+            foreach (GUIElement e in children)
+            {
+                if (e.Bound.Contains(rectangle)) e.AddDrawable(target, visual, rectangle);
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Adds the given string to be drawn on the screen on all children (or this)
+        /// with the target name.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;target&quot;&gt;Only GUIElements with this name should display the text.&lt;/param&gt;
+        /// &lt;param name=&quot;text&quot;&gt;The text to be drawn to the screen.&lt;/param&gt;
+        /// &lt;param name=&quot;position&quot;&gt;Where the upper-left corner of the text should be&lt;/param&gt;
+        public void AddText(string target, string text, Vector2 position)
+        {
+            AddText(target, text, position, Color.Black);
+        }
+
+        /// &lt;summary&gt;
+        /// Adds the given string to be drawn on the screen on all children (or this)
+        /// with the target name.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;target&quot;&gt;Only GUIElements with this name should display the text.&lt;/param&gt;
+        /// &lt;param name=&quot;text&quot;&gt;The text to be drawn to the screen.&lt;/param&gt;
+        /// &lt;param name=&quot;position&quot;&gt;Where the upper-left corner of the text should be&lt;/param&gt;
+        /// &lt;param name=&quot;color&quot;&gt;The color that the text should be drawn in&lt;/param&gt;
+        public void AddText(string target, string text, Vector2 position, Color color)
+        {
+            Contract.Requires(target != null);
+            Contract.Requires(text != null);
+            Contract.Ensures(target == Name ? Contract.OldValue&lt;int&gt;(texts.Count) + 1 == texts.Count : Contract.OldValue&lt;int&gt;(texts.Count) == texts.Count);
+
+            if (Name == target)
+            {
+                texts.Add(new Text(WordWrap(text, position), new Vector2(position.X + Bound.X, position.Y + Bound.Y), color));
+            }
+            foreach (GUIElement e in children) e.AddText(target, text, position);
+        }
+
+        /// &lt;summary&gt;
+        /// Word Wraps the given string so when displayed at the given
+        /// position, it will not draw outside the width of the GUIElement.
+        /// If too long, the text will however draw outside the bottom
+        /// of the box.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;text&quot;&gt;The text to word wrap&lt;/param&gt;
+        /// &lt;param name=&quot;position&quot;&gt;Where the upper-left corner of the drawable should be&lt;/param&gt;
+        /// &lt;returns&gt;A string with linebreaks so the text will be drawn correctly.&lt;/returns&gt;
+        protected string WordWrap(string text, Vector2 position)
+        {
+            Contract.Requires(text != null);
+
+            int wordsIndex = 0;
+            string[] words = text.Split();
+            StringBuilder builder = new StringBuilder();
+
+            int totalSpace = Bound.Width - (int)position.X + 5;
+
+            string currentLine = &quot;&quot;;
+            string nextWord;
+            while (wordsIndex &lt; words.Length)
+            {
+                nextWord = words[wordsIndex];
+
+                if (GUI.Font.MeasureString(currentLine + nextWord).X &lt;= totalSpace) // word fits
+                {
+                    currentLine += nextWord + &quot; &quot;;
+                    wordsIndex++;
+                }
+                else if (GUI.Font.MeasureString(nextWord).X &gt; totalSpace) // cut word
+                {
+                    int end = nextWord.Length - 1;
+                    while (GUI.Font.MeasureString(currentLine + nextWord.Substring(0, end) + &quot;-&quot;).X &gt; totalSpace) // see what we have space for
+                    {
+                        end--;
+                    }
+                    builder.Append(currentLine + nextWord.Substring(0, end) + &quot;-\n&quot;); // add what we had space for
+                    currentLine = &quot;&quot;;
+                    words[wordsIndex] = words[wordsIndex].Substring(end, words[wordsIndex].Length - end); // let the remaining be
+                }
+                else// word doesn't fit, bit is not too long
+                {
+                    builder.Append(currentLine + &quot;\n&quot;);
+                    currentLine = &quot;&quot;;
+                }
+
+            }
+            builder.AppendLine(currentLine);
+
+            return builder.ToString().Trim();
+        }
+
+        /// &lt;summary&gt;
+        /// Makes the current GUIElement draw a background beneath itself.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;toDraw&quot;&gt;True if the current GUIElement should draw background&lt;/param&gt;
+        public void SetDrawBackground(bool toDraw)
+        {
+            Contract.Ensures(DrawsBackground() == toDraw);
+
+            drawBg = toDraw;
+        }
+
+        /// &lt;summary&gt;
+        /// Does the element draw a background behind it.
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt;True if it draws background behind it, else false.&lt;/returns&gt;
+        [Pure]
+        public bool DrawsBackground()
+        {
+            return drawBg;
+        }
+
+        /// &lt;summary&gt;
+        /// Changes the background to the given asset and enables
+        /// background drawing.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;assetName&quot;&gt;The name of the asset in the Content project.&lt;/param&gt;
+        public void SetBackground(string assetName)
+        {
+            Contract.Ensures(DrawsBackground());
+
+            background = Game.Content.Load&lt;Texture2D&gt;(assetName);
+            SetDrawBackground(true);
+        }
+
+        /// &lt;summary&gt;
+        /// Draws this GUIElement and then all children on top of it
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;draw&quot;&gt;The SpriteBatch to draw on&lt;/param&gt;
+        public virtual void Draw(SpriteBatch draw)
+        {
+            // draw my own background
+            if (drawBg)
+            {
+                draw.Draw(background ?? defaultBG, Bound, Color.White);
+            }
+
+            // draw my own &quot;pictures&quot;
+            foreach (Drawable d in visuals.Keys) draw.Draw(d.Texture, visuals[d], Color.White);
+
+            // draw my own text
+            foreach (Text t in texts)
+            {
+                draw.DrawString(Font, t.Message, t.Position, t.Color);
+            }
+
+            // draw the children on top
+            foreach (GUIElement e in children) e.Draw(draw);
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            foreach (GUIElement e in children) e.Update(gameTime);
+        }
+    }
+}
+</pre></code><script type="text/javascript">
+			applyranges('src9', RANGES_9)
+		</script>
+	</body>
+</html>

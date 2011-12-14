@@ -345,15 +345,6 @@
 
         #endregion
 
-        #region Load Markers
-
-        private void LoadMarkers(Game game)
-        {
-
-        }
-
-        #endregion
-
         #region Load Map
 
         public static void LoadMap(Game game)

@@ -1,0 +1,137 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_83 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src83" class="dotCoverSource"><pre>using System.Diagnostics.Contracts;
+
+namespace Descent.GUI
+{
+    using System.Collections.Generic;
+    using Microsoft.Xna.Framework;
+    using Microsoft.Xna.Framework.Graphics;
+    using Microsoft.Xna.Framework.Input;
+
+    /// &lt;summary&gt;
+    /// Takes input from the user and displays everything entered so far.
+    /// The content can be deleted (character by character) by the backspace
+    /// key and the value of a specific instance can be read (or set) statically by
+    /// knowing the instance's key.
+    /// &lt;/summary&gt;
+    public class InputElement : GUIElement
+    {
+        // static
+
+        private static Dictionary&lt;string, string&gt; inputs = new Dictionary&lt;string, string&gt;();
+
+        /// &lt;summary&gt;
+        /// Gets the current input from a specific input element through it's key.
+        /// If two input elements share the same key, they will display the same
+        /// text and always change together.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;key&quot;&gt;The the key for the input element whose input is wanted.&lt;/param&gt;
+        /// &lt;returns&gt;The text associated with the given key, if nothing entered so far 
+        /// it will return an empty string if nothing found for the given key.&lt;/returns&gt;
+        public static string GetInputFrom(string key)
+        {
+            Contract.Requires(key != null);
+            Contract.Ensures(Contract.Result&lt;string&gt;() != null);
+
+            if (inputs.ContainsKey(key))
+            {
+                return inputs[key];
+            }
+            return &quot;&quot;;
+        }
+
+        /// &lt;summary&gt;
+        /// Sets the value for a given key.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;key&quot;&gt;The key for the value to set.&lt;/param&gt;
+        /// &lt;param name=&quot;input&quot;&gt;The new input for the given key.&lt;/param&gt;
+        public static void SetInput(string key, string input)
+        {
+            Contract.Requires(key != null);
+            Contract.Requires(input != null);
+            Contract.Requires(key.Length &gt; 0);
+            Contract.Ensures(GetInputFrom(key) == input);
+
+            inputs[key] = input;
+        }
+
+        // dynamic
+        private Vector2 pos;
+
+        /// &lt;summary&gt;
+        /// Create a new input element at the given position and saves the input to its
+        /// name (key).
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;game&quot;&gt;The current game object.&lt;/param&gt;
+        /// &lt;param name=&quot;inputName&quot;&gt;The name is used to (internally) save the input and
+        /// to retrieve it externally.&lt;/param&gt;
+        /// &lt;param name=&quot;x&quot;&gt;The top-left x-coordinate.&lt;/param&gt;
+        /// &lt;param name=&quot;y&quot;&gt;The top-left x-coordinate.&lt;/param&gt;
+        /// &lt;param name=&quot;width&quot;&gt;The width of the input element.&lt;/param&gt;
+        /// &lt;param name=&quot;height&quot;&gt;The height of the input element.&lt;/param&gt;
+        public InputElement(Game game, string inputName, int x, int y, int width, int height)
+            : base(game, inputName, x, y, width, height)
+        {
+            pos = new Vector2(Bound.X, Bound.Y);
+        }
+
+        public override void HandleKeyPress(Keys key)
+        {
+            if (HasFocus())
+            {
+                string soFar = GetInputFrom(this.Name);
+
+                bool isShift = Keyboard.GetState().IsKeyDown(Keys.LeftShift) || Keyboard.GetState().IsKeyDown(Keys.RightShift);
+                switch (key)
+                {
+                    case Keys.Back: { if (soFar.Length &gt; 0) { soFar = soFar.Substring(0, soFar.Length - 1); } break; }
+                    case Keys.Space: { soFar += &quot; &quot;; break; }
+                    case Keys.OemPeriod: { soFar += isShift ? &quot;:&quot; : &quot;.&quot;; break; }
+                    case Keys.OemComma: { soFar += isShift ? &quot;;&quot; : &quot;,&quot;; break; }
+                    case Keys.OemPlus: { soFar += isShift ? &quot;?&quot; : &quot;+&quot;; break; }
+                    case Keys.OemOpenBrackets: { soFar += isShift ? &quot;`&quot; : &quot;&#180;&quot;; break; }
+                    case Keys.OemCloseBrackets: { soFar += isShift ? &quot;&#197;&quot; : &quot;&#229;&quot;; break; }
+                    case Keys.OemQuotes: { soFar += isShift ? &quot;&#216;&quot; : &quot;&#248;&quot;; break; }
+                    case Keys.OemTilde: { soFar += isShift ? &quot;&#198;&quot; : &quot;&#230;&quot;; break; }
+                    case Keys.OemQuestion: { soFar += isShift ? &quot;*&quot; : &quot;'&quot;; break; }
+                    case Keys.OemSemicolon: { soFar += isShift ? &quot;^&quot; : &quot;&#168;&quot;; break; }
+                    case Keys.OemBackslash: { soFar += isShift ? &quot;&gt;&quot; : &quot;&lt;&quot;; break; }
+                    case Keys.OemMinus: { soFar += isShift ? &quot;_&quot; : &quot;-&quot;; break; }
+                    case Keys.D1: { soFar += isShift ? &quot;!&quot; : &quot;1&quot;; break; }
+                    case Keys.D2: { soFar += isShift ? &quot;\&quot;&quot; : &quot;2&quot;; break; }
+                    case Keys.D3: { soFar += isShift ? &quot;#&quot; : &quot;3&quot;; break; }
+                    case Keys.D4: { soFar += isShift ? &quot;&#164;&quot; : &quot;4&quot;; break; }
+                    case Keys.D5: { soFar += isShift ? &quot;%&quot; : &quot;5&quot;; break; }
+                    case Keys.D6: { soFar += isShift ? &quot;&amp;&quot; : &quot;6&quot;; break; }
+                    case Keys.D7: { soFar += isShift ? &quot;/&quot; : &quot;7&quot;; break; }
+                    case Keys.D8: { soFar += isShift ? &quot;(&quot; : &quot;8&quot;; break; }
+                    case Keys.D9: { soFar += isShift ? &quot;)&quot; : &quot;9&quot;; break; }
+                    case Keys.D0: { soFar += isShift ? &quot;=&quot; : &quot;0&quot;; break; }
+                    default: { if (key.ToString().Length == 1) { soFar += ((isShift == true) ? key.ToString() : key.ToString().ToLower()); } break; }
+                }
+
+                SetInput(this.Name, soFar);
+            }
+        }
+
+        public override void Draw(SpriteBatch draw)
+        {
+            base.Draw(draw);
+
+            draw.DrawString(GUI.Font, GetInputFrom(Name) + (HasFocus() ? &quot;|&quot; : &quot;&quot;), pos, Color.Black);
+        }
+    }
+}
+</pre></code><script type="text/javascript">
+			applyranges('src83', RANGES_83)
+		</script>
+	</body>
+</html>

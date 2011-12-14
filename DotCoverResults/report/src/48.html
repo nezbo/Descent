@@ -1,0 +1,62 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_48 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src48" class="dotCoverSource"><pre>
+namespace Descent.Messaging.Events
+{
+    using System.Diagnostics.Contracts;
+
+    /// &lt;summary&gt;
+    /// The event arguments for events about treasures.
+    /// &lt;/summary&gt;
+    /// &lt;author&gt;
+    /// Simon Westh Henriksen
+    /// &lt;/author&gt;
+    public sealed class TreasureEventArgs : GameEventArgs
+    {
+        public TreasureEventArgs(int treasureId)
+        {
+            Contract.Requires(treasureId &gt; 0);
+
+            TreasureId = treasureId;
+        }
+
+        public TreasureEventArgs(string[] stringArgs)
+        {
+            Contract.Requires(stringArgs != null);
+            Contract.Requires(stringArgs.Length == 1);
+            
+            Contract.Requires(EventContractHelper.TryParseInt(stringArgs[0]));
+            
+            PopulateWithArgs(stringArgs);
+        }
+
+        public int TreasureId { get; set; }
+
+        public override void PopulateWithArgs(string[] stringArgs)
+        {
+            Contract.Requires(stringArgs != null);
+            Contract.Requires(stringArgs.Length == 1);
+            
+            Contract.Requires(EventContractHelper.TryParseInt(stringArgs[0]));
+
+            TreasureId = int.Parse(stringArgs[0]);
+        }
+
+        public override string ToString()
+        {
+            return TreasureId.ToString();
+        }
+    }
+}
+</pre></code><script type="text/javascript">
+			applyranges('src48', RANGES_48)
+		</script>
+	</body>
+</html>

@@ -1,0 +1,144 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_12 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src12" class="dotCoverSource"><pre>namespace Descent.Model.Board.Marker
+{
+    using System.Diagnostics.Contracts;
+
+    using Descent.GUI;
+    using Descent.Model.Player.Figure;
+
+    using Microsoft.Xna.Framework.Graphics;
+
+    /// &lt;summary&gt;
+    /// A generic marker that is on the board, that can be picked up and used
+    /// &lt;/summary&gt;
+    /// &lt;author&gt;
+    /// Jonas Breindahl (jobre@itu.dk)
+    /// &lt;/author&gt;
+    public abstract class Marker : Drawable
+    {
+        #region Fields
+
+        private int id;
+        private string name;
+        private Texture2D texture;
+        private int movementPoints;
+
+        #endregion
+
+        #region Properties
+
+        /// &lt;summary&gt;
+        /// Gets the unique id of the marker
+        /// &lt;/summary&gt;
+        public int Id
+        {
+            get
+            {
+                return id;
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the name of the marker
+        /// &lt;/summary&gt;
+        public string Name
+        {
+            get
+            {
+                return name;
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets or sets the texture of the marker
+        /// &lt;/summary&gt;
+        public Texture2D Texture
+        {
+            get
+            {
+                return texture;
+            }
+
+            protected set
+            {
+                texture = value;
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the number of movementpoints it costs to pick up/interact with the marker
+        /// &lt;/summary&gt;
+        public int MovementPoints
+        {
+            get
+            {
+                return movementPoints;
+            }
+        }
+
+        #endregion
+
+        #region Initialization
+
+        /// &lt;summary&gt;
+        /// Initializes a new instance of the &lt;see cref=&quot;Marker&quot;/&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;id&quot;&gt;
+        /// The unique id of the marker
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;name&quot;&gt;
+        /// The name of the marker
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;texture&quot;&gt;
+        /// The texture of the marker
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;movementPoints&quot;&gt;
+        /// The movement points that it costs to interact with it
+        /// &lt;/param&gt;
+        public Marker(int id, string name, Texture2D texture, int movementPoints)
+        {
+            Contract.Requires(name != null);
+            Contract.Requires(name.Length &gt; 0);
+            Contract.Requires(movementPoints &gt;= 0);
+            this.name = name;
+            this.texture = texture;
+            this.movementPoints = movementPoints;
+        }
+
+        #endregion 
+
+        #region Methods
+
+        /// &lt;summary&gt;
+        /// Picks up, or interacts with, the marker
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;hero&quot;&gt;
+        /// The hero, standing on the marker
+        /// &lt;/param&gt;
+        public abstract void PickUp(Hero hero);
+
+        /// &lt;summary&gt;
+        /// The cost of interacting is always larger or equal to zero
+        /// &lt;/summary&gt;
+        [ContractInvariantMethod]
+        private void ObjectInvariant()
+        {
+            Contract.Invariant(movementPoints &gt;= 0);
+        }
+
+        #endregion
+    }
+}
+</pre></code><script type="text/javascript">
+			applyranges('src12', RANGES_12)
+		</script>
+	</body>
+</html>

@@ -1,0 +1,153 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_62 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src62" class="dotCoverSource"><pre>
+namespace Descent.Model.Player.Figure.HeroStuff
+{
+    using System.Collections.Generic;
+
+    using Descent.Model.Event;
+
+    /// &lt;summary&gt;
+    /// A Skill is an ability with a type.
+    /// These skills come from special decks of the given type.
+    /// &lt;/summary&gt;
+    /// &lt;author&gt;
+    /// Jonas Breindahl (jobre@itu.dk)
+    /// &lt;/author&gt;
+    public class Skill
+    {
+        #region Fields
+
+        private int id;
+
+        private string name;
+
+        private EAttackType type;
+
+        private string description;
+
+        private List&lt;Ability&gt; abilities = new List&lt;Ability&gt;();
+
+        private bool tapped = false;
+
+        #endregion
+
+        #region Properties
+
+        /// &lt;summary&gt;
+        /// Gets the unique id of the skill
+        /// &lt;/summary&gt;
+        public int Id
+        {
+            get
+            {
+                return id;
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the name of the skill
+        /// &lt;/summary&gt;
+        public string Name
+        {
+            get
+            {
+                return name;
+            }
+        }
+        
+        /// &lt;summary&gt;
+        /// Gets the type of the skill (Melee, Ranged and Magic)
+        /// &lt;/summary&gt;
+        public EAttackType Type
+        {
+            get
+            {
+                return type;
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the textual description of the skill
+        /// &lt;/summary&gt;
+        public string Description
+        {
+            get
+            {
+                return description;
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the list of abilities that implement the skill
+        /// &lt;/summary&gt;
+        public List&lt;Ability&gt; Abilities
+        {
+            get
+            {
+                return abilities;
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets or Sets whether the skill is tapped.
+        /// &lt;/summary&gt;
+        public bool Tapped
+        {
+            get
+            {
+                return tapped;
+            }
+
+            set
+            {
+                tapped = value;
+            }
+        }
+
+        #endregion
+
+        #region Initialization
+
+        /// &lt;summary&gt;
+        /// Initializes a new instance of the &lt;see cref=&quot;Skill&quot;/&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;id&quot;&gt;
+        /// The unique id of the skill
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;name&quot;&gt;
+        /// The name of the skill
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;type&quot;&gt;
+        /// The type of the skill
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;description&quot;&gt;
+        /// The description, the text on the skill
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;abilities&quot;&gt;
+        /// The abilities of the skill
+        /// &lt;/param&gt;
+        public Skill(int id, string name, EAttackType type, string description, List&lt;Ability&gt; abilities)
+        {
+            this.id = id;
+            this.name = name;
+            this.type = type;
+            this.description = description;
+            this.abilities = abilities;
+        }
+
+        #endregion
+    }
+}
+</pre></code><script type="text/javascript">
+			applyranges('src62', RANGES_62)
+		</script>
+	</body>
+</html>

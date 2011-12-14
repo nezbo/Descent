@@ -1,0 +1,62 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_21 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src21" class="dotCoverSource"><pre>
+namespace Descent.Messaging.Events
+{
+    using System.Diagnostics.Contracts;
+
+    /// &lt;summary&gt;
+    /// The event arguments for events about equipping and unequipping equipments at a special inventory fields.
+    /// &lt;/summary&gt;
+    public sealed class EquipEventArgs : GameEventArgs
+    {
+        public EquipEventArgs(int equipmentId, int inventoryField)
+        {
+            Contract.Requires(equipmentId &gt; 0);
+            Contract.Requires(inventoryField &gt;= 0 &amp;&amp; inventoryField &lt;= 10);
+            EquipmentId = equipmentId;
+            InventoryField = inventoryField;
+        }
+
+        public EquipEventArgs(string[] stringArgs)
+        {
+            Contract.Requires(stringArgs != null);
+            Contract.Requires(stringArgs.Length == 2);
+            
+            Contract.Requires(Contract.ForAll(stringArgs, s =&gt; EventContractHelper.TryParseInt(s)));
+            PopulateWithArgs(stringArgs);
+        }
+
+        public int EquipmentId { get; set; }
+
+        public int InventoryField { get; set; }
+
+        public override void PopulateWithArgs(string[] stringArgs)
+        {
+            Contract.Requires(stringArgs != null);
+            Contract.Requires(stringArgs.Length == 2);
+            
+            Contract.Requires(Contract.ForAll(stringArgs, s =&gt; EventContractHelper.TryParseInt(s)));
+
+            EquipmentId = int.Parse(stringArgs[0]);
+            InventoryField = int.Parse(stringArgs[1]);
+        }
+
+        public override string ToString()
+        {
+            return string.Join(&quot;,&quot;, EquipmentId, InventoryField);
+        }
+    }
+}
+</pre></code><script type="text/javascript">
+			applyranges('src21', RANGES_21)
+		</script>
+	</body>
+</html>

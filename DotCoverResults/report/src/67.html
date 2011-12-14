@@ -1,0 +1,70 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_67 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src67" class="dotCoverSource"><pre>
+namespace Descent.Messaging.Events
+{
+    using System.Diagnostics.Contracts;
+
+    /// &lt;summary&gt;
+    /// The event arguments for methods regarding one dice.
+    /// &lt;/summary&gt;
+    /// &lt;author&gt;
+    /// Simon Westh Henriksen
+    /// &lt;/author&gt;
+    public sealed class DiceEventArgs : GameEventArgs
+    {
+        public DiceEventArgs(int diceId, int sideId)
+        {
+            Contract.Requires(diceId &gt;= 0);
+            Contract.Requires(sideId &gt;= 0 &amp;&amp; sideId &lt;= 7);
+
+            DiceId = diceId;
+            SideId = sideId;
+        }
+
+        public DiceEventArgs(string[] stringArgs)
+        {
+            Contract.Requires(stringArgs != null);
+            Contract.Requires(stringArgs.Length == 2);
+            
+            Contract.Requires(Contract.ForAll(stringArgs, s =&gt; EventContractHelper.TryParseInt(s)));
+            Contract.Requires(int.Parse(stringArgs[0]) &gt;= 0);
+            Contract.Requires(int.Parse(stringArgs[1]) &gt;= 0 &amp;&amp; int.Parse(stringArgs[1]) &lt;= 7);
+            PopulateWithArgs(stringArgs);
+        }
+
+        public int DiceId { get; set; }
+
+        public int SideId { get; set; }
+
+        public override void PopulateWithArgs(string[] stringArgs)
+        {
+            Contract.Requires(stringArgs != null);
+            Contract.Requires(stringArgs.Length == 2);
+            
+            Contract.Requires(Contract.ForAll(stringArgs, s =&gt; EventContractHelper.TryParseInt(s)));
+            Contract.Requires(int.Parse(stringArgs[0]) &gt;= 0);
+            Contract.Requires(int.Parse(stringArgs[1]) &gt;= 0 &amp;&amp; int.Parse(stringArgs[1]) &lt;= 7);
+
+            DiceId = int.Parse(stringArgs[0]);
+            SideId = int.Parse(stringArgs[1]);
+        }
+
+        public override string ToString()
+        {
+            return string.Join(&quot;,&quot;, DiceId, SideId);
+        }
+    }
+}
+</pre></code><script type="text/javascript">
+			applyranges('src67', RANGES_67)
+		</script>
+	</body>
+</html>

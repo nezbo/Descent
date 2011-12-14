@@ -1,0 +1,427 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_26 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src26" class="dotCoverSource"><pre>
+namespace Descent.Model.Player.Figure.HeroStuff
+{
+    using System.Collections.Generic;
+    using System.Diagnostics.Contracts;
+    using System.Linq;
+
+    using Descent.Model.Event;
+
+    #region Enums
+    /// &lt;summary&gt;
+    /// A set of all types of equipment
+    /// &lt;/summary&gt;
+    public enum EquipmentType
+    {
+        /// &lt;summary&gt;
+        /// An equipment of type weapon, that can be used
+        /// for attacks, and have surge abilites
+        /// &lt;/summary&gt;
+        Weapon,
+
+        /// &lt;summary&gt;
+        /// An equipment of type armor, that give armor,
+        /// and different abilities that prevent damage
+        /// &lt;/summary&gt;
+        Armor,
+
+        /// &lt;summary&gt;
+        /// Other items that grant different abilities
+        /// &lt;/summary&gt;
+        Other,
+
+        /// &lt;summary&gt;
+        /// Potions can be used to heal damage or gain fatigue
+        /// &lt;/summary&gt;
+        Potion,
+
+        /// &lt;summary&gt;
+        /// Shield can be used to protect in attacks.
+        /// &lt;/summary&gt;
+        Shield
+    }
+
+    /// &lt;summary&gt;
+    /// A set of all 
+    /// &lt;/summary&gt;
+    public enum EquipmentRarity
+    {
+        /// &lt;summary&gt;
+        /// The common rarity, only found in the town
+        /// &lt;/summary&gt;
+        Common,
+
+        /// &lt;summary&gt;
+        /// The copper rarity, only found through copper chests
+        /// &lt;/summary&gt;
+        Copper,
+
+        /// &lt;summary&gt;
+        /// The silver rarity, only found through silver chests
+        /// &lt;/summary&gt;
+        Silver,
+
+        /// &lt;summary&gt;
+        /// The gold rarity, only found through gold chests
+        /// &lt;/summary&gt;
+        Gold
+    }
+    #endregion
+
+    /// &lt;summary&gt;
+    /// Equipment can be worn by the hero
+    /// &lt;/summary&gt;
+    /// &lt;author&gt;
+    /// Jonas Breindahl (jobre@itu.dk)
+    /// &lt;/author&gt;
+    public class Equipment
+    {
+        #region Fields
+
+        private int id;
+        private bool tapped = false;
+        private string name;
+        private EquipmentType type;
+        private EquipmentRarity rarity;
+        private EAttackType attackType;
+        private int buyPrice;
+        private List&lt;SurgeAbility&gt; surgeAbilities;
+        private int hands;
+        private List&lt;Ability&gt; abilities;
+        private List&lt;Dice&gt; dice; 
+        private bool equipped = false;
+
+        #endregion
+
+        #region Properties
+
+        /// &lt;summary&gt;
+        /// Gets the unique id of the equipment
+        /// &lt;/summary&gt;
+        public int Id
+        {
+            get { return id; }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets a value indicating whether the equipment is tapped / used
+        /// &lt;/summary&gt;
+        public bool Tapped
+        {
+            get
+            {
+                return tapped;
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the name of the equipment
+        /// What is your name?
+        /// &lt;/summary&gt;
+        public string Name
+        {
+            get { return name; }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the type of the equipment
+        /// What type of equipment are you?
+        /// &lt;/summary&gt;
+        public EquipmentType Type
+        {
+            get
+            {
+                return type;
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the attack type of the equipment,
+        /// None if the equipment is not a weapon.
+        /// &lt;/summary&gt;
+        public EAttackType AttackType
+        {
+            get
+            {
+                Contract.Ensures(this.type == EquipmentType.Weapon || Contract.Result&lt;EAttackType&gt;() == EAttackType.NONE);
+                return attackType;
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the rarity of an equipment
+        /// &lt;/summary&gt;
+        public EquipmentRarity Rarity
+        {
+            get
+            {
+                return rarity;
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the list of abilities on the equipment
+        /// &lt;/summary&gt;
+        public List&lt;Ability&gt; Abilities
+        {
+            get
+            {
+                return abilities;
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the surge abilities that the weapon has
+        /// &lt;/summary&gt;
+        public List&lt;SurgeAbility&gt; SurgeAbilities
+        {
+            get
+            {
+                return surgeAbilities;
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the number of hands it takes to wield
+        /// &lt;/summary&gt;
+        public int Hands
+        {
+            get
+            {
+                return hands;
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the buy price of the equipment
+        /// &lt;/summary&gt;
+        public int BuyPrice
+        {
+            get
+            {
+                return buyPrice;
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the list of dice that the weapon supplies.
+        /// This is used when drawing the GUI of the weapon.
+        /// &lt;/summary&gt;
+        public List&lt;Dice&gt; DiceForAttack
+        {
+            get
+            {
+                return dice;
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets a value indicating whether the equipment
+        /// is equipped to a hero.
+        /// &lt;/summary&gt;
+        [Pure]
+        public bool Equipped
+        {
+            get
+            {
+                return equipped;
+            }
+        }
+
+        #endregion
+
+        #region Initialization
+
+        /// &lt;summary&gt;
+        /// Initializes a new instance of the &lt;see cref=&quot;Equipment&quot;/&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;id&quot;&gt;
+        /// The unique id of the equipment
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;name&quot;&gt;
+        /// The name of the equipment
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;type&quot;&gt;
+        /// The equipments type
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;attackType&quot;&gt;
+        /// The attack type of the equipment
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;rarity&quot;&gt;
+        /// The rarity of the equipment
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;buyPrice&quot;&gt;
+        /// The buy price of the equipment
+        /// This is 0 if the equipments rarity is not common
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;surgeAbilities&quot;&gt;
+        /// The surge abilities, if the equipment is a weapon
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;hands&quot;&gt;
+        /// The number of hands it takes to wield, if the equipment is a weapon
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;abilities&quot;&gt;
+        /// The abilities that the equipment have
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;dice&quot;&gt;
+        /// The dice that the equipment has
+        /// &lt;/param&gt;
+        public Equipment(int id, string name, EquipmentType type, EAttackType attackType, EquipmentRarity rarity, int buyPrice, List&lt;SurgeAbility&gt; surgeAbilities, int hands, List&lt;Ability&gt; abilities, List&lt;Dice&gt; dice)
+        {
+            Contract.Requires(surgeAbilities != null);
+            Contract.Requires(abilities != null);
+            this.id = id;
+            this.name = name;
+            this.type = type;
+            this.attackType = attackType;
+            this.rarity = rarity;
+            this.buyPrice = rarity == EquipmentRarity.Common ? buyPrice : 0;
+            this.surgeAbilities = surgeAbilities;
+            this.hands = hands;
+            this.abilities = abilities;
+            this.dice = dice ?? new List&lt;Dice&gt;();
+            tapped = false;
+        }
+
+        #endregion
+
+        #region Methods
+
+        /// &lt;summary&gt;
+        /// Taps the piece of equipment
+        /// &lt;/summary&gt;
+        public void TapEquipment()
+        {
+            Contract.Requires(Tapped == false);
+            tapped = true;
+        }
+
+        /// &lt;summary&gt;
+        /// Untaps the piece of equipment,
+        /// even if not tapped
+        /// &lt;/summary&gt;
+        public void UntapEquipment()
+        {
+            tapped = false;
+        }
+
+        /// &lt;summary&gt;
+        /// The equipment will pass abilities on, so
+        /// the hero is able to use them.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;hero&quot;&gt;
+        /// The hero that equips the equipment
+        /// &lt;/param&gt;
+        public void EquipToHero(Hero hero)
+        {
+            Contract.Requires(!Equipped);
+            Contract.Ensures(Equipped);
+            /*
+            Contract.Ensures(
+                this.type == EquipmentType.Weapon ? 
+                hero.Inventory.Weapon.Equals(this) :
+                    this.type == EquipmentType.Armor ?
+                    hero.Inventory.Armor.Equals(this) :
+                        this.type == EquipmentType.Other ?
+                        hero.Inventory.OtherItems.Contains(this) :
+                            this.type == EquipmentType.Potion &amp;&amp; hero.Inventory.Potions.Contains(this));
+             * */
+            hero.DiceContribution += this.DiceContribution;
+            hero.SurgeAbilityContribution += this.SurgeAbilitiesContribution;
+            equipped = true;
+        }
+
+        /// &lt;summary&gt;
+        /// The equipment will unattach from a hero
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;hero&quot;&gt;
+        /// The hero to 
+        /// &lt;/param&gt;
+        public void UnequipFromHero(Hero hero)
+        {
+            Contract.Requires(Equipped);
+            Contract.Ensures(!Equipped);
+            
+            hero.DiceContribution -= this.DiceContribution;
+            equipped = false;
+        }
+
+        /// &lt;summary&gt;
+        /// Returns a clone of the equipment.
+        /// The data, and the index will be the same, 
+        /// but the pointer to the object itself will be different
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt;
+        /// The clone
+        /// &lt;/returns&gt;
+        public Equipment Clone()
+        {
+            return new Equipment(
+                id, 
+                name, 
+                type, 
+                attackType, 
+                rarity, 
+                buyPrice, 
+                surgeAbilities.Select(e =&gt; e).ToList(), 
+                hands, 
+                abilities.Select(e =&gt; e).ToList(),
+                dice.Select(d =&gt; d).ToList());
+        }
+
+        /// &lt;summary&gt;
+        /// Compares a piece of equipment to this one
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;obj&quot;&gt;
+        /// The obj to be compared
+        /// &lt;/param&gt;
+        /// &lt;returns&gt;
+        /// Returns true if the two pieces of equipment have the same id
+        /// &lt;/returns&gt;
+        public override bool Equals(object obj)
+        {
+            if (obj == null || !(obj is Equipment)) return false;
+            if (((Equipment)obj).Id == Id) return true;
+            return false;
+        }
+
+        /// &lt;summary&gt;
+        /// A method that return the dice of the weapon,
+        /// used to pass on as a delegate.
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt;
+        /// The list of dice the equipment contributes
+        /// &lt;/returns&gt;
+        private List&lt;Dice&gt; DiceContribution()
+        {
+            return dice;
+        }
+
+        /// &lt;summary&gt;
+        /// A method that return the surge abilities of the weapon,
+        /// used to pass on as a delegate
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt;
+        /// The list of surge abilities the weapon has
+        /// &lt;/returns&gt;
+        private List&lt;SurgeAbility&gt; SurgeAbilitiesContribution()
+        {
+            return surgeAbilities;
+        }
+        #endregion
+    }
+}
+</pre></code><script type="text/javascript">
+			applyranges('src26', RANGES_26)
+		</script>
+	</body>
+</html>

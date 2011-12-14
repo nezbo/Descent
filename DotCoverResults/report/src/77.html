@@ -1,0 +1,202 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_77 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src77" class="dotCoverSource"><pre>using Descent.GUI.Screens;
+
+namespace Descent.GUI
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics.Contracts;
+    using Descent.Model.Board;
+    using Descent.Model.Player;
+    using Microsoft.Xna.Framework;
+    using Microsoft.Xna.Framework.Graphics;
+    using Microsoft.Xna.Framework.Input;
+
+    /// &lt;summary&gt;
+    /// Handles the visual aspects of the game and input
+    /// from the user.
+    /// &lt;/summary&gt;
+    /// &lt;author&gt;
+    /// Emil Juul Jacobsen
+    /// &lt;/author&gt;
+    public class GUI : DrawableGameComponent
+    {
+        // static
+
+        public static SpriteFont Font { get; set; }
+
+        // dynamic
+
+        //input
+        private bool mouseDownBefore = false;
+        private KeyboardState lastKeyboardState;
+
+        /// &lt;summary&gt;
+        /// The three layers of the GUI:
+        /// 0: The board.
+        /// 1: The state.
+        /// 2: The chat and info
+        /// &lt;/summary&gt;
+        private GUIElement[] layers;
+
+        /// &lt;summary&gt;
+        /// Creates a Graphical User Interface.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;draw&quot;&gt;The surface to draw on.&lt;/param&gt;
+        public GUI(Game game)
+            : base(game)
+        {
+            this.lastKeyboardState = Keyboard.GetState();
+
+            layers = new GUIElement[3];
+        }
+
+        /// &lt;summary&gt;
+        /// Draws the GUI to the screen.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;draw&quot;&gt;The SpriteBatch to draw on.&lt;/param&gt;
+        public void Draw(SpriteBatch draw)
+        {
+            draw.Begin();
+            foreach (GUIElement element in layers)
+            {
+                if (element != null) element.Draw(draw);
+            }
+            draw.End();
+        }
+
+        /// &lt;summary&gt;
+        /// Lets the topmost element on the screen
+        /// react to the given click.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;x&quot;&gt;The x-coordinate of the click&lt;/param&gt;
+        /// &lt;param name=&quot;y&quot;&gt;The y-coordinate of the click&lt;/param&gt;
+        private void HandleClick(int x, int y)
+        {
+            for (int i = layers.Length - 1; i &gt;= 0; i--)
+            {
+                if (layers[i] != null)
+                {
+                    if (layers[i].HandleClick(x, y)) break;
+                }
+            }
+        }
+
+        private void HandleKeyPress(Keys key)
+        {
+            Contract.Requires(Keyboard.GetState().IsKeyDown(key));
+
+            foreach (GUIElement e in layers)
+            {
+                if (e != null)
+                {
+                    e.HandleKeyPress(key);
+                }
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Updates the content of the gui by checking for mouse
+        /// clicks and key presses.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;gameTime&quot;&gt;The GameTime object for this game.&lt;/param&gt;
+        public override void Update(GameTime gameTime)
+        {
+            if (Game.IsActive)
+            {
+                // mouseclick
+                MouseState ms = Mouse.GetState();
+                if (ms.LeftButton == ButtonState.Pressed &amp;&amp; !mouseDownBefore)
+                {
+                    HandleClick(ms.X, ms.Y);
+                }
+                mouseDownBefore = (ms.LeftButton == ButtonState.Pressed);
+
+                KeyboardState keyState = Keyboard.GetState();
+
+                // key tuped
+                List&lt;Keys&gt; pressed = new List&lt;Keys&gt;(keyState.GetPressedKeys());
+                foreach (Keys key in Enum.GetValues(typeof(Keys)))
+                {
+                    bool isDown = pressed.Contains(key);
+                    if (isDown &amp;&amp; lastKeyboardState.IsKeyUp(key))
+                    {
+                        HandleKeyPress(key);
+                    }
+                }
+
+                lastKeyboardState = keyState;
+            }
+
+            // general update
+            foreach (GUIElement l in layers)
+            {
+                if (l != null) l.Update(gameTime);
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Changes the GUIElement of the state layer.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;state&quot;&gt;The new GUIElement of the State layer&lt;/param&gt;
+        public void ChangeStateGUI(GUIElement state)
+        {
+            Contract.Ensures(layers[1] == state);
+            layers[1] = state;
+        }
+
+        /// &lt;summary&gt;
+        /// Creates (and initiates) the layer of the GUI
+        /// that displays the game board.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;board&quot;&gt;The board to be displayed.&lt;/param&gt;
+        /// &lt;param name=&quot;role&quot;&gt;The Role determining how much is visible on the board.&lt;/param&gt;
+        public void CreateBoardGUI(Board board, Role role)
+        {
+            Contract.Ensures(layers[0] != null);
+            layers[0] = GUIElementFactory.CreateBoardElement(Game, board, role);
+        }
+
+        /// &lt;summary&gt;
+        /// Creates (and initiates) the layer of the GUI
+        /// that displays the chat and player stats
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;role&quot;&gt;The Role that should be created a menu for.&lt;/param&gt;
+        public void CreateMenuGUI(Role role)
+        {
+            Contract.Ensures(layers[2] != null);
+            layers[2] = GUIElementFactory.CreateMenuElement(Game, role);
+        }
+
+        /// &lt;summary&gt;
+        /// Marks a square on the board with a transparent color.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;x&quot;&gt;The x-coordinate of the square on the board.&lt;/param&gt;
+        /// &lt;param name=&quot;y&quot;&gt;The y-coordinate of the square on the board.&lt;/param&gt;
+        /// &lt;param name=&quot;positive&quot;&gt;True if the highlight should indicate a eligible. False if it should indicate inaccessibility.&lt;/param&gt;
+        public void MarkSquare(int x, int y, bool positive)
+        {
+            ((BoardElement)layers[0]).MarkSquare(x, y, positive);
+        }
+
+        /// &lt;summary&gt;
+        /// Clears the board for all markings.
+        /// &lt;/summary&gt;
+        public void ClearMarks()
+        {
+            ((BoardElement)layers[0]).ClearMarks();
+        }
+    }
+}</pre></code><script type="text/javascript">
+			applyranges('src77', RANGES_77)
+		</script>
+	</body>
+</html>

@@ -1,0 +1,55 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_31 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src31" class="dotCoverSource"><pre>namespace Descent.GUI.Screens
+{
+    using System.Collections.Generic;
+    using Descent.GUI.SubElements;
+    using Descent.Model.Player;
+    using Descent.Model.Player.Figure;
+    using Microsoft.Xna.Framework;
+
+    /// &lt;summary&gt;
+    /// This menu displays some compact information about the other players
+    /// in the game. The heroes will see the overlord and the other players'
+    /// heroes and the overlord will see the entire hero party.
+    /// &lt;/summary&gt;
+    /// &lt;author&gt;
+    /// Emil Juul Jacobsen
+    /// &lt;/author&gt;
+    class PlayersElement : GUIElement
+    {
+        /// &lt;summary&gt;
+        /// Creates a new instance of a PlayerElement that display summaries
+        /// of the players in the game.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;game&quot;&gt;The game object&lt;/param&gt;
+        /// &lt;param name=&quot;yourself&quot;&gt;The hero that shouldn't be displayed in the summary, null if youre the Overlord.&lt;/param&gt;
+        /// &lt;param name=&quot;party&quot;&gt;The hero party to display.&lt;/param&gt;
+        public PlayersElement(Game game, Hero yourself, HeroParty party)
+            : base(game, &quot;players&quot;, (int)(game.GraphicsDevice.Viewport.Width * (3 / 4.0)), 0, game.GraphicsDevice.Viewport.Width / 4, game.GraphicsDevice.Viewport.Height / 2)
+        {
+            if (yourself != null) AddChild(new OverlordSummary(game, 0));
+
+            List&lt;Hero&gt; heroes = new List&lt;Hero&gt;(Player.Instance.HeroParty.Heroes.Values);
+            if (yourself != null) heroes.Remove(yourself);
+
+            int startY = (yourself == null) ? 0 : 100;
+            for (int i = 0; i &lt; heroes.Count; i++)
+            {
+                AddChild(new HeroSummary(game, startY + i * 100, heroes[i]));
+            }
+        }
+    }
+}
+</pre></code><script type="text/javascript">
+			applyranges('src31', RANGES_31)
+		</script>
+	</body>
+</html>

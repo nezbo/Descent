@@ -1,0 +1,76 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_7 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src7" class="dotCoverSource"><pre>
+namespace Descent.Messaging.Events
+{
+    using System.Diagnostics.Contracts;
+    using System.Text;
+
+    /// &lt;summary&gt;
+    /// The event arguments for the RerollDices event.
+    /// &lt;/summary&gt;
+    /// &lt;author&gt;
+    /// Simon Westh Henriksen
+    /// &lt;/author&gt;
+    public sealed class RerollDicesEventArgs : GameEventArgs
+    {
+        public RerollDicesEventArgs(int[] diceIds)
+        {
+            Contract.Requires(diceIds != null);
+            Contract.Requires(diceIds.Length &gt; 0);
+            DiceIds = diceIds;
+        }
+
+        public RerollDicesEventArgs(string[] stringArgs)
+        {
+            Contract.Requires(stringArgs != null);
+            Contract.Requires(stringArgs.Length &gt; 0);
+            
+            Contract.Requires(Contract.ForAll(stringArgs, s =&gt; EventContractHelper.TryParseInt(s)));
+
+            PopulateWithArgs(stringArgs);
+        }
+
+        public int[] DiceIds { get; set; }
+
+        public override void PopulateWithArgs(string[] stringArgs)
+        {
+            Contract.Requires(stringArgs != null);
+            Contract.Requires(stringArgs.Length &gt; 0);
+            
+            Contract.Requires(Contract.ForAll(stringArgs, s =&gt; EventContractHelper.TryParseInt(s)));
+
+            DiceIds = new int[stringArgs.Length];
+
+            for (int i = 0; i &lt; stringArgs.Length; i++)
+            {
+                DiceIds[i] = int.Parse(stringArgs[i]);
+            }
+        }
+
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            for(int i = 0; i &lt; DiceIds.Length; i++)
+            {
+                if(i != 0) sb.Append(&quot;,&quot;);
+                sb.Append(DiceIds[i]);
+            }
+
+            return sb.ToString();
+        }
+    }
+}
+</pre></code><script type="text/javascript">
+			applyranges('src7', RANGES_7)
+		</script>
+	</body>
+</html>

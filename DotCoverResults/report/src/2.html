@@ -1,0 +1,213 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_2 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src2" class="dotCoverSource"><pre>namespace Descent.State
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics.Contracts;
+    using System.Linq;
+
+    using Descent.Messaging.Events;
+    using Descent.Model;
+    using Descent.Model.Board.Marker;
+    using Descent.Model.Event;
+    using Descent.Model.Player;
+    using Descent.Model.Player.Figure;
+    using Descent.Model.Player.Figure.HeroStuff;
+    using Descent.Model.Player.OverlordStuff;
+
+    public delegate T Bonus&lt;T&gt;();
+
+    /// &lt;summary&gt;
+    /// Holds state relevant to the playing game a has game logic.
+    /// &lt;/summary&gt;
+    /// &lt;author&gt;
+    /// Simon Henriksen &amp; Martin Marcher
+    /// &lt;/author&gt;
+    public class GameState
+    {
+        private static Random random = new Random();
+
+        private List&lt;Equipment&gt; currentEquipment = new List&lt;Equipment&gt;();
+        private List&lt;OverlordCard&gt; overlordCards = new List&lt;OverlordCard&gt;();
+        private List&lt;Hero&gt; heroes = new List&lt;Hero&gt;();
+        private List&lt;Monster&gt; monstersLeftToAct = new List&lt;Monster&gt;();
+        private Dictionary&lt;int, List&lt;Equipment&gt;&gt; unequippedEquipment;
+
+        private List&lt;Chest&gt; chestsLeft = new List&lt;Chest&gt;();
+        public List&lt;Monster&gt; LegendaryMonsters { get; set; } 
+
+        private List&lt;Treasure&gt; treasures;
+
+        public GameState()
+        {
+            currentEquipment = new List&lt;Equipment&gt;();
+            overlordCards = new List&lt;OverlordCard&gt;();
+            heroes = new List&lt;Hero&gt;();
+            unequippedEquipment = new Dictionary&lt;int, List&lt;Equipment&gt;&gt;();
+            treasures = new List&lt;Treasure&gt;();
+
+            currentEquipment.AddRange(FullModel.AllEquipment);
+            overlordCards.AddRange(FullModel.AllOverlordCards);
+            heroes.AddRange(FullModel.AllHeroes);
+            treasures.AddRange(FullModel.AllTreasures);
+
+            chestsLeft.AddRange(FullModel.AllChests);
+
+            // Listen to events
+            Player.Instance.EventManager.GiveOverlordCardsEvent += GiveOverlordCards;
+            Player.Instance.EventManager.GiveEquipmentEvent += GiveEquipment;
+        }
+
+        public int CurrentPlayer { get; set; }
+
+        public Attack CurrentAttack { get; set; }
+
+        public Equipment[] CurrentEquipment
+        {
+            get { return currentEquipment.ToArray(); }
+        }
+
+        public bool CanBuyEquipment(int equipmentId)
+        {
+            Contract.Requires(FullModel.GetEquipment(equipmentId) != null);
+            return CurrentEquipment.Contains(FullModel.GetEquipment(equipmentId));
+        }
+
+        public OverlordCard[] GetOverlordCards(int count)
+        {
+            if (overlordCards.Count &lt; count)
+            {
+                overlordCards.AddRange(FullModel.AllOverlordCards);
+            }
+            return overlordCards.OrderBy(x =&gt; System.Guid.NewGuid()).Take(count).ToArray();
+        }
+
+        public Hero getHero()
+        {
+            return heroes.OrderBy(x =&gt; System.Guid.NewGuid()).First();
+        }
+
+        [Pure]
+        public Equipment[] UnequippedEquipment(int playerId)
+        {
+            Contract.Requires(playerId &gt; 0);
+            Contract.Ensures(Contract.Result&lt;Equipment[]&gt;().Count() &gt;= 3);
+            List&lt;Equipment&gt; equipment = new List&lt;Equipment&gt;();
+            if (unequippedEquipment.Keys.Contains(playerId))
+            {
+                equipment.AddRange(unequippedEquipment[playerId]);
+            }
+            while(equipment.Count &lt; 3)
+            {
+                equipment.Add(null);
+            }
+            return equipment.ToArray();
+        }
+
+        public int GetRandomChestID(EquipmentRarity rarity)
+        {
+            Random r = new Random(DateTime.Now.Millisecond);
+            int n = chestsLeft.Count(c =&gt; c.Rarity == rarity);
+            Chest chest = chestsLeft.Where(c1 =&gt; c1.Rarity == rarity).ToArray()[r.Next(n)];
+            return chest.Id;
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the contents of a chest.
+        /// This method will remove the 
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;chestId&quot;&gt;Id of the chest.&lt;/param&gt;
+        /// &lt;returns&gt;{conquest tokens, coins, curses, treasures}&lt;/returns&gt;
+        public Chest getChest(int chestId)
+        {
+            Chest c = FullModel.AllChests.Single(i =&gt; i.Id == chestId);
+            chestsLeft.Remove(c);
+            return c;
+        }
+
+        public Treasure[] getTreasures(int numberOfTreasures, EquipmentRarity rarity)
+        {
+            return treasures.Where(treasure =&gt; treasure.Rarity == rarity).OrderBy(t =&gt; random.Next()).Take(numberOfTreasures).ToArray();
+        }
+
+        public void RemoveEquipment(int equipmentId)
+        {
+
+            currentEquipment.Remove(FullModel.GetEquipment(equipmentId));
+        }
+
+        public void RemoveOverlordCards(int[] overlordCardIds)
+        {
+            Contract.Requires(overlordCardIds.Length &gt; 0);
+            overlordCards.RemoveAll(card =&gt; overlordCardIds.Contains(card.Id));
+        }
+
+        public void RemoveHero(int heroId)
+        {
+            Contract.Requires(FullModel.GetHero(heroId) != null);
+            heroes.Remove(FullModel.GetHero(heroId));
+        }
+
+        /* 
+        public void RemoveTreasure(int treasureId)
+        {
+            Contract.Requires(FullModel.GetTreasure(treasureId) != null);
+            treasures.Remove(FullModel.GetTreasure(treasureId));
+        }
+        */
+
+        public void AddToUnequippedEquipment(int playerId, Equipment equipment)
+        {
+            Contract.Requires(playerId &gt; 0);
+            Contract.Ensures(UnequippedEquipment(playerId).Contains(equipment));
+
+            if (!unequippedEquipment.ContainsKey(playerId))
+            {
+                unequippedEquipment[playerId] = new List&lt;Equipment&gt;();
+            }
+            unequippedEquipment[playerId].Add(equipment);
+        }
+
+        public void RemoveFromUnequippedEquipment(int playerId, Equipment equipment)
+        {
+            Contract.Requires(playerId &gt; 0);
+
+            unequippedEquipment[playerId].Remove(equipment);
+        }
+
+        public void RemoveAllUnequippedEquipment(int playerId)
+        {
+            Contract.Requires(playerId &gt; 0);
+            Contract.Ensures(UnequippedEquipment(playerId).Length == 3);
+
+            if(unequippedEquipment.ContainsKey(playerId)) unequippedEquipment[playerId].Clear();
+        }
+
+        #region Event listeners
+
+        private void GiveOverlordCards(object sender, GiveOverlordCardsEventArgs eventArgs)
+        {
+            RemoveOverlordCards(eventArgs.OverlordCardIds);
+        }
+
+        private void GiveEquipment(object sender, GiveEquipmentEventArgs eventArgs)
+        {
+            RemoveEquipment(eventArgs.EquipmentId);
+        }
+
+        #endregion
+    }
+}
+</pre></code><script type="text/javascript">
+			applyranges('src2', RANGES_2)
+		</script>
+	</body>
+</html>

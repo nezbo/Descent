@@ -1,0 +1,70 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_13 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src13" class="dotCoverSource"><pre>namespace Descent.Model.Board.Marker
+{
+    using System.Diagnostics.Contracts;
+
+    using Descent.Messaging.Events;
+    using Descent.Model.Player;
+    using Descent.Model.Player.Figure;
+
+    using Microsoft.Xna.Framework.Graphics;
+
+    /// &lt;summary&gt;
+    /// A type of marker, that has a rune key on it
+    /// &lt;/summary&gt;
+    /// &lt;author&gt;
+    /// Jonas Breindahl (jobre@itu.dk)
+    /// &lt;/author&gt;
+    public class RuneMarker : Marker
+    {
+        private RuneKey color;
+
+        /// &lt;summary&gt;
+        /// A Rune, that will make the heroes able to open rune doors of that color
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;id&quot;&gt;&lt;/param&gt;
+        /// &lt;param name=&quot;name&quot;&gt;&lt;/param&gt;
+        /// &lt;param name=&quot;texture&quot;&gt;&lt;/param&gt;
+        /// &lt;param name=&quot;movementPoints&quot;&gt;&lt;/param&gt;
+        /// &lt;param name=&quot;color&quot;&gt;&lt;/param&gt;
+        public RuneMarker(int id, string name, Texture2D texture, int movementPoints, RuneKey color)
+            : base(id, name, texture, movementPoints)
+        {
+            Contract.Requires(name != null);
+            Contract.Requires(name.Length &gt; 0);
+            Contract.Requires(movementPoints &gt;= 0);
+            Contract.Requires(color != RuneKey.None);
+
+            this.color = color;
+        }
+
+        /// &lt;summary&gt;
+        /// Adds the runes color to the hero party
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;hero&quot;&gt;
+        /// The hero standing on the marker
+        /// &lt;/param&gt;
+        public override void PickUp(Hero hero)
+        {
+            Player.Instance.HeroParty.AddRuneKey(color);
+
+            if (Player.Instance.IsServer)
+            {
+                Player.Instance.EventManager.QueueEvent(EventType.ChatMessage, new ChatMessageEventArgs(&quot;The hero party collected a &quot; + color.ToString().ToLower() + &quot; rune.&quot;));
+            }
+        }
+    }
+}
+</pre></code><script type="text/javascript">
+			applyranges('src13', RANGES_13)
+		</script>
+	</body>
+</html>
