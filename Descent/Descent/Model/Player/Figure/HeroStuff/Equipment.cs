@@ -143,7 +143,6 @@ namespace Descent.Model.Player.Figure.HeroStuff
         {
             get
             {
-                Contract.Ensures(this.type == EquipmentType.Weapon || Contract.Result<EAttackType>() == EAttackType.NONE);
                 return attackType;
             }
         }
@@ -314,6 +313,7 @@ namespace Descent.Model.Player.Figure.HeroStuff
         /// </param>
         public void EquipToHero(Hero hero)
         {
+            Contract.Requires(hero != null);
             Contract.Requires(!Equipped);
             Contract.Ensures(Equipped);
             /*
@@ -326,6 +326,7 @@ namespace Descent.Model.Player.Figure.HeroStuff
                         hero.Inventory.OtherItems.Contains(this) :
                             this.type == EquipmentType.Potion && hero.Inventory.Potions.Contains(this));
              * */
+            
             hero.DiceContribution += this.DiceContribution;
             hero.SurgeAbilityContribution += this.SurgeAbilitiesContribution;
             equipped = true;
