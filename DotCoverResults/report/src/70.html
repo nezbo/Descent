@@ -1,0 +1,62 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_70 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src70" class="dotCoverSource"><pre>namespace Descent.GUI.SubElements
+{
+    using Descent.Model.Player;
+    using Microsoft.Xna.Framework;
+    using Microsoft.Xna.Framework.Graphics;
+
+    /// &lt;summary&gt;
+    /// A short summary of the overlords information, including threat tokens,
+    /// deck size, discard size, hand size and the heroes remaining conquest
+    /// tokens.
+    /// &lt;/summary&gt;
+    /// &lt;author&gt;
+    /// Emil Juul Jacobsen
+    /// &lt;/author&gt;
+    class OverlordSummary : GUIElement
+    {
+        private static readonly int Height = 100;
+
+        /// &lt;summary&gt;
+        /// Creates a new summary of the overlords information for the given game and 
+        /// displays it to the right of the screen, at the given y-coordinate (down 
+        /// from the top).
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;game&quot;&gt;The current Game object.&lt;/param&gt;
+        /// &lt;param name=&quot;y&quot;&gt;How far down the screen this HeroSummary should be located.&lt;/param&gt;
+        public OverlordSummary(Game game, int y)
+            : base(game, &quot;overlord summary&quot;, (int)(game.GraphicsDevice.Viewport.Width * (3 / 4.0)), y, game.GraphicsDevice.Viewport.Width / 4, Height)
+        {
+            this.SetBackground(&quot;overlordbg&quot;);
+
+            this.AddDrawable(this.Name, new Image(game.Content.Load&lt;Texture2D&gt;(&quot;Images/Other/overlorddeck&quot;)), new Vector2(Bound.X, Bound.Y));
+            this.AddDrawable(this.Name, new Image(game.Content.Load&lt;Texture2D&gt;(&quot;Images/Other/overlorddiscard&quot;)), new Vector2(Bound.X + Bound.Width / 3, Bound.Y));
+            this.AddDrawable(this.Name, new Image(game.Content.Load&lt;Texture2D&gt;(&quot;Images/Other/overlordhand&quot;)), new Vector2(Bound.X + (float)(Bound.Width * (2 / 3.0)), Bound.Y));
+            this.AddDrawable(this.Name, new Image(game.Content.Load&lt;Texture2D&gt;(&quot;Images/Other/threat1&quot;)), new Rectangle(Bound.X + Bound.Width / 3 + 10, Bound.Y + 60, 30, 30));
+            this.AddDrawable(this.Name, new Image(game.Content.Load&lt;Texture2D&gt;(&quot;Images/Other/conquest1&quot;)), new Rectangle(Bound.X + (int)(Bound.Width * (2 / 3.0)) + 10, Bound.Y + 60, 30, 30));
+        }
+
+        public override void Draw(SpriteBatch draw)
+        {
+            base.Draw(draw);
+
+            draw.DrawString(GUI.Font, &quot;&quot; + Player.Instance.GetPlayerNick(Player.Instance.OverlordId), new Vector2(Bound.X + 10, Bound.Y + 65), Color.White);
+            draw.DrawString(GUI.Font, &quot;&quot; + Player.Instance.Overlord.Hand.Count, new Vector2(Bound.X + 2 * (Bound.Width / 3) + 60, Bound.Y + 15), Color.White);
+            draw.DrawString(GUI.Font, &quot;&quot; + Player.Instance.Overlord.ThreatTokens, new Vector2(Bound.X + Bound.Width / 3 + 60, Bound.Y + 65), Color.White);
+            draw.DrawString(GUI.Font, &quot;&quot; + Player.Instance.HeroParty.ConquestTokens, new Vector2(Bound.X + (int)(Bound.Width * (2 / 3.0)) + 60, Bound.Y + 65), Color.White);
+        }
+    }
+}
+</pre></code><script type="text/javascript">
+			applyranges('src70', RANGES_70)
+		</script>
+	</body>
+</html>

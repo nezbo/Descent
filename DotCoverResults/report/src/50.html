@@ -1,0 +1,75 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_50 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src50" class="dotCoverSource"><pre>
+namespace Descent.Messaging.Events
+{
+    using System.Diagnostics.Contracts;
+
+    /// &lt;summary&gt;
+    /// The event arguments for the InflictWounds event;
+    /// &lt;/summary&gt;
+    /// &lt;author&gt;
+    /// Simon Westh Henriksen
+    /// &lt;/author&gt;
+    public sealed class InflictWoundsEventArgs : GameEventArgs
+    {
+        public InflictWoundsEventArgs(int x, int y, int damage, int pierce)
+        {
+            Contract.Requires(x &gt;= 0);
+            Contract.Requires(y &gt;= 0);
+            Contract.Requires(damage &gt;= 0);
+            Contract.Requires(pierce &gt;= 0);
+
+            X = x;
+            Y = y;
+            Damage = damage;
+            Pierce = pierce;
+        }
+
+        public InflictWoundsEventArgs(string[] stringArgs)
+        {
+            Contract.Requires(stringArgs != null);
+            Contract.Requires(stringArgs.Length == 4);
+            
+            Contract.Requires(Contract.ForAll(stringArgs, s =&gt; EventContractHelper.TryParseInt(s) &amp;&amp; int.Parse(s) &gt;= 0));
+            PopulateWithArgs(stringArgs);
+        }
+
+        public int X { get; set; }
+
+        public int Y { get; set; }
+
+        public int Damage { get; set; }
+
+        public int Pierce { get; set; }
+
+        public override void PopulateWithArgs(string[] stringArgs)
+        {
+            Contract.Requires(stringArgs != null);
+            Contract.Requires(stringArgs.Length == 4);
+            
+            Contract.Requires(Contract.ForAll(stringArgs, s =&gt; EventContractHelper.TryParseInt(s) &amp;&amp; int.Parse(s) &gt;= 0));
+            X = int.Parse(stringArgs[0]);
+            Y = int.Parse(stringArgs[1]);
+            Damage = int.Parse(stringArgs[2]);
+            Pierce = int.Parse(stringArgs[3]);
+        }
+
+        public override string ToString()
+        {
+            return string.Join(&quot;,&quot;, X, Y, Damage, Pierce);
+        }
+    }
+}
+</pre></code><script type="text/javascript">
+			applyranges('src50', RANGES_50)
+		</script>
+	</body>
+</html>

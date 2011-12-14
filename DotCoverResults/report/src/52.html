@@ -1,0 +1,186 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_52 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src52" class="dotCoverSource"><pre>namespace Descent.GUI.SubElements
+{
+    using System.Collections.Generic;
+    using System.Linq;
+    using Descent.Model;
+    using Descent.Model.Event;
+    using Descent.Model.Player;
+    using Descent.Model.Player.Figure.HeroStuff;
+    using Microsoft.Xna.Framework;
+    using Microsoft.Xna.Framework.Graphics;
+
+    /// &lt;summary&gt;
+    /// Displays a single Equipment to the screen.
+    /// &lt;/summary&gt;
+    /// &lt;author&gt;
+    /// Emil Juul Jacobsen
+    /// &lt;/author&gt;
+    public class EquipmentElement : GUIElement
+    {
+        private static string Marked;
+        private static SpriteFont EquipmentFont { get; set; }
+
+        private Dictionary&lt;EquipmentRarity, string&gt; Border;
+
+        private Image Coin;
+        private Texture2D Hand;
+
+        /// &lt;summary&gt;
+        /// The Equipment that this element displays.
+        /// &lt;/summary&gt;
+        public Equipment Equipment { get; internal set; }
+
+        /// &lt;summary&gt;
+        /// The Id of the Equipment that this element displays.
+        /// &lt;/summary&gt;
+        public int Id { get; internal set; }
+
+        /// &lt;summary&gt;
+        /// Creates a new Equipment element to display the given Equipment at the given position.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;game&quot;&gt;The current Game object.&lt;/param&gt;
+        /// &lt;param name=&quot;posX&quot;&gt;The top-left x-coordinate of this element.&lt;/param&gt;
+        /// &lt;param name=&quot;posY&quot;&gt;The top-left y-coordinate of this element.&lt;/param&gt;
+        /// &lt;param name=&quot;width&quot;&gt;The width of this element.&lt;/param&gt;
+        /// &lt;param name=&quot;height&quot;&gt;The height of this element.&lt;/param&gt;
+        /// &lt;param name=&quot;slotTitle&quot;&gt;The title of this slot, in case the Equipment isn't there (null).&lt;/param&gt;
+        /// &lt;param name=&quot;eq&quot;&gt;The Equipment to visualize.&lt;/param&gt;
+        /// &lt;param name=&quot;id&quot;&gt;The Id of the given Equipment.&lt;/param&gt;
+        public EquipmentElement(Game game, int posX, int posY, int width, int height, string slotTitle, Equipment eq, int id)
+            : base(game, &quot;item&quot;, posX, posY, width, height)
+        {
+            Equipment = eq;
+            Id = id;
+
+            if (Coin == null) Coin = new Image(game.Content.Load&lt;Texture2D&gt;(&quot;Images/Other/25gold&quot;));
+            if (Hand == null) Hand = game.Content.Load&lt;Texture2D&gt;(&quot;Images/Other/hand&quot;);
+
+            if (EquipmentFont == null) EquipmentFont = game.Content.Load&lt;SpriteFont&gt;(&quot;fontSmall&quot;);
+            SetFont(EquipmentFont);
+
+            if (Marked == null) Marked = &quot;Images/Other/equipbg-marked&quot;;
+            if (Border == null)
+            {
+                Border = new Dictionary&lt;EquipmentRarity, string&gt;();
+                Border.Add(EquipmentRarity.Common, &quot;Images/Other/equipbg&quot;);
+                Border.Add(EquipmentRarity.Copper, &quot;Images/Other/equipbg-bronze&quot;);
+                Border.Add(EquipmentRarity.Silver, &quot;Images/Other/equipbg-silver&quot;);
+                Border.Add(EquipmentRarity.Gold, &quot;Images/Other/equipbg-gold&quot;);
+            }
+
+            if (Equipment == null)
+            {
+                this.AddText(this.Name, slotTitle.Length &gt; 0 ? slotTitle + &quot; (Empty)&quot; : &quot;(Empty)&quot;, new Vector2(0, 0));
+            }
+            else
+            {
+                PopulateItem();
+            }
+            SetBackground(GetBGString());
+        }
+
+        private void PopulateItem()
+        {
+            int yPos = 2;
+            this.AddText(this.Name, Equipment.Name, new Vector2(4, yPos));
+
+            Vector2 nameSize = this.Font.MeasureString(texts[0].Message);
+            yPos += (int)nameSize.Y + 5;
+
+            this.AddText(this.Name, Equipment.Type.ToString(), new Vector2(4, yPos));
+
+            yPos += 20;
+
+            // specifics
+            switch (Equipment.Type)
+            {
+                case EquipmentType.Weapon:
+                    {
+                        Rectangle wpnTypeRect = new Rectangle(Bound.X + Bound.Width / 2 + 10, Bound.Y + yPos - 20, 15, 15);
+                        switch (Equipment.AttackType)
+                        {
+                            case EAttackType.MAGIC: AddDrawable(Name, new Image(Game.Content.Load&lt;Texture2D&gt;(&quot;Images/Other/magic-icon&quot;)), wpnTypeRect);
+                                break;
+                            case EAttackType.MELEE: AddDrawable(Name, new Image(Game.Content.Load&lt;Texture2D&gt;(&quot;Images/Other/melee-icon&quot;)), wpnTypeRect);
+                                break;
+                            case EAttackType.RANGED: AddDrawable(Name, new Image(Game.Content.Load&lt;Texture2D&gt;(&quot;Images/Other/ranged-icon&quot;)), wpnTypeRect);
+                                break;
+                        }
+
+                        foreach (SurgeAbility ability in Equipment.SurgeAbilities)
+                        {
+                            GUIElementFactory.DrawSurgeAbility(this, ability, 2, yPos, true);
+                            yPos += (int)Font.MeasureString(texts[texts.Count - 1].Message).Y;
+                        }
+
+                        int xHand = 45;
+                        for (int i = 0; i &lt; Equipment.Hands; i++)
+                        {
+                            AddDrawable(Name, new Image(Hand), new Rectangle(Bound.X + xHand, Bound.Y + Bound.Height - 19, 15, 15));
+                            xHand += 15;
+                        }
+
+                        int xStart = Bound.X + xHand;
+                        int yDice = Bound.Y + Bound.Height - 19;
+                        int xDice = xStart;
+                        EDice[] dices = Equipment.DiceForAttack.Select(n =&gt; n.Color).ToArray();
+                        foreach (EDice dice in dices)
+                        {
+                            if (xDice + 15 &gt;= Bound.X + Bound.Width)
+                            {
+                                xDice = xStart;
+                                yDice -= 15;
+                            }
+
+                            GUIElementFactory.DrawDice(this, dice, xDice, yDice, 15);
+
+                            xDice += 15;
+                        }
+
+                        break;
+                    }
+                default:
+                    {
+                        foreach (Ability a in Equipment.Abilities)
+                        {
+                            string s = a.ToString();
+                            AddText(Name, s, new Vector2(4, yPos));
+                            yPos += (int)Font.MeasureString(s).Y;
+                        }
+                        break;
+                    }
+            }
+
+            // price
+            this.AddDrawable(Name, Coin, new Rectangle(Bound.X + 4, Bound.Y + Bound.Height - 19, 15, 15));
+            this.AddText(Name, &quot;&quot; + Equipment.BuyPrice, new Vector2(22, Bound.Height - 19));
+        }
+
+        private string GetBGString()
+        {
+            return (Equipment == null) ? Border[EquipmentRarity.Common] : Border[Equipment.Rarity];
+        }
+
+        public override bool HandleClick(int x, int y)
+        {
+            bool result = base.HandleClick(x, y);
+            SetBackground(HasFocus() ? Marked : GetBGString()); // update bg
+
+            return result;
+        }
+    }
+}
+</pre></code><script type="text/javascript">
+			applyranges('src52', RANGES_52)
+		</script>
+	</body>
+</html>

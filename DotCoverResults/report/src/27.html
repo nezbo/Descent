@@ -1,0 +1,44 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_27 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src27" class="dotCoverSource"><pre>namespace Descent.Model.Board.Marker
+{
+    using System.Diagnostics.Contracts;
+
+    using Descent.Model.Player.Figure;
+
+    using Microsoft.Xna.Framework.Graphics;
+
+    /// &lt;summary&gt;
+    /// Either rubble, water og pit, that can be on a square.
+    /// &lt;/summary&gt;
+    /// &lt;author&gt;
+    /// Jonas Breindahl (jobre@itu.dk)
+    /// &lt;/author&gt;
+    public class OtherMarkers : Marker
+    {
+        public OtherMarkers(int id, string name, Texture2D texture, int movementPoints)
+            : base(id, name, texture, movementPoints)
+        {
+            Contract.Requires(name != null);
+            Contract.Requires(name.Length &gt; 0);
+            Contract.Requires(movementPoints &gt;= 0);
+        }
+
+        public override void PickUp(Hero hero)
+        {
+            return;
+        }
+    }
+}
+</pre></code><script type="text/javascript">
+			applyranges('src27', RANGES_27)
+		</script>
+	</body>
+</html>

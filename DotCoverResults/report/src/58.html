@@ -1,0 +1,70 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_58 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src58" class="dotCoverSource"><pre>namespace Descent.GUI.Screens
+{
+    using Descent.GUI.SubElements;
+    using Descent.Model.Player;
+    using Descent.Model.Player.OverlordStuff;
+    using Microsoft.Xna.Framework;
+    using Microsoft.Xna.Framework.Graphics;
+
+    /// &lt;summary&gt;
+    /// The user interface of the overlord player. This is (at the moment) just his
+    /// hand of cards. Right now the visualization of the overlords stuff isn't bound
+    /// to any backend code so it isn't functional yet.
+    /// &lt;/summary&gt;
+    /// &lt;author&gt;
+    /// Emil Juul Jacobsen
+    /// &lt;/author&gt;
+
+    class OverlordElement : GUIElement
+    {
+        private int oldHandSize = 0;
+
+        /// &lt;summary&gt;
+        /// Creates a new overlord element for the given game.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;game&quot;&gt;The current Game object.&lt;/param&gt;
+        public OverlordElement(Game game)
+            : base(game, &quot;hero&quot;, 0, 0, (int)(game.GraphicsDevice.Viewport.Width * (3 / 4.0)), game.GraphicsDevice.Viewport.Height)
+        {
+            SetDrawBackground(false);
+            AddDrawable(Name, new Image(game.Content.Load&lt;Texture2D&gt;(&quot;Images/Heroes/BIG-0&quot;)), new Rectangle(Bound.X, Bound.Y + Bound.Height - 200, 200, 200));
+        }
+
+        private void UpdateHand()
+        {
+            if (Player.Instance.Overlord.Hand.Count != oldHandSize)
+            {
+                this.ClearChildren();
+
+                int cardX = 250;
+                foreach (OverlordCard card in Player.Instance.Overlord.Hand)
+                {
+                    AddChild(new OverlordCardElement(Game, cardX, Bound.Height - 25, card));
+                    cardX += 50;
+                }
+
+                oldHandSize = Player.Instance.Overlord.Hand.Count;
+            }
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            UpdateHand();
+            base.Update(gameTime);
+        }
+    }
+}
+</pre></code><script type="text/javascript">
+			applyranges('src58', RANGES_58)
+		</script>
+	</body>
+</html>

@@ -1,0 +1,39 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_66 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src66" class="dotCoverSource"><pre>// -----------------------------------------------------------------------
+// &lt;copyright file=&quot;EventContractHelper.cs&quot; company=&quot;&quot;&gt;
+// TODO: Update copyright text.
+// &lt;/copyright&gt;
+// -----------------------------------------------------------------------
+
+namespace Descent.Messaging.Events
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+
+    /// &lt;summary&gt;
+    /// Helper for contracts in events.
+    /// &lt;/summary&gt;
+    public class EventContractHelper
+    {
+        public static bool TryParseInt(string str)
+        {
+            int success;
+            return int.TryParse(str, out success);
+        }
+    }
+}
+</pre></code><script type="text/javascript">
+			applyranges('src66', RANGES_66)
+		</script>
+	</body>
+</html>

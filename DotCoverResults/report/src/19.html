@@ -1,0 +1,67 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_19 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src19" class="dotCoverSource"><pre>
+namespace Descent.Messaging.Events
+{
+    using System.Diagnostics.Contracts;
+
+    /// &lt;summary&gt;
+    /// The event arguments for switching items.
+    /// &lt;/summary&gt;
+    /// &lt;author&gt;
+    /// Simon Westh Henriksen
+    /// &lt;/author&gt;
+    public sealed class SwitchItemsEventArgs : GameEventArgs
+    {
+        public SwitchItemsEventArgs(int field1, int field2)
+        {
+            Contract.Requires(field1 &gt;= 0);
+            Contract.Requires(field2 &gt;= 0);
+
+            Field1 = field1;
+            Field2 = field2;
+        }
+
+        public SwitchItemsEventArgs(string[] stringArgs)
+        {
+            Contract.Requires(stringArgs != null);
+            Contract.Requires(stringArgs.Length == 2);
+            
+            Contract.Requires(Contract.ForAll(stringArgs, s =&gt; EventContractHelper.TryParseInt(s) &amp;&amp; int.Parse(s) &gt;= 0));
+
+            PopulateWithArgs(stringArgs);
+        }
+
+        public int Field1 { get; set; }
+
+        public int Field2 { get; set; }
+
+        public override void PopulateWithArgs(string[] stringArgs)
+        {
+            Contract.Requires(stringArgs != null);
+            Contract.Requires(stringArgs.Length == 2);
+            
+            Contract.Requires(Contract.ForAll(stringArgs, s =&gt; EventContractHelper.TryParseInt(s) &amp;&amp; int.Parse(s) &gt;= 0));
+
+            Field1 = int.Parse(stringArgs[0]);
+            Field2 = int.Parse(stringArgs[1]);
+        }
+
+        public override string ToString()
+        {
+            return string.Join(&quot;,&quot;, Field1, Field2);
+        }
+    }
+}
+</pre></code><script type="text/javascript">
+			applyranges('src19', RANGES_19)
+		</script>
+	</body>
+</html>

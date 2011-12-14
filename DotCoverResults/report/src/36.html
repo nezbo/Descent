@@ -1,0 +1,298 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_36 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src36" class="dotCoverSource"><pre>
+namespace Descent.Model.Event
+{
+    using System;
+
+    using Descent.Model.Player;
+    using Descent.Model.Player.Figure;
+
+    public enum AbilityBonus
+    {
+        None,
+        Armor,
+        Aura,
+        Breath,
+        Burn,
+        Command,
+        Damage,
+        Fear,
+        Fly,
+        Grapple,
+        Knockback,
+        Pierce,
+        Poison,
+        QuickShot,
+        Range,
+        Reach,
+        Sorcery,
+        Stun,
+        Surge,
+        Sweep,
+        Undying,
+        Web
+    }
+
+    /// &lt;summary&gt;
+    /// Any ability, that have an effect on figures, heroes and the overlord.
+    /// &lt;/summary&gt;
+    /// &lt;author&gt;
+    /// Jonas Breindahl (jobre@itu.dk)
+    /// &lt;/author&gt;
+    public class Ability
+    {
+        #region Static
+
+        /// &lt;summary&gt;
+        /// Creates an ability by parsing a string
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;abilityString&quot;&gt;
+        /// An ability as a string
+        /// &lt;/param&gt;
+        /// &lt;returns&gt;
+        /// An ability
+        /// &lt;/returns&gt;
+        public static Ability GetAbility(string abilityString)
+        {
+            Ability ability = new Ability();
+
+            if (abilityString == null || abilityString == string.Empty) return ability;
+
+            string[] data = abilityString.Split(' ');
+
+            for (int i = 0; i &lt; data.Length; i++)
+            {
+                switch (data[i])
+                {
+                    case &quot;When&quot;:
+                        ability.triggered = true;
+                        break;
+                    case &quot;MakingAttacking&quot;:
+                        ability.trigger += ability.WhenAttacking;
+                        break;
+                    case &quot;IfType&quot;:
+                        EAttackType.TryParse(data[++i], true, out ability.type);
+                        ability.trigger += ability.IfType;
+                        break;
+                    case &quot;Armor&quot;:
+                        ability.bonus = AbilityBonus.Armor;
+                        ability.amount = int.Parse(data[++i]);
+                        break;
+                    case &quot;Aura&quot;:
+                        ability.bonus = AbilityBonus.Aura;
+                        break;
+                    case &quot;Breath&quot;:
+                        ability.bonus = AbilityBonus.Breath;
+                        break;
+                    case &quot;Burn&quot;:
+                        ability.bonus = AbilityBonus.Burn;
+                        break;
+                    case &quot;Command&quot;:
+                        ability.bonus = AbilityBonus.Command;
+                        break;
+                    case &quot;Damage&quot;:
+                        ability.bonus = AbilityBonus.Damage;
+                        ability.amount = int.Parse(data[++i]);
+                        break;
+                    case &quot;Fear&quot;:
+                        ability.bonus = AbilityBonus.Fear;
+                        ability.amount = int.Parse(data[++i]);
+                        break;
+                    case &quot;Fly&quot;:
+                        ability.bonus = AbilityBonus.Fly;
+                        break;
+                    case &quot;Grapple&quot;:
+                        ability.bonus = AbilityBonus.Grapple;
+                        break;
+                    case &quot;Knockback&quot;:
+                        ability.bonus = AbilityBonus.Grapple;
+                        break;
+                    case &quot;Pierce&quot;:
+                        ability.bonus = AbilityBonus.Pierce;
+                        ability.amount = int.Parse(data[++i]);
+                        break;
+                    case &quot;Poison&quot;:
+                        ability.bonus = AbilityBonus.Poison;
+                        break;
+                    case &quot;QuickShot&quot;:
+                        ability.bonus = AbilityBonus.QuickShot;
+                        break;
+                    case &quot;Range&quot;:
+                        ability.bonus = AbilityBonus.Range;
+                        ability.amount = int.Parse(data[++i]);
+                        break;
+                    case &quot;Reach&quot;:
+                        ability.bonus = AbilityBonus.Reach;
+                        break;
+                    case &quot;Sorcery&quot;:
+                        ability.bonus = AbilityBonus.Sorcery;
+                        ability.amount = int.Parse(data[++i]);
+                        break;
+                    case &quot;Stun&quot;:
+                        ability.bonus = AbilityBonus.Stun;
+                        break;
+                    case &quot;Surge&quot;:
+                        ability.bonus = AbilityBonus.Surge;
+                        ability.amount = int.Parse(data[++i]);
+                        break;
+                    case &quot;Sweep&quot;:
+                        ability.bonus = AbilityBonus.Sweep;
+                        break;
+                    case &quot;Undying&quot;:
+                        ability.bonus = AbilityBonus.Undying;
+                        break;
+                }
+            }
+
+
+
+            return ability;
+        }
+
+        private static Func&lt;bool&gt; GetTrigger(string trigger, Ability ability)
+        {
+            bool triggerFunc;
+
+            if (trigger.StartsWith(&quot;WhenAttacking&quot;))
+            {
+                return ability.WhenAttacking;
+            }
+
+            return isTrue;
+        }
+
+        private static bool isTrue()
+        {
+            return true;
+        }
+
+        #endregion
+
+        #region Fields
+
+        private Figure figure = null;
+
+        private bool triggered = false;
+
+        private Func&lt;bool&gt; trigger;
+
+        private AbilityBonus bonus;
+
+        private int amount;
+
+        private EAttackType type;
+
+        #endregion
+
+        #region Properties
+
+        /// &lt;summary&gt;
+        /// Gets a value indicating whether the ability is 
+        /// triggered by something, or always active?
+        /// &lt;/summary&gt;
+        public bool Triggered
+        {
+            get
+            {
+                return triggered;
+            }
+        }
+
+        public bool Available
+        {
+            get
+            {
+                return !Triggered || trigger.Invoke();
+            }
+        }
+
+        #endregion
+
+        #region Initialization
+
+        /// &lt;summary&gt;
+        /// Applys the ability to a figure
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;figure&quot;&gt;
+        /// The figure to apply the figure to
+        /// &lt;/param&gt;
+        public void Apply(Figure figure)
+        {
+            this.figure = figure;
+            if (!triggered || trigger.Invoke())
+            {
+                switch (bonus)
+                {
+                    case AbilityBonus.Damage:
+                        figure.DamageContribution += IntBonus;
+                        break;
+                    case AbilityBonus.Pierce:
+                        figure.PierceContribution += IntBonus;
+                        break;
+                    case AbilityBonus.Range:
+                        figure.RangeContribution += IntBonus;
+                        break;
+                    case AbilityBonus.Surge:
+                        figure.SurgeContribution += IntBonus;
+                        break;
+                    case AbilityBonus.QuickShot:
+                        break;
+                    case AbilityBonus.Armor:
+                        figure.ArmorContribution += IntBonus;
+                        break;
+                }
+            }
+        }
+
+        int IntBonus()
+        {
+            return amount;
+        }
+
+        void QuickShot()
+        {
+            // TODO: After calculating number of attacks, double it
+        }
+
+        bool WhenAttacking()
+        {
+            // TODO: A trigger that returns true when attacking
+            return true;
+        }
+
+        bool IfType()
+        {
+            return figure.AttackType.Equals(type);
+        }
+
+
+
+        #endregion
+
+        #region Methods
+
+        /// &lt;summary&gt;
+        /// Prints an ability as a 
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt;&lt;/returns&gt;
+        public override string ToString()
+        {
+            return (amount &gt; 0 ? &quot;+&quot; + amount + &quot; &quot; : string.Empty) + bonus.ToString();
+        }
+
+        #endregion
+    }
+}
+</pre></code><script type="text/javascript">
+			applyranges('src36', RANGES_36)
+		</script>
+	</body>
+</html>

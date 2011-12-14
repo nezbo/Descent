@@ -1,0 +1,96 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_61 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src61" class="dotCoverSource"><pre>
+namespace Descent.Model.Player.Figure.HeroStuff
+{
+    using Descent.Model.Event;
+
+    /// &lt;summary&gt;
+    /// A surge ability is an ability with a cost
+    /// &lt;/summary&gt;
+    /// &lt;author&gt;
+    /// Jonas Breindahl (jobre@itu.dk)
+    /// &lt;/author&gt;
+    public class SurgeAbility
+    {
+        /// &lt;summary&gt;
+        /// Takes a string and returns an SurgeAbility instance
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;surgeAbility&quot;&gt;
+        /// The surge ability in raw text format
+        /// &lt;/param&gt;
+        /// &lt;returns&gt;
+        /// An instance of SurgeAbility
+        /// &lt;/returns&gt;
+        public static SurgeAbility GetSurgeAbility(string surgeAbility)
+        {
+            string[] data = surgeAbility.Split(new char[] { ' ' }, 2);
+            return new SurgeAbility(int.Parse(data[0]), Ability.GetAbility(data[1]));
+        }
+
+        #region Fields
+
+        private int cost;
+
+        private Ability ability;
+
+        #endregion
+
+        #region Properties
+
+        /// &lt;summary&gt;
+        /// Gets the cost of the ability
+        /// &lt;/summary&gt;
+        public int Cost
+        {
+            get
+            {
+                return cost;
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the ability to be gained if the cost is payed.
+        /// &lt;/summary&gt;
+        public Ability Ability
+        {
+            get
+            {
+                return ability;
+            }
+        }
+
+        #endregion
+
+        #region Initialization
+
+        /// &lt;summary&gt;
+        /// Initializes a new instance of the &lt;see cref=&quot;SurgeAbility&quot;/&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;cost&quot;&gt;
+        /// The cost of the ability
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;ability&quot;&gt;
+        /// The ability to be bought
+        /// &lt;/param&gt;
+        public SurgeAbility(int cost, Ability ability)
+        {
+            this.cost = cost;
+            this.ability = ability;
+        }
+
+        #endregion
+    }
+}
+</pre></code><script type="text/javascript">
+			applyranges('src61', RANGES_61)
+		</script>
+	</body>
+</html>

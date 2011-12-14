@@ -1,0 +1,205 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_4 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src4" class="dotCoverSource"><pre>namespace Descent.Model.Player.OverlordStuff
+{
+    #region Enum
+
+    /// &lt;summary&gt;
+    /// An enum of all overlord types
+    /// &lt;/summary&gt;
+    public enum OverlordCardType
+    {
+        /// &lt;summary&gt;
+        /// A card that will let the overlord spawn more monsters
+        /// &lt;/summary&gt;
+        Spawn,
+        
+        /// &lt;summary&gt;
+        /// A card that will let the overlord create traps for the heroes
+        /// &lt;/summary&gt;
+        Trap,
+
+        /// &lt;summary&gt;
+        /// A card that will let the overlord gain new continous powers
+        /// &lt;/summary&gt;
+        Power,
+
+        /// &lt;summary&gt;
+        /// A card that will let the overlords 
+        /// monsters gain one time abilities
+        /// &lt;/summary&gt;
+        Event
+    }
+
+    #endregion
+
+    /// &lt;summary&gt;
+    /// Cards that the overlord draws each turn
+    /// &lt;/summary&gt;
+    /// &lt;author&gt;
+    /// Martin Marcher, Jonas Breindahl
+    /// &lt;/author&gt;
+    public abstract class OverlordCard
+    {
+        #region Fields
+
+        private int id;
+
+        private string name;
+
+        private string description;
+
+        private int playPrice;
+
+        private int sellPrice;
+
+        #endregion
+
+        #region Properties
+
+        /// &lt;summary&gt;
+        /// Gets the id of the overlord card
+        /// &lt;/summary&gt;
+        public int Id 
+        { 
+            get
+            {
+                return id;
+            }
+
+            private set
+            {
+                id = value;
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the name of the overlord card
+        /// &lt;/summary&gt;
+        public string Name
+        {
+            get
+            {
+                return name;
+            }
+
+            private set
+            {
+                name = value;
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the description of the overlord card
+        /// &lt;/summary&gt;
+        public string Decription
+        {
+            get
+            {
+                return description;
+            }
+
+            private set
+            {
+                description = value;
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the price to play the overlordcard
+        /// &lt;/summary&gt;
+        public int PlayPrice
+        {
+            get
+            {
+                return playPrice;
+            }
+
+            private set
+            {
+                playPrice = value;
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the sell price for the overlord card
+        /// &lt;/summary&gt;
+        public int SellPrice
+        {
+            get
+            {
+                return sellPrice;
+            }
+
+            private set
+            {
+                sellPrice = value;
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets or sets the type of overlord card the card is
+        /// &lt;/summary&gt;
+        public OverlordCardType Type { get; protected set; }
+
+        #endregion
+
+        #region Initialization
+
+        /// &lt;summary&gt;
+        /// Initializes a new instance of the &lt;see cref=&quot;OverlordCard&quot;/&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;id&quot;&gt;
+        /// The id of the card
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;name&quot;&gt;
+        /// The name of the card
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;description&quot;&gt;
+        /// The description of the card
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;playPrice&quot;&gt;
+        /// The play price of the card
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;sellPrice&quot;&gt;
+        /// The sell price of the card
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;type&quot;&gt;
+        /// The type of overlordcard
+        /// &lt;/param&gt;
+        public OverlordCard(int id, string name, string description, int playPrice, int sellPrice, OverlordCardType type)
+        {
+            this.id = id;
+            this.name = name;
+            this.description = description;
+            this.playPrice = playPrice;
+            this.sellPrice = sellPrice;
+            this.Type = type;
+        }
+
+        #endregion
+
+        #region Methods
+
+        public virtual void PlayCard(){}
+
+        public virtual bool CanPlay()
+        {
+            return true;
+        }
+
+        #endregion
+    }
+}
+</pre></code><script type="text/javascript">
+			applyranges('src4', RANGES_4)
+		</script>
+	</body>
+</html>

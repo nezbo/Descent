@@ -46,6 +46,11 @@
             mServer.Start();
         }
 
+        public override void Close()
+        {
+            mServer.Close();
+        }
+
         /// <summary>
         /// Sends a string through the server. Will send to all clients except the sender of the message.
         /// </summary>

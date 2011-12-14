@@ -1,0 +1,152 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_65 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src65" class="dotCoverSource"><pre>namespace Descent.Model.Board.Marker
+{
+    using Descent.Model.Player.Figure.HeroStuff;
+
+    /// &lt;summary&gt;
+    /// A chest with treasures, coins and tokens
+    /// &lt;/summary&gt;
+        /// &lt;author&gt;
+        /// Jonas Breindahl (jobre@itu.dk)
+        /// &lt;/author&gt;
+    public class Chest
+    {
+        #region Fields
+
+        private int id; 
+
+        private EquipmentRarity rarity;
+
+        private int tokens;
+
+        private int coin;
+
+        private int curses;
+
+        private int treasures;
+
+        #endregion
+
+        #region Properties
+
+        /// &lt;summary&gt;
+        /// Gets the unique id of the chest
+        /// &lt;/summary&gt;
+        public int Id
+        {
+            get
+            {
+                return id;
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the rarity of the treasure
+        /// &lt;/summary&gt;
+        public EquipmentRarity Rarity
+        {
+            get
+            {
+                return rarity;
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the number of conquest tokens in the chest,
+        /// the party gets this number of tokens.
+        /// &lt;/summary&gt;
+        public int ConquestTokens
+        {
+            get
+                {
+                    return tokens;
+                }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the number of coins in the treasure
+        /// This is 0 if there is not any
+        /// &lt;/summary&gt;
+        public int Coin
+        {
+            get
+            {
+                return coin;
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the number of curses in the chest,
+        /// the overlord gets a threat token for each hero
+        /// &lt;/summary&gt;
+        public int Curses
+        {
+            get
+            {
+                return curses;
+            }   
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the number of treasures in the chest,
+        /// each hero gets x number of the chests rarity
+        /// &lt;/summary&gt;
+        public int Treasures
+        {
+            get
+            {
+                return treasures;
+            }
+        }
+
+        #endregion
+
+        #region Initialization
+
+        /// &lt;summary&gt;
+        /// Initializes a new instance of the &lt;see cref=&quot;Chest&quot;/&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;id&quot;&gt;
+        /// The id of the chest
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;rarity&quot;&gt;
+        /// The rarity of the chest (copper, silver and gold)
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;conquestTokens&quot;&gt;
+        /// The conquest tokens in the chest
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;coin&quot;&gt;
+        /// The coins in the chest
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;curses&quot;&gt;
+        /// The curses in the chest
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;treasures&quot;&gt;
+        /// The treasures in the chest
+        /// &lt;/param&gt;
+        public Chest(int id, EquipmentRarity rarity, int conquestTokens, int coin, int curses, int treasures)
+        {
+            this.id = id;
+            this.rarity = rarity;
+            this.tokens = conquestTokens;
+            this.coin = coin;
+            this.curses = curses;
+            this.treasures = treasures;
+        }
+
+        #endregion
+    }
+}
+</pre></code><script type="text/javascript">
+			applyranges('src65', RANGES_65)
+		</script>
+	</body>
+</html>

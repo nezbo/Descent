@@ -1,0 +1,55 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_86 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src86" class="dotCoverSource"><pre>namespace Descent.Model.Board.Marker
+{
+    using System.Diagnostics.Contracts;
+
+    using Descent.Model.Player.Figure;
+
+    using Microsoft.Xna.Framework.Graphics;
+
+    /// &lt;summary&gt;
+    /// A glyph is a portal and a valid starting point.
+    /// &lt;/summary&gt;
+    /// &lt;author&gt;
+    /// Jonas Breindahl (jobre@itu.dk)
+    /// &lt;/author&gt;
+    public class GlyphMarker : Marker
+    {
+        public bool Open { get; private set; }
+
+        private Texture2D openTexture;
+
+        public GlyphMarker(int id, string name, Texture2D texture, int movementPoints, bool open, Texture2D openTexture)
+            : base(id, name, texture, movementPoints)
+        {
+            Contract.Requires(name != null);
+            Contract.Requires(name.Length &gt; 0);
+            Contract.Requires(movementPoints &gt;= 0);
+
+            this.Open = open;
+            if (open) this.Texture = openTexture;
+            this.openTexture = openTexture;
+        }
+
+        public override void PickUp(Hero hero)
+        {
+            if (Open) return;
+            Player.Player.Instance.HeroParty.AddConquestTokens(3);
+            Open = !Open;
+            Texture = openTexture;
+        }
+    }
+}
+</pre></code><script type="text/javascript">
+			applyranges('src86', RANGES_86)
+		</script>
+	</body>
+</html>

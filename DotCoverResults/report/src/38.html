@@ -1,0 +1,54 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_38 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src38" class="dotCoverSource"><pre>namespace Descent.Model.Player.OverlordStuff
+{
+    /// &lt;summary&gt;
+    /// A type of overlord card that lets the overlord play one time abilities
+    /// &lt;/summary&gt;
+    /// &lt;author&gt;
+    /// Jonas Breindahl (jobre@itu.dk)
+    /// &lt;/author&gt;
+    public class EventCard : OverlordCard
+    {
+        /// &lt;summary&gt;
+        /// Initializes a new instance of the &lt;see cref=&quot;EventCard&quot;/&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;id&quot;&gt;
+        /// The id of the card
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;name&quot;&gt;
+        /// The name of the card
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;description&quot;&gt;
+        /// The description of the card
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;playPrice&quot;&gt;
+        /// The play price to play the card
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;sellPrice&quot;&gt;
+        /// The sell price of the card
+        /// &lt;/param&gt;
+        public EventCard(int id, string name, string description, int playPrice, int sellPrice)
+            : base(id, name, description, playPrice, sellPrice, OverlordCardType.Event)
+        {
+            
+        }
+
+        public override void PlayCard()
+        {
+            // TODO: Play card
+        }
+    }
+}
+</pre></code><script type="text/javascript">
+			applyranges('src38', RANGES_38)
+		</script>
+	</body>
+</html>

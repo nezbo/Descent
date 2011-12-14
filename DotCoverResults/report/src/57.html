@@ -1,0 +1,70 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_57 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src57" class="dotCoverSource"><pre>
+﻿namespace Descent.Messaging.Events
+
+{
+    using System.Diagnostics.Contracts;
+
+    /// &lt;summary&gt;
+    /// The event arguments for the RolledDices event.
+    /// Example on arguments: 1,4,4,2
+    /// &lt;/summary&gt;
+    /// &lt;author&gt;
+    /// Simon Westh Henriksen
+    /// &lt;/author&gt;
+    public sealed class RolledDicesEventArgs : GameEventArgs
+    {
+        public RolledDicesEventArgs(int[] rolledSides)
+        {
+            Contract.Requires(rolledSides != null);
+            Contract.Requires(rolledSides.Length &gt; 0);
+
+            RolledSides = rolledSides;
+        }
+
+        public RolledDicesEventArgs(string[] stringArgs)
+        {
+            Contract.Requires(stringArgs != null);
+            Contract.Requires(stringArgs.Length &gt;= 1);
+            
+            Contract.Requires(Contract.ForAll(stringArgs, s =&gt; EventContractHelper.TryParseInt(s)));
+
+            PopulateWithArgs(stringArgs);
+        }
+
+        public int[] RolledSides { get; set; }
+
+
+        public override void PopulateWithArgs(string[] stringArgs)
+        {
+            Contract.Requires(stringArgs != null);
+            Contract.Requires(stringArgs.Length &gt;= 1);
+            
+            Contract.Requires(Contract.ForAll(stringArgs, s =&gt; EventContractHelper.TryParseInt(s)));
+
+            RolledSides = new int[stringArgs.Length];
+
+            for (int i = 0; i &lt; stringArgs.Length; i++)
+            {
+                RolledSides[i] = int.Parse(stringArgs[i]);
+            }
+        }
+
+        public override string ToString()
+        {
+            return string.Join(&quot;,&quot;, RolledSides);
+        }
+    }
+}</pre></code><script type="text/javascript">
+			applyranges('src57', RANGES_57)
+		</script>
+	</body>
+</html>

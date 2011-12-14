@@ -1,0 +1,60 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_56 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src56" class="dotCoverSource"><pre>namespace Descent.Model.Board.Marker
+{
+    using System.Diagnostics.Contracts;
+
+    using Descent.Messaging.Events;
+    using Descent.Model.Player;
+    using Descent.Model.Player.Figure;
+
+    using Microsoft.Xna.Framework.Graphics;
+
+    /// &lt;summary&gt;
+    /// A type of marker, that has money on it
+    /// &lt;/summary&gt;
+    /// &lt;author&gt;
+    /// Jonas Breindahl (jobre@itu.dk)
+    /// &lt;/author&gt;
+    public class MoneyMarker : Marker
+    {
+        public MoneyMarker(int id, string name, Texture2D texture, int movementPoints)
+            : base(id, name, texture, movementPoints)
+        {
+            Contract.Requires(name != null);
+            Contract.Requires(name.Length &gt; 0);
+            Contract.Requires(movementPoints &gt;= 0);
+        }
+
+        /// &lt;summary&gt;
+        /// Gives all heroes 100 coins
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;hero&quot;&gt;
+        /// The hero standing on the marker
+        /// &lt;/param&gt;
+        public override void PickUp(Hero hero)
+        {
+            foreach (Hero h in Player.Instance.HeroParty.AllHeroes)
+            {
+                h.Coins += 100;
+            }
+
+            if (Player.Instance.IsServer)
+            {
+                Player.Instance.EventManager.QueueEvent(EventType.ChatMessage, new ChatMessageEventArgs(&quot;All heroes received 100 coins.&quot;));
+            }
+        }
+    }
+}
+</pre></code><script type="text/javascript">
+			applyranges('src56', RANGES_56)
+		</script>
+	</body>
+</html>

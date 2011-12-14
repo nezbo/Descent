@@ -1,0 +1,155 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_33 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src33" class="dotCoverSource"><pre>
+namespace Descent.Model.Player.Figure.HeroStuff
+{
+    using System.Diagnostics.Contracts;
+
+    /// &lt;summary&gt;
+    /// A treasure, that can be in a chest, either a 
+    /// piece of equipment or a treasure cache
+    /// &lt;/summary&gt;
+    /// &lt;author&gt;
+    /// Jonas Breindahl (jobre@itu.dk)
+    /// &lt;/author&gt;
+    public class Treasure
+    {
+        #region Fields
+
+        private int id;
+
+        private string name;
+
+        private EquipmentRarity rarity;
+
+        private Equipment equipment;
+
+        private int coins;
+
+        #endregion
+
+        #region Properties
+
+        /// &lt;summary&gt;
+        /// Gets the unique ID of the treasure
+        /// &lt;/summary&gt;
+        public int Id
+        {
+            get
+            {
+                return id;
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the name of the treasure
+        /// &lt;/summary&gt;
+        public string Name
+        {
+            get
+            {
+                return name;
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the rarity of the treasure
+        /// &lt;/summary&gt;
+        public EquipmentRarity Rarity
+        {
+            get
+            {
+                return rarity;
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the equipment of the treasure
+        /// This is none, if there is no equipment
+        /// &lt;/summary&gt;
+        public Equipment Equipment
+        {
+            get
+            {
+                return equipment;
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the amount of coins in the treasure
+        /// &lt;/summary&gt;
+        public int Coins
+        {
+            get
+            {
+                return coins;
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets a value indicating whether the 
+        /// treasure is a treasure cache or an equipment.
+        /// &lt;/summary&gt;
+        public bool IsTreasureCache
+        {
+            get
+            {
+                return Name.Equals(&quot;Treasure Cache&quot;);
+            }
+        }
+
+        #endregion
+
+        #region Initialization
+
+        /// &lt;summary&gt;
+        /// Initializes a new instance of the &lt;see cref=&quot;Treasure&quot;/&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;id&quot;&gt;
+        /// The id of the treasure
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;name&quot;&gt;
+        /// The name of the treasure
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;rarity&quot;&gt;
+        /// The rarity of the treasure
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;equipment&quot;&gt;
+        /// The equipment equipment in the treasure
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;coins&quot;&gt;
+        /// The amount of coins in the treasure
+        /// &lt;/param&gt;
+        public Treasure(int id, string name, EquipmentRarity rarity, Equipment equipment, int coins)
+        {
+            this.id = id;
+            this.name = name;
+            this.rarity = rarity;
+            this.equipment = equipment;
+            this.coins = coins;
+        }
+
+        #endregion
+
+        /// &lt;summary&gt;
+        /// Checks whether an equipment is always legal
+        /// &lt;/summary&gt;
+        [ContractInvariantMethod]
+        private void ObjectInvariant()
+        {
+            Contract.Invariant(Coins &gt;= 0);
+        }
+    }
+}
+</pre></code><script type="text/javascript">
+			applyranges('src33', RANGES_33)
+		</script>
+	</body>
+</html>

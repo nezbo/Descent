@@ -1,0 +1,71 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_5 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src5" class="dotCoverSource"><pre>
+namespace Descent.Messaging.Events
+{
+    using System;
+    using System.Diagnostics.Contracts;
+
+    /// &lt;summary&gt;
+    /// The standard event arguments class. Has sender id, event id, event type and a bool indicating whether the message needs a response.
+    /// &lt;/summary&gt;
+    /// &lt;author&gt;
+    /// Simon Westh Henriksen
+    /// &lt;/author&gt;
+    public class GameEventArgs : EventArgs
+    {
+        public GameEventArgs()
+        {  
+        }
+
+        /// &lt;summary&gt;
+        /// Initializes a new instance of the &lt;see cref=&quot;GameEventArgs&quot;/&gt; class. 
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;senderID&quot;&gt;ID of the sender. See &lt;see cref=&quot;Descent.Messaging.Connection&quot;/&gt;&lt;/param&gt;
+        /// &lt;param name=&quot;eventID&quot;&gt;ID of the event (MD5 hash).&lt;/param&gt;
+        /// &lt;param name=&quot;eventType&quot;&gt;The &lt;see cref=&quot;EventType&quot;/&gt;.&lt;/param&gt;
+        /// &lt;param name=&quot;needResponse&quot;&gt;Does this event need a response from the other players?&lt;/param&gt;
+        public GameEventArgs(int senderID, string eventID, EventType eventType, bool needResponse)
+        {
+            Contract.Requires(senderID &gt;= 1 &amp;&amp; senderID &lt;= 5);
+            Contract.Requires(eventID != null);
+            SenderId = senderID;
+            EventId = eventID;
+            EventType = eventType;
+            NeedResponse = needResponse;
+        }
+
+        public int SenderId { get; set; }
+
+        public string EventId { get; set; }
+
+        public EventType EventType { get; set; }
+
+        public bool NeedResponse { get; set; }
+
+        public virtual void PopulateWithArgs(string[] stringArgs)
+        {   
+        }
+        
+        /// &lt;summary&gt;
+        /// This should return the special message arguments, seperated by a &quot;,&quot; in the right order.
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt;Event arguments as the formated comma-seperated string.&lt;/returns&gt;
+        public override string ToString()
+        {
+            return string.Empty;
+        }
+    }
+}
+</pre></code><script type="text/javascript">
+			applyranges('src5', RANGES_5)
+		</script>
+	</body>
+</html>

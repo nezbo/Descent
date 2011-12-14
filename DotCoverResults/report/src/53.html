@@ -1,0 +1,137 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_53 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src53" class="dotCoverSource"><pre>using System.Diagnostics.Contracts;
+
+namespace Descent.GUI.SubElements
+{
+    using System.Collections.Generic;
+    using Descent.Messaging.Events;
+    using Descent.Model;
+    using Descent.Model.Player;
+    using Microsoft.Xna.Framework;
+    using Microsoft.Xna.Framework.Graphics;
+    using Microsoft.Xna.Framework.Input;
+
+    /// &lt;summary&gt;
+    /// The chat displays chat messages and has an input element as a child that is used to write
+    /// chatmessages to the chat.
+    /// &lt;/summary&gt;
+    /// &lt;author&gt;
+    /// Emil Juul Jacobsen
+    /// &lt;/author&gt;
+    public class ChatElement : GUIElement
+    {
+        private LinkedList&lt;string&gt; messages;
+
+        /// &lt;summary&gt;
+        /// Creates a new Chat for the given Game.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;game&quot;&gt;The current Game object.&lt;/param&gt;
+        public ChatElement(Game game)
+            : base(game, &quot;chat&quot;, (int)(game.GraphicsDevice.Viewport.Width * (3 / 4.0)), (Player.Instance.NumberOfPlayers - 1) * 100, game.GraphicsDevice.Viewport.Width / 4, game.GraphicsDevice.Viewport.Height - (Player.Instance.NumberOfPlayers - 1) * 100)
+        {
+            InputElement input = new InputElement(game, &quot;chatInput&quot;, Bound.X + 10, Bound.Y + Bound.Height - 40, Bound.Width - 18, 30);
+            AddChild(input);
+
+            messages = new LinkedList&lt;string&gt;();
+
+            AddDrawable(this.Name, new Image(game.Content.Load&lt;Texture2D&gt;(&quot;chatbg&quot;)),
+                        new Rectangle(Bound.X, Bound.Y + Bound.Height - 50, Bound.Width, 50));
+
+            // external events
+            manager.ChatMessageEvent += new ChatMessageHandler(GetMessage);
+            manager.GiveEquipmentEvent += new GiveEquipmentHandler(GiveEquipment);
+
+            this.SetDrawBackground(true);
+            this.SetBackground(&quot;chatbg&quot;);
+        }
+
+        private void SendMessage(string text)
+        {
+
+#if DEBUG
+            // Allow for sending events directly through the chat if we're in debug.
+            if (text.IndexOf(&quot;evt: &quot;) == 0)
+            {
+                manager.QueueStringEvent(text.Substring(5));
+                return;
+            }
+#endif
+
+            string message = Player.Instance.Nickname + &quot;: &quot; + text;
+            manager.QueueEvent(EventType.ChatMessage, new ChatMessageEventArgs(message));
+        }
+
+        private void FormatAndAdd(string text)
+        {
+            string[] lines = WordWrap(text, new Vector2(10, 0)).Split('\n');
+            foreach (string s in lines) messages.AddFirst(s);
+        }
+
+        public override void HandleKeyPress(Keys key)
+        {
+            base.HandleKeyPress(key);
+
+            foreach (GUIElement e in children)
+            {
+                if (e.Name == &quot;chatInput&quot; &amp;&amp; e.HasFocus() &amp;&amp; key == Keys.Enter &amp;&amp; InputElement.GetInputFrom(&quot;chatInput&quot;).Length &gt; 0)
+                {
+                    SendMessage(InputElement.GetInputFrom(&quot;chatInput&quot;));
+                    InputElement.SetInput(&quot;chatInput&quot;, &quot;&quot;);
+                }
+            }
+        }
+
+        public override void Draw(SpriteBatch draw)
+        {
+            base.Draw(draw);
+
+            int textHeight = (int)GUI.Font.MeasureString(&quot;A&quot;).Y;
+            int yPos = Bound.Y + Bound.Height - 80;
+
+            LinkedListNode&lt;string&gt; currentNode = messages.First;
+            while (yPos &gt; Bound.Y &amp;&amp; currentNode != null)
+            {
+                draw.DrawString(GUI.Font, currentNode.Value, new Vector2(10 + Bound.X, yPos), Color.Black);
+                currentNode = currentNode.Next;
+                yPos -= textHeight;
+            }
+        }
+
+        // events from outside to chat
+        private void GetMessage(object sender, ChatMessageEventArgs eventArgs)
+        {
+            Contract.Requires(eventArgs != null);
+            Contract.Requires(eventArgs.ToString().Length &gt; 0);
+
+            FormatAndAdd(eventArgs.ToString());
+        }
+
+        private void GiveEquipment(object sender, GiveEquipmentEventArgs eventArgs)
+        {
+            string playerName = Player.Instance.GetPlayerNick(eventArgs.PlayerId);
+            string equipmentName = FullModel.GetEquipment(eventArgs.EquipmentId).Name;
+
+            if (eventArgs.Free)
+            {
+                FormatAndAdd(playerName + &quot; received &quot; + equipmentName + &quot;.&quot;);
+            }
+            else
+            {
+                FormatAndAdd(playerName + &quot; bought &quot; + equipmentName + &quot;.&quot;);
+            }
+        }
+    }
+}
+</pre></code><script type="text/javascript">
+			applyranges('src53', RANGES_53)
+		</script>
+	</body>
+</html>
