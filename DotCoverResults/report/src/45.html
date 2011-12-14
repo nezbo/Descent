@@ -1,0 +1,134 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_45 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src45" class="dotCoverSource"><pre>namespace Descent.GUI.SubElements
+{
+    using System;
+    using System.Collections.Generic;
+    using Descent.Messaging.Events;
+    using Descent.Model.Player.Figure.HeroStuff;
+    using Microsoft.Xna.Framework;
+
+    /// &lt;summary&gt;
+    /// A panel of EquipmentElements that expands and hides by user clicks.
+    /// The panel links to a range of slots in an inventory and updates itself
+    /// whenever the equipment at the slots change.
+    /// &lt;/summary&gt;
+    /// &lt;author&gt;
+    /// Emil Juul Jacobsen
+    /// &lt;/author&gt;
+    class EquipmentPanel : GUIElement
+    {
+        private bool expanded;
+
+        private Dictionary&lt;int, EquipmentElement&gt; equipments;
+        private int[] slots;
+        private Inventory inventory;
+
+        /// &lt;summary&gt;
+        /// Creates an EquipmentPanel that can be expanded and hidden by being
+        /// clicked on by the user.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;game&quot;&gt;The current Game object.&lt;/param&gt;
+        /// &lt;param name=&quot;title&quot;&gt;The title to display at the top.&lt;/param&gt;
+        /// &lt;param name=&quot;x&quot;&gt;The top-left x-coordinate of the EquipmentPanel when hidden.&lt;/param&gt;
+        /// &lt;param name=&quot;y&quot;&gt;The top-left y-coordinate of the EquipmentPanel when hidden.&lt;/param&gt;
+        /// &lt;param name=&quot;inv&quot;&gt;The inventory to show equipment from.&lt;/param&gt;
+        /// &lt;param name=&quot;slots&quot;&gt;The indexes (slots) of the inventory to visualize.&lt;/param&gt;
+        public EquipmentPanel(Game game, string title, int x, int y, Inventory inv, int[] slots)
+            : base(game, &quot;equipment panel&quot;, x, y, 1, 1)
+        {
+            expanded = false;
+            SetBackground(&quot;boxbg&quot;);
+
+            equipments = new Dictionary&lt;int, EquipmentElement&gt;();
+            inventory = inv;
+            this.slots = slots;
+
+            UpdateInventory();
+
+            Bound = new Rectangle(Bound.X, Bound.Y, equipments[slots[0]].Bound.Width + 20, 50 + slots.Length * equipments[slots[0]].Bound.Height + (slots.Length - 1) * 10);
+
+            AddText(this.Name, title, new Vector2(5, 10));
+        }
+
+        private string GetSlotType(int index)
+        {
+            string name = &quot;&quot;;
+            foreach (EquipmentSlot e in Enum.GetValues(typeof(EquipmentSlot)))
+            {
+                int value = (int)e;
+                if (value &gt; index)
+                {
+                    break;
+                }
+                else
+                {
+                    name = e.ToString();
+                }
+            }
+            return name;
+        }
+
+        private void UpdateInventory()
+        {
+            bool changed = false;
+            int height = 0;
+            int space = 10;
+            for (int i = 0; i &lt; slots.Length; i++)
+            {
+                if (!equipments.ContainsKey(slots[i]) || equipments[slots[i]].Equipment != inventory[slots[i]])
+                {
+                    if (i != 0 &amp;&amp; height == 0)
+                    {
+                        height = equipments[slots[0]].Bound.Height;
+                    }
+                    EquipmentElement e = GUIElementFactory.CreateEquipmentElement(Game, Bound.X + 10,
+                                                              Bound.Y + 50 + i * height + i * space,
+                                                              GetSlotType(slots[i]), inventory[slots[i]], slots[i]);
+
+                    e.SetClickAction(&quot;item&quot;, (n, g) =&gt;
+                    {
+                        if (g is EquipmentElement)
+                        {
+                            int id = ((EquipmentElement)g).Id;
+                            n.EventManager.QueueEvent(EventType.InventoryFieldMarked, new InventoryFieldEventArgs(id));
+                        }
+                    });
+
+                    equipments[slots[i]] = e;
+                    changed = true;
+                }
+            }
+
+            if (changed)
+            {
+                this.ClearChildren();
+                foreach (EquipmentElement e in equipments.Values) this.AddChild(e);
+            }
+        }
+
+        protected override void ActOnDirectClick(int x, int y)
+        {
+            Move(0, expanded ? Bound.Height - 50 : -(Bound.Height - 50));
+            expanded = !expanded;
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            UpdateInventory();
+            base.Update(gameTime);
+        }
+    }
+}
+</pre></code><script type="text/javascript">
+			applyranges('src45', RANGES_45)
+		</script>
+	</body>
+</html>

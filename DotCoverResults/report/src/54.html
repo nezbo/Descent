@@ -1,0 +1,200 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_54 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src54" class="dotCoverSource"><pre>using Descent.GUI;
+using Descent.Model;
+using Descent.Model.Player;
+using Descent.State;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+
+namespace Descent
+{
+    using Descent.Messaging.Events;
+
+    /// &lt;summary&gt;
+    /// This is the main type for your game
+    /// &lt;/summary&gt;
+    public class Game1 : Microsoft.Xna.Framework.Game
+    {
+        GraphicsDeviceManager graphics;
+        SpriteBatch spriteBatch;
+        GUI.GUI gui;
+
+        private int numOfFrames = 0;
+        private double FPS = 0;
+
+        public Game1()
+        {
+            graphics = new GraphicsDeviceManager(this);
+            Content.RootDirectory = &quot;Content&quot;;
+
+            graphics.PreferredBackBufferWidth = 1280;
+            graphics.PreferredBackBufferHeight = 720;
+        }
+
+        /// &lt;summary&gt;
+        /// Allows the game to perform any initialization it needs to before starting to run.
+        /// This is where it can query for any required services and load any non-graphic
+        /// related content.  Calling base.Initialize will enumerate through any components
+        /// and initialize them as well.
+        /// &lt;/summary&gt;
+        protected override void Initialize()
+        {
+            this.IsMouseVisible = true;
+            InputElement.SetInput(&quot;nameInput&quot;, &quot;Player&quot;);
+            base.Initialize();
+        }
+
+        /// &lt;summary&gt;
+        /// LoadContent will be called once per game and is the place to load
+        /// all of your content.
+        /// &lt;/summary&gt;
+        protected override void LoadContent()
+        {
+            // Create a new SpriteBatch, which can be used to draw textures.
+            spriteBatch = new SpriteBatch(GraphicsDevice);
+            GUI.GUI.Font = Content.Load&lt;SpriteFont&gt;(&quot;font&quot;);
+            FullModel.LoadContent(this);
+
+            // creation of elements
+            this.gui = new GUI.GUI(this);
+            GUIElement root = GUIElementFactory.CreateStateElement(this, Descent.State.State.ActivateMonsters, Descent.Model.Player.Role.Overlord, null);
+            GUIElement createGame = new GUIElement(this, &quot;create&quot;, (GraphicsDevice.Viewport.Width - 300) / 2, 400, 300, 100);
+            GUIElement joinGame = new GUIElement(this, &quot;join&quot;, (GraphicsDevice.Viewport.Width - 300) / 2, 550, 300, 100);
+            GUIElement changeName = new GUIElement(this, &quot;changeName&quot;, (GraphicsDevice.Viewport.Width - 200) / 2, 250, 200, 100);
+            InputElement nameInput = new InputElement(this, &quot;nameInput&quot;, changeName.Bound.X + 10, changeName.Bound.Y + (changeName.Bound.Height - 30) / 2, changeName.Bound.Width - 20, 30);
+            InputElement connectInput = new InputElement(this, &quot;connectInput&quot;, joinGame.Bound.X + 10, joinGame.Bound.Y + (joinGame.Bound.Height - 30) / 2, 150, 30);
+            GUIElement buttonCreateGame = new GUIElement(this, &quot;doneCreate&quot;, createGame.Bound.X + (createGame.Bound.Width - 100) / 2, createGame.Bound.Y + (createGame.Bound.Height - 30) / 2, 120, 30);
+            GUIElement buttonJoinGame = new GUIElement(this, &quot;doneJoin&quot;, joinGame.Bound.X + 200, joinGame.Bound.Y + (joinGame.Bound.Height - 30) / 2, 80, 30);
+
+            // assembling tree
+            root.AddChild(createGame);
+            root.AddChild(joinGame);
+            root.AddChild(changeName);
+            changeName.AddChild(nameInput);
+            createGame.AddChild(buttonCreateGame);
+            joinGame.AddChild(connectInput);
+            joinGame.AddChild(buttonJoinGame);
+
+            // adding visual to tree
+            changeName.SetBackground(&quot;boxbg&quot;);
+            joinGame.SetBackground(&quot;boxbg&quot;);
+            createGame.SetBackground(&quot;boxbg&quot;);
+            nameInput.SetBackground(&quot;boxbg&quot;);
+            connectInput.SetBackground(&quot;boxbg&quot;);
+            buttonCreateGame.SetBackground(&quot;boxbg&quot;);
+            buttonJoinGame.SetBackground(&quot;boxbg&quot;);
+            Image logo = new Image(Content.Load&lt;Texture2D&gt;(&quot;logo-descent&quot;));
+            root.AddDrawable(root.Name, logo, new Vector2((root.Bound.Width - logo.Texture.Bounds.Width) / 2.0f, 50));
+
+            // adding logic to tree
+            root.SetDrawBackground(false);
+
+            root.AddText(&quot;changeName&quot;, &quot;Name:&quot;, new Vector2(5, 0));
+            root.AddText(&quot;doneCreate&quot;, &quot;New Game!&quot;, new Vector2(5, 0));
+            root.AddText(&quot;doneJoin&quot;, &quot;Join!&quot;, new Vector2(25, 0));
+            root.SetClickAction(&quot;doneCreate&quot;, (n, g) =&gt;
+            {
+                // Start the game. TODO: Try/catch error handling.
+                n.StartGame(1337);
+
+                // Set the nickname. Since this is the server, it will be set on id 1 always.
+                if (InputElement.GetInputFrom(&quot;nameInput&quot;).Length &gt; 0)
+                {
+                    n.Nickname = InputElement.GetInputFrom(&quot;nameInput&quot;);
+                }
+
+                // Create the state manager.
+                n.StateManager = new StateManager(gui);
+            });
+
+            root.SetClickAction(&quot;doneJoin&quot;, (n, g) =&gt;
+            {
+                g.SetClickAction(g.Name, null);
+                n.JoinGame(InputElement.GetInputFrom(&quot;connectInput&quot;), 1337);
+
+                Player.Instance.EventManager.AcceptPlayerEvent += new AcceptPlayerHandler((sender, eventArgs) =&gt;
+                {
+                    if (eventArgs.PlayerId == Player.Instance.Id)
+                    {
+                        if (InputElement.GetInputFrom(&quot;nameInput&quot;).Length &gt; 0)
+                        {
+                            n.Nickname = InputElement.GetInputFrom(&quot;nameInput&quot;);
+                        }
+
+                        n.StateManager = new StateManager(gui);
+
+                        Player.Instance.EventManager.QueueEvent(EventType.PlayerJoined, new PlayerJoinedEventArgs(Player.Instance.Id, Player.Instance.Nickname));
+                    }
+                });
+            });
+
+            Player.Instance.EventManager.PlayerJoinedEvent += new PlayerJoinedHandler((sender, eventArgs) =&gt;
+            {
+                // If the PlayerJoined event is about our local player(the id will be set just before this, so 
+
+            });
+
+            // placing the root in the gui
+            gui.ChangeStateGUI(root);
+
+        }
+
+        /// &lt;summary&gt;
+        /// Allows the game to run logic such as updating the world,
+        /// checking for collisions, gathering input, and playing audio.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;gameTime&quot;&gt;Provides a snapshot of timing values.&lt;/param&gt;
+        protected override void Update(GameTime gameTime)
+        {
+            //fullscreen
+            if (Keyboard.GetState().IsKeyDown(Keys.F11)) graphics.ToggleFullScreen();
+
+            // FPS
+            if (gameTime.TotalGameTime.Milliseconds == 0)
+            {
+                FPS = numOfFrames;
+                numOfFrames = 0;
+            }
+
+            // Allows the game to exit
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
+                this.Exit();
+
+            gui.Update(gameTime);
+            Player.Instance.EventManager.ProcessEventQueue();
+
+            base.Update(gameTime);
+        }
+
+        /// &lt;summary&gt;
+        /// This is called when the game should draw itself.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;gameTime&quot;&gt;Provides a snapshot of timing values.&lt;/param&gt;
+        protected override void Draw(GameTime gameTime)
+        {
+            GraphicsDevice.Clear(Color.Black);
+
+            gui.Draw(spriteBatch);
+
+            numOfFrames++;
+            string header = &quot;Descent - FPS &quot; + FPS;
+            Window.Title = header;
+
+            base.Draw(gameTime);
+        }
+    }
+}
+</pre></code><script type="text/javascript">
+			applyranges('src54', RANGES_54)
+		</script>
+	</body>
+</html>

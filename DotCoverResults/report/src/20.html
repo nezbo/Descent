@@ -1,0 +1,81 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_20 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src20" class="dotCoverSource"><pre>
+namespace Descent.Messaging.Events
+{
+    using System.Diagnostics.Contracts;
+    using System.Linq;
+    using System.Text;
+
+    /// &lt;summary&gt;
+    /// The event arguments for the GiveOverlordCards event.
+    /// &lt;/summary&gt;
+    /// &lt;author&gt;
+    /// Simon Westh Henriksen
+    /// &lt;/author&gt;
+    public sealed class GiveOverlordCardsEventArgs : GameEventArgs
+    {
+        public GiveOverlordCardsEventArgs(int[] overlordCardIds)
+        {
+            Contract.Requires(overlordCardIds != null);
+            Contract.Requires(overlordCardIds.Length &gt; 0);
+            OverlordCardIds = overlordCardIds;
+        }
+
+        public GiveOverlordCardsEventArgs(string[] stringArgs)
+        {
+            Contract.Requires(stringArgs != null);
+            Contract.Requires(stringArgs.Length &gt;= 2);
+            
+            Contract.Requires(Contract.ForAll(stringArgs, s =&gt; EventContractHelper.TryParseInt(s) &amp;&amp; int.Parse(s) &gt; 0));
+            Contract.Requires(stringArgs.Skip(1).ToArray().Length == int.Parse(stringArgs[0]));
+            PopulateWithArgs(stringArgs);
+        }
+
+        public int[] OverlordCardIds { get; set; }
+
+        public override void PopulateWithArgs(string[] stringArgs)
+        {
+            Contract.Requires(stringArgs != null);
+            Contract.Requires(stringArgs.Length &gt;= 2);
+            
+            Contract.Requires(Contract.ForAll(stringArgs, s =&gt; EventContractHelper.TryParseInt(s) &amp;&amp; int.Parse(s) &gt; 0));
+            Contract.Requires(stringArgs.Skip(1).ToArray().Length == int.Parse(stringArgs[0]));
+
+            int numberOfOverlordCards = int.Parse(stringArgs[0]);
+
+            OverlordCardIds = new int[numberOfOverlordCards];
+            string[] cardStrings = stringArgs.Skip(1).ToArray();
+
+            for (int i = 0; i &lt; cardStrings.Length; i++)
+            {
+                OverlordCardIds[i] = int.Parse(cardStrings[i]);
+            }
+        }
+
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append(OverlordCardIds.Length);
+            foreach (int overlordCardId in OverlordCardIds)
+            {
+                sb.Append(&quot;,&quot;);
+                sb.Append(overlordCardId);
+            }
+
+            return sb.ToString();
+        }
+    }
+}
+</pre></code><script type="text/javascript">
+			applyranges('src20', RANGES_20)
+		</script>
+	</body>
+</html>

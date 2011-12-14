@@ -1,0 +1,354 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_63 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src63" class="dotCoverSource"><pre>namespace Descent.Model.Player.Figure
+{
+    using System.Collections.Generic;
+    using System.Diagnostics.Contracts;
+    using System.Linq;
+
+    using Descent.Model.Player.Figure.HeroStuff;
+
+    using Microsoft.Xna.Framework;
+    using Microsoft.Xna.Framework.Graphics;
+
+    /// &lt;summary&gt;
+    /// A hero, made from a hero-sheet
+    /// &lt;/summary&gt;
+    /// &lt;author&gt;
+    /// Jonas Breindahl (jobre@itu.dk) &amp; Martin Marcher
+    /// &lt;/author&gt;
+    public class Hero : Figure
+    {
+        #region Events
+
+        /// &lt;summary&gt;
+        /// This event contributes to the Max Fatigue of this hero
+        /// &lt;/summary&gt;
+        public event Bonus&lt;int&gt; MaxFatigueContribution;
+
+        #endregion
+
+        #region Fields
+
+        private int cost;
+
+        private int maxFatigue;
+        private int fatigue = 0;
+
+        private Dictionary&lt;EAttackType, int&gt; blackDice;
+
+        private Dictionary&lt;EAttackType, int&gt; numberOfSkills = new Dictionary&lt;EAttackType, int&gt;();
+        private Dictionary&lt;EAttackType, List&lt;Skill&gt;&gt; skills = new Dictionary&lt;EAttackType, List&lt;Skill&gt;&gt;();
+
+        private string abilityText;
+
+        private int hands;
+
+        private readonly Inventory inventory;
+
+        private Texture2D bigTexture;
+
+        #endregion
+
+        #region Properties
+
+        /// &lt;summary&gt;
+        /// Gets the max fatique, including all contributors bonus
+        /// Sets the internal value, not including any contributors
+        /// &lt;/summary&gt;
+        public int MaxFatigue
+        {
+            get
+            {
+                int total = MaxFatigueContribution == null ? 0 : MaxFatigueContribution.GetInvocationList().Cast&lt;Bonus&lt;int&gt;&gt;().Sum(bonus =&gt; bonus.Invoke());
+                return maxFatigue + total;
+            }
+
+            private set
+            {
+                maxFatigue = value;
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the fatigue of the figure
+        /// &lt;/summary&gt;
+        public int Fatigue
+        {
+            get
+            {
+                return fatigue;
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the conquest token cost of the hero
+        /// &lt;/summary&gt;
+        public int Cost
+        {
+            get { return cost; }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the number of hands the hero have to equip weapons in
+        /// &lt;/summary&gt;
+        public int Hands
+        {
+            get
+            {
+                return hands;
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets or sets the number of coins owned by the hero
+        /// &lt;/summary&gt;
+        public int Coins { get; set; }
+
+        /// &lt;summary&gt;
+        /// Gets the inventory of the hero
+        /// &lt;/summary&gt;
+        public Inventory Inventory
+        {
+            get
+            {
+                return inventory;
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the big texture, used for a heroes own gui
+        /// &lt;/summary&gt;
+        public Texture2D BigTexture
+        {
+            get
+            {
+                return bigTexture;
+            }
+        }
+
+        public override EAttackType AttackType
+        {
+            get
+            {
+                return inventory[0] == null ? EAttackType.NONE : inventory[0].AttackType;
+            }
+        }
+
+        #endregion
+
+        #region Initialization
+
+        /// &lt;summary&gt;
+        /// Initializes a new instance of the &lt;see cref=&quot;Hero&quot;/&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;id&quot;&gt;
+        /// The id of the hero
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;name&quot;&gt;
+        /// The name of the hero
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;conquest&quot;&gt;
+        /// The conquest token cost of the hero
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;health&quot;&gt;
+        /// The the starting max health of the hero
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;fatigue&quot;&gt;
+        /// The fatigue of the hero
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;armor&quot;&gt;
+        /// The natural armor of the hero
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;speed&quot;&gt;
+        /// The base speed of the hero
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;blackDice&quot;&gt;
+        /// The black dice the hero have in each type
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;numberOfSkills&quot;&gt;
+        /// The number of skills in each type
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;hands&quot;&gt;
+        /// The number of hands the hero have
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;text&quot;&gt;
+        /// The text of the hero ability
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;texture&quot;&gt;
+        /// The small texture of the hero
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;bigTexture&quot;&gt;
+        /// The big texture for a hero
+        /// &lt;/param&gt;
+        public Hero(int id, string name, int conquest, int health, int fatigue, int armor, int speed, Dictionary&lt;EAttackType, int&gt; blackDice, Dictionary&lt;EAttackType, int&gt; numberOfSkills, int hands, string text, Texture2D texture, Texture2D bigTexture)
+            : base(id, name, new Rectangle(0, 0, 1, 1))
+        {
+            this.cost = conquest;
+            this.MaxHealth = health;
+            this.MaxFatigue = fatigue;
+            this.Armor = armor;
+            this.Speed = speed;
+            this.blackDice = blackDice;
+            this.numberOfSkills = numberOfSkills;
+            this.hands = hands;
+            abilityText = text;
+            this.Texture = texture;
+            this.bigTexture = bigTexture;
+            inventory = new Inventory(this);
+
+            Coins += 300;
+            DiceContribution += this.BlackDice;
+        }
+
+        /// &lt;summary&gt;
+        /// Call when the game is about to start, so the figure gets life and fatigue
+        /// &lt;/summary&gt;
+        public override void Initialize()
+        {
+            base.Initialize();
+            fatigue = MaxFatigue;
+        }
+
+        #endregion
+
+        #region Public Methods
+
+        public int TrainingTokens(EAttackType attackType)
+        {
+            return blackDice.ContainsKey(attackType) ? blackDice[attackType] : 0;
+        }
+
+        /// &lt;summary&gt;
+        /// Adds fatigue to the hero, up to max fatigue
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;amount&quot;&gt;
+        /// The amount of fatigue to be added
+        /// &lt;/param&gt;
+        public void AddFatigue(int amount)
+        {
+            Contract.Requires(amount &gt; 0);
+            Contract.Ensures(
+                Contract.OldValue(fatigue) + amount &gt; MaxFatigue ?
+                fatigue == MaxFatigue :
+                fatigue == Contract.OldValue(fatigue) + amount);
+            fatigue = (int)MathHelper.Clamp(fatigue + amount, 0, MaxFatigue);
+        }
+
+        /// &lt;summary&gt;
+        /// Removes fatigue from the hero, down to 0
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;amount&quot;&gt;
+        /// The amount of fatigue to be removed
+        /// &lt;/param&gt;
+        public void RemoveFatigue(int amount)
+        {
+            Contract.Requires(amount &gt; 0);
+            Contract.Requires(amount &lt;= Fatigue);
+            Contract.Ensures(fatigue == 0 || (fatigue == (Contract.OldValue(fatigue) - amount)));
+            fatigue = (int)MathHelper.Clamp(fatigue - amount, 0, MaxFatigue);
+        }
+
+        /// &lt;summary&gt;
+        /// Adds a skill card to the list of skills
+        /// Add 'this' skill!
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;skill&quot;&gt;
+        /// The Skill card to be added
+        /// &lt;/param&gt;
+        public void AddSkill(Skill skill)
+        {
+            Contract.Requires(skill != null);
+            if (!skills.ContainsKey(skill.Type))
+                skills[skill.Type] = new List&lt;Skill&gt;();
+            skills[skill.Type].Add(skill);
+        }
+
+        /// &lt;summary&gt;
+        /// Removes a skill card from the list of skills
+        /// Remove 'this' skill!
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;skill&quot;&gt;
+        /// The Skill card to be removed
+        /// &lt;/param&gt;
+        public void RemoveSkill(Skill skill)
+        {
+            Contract.Requires(skill != null);
+            if (!skills.ContainsKey(skill.Type))
+                skills[skill.Type] = new List&lt;Skill&gt;();
+            skills[skill.Type].Remove(skill);
+        }
+
+        /// &lt;summary&gt;
+        /// Untaps all skills and equipment that the hero controls
+        /// &lt;/summary&gt;
+        public void UntapAll()
+        {
+            for (int i = 0; i &lt; inventory.Length; i++)
+            {
+                if (inventory[i] != null)
+                {
+                    inventory[i].UntapEquipment();
+                }
+            }
+
+            foreach (EAttackType attackType in skills.Keys)
+            {
+                foreach (Skill skill in skills[attackType])
+                {
+                    skill.Tapped = false;
+                }
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Called when a hero has ended his turn. Removes movement and attacks.
+        /// &lt;/summary&gt;
+        public void EndTurn()
+        {
+            movementLeft = 0;
+            attacksLeft = 0;
+        }
+
+        /// &lt;summary&gt;
+        /// A method that returns the number of black dice for the weapon type equipped.
+        /// This list of black dice is empty if there is now weapon equipped.
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt;&lt;/returns&gt;
+        private List&lt;Dice&gt; BlackDice()
+        {
+            List&lt;Dice&gt; dice = new List&lt;Dice&gt;();
+            if (inventory.Weapon == null) return dice;
+
+            for (int i = 0; i &lt; blackDice[inventory.Weapon.AttackType]; i++)
+            {
+                dice.Add(FullModel.GetDice(EDice.B));
+            }
+
+            return dice;
+        }
+
+        /// &lt;summary&gt;
+        /// The invariant of the Hero class
+        /// &lt;/summary&gt;
+        [ContractInvariantMethod]
+        private void ObjectInvariant()
+        {
+            Contract.Invariant(inventory != null);
+            Contract.Invariant(fatigue &gt;= 0 &amp;&amp; fatigue &lt;= MaxFatigue);
+        }
+        #endregion
+    }
+}
+</pre></code><script type="text/javascript">
+			applyranges('src63', RANGES_63)
+		</script>
+	</body>
+</html>

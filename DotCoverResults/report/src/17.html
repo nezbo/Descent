@@ -1,0 +1,107 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_17 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src17" class="dotCoverSource"><pre>
+namespace Descent.Messaging.Events
+{
+    using System.Diagnostics.Contracts;
+    using System.Linq;
+    using System.Text;
+
+    /// &lt;summary&gt;
+    /// This struct is used for representing the players in the &lt;see cref=&quot;PlayersInGameEventArgs&quot;/&gt; class.
+    /// &lt;/summary&gt;
+    public struct PlayerInGame
+    {
+        public int Id;
+
+        public string Nickname;
+
+        public PlayerInGame(int id, string nickname)
+        {
+            Id = id;
+            Nickname = nickname;
+        }
+    }
+
+    /// &lt;summary&gt;
+    /// The event arguments for the PlayersInGame event.
+    /// &lt;/summary&gt;
+    public sealed class PlayersInGameEventArgs : GameEventArgs
+    {
+        public PlayersInGameEventArgs(PlayerInGame[] playersIngame)
+        {
+            Contract.Requires(playersIngame != null);
+            Contract.Requires(playersIngame.Length &gt; 0);
+
+            NumberOfPlayers = playersIngame.Length;
+            Players = playersIngame;
+        }
+
+        public PlayersInGameEventArgs(string[] stringArgs)
+        {
+            Contract.Requires(stringArgs != null);
+            Contract.Requires(stringArgs.Length &gt;= 3);
+            
+            Contract.Requires(EventContractHelper.TryParseInt(stringArgs[0]) &amp;&amp; int.Parse(stringArgs[0]) &gt;= 1);
+            Contract.Requires(Contract.ForAll(1, stringArgs.Length, i =&gt; (i % 2 == 1) ? EventContractHelper.TryParseInt(stringArgs[i]) : true));
+
+            PopulateWithArgs(stringArgs);
+        }
+        
+
+        public int NumberOfPlayers { get; set; }
+
+        public PlayerInGame[] Players { get; set; }
+
+        public override void PopulateWithArgs(string[] stringArgs)
+        {
+            Contract.Requires(stringArgs != null);
+            Contract.Requires(stringArgs.Length &gt;= 3);
+            
+            Contract.Requires(EventContractHelper.TryParseInt(stringArgs[0]) &amp;&amp; int.Parse(stringArgs[0]) &gt;= 1);
+            Contract.Requires(Contract.ForAll(1, stringArgs.Length, i =&gt; (i % 2 == 1) ? EventContractHelper.TryParseInt(stringArgs[i]) : true));
+
+
+            NumberOfPlayers = int.Parse(stringArgs[0]);
+            Players = new PlayerInGame[NumberOfPlayers];
+
+            string[] playerStrings = stringArgs.Skip(1).ToArray();
+
+            int currPlayer = 0;
+            for (int i = 0; i &lt; playerStrings.Length; i += 2)
+            {
+                int id = int.Parse(playerStrings[i]);
+                string nick = playerStrings[i + 1];
+                Players[currPlayer] = new PlayerInGame(id, nick);
+                currPlayer++;
+            }
+        }
+
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append(NumberOfPlayers);
+            foreach (PlayerInGame playerInGame in Players)
+            {
+                sb.Append(&quot;,&quot;);
+                sb.Append(playerInGame.Id);
+                sb.Append(&quot;,&quot;);
+                sb.Append(playerInGame.Nickname);
+            }
+
+            return sb.ToString();
+        }
+    }
+}
+</pre></code><script type="text/javascript">
+			applyranges('src17', RANGES_17)
+		</script>
+	</body>
+</html>

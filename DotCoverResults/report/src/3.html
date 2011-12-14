@@ -1,0 +1,239 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_3 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src3" class="dotCoverSource"><pre>namespace Descent.Model.Player
+{
+    using Descent.Messaging.Connection;
+    using Descent.Messaging.Events;
+    using Descent.Model.Player.Figure;
+    using Descent.State;
+
+    /// &lt;summary&gt;
+    /// Describes the current role of a Player in the game. The Overlord's
+    /// role will not change throughout the game, but the Hero's will frequently
+    /// change from the ActiveHero to the InactiveHero denoting wether or not
+    /// they are allowed to do stuff in the game.
+    /// &lt;/summary&gt;
+    /// &lt;author&gt;
+    /// Emil Juul Jacobsen
+    /// &lt;/author&gt;
+    public enum Role
+    {
+        Overlord,
+        ActiveHero,
+        InactiveHero
+    }
+
+    /// &lt;summary&gt;
+    /// There are 3 different kinds of attack,
+    /// Magic, Melee and Ranged. 
+    /// An attack have to be one of these 3 types.
+    /// &lt;/summary&gt;
+    /// &lt;author&gt;
+    /// Jonas Breindahl (jobre@itu.dk)
+    /// &lt;/author&gt;
+    public enum EAttackType
+    {
+        NONE, MAGIC, MELEE, RANGED
+    }
+
+    /// &lt;summary&gt;
+    /// The actual player, playing the game
+    /// &lt;/summary&gt;
+    /// &lt;author&gt;
+    /// Jonas Breindahl (jobre@itu.dk)
+    /// &lt;/author&gt;
+    public class Player
+    {
+        /// &lt;summary&gt;
+        /// The static field, holding the player instance
+        /// &lt;/summary&gt;
+        private static Player player;
+
+        private StateManager stateManager;
+
+        private EventManager eventManager;
+
+        private string[] playerNicks;
+
+        /// &lt;summary&gt;
+        /// Prevents a default instance of the &lt;see cref=&quot;Player&quot;/&gt; class from being created.
+        /// &lt;/summary&gt;
+        private Player()
+        {
+            eventManager = new EventManager();
+            playerNicks = new string[5];
+            Overlord = new Overlord();
+            HeroParty = new HeroParty();
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the Player singleton instance
+        /// &lt;/summary&gt;
+        public static Player Instance
+        {
+            get
+            {
+                return player ?? (player = new Player());
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets or sets the Players nickname.
+        /// &lt;/summary&gt;
+        public string Nickname
+        {
+            get
+            {
+                return GetPlayerNick(Player.Instance.Id);
+            }
+
+            set
+            {
+                SetPlayerNick(Player.Instance.Id, value);
+            }
+        }
+
+        public bool IsOverlord
+        {
+            get { return (Id == OverlordId); }
+        }
+
+        public int OverlordId { get; set; }
+
+        public Overlord Overlord { get; private set; }
+
+        /// &lt;summary&gt;
+        /// Gets the Hero Party.
+        /// &lt;/summary&gt;
+        public HeroParty HeroParty { get; private set; }
+
+        /// &lt;summary&gt;
+        /// Gets or sets the Hero of the Player - if the player is not overlord.
+        /// &lt;/summary&gt;
+        public Hero Hero
+        {
+            get
+            {
+                return HeroParty.Heroes[Player.Instance.Id];
+            }
+            
+            set
+            {
+                HeroParty.Heroes[Player.Instance.Id] = value;
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the unique ID.
+        /// What is your unique player ID?
+        /// &lt;/summary&gt;
+        public int Id
+        {
+            get
+            {
+                return Connection.Id;
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Are you client or server?
+        /// &lt;/summary&gt;
+        public bool IsServer{ get; internal set; }
+
+        public void SetPlayerNick(int id, string nickname)
+        {
+            playerNicks[id - 1] = nickname;
+        }
+
+        public string GetPlayerNick(int id)
+        {
+            return playerNicks[id - 1];
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the number of other players in the game.
+        /// &lt;/summary&gt;
+        public int NumberOfPlayers
+        {
+            get
+            {
+                int c = 0;
+                foreach (string playerNick in playerNicks)
+                {
+                    if (playerNick != null) c++;
+                }
+                return c;
+            }
+        }
+
+
+        /// &lt;summary&gt;
+        /// Gets or sets the StateManager.
+        /// &lt;/summary&gt;
+        public StateManager StateManager
+        {
+            get
+            {
+                return stateManager;
+            }
+
+            set
+            {
+                if (stateManager == null)
+                {
+                    stateManager = value;
+                }
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets EventManager.
+        /// &lt;/summary&gt;
+        public EventManager EventManager
+        {
+            get
+            {
+                return eventManager;
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets or sets the Connection.
+        /// &lt;/summary&gt;
+        public Connection Connection { get; set; }
+
+        /// &lt;summary&gt;
+        /// Start/host a game on the following port.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;port&quot;&gt;Port to listen on.&lt;/param&gt;
+        public void StartGame(int port)
+        {
+            IsServer = true;
+            Connection = new ServerConnection(port);
+            Connection.Start();
+        }
+
+        /// &lt;summary&gt;
+        /// Join an already started game.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;ip&quot;&gt;Ip of host.&lt;/param&gt;
+        /// &lt;param name=&quot;port&quot;&gt;Port of host.&lt;/param&gt;
+        public void JoinGame(string ip, int port)
+        {
+            IsServer = false;
+            Connection = new ClientConnection(ip, port);
+            Connection.Start();
+        }
+    }
+}</pre></code><script type="text/javascript">
+			applyranges('src3', RANGES_3)
+		</script>
+	</body>
+</html>

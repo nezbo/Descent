@@ -1,0 +1,558 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_39 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src39" class="dotCoverSource"><pre>
+namespace Descent.Model.Player.Figure.HeroStuff
+{
+    using System.Diagnostics.Contracts;
+    using System.Linq;
+
+    /// &lt;summary&gt;
+    /// An enum of all equipment types,
+    /// which can be cast to int, for the start
+    /// position of the slot in the inventory.
+    /// &lt;/summary&gt;
+    public enum EquipmentSlot
+    {
+        /// &lt;summary&gt;
+        /// There is only one weapon slot
+        /// &lt;/summary&gt;
+        Weapon = 0,
+
+        /// &lt;summary&gt;
+        /// There is only one shield slot
+        /// &lt;/summary&gt;
+        Shield = 1,
+
+        /// &lt;summary&gt;
+        /// There is only one armor slot
+        /// &lt;/summary&gt;
+        Armor = 2,
+
+        /// &lt;summary&gt;
+        /// There are two other item slots
+        /// &lt;/summary&gt;
+        Other = 3,
+
+        /// &lt;summary&gt;
+        /// There are three potion slots
+        /// &lt;/summary&gt;
+        Potion = 5,
+
+        /// &lt;summary&gt;
+        /// There are three backpack slots
+        /// &lt;/summary&gt;
+        Backpack = 8
+    }
+
+    /// &lt;summary&gt;
+    /// The inventory of a hero
+    /// &lt;/summary&gt;
+    /// &lt;author&gt;
+    /// Jonas Breindahl (jobre@itu.dk) &amp; Martin MArcher
+    /// &lt;/author&gt;
+    public class Inventory
+    {
+        #region Fields
+
+        public const int MaxPotions = 3;
+        public const int MaxOtherItems = 2;
+        public const int MaxInBackpack = 3;
+
+        private readonly Equipment[] inventory = new Equipment[11];
+        private readonly Hero hero;
+
+        #endregion
+
+        #region Indexer
+
+        /// &lt;summary&gt;
+        /// Gets an equipment at a 
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;slot&quot;&gt;
+        /// The slot to access in the inventory
+        /// &lt;/param&gt;
+        /// &lt;returns&gt;
+        /// The equipment at that slot
+        /// &lt;/returns&gt;
+        public Equipment this[int slot]
+        {
+            get
+            {
+                Contract.Requires(slot &gt;= 0 &amp;&amp; slot &lt;= 10);
+
+                return inventory[slot];
+            }
+
+            set
+            {
+                Contract.Requires(this.CanEquipAtIndex(slot, value));
+                Contract.Ensures(this[slot] == value);
+
+                if (this[slot] != null &amp;&amp; slot &lt; 5)
+                    this[slot].UnequipFromHero(hero);
+                if (value != null &amp;&amp; slot &lt; 5)
+                    value.EquipToHero(hero);
+
+                inventory[slot] = value;
+            }
+        }
+
+        #endregion
+
+        #region Properties
+
+        /// &lt;summary&gt;
+        /// Gets the size of the inventory,
+        /// This is always 13
+        /// &lt;/summary&gt;
+        public int Length
+        {
+            get
+            {
+                return inventory.Length;
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the max number of hands 
+        /// the hero owning the inventory has
+        /// &lt;/summary&gt;
+        public int MaxHands
+        {
+            get { return hero.Hands; }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets how many free hands the hero has left
+        /// &lt;/summary&gt;
+        public int FreeHands
+        {
+            get
+            {
+                int freeHands = MaxHands;
+                freeHands -= (inventory[(int)EquipmentSlot.Weapon] != null) ? inventory[(int)EquipmentSlot.Weapon].Hands : 0;
+                freeHands -= (inventory[(int)EquipmentSlot.Shield] != null) ? inventory[(int)EquipmentSlot.Shield].Hands : 0;
+                return freeHands;
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the equipped weapon, null if there isnt any
+        /// &lt;/summary&gt;
+        public Equipment Weapon
+        {
+            get { return inventory[(int)EquipmentSlot.Weapon]; }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the equipped shield, null if there is no shield equipped
+        /// &lt;/summary&gt;
+        public Equipment Shield
+        {
+            get { return inventory[(int)EquipmentSlot.Shield]; }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the equipped armor, null if there isnt any
+        /// &lt;/summary&gt;
+        public Equipment Armor
+        {
+            get { return inventory[(int)EquipmentSlot.Armor]; }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets an array of equipped other items.
+        /// If some slots are empty, null will be there instead
+        /// &lt;/summary&gt;
+        public Equipment[] OtherItems
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result&lt;Equipment[]&gt;().Length == MaxOtherItems);
+                return Enumerable.Range((int)EquipmentSlot.Other, 2).Select(i =&gt; inventory[i]).ToArray();
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets a list of all equipped potions
+        /// If some slots are empty, null will be there instead
+        /// &lt;/summary&gt;
+        public Equipment[] Potions
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result&lt;Equipment[]&gt;().Length == MaxPotions);
+                return Enumerable.Range((int)EquipmentSlot.Potion, 3).Select(i =&gt; inventory[i]).ToArray();
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets a list of all items in the backpack
+        /// If some slots are empty, null will be there
+        /// &lt;/summary&gt;
+        public Equipment[] Backpack
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result&lt;Equipment[]&gt;().Length == MaxInBackpack);
+                return Enumerable.Range((int)EquipmentSlot.Backpack, 3).Select(i =&gt; inventory[i]).ToArray();
+            }
+        }
+
+        #endregion
+
+        #region Initialization
+
+        /// &lt;summary&gt;
+        /// Initializes a new instance of the &lt;see cref=&quot;Inventory&quot;/&gt; class. 
+        /// The inventory of a hero
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;hero&quot;&gt;
+        /// The hero, that has this inventory.
+        /// &lt;/param&gt;
+        public Inventory(Hero hero)
+        {
+            this.hero = hero;
+        }
+
+        #endregion
+
+        #region Methods
+
+        /// &lt;summary&gt;
+        /// Do you have enough hands left to equip this weapon?
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;equipment&quot;&gt;
+        /// A piece of equipment.
+        /// &lt;/param&gt;
+        /// &lt;returns&gt;
+        /// Whether there are enough hands to equip this weapon
+        /// &lt;/returns&gt;
+        public bool CanEquipWeapon(Equipment equipment)
+        {
+            return equipment.Hands &lt;= FreeHands;
+        }
+
+        /// &lt;summary&gt;
+        /// Gets a value indicating whether there is room for
+        /// a potion in either the potion slots, or the backpack.
+        /// &lt;/summary&gt;
+        public bool CanEquipPotion
+        {
+            get
+            {
+                bool result = false;
+                for (int n = (int)EquipmentSlot.Potion; !result &amp;&amp; n &lt; (int)EquipmentSlot.Potion + 6; n++)
+                {
+                    result = this[n] == null;
+                }
+
+                return result;
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Equip a weapon
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;weapon&quot;&gt;
+        /// The weapon to be equipped
+        /// &lt;/param&gt;
+        public void EquipWeapon(Equipment weapon)
+        {
+            Contract.Requires(weapon != null);
+            Contract.Requires(weapon.Type == EquipmentType.Weapon);
+            Contract.Requires(weapon.Hands &lt;= FreeHands);
+            Contract.Ensures(inventory[(int)EquipmentSlot.Weapon] == weapon);
+            Contract.Ensures(FreeHands == Contract.OldValue(FreeHands) - weapon.Hands);
+
+            inventory[(int)EquipmentSlot.Weapon] = weapon;
+            weapon.EquipToHero(hero);
+        }
+
+        /// &lt;summary&gt;
+        /// Equip an armor
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;armor&quot;&gt;
+        /// The armor to be equipped
+        /// &lt;/param&gt;
+        public void EquipArmor(Equipment armor)
+        {
+            Contract.Requires(armor != null);
+            Contract.Requires(armor.Type == EquipmentType.Armor);
+            Contract.Ensures(this[(int)EquipmentSlot.Armor] == armor);
+
+            inventory[(int)EquipmentSlot.Armor] = armor;
+            armor.EquipToHero(hero);
+        }
+
+        /// &lt;summary&gt;
+        /// Equip a shield.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;shield&quot;&gt;
+        /// The shield to be equipped
+        /// &lt;/param&gt;
+        public void EquipShield(Equipment shield)
+        {
+            Contract.Requires(shield != null);
+            Contract.Requires(shield.Type == EquipmentType.Shield);
+            Contract.Requires(shield.Hands &lt;= FreeHands);
+            Contract.Ensures(this[(int)EquipmentSlot.Shield] == shield);
+            Contract.Ensures(FreeHands == Contract.OldValue(FreeHands) - shield.Hands);
+
+            inventory[(int)EquipmentSlot.Shield] = shield;
+            shield.EquipToHero(hero);
+        }
+
+        /// &lt;summary&gt;
+        /// Equip an item to 'other'.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;index&quot;&gt;The index where the item should be placed.&lt;/param&gt;
+        /// &lt;param name=&quot;item&quot;&gt;The item to place.&lt;/param&gt;
+        public void EquipToOther(int index, Equipment item)
+        {
+            Contract.Requires(0 &lt; index &amp;&amp; index &lt; MaxOtherItems);
+            Contract.Requires(item != null);
+            Contract.Requires(item.Type == EquipmentType.Other);
+            Contract.Requires(this[(int)EquipmentSlot.Other + index] == null);
+            Contract.Ensures(this[(int)EquipmentSlot.Other + index] == item);
+
+            inventory[(int)EquipmentSlot.Other + index] = item;
+            item.EquipToHero(hero);
+        }
+
+        /// &lt;summary&gt;
+        /// Places a potion in the first 
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;potion&quot;&gt;
+        /// The potion to be equipped
+        /// &lt;/param&gt;
+        public void EquipPotion(Equipment potion)
+        {
+            Contract.Requires(potion != null);
+            Contract.Requires(CanEquipPotion);
+            Contract.Requires(potion.Type == EquipmentType.Potion);
+
+            for (int n = (int)EquipmentSlot.Potion; n &lt; (int)EquipmentSlot.Potion + 6; n++)
+            {
+                if (this[n] == null)
+                {
+                    this[n] = potion;
+                    return;
+                }
+            }
+        }
+        /// &lt;summary&gt;
+        /// Equip an item to backpack.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;index&quot;&gt;The index where the item should be placed.&lt;/param&gt;
+        /// &lt;param name=&quot;item&quot;&gt;The item to place.&lt;/param&gt;
+        public void EquipToBackpack(int index, Equipment item)
+        {
+            Contract.Requires(0 &lt; index &amp;&amp; index &lt; MaxInBackpack);
+            Contract.Requires(item != null);
+            Contract.Requires(this[(int)EquipmentSlot.Backpack + index] == null);
+            Contract.Ensures(this[(int)EquipmentSlot.Backpack + index] == item);
+
+            inventory[(int)EquipmentSlot.Backpack + index] = item;
+            item.EquipToHero(hero);
+        }
+
+        /// &lt;summary&gt;
+        /// Equip an item to potions.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;index&quot;&gt;The indexwhere the item should be placed.&lt;/param&gt;
+        /// &lt;param name=&quot;item&quot;&gt;The item to place.&lt;/param&gt;
+        public void EquipToPotions(int index, Equipment item)
+        {
+            Contract.Requires(0 &lt; index &amp;&amp; index &lt; MaxPotions);
+            Contract.Requires(item != null);
+            Contract.Requires(item.Type == EquipmentType.Potion);
+            Contract.Requires(this[(int)EquipmentSlot.Potion + index] == null);
+            Contract.Ensures(this[(int)EquipmentSlot.Potion + index] == item);
+
+            inventory[(int)EquipmentSlot.Potion + index] = item;
+            item.EquipToHero(hero);
+        }
+
+        /// &lt;summary&gt;
+        /// Unequip the weapon.
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt;The weapon that was equipped.&lt;/returns&gt;
+        public Equipment UnequipWeapon()
+        {
+            Contract.Requires(this[(int)EquipmentSlot.Weapon] != null);
+            Contract.Ensures(this[(int)EquipmentSlot.Weapon] == null);
+            Contract.Ensures(FreeHands == Contract.OldValue(FreeHands) + Contract.Result&lt;Equipment&gt;().Hands);
+            Contract.Ensures(Contract.Result&lt;Equipment&gt;() == Contract.OldValue(this[(int)EquipmentSlot.Weapon]));
+            Contract.Ensures(Contract.Result&lt;Equipment&gt;().Type == EquipmentType.Weapon);
+
+            Equipment result = inventory[(int)EquipmentSlot.Weapon];
+            inventory[(int)EquipmentSlot.Weapon] = null;
+            result.UnequipFromHero(hero);
+            return result;
+        }
+
+        /// &lt;summary&gt;
+        /// Unequip the armor.
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt;The armor that was equipped.&lt;/returns&gt;
+        public Equipment UnequipArmor()
+        {
+            Contract.Requires(this[(int)EquipmentSlot.Armor] != null);
+            Contract.Ensures(this[(int)EquipmentSlot.Armor] == null);
+            Contract.Ensures(Contract.Result&lt;Equipment&gt;() == Contract.OldValue(this[(int)EquipmentSlot.Armor]));
+            Contract.Ensures(Contract.Result&lt;Equipment&gt;().Type == EquipmentType.Armor);
+
+            Equipment result = inventory[(int)EquipmentSlot.Armor];
+            inventory[(int)EquipmentSlot.Armor] = null;
+            result.UnequipFromHero(hero);
+            return result;
+        }
+
+        /// &lt;summary&gt;
+        /// Unequip the shield.
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt;The weapon that was shield.&lt;/returns&gt;
+        public Equipment UnequipShield()
+        {
+            Contract.Requires(this[(int)EquipmentSlot.Shield] != null);
+            Contract.Ensures(this[(int)EquipmentSlot.Shield] == null);
+            Contract.Ensures(FreeHands == Contract.OldValue(FreeHands) + Contract.Result&lt;Equipment&gt;().Hands);
+            Contract.Ensures(Contract.Result&lt;Equipment&gt;() == Contract.OldValue(this[(int)EquipmentSlot.Shield]));
+            Contract.Ensures(Contract.Result&lt;Equipment&gt;().Type == EquipmentType.Shield);
+
+            Equipment result = inventory[(int)EquipmentSlot.Shield];
+            inventory[(int)EquipmentSlot.Shield] = null;
+            result.UnequipFromHero(hero);
+            return result;
+        }
+
+        /// &lt;summary&gt;
+        /// Unequips an other item, and returns it
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;index&quot;&gt;
+        /// The index from where to remove.
+        /// &lt;/param&gt;
+        /// &lt;returns&gt;
+        /// The unequipped equipment
+        /// &lt;/returns&gt;
+        public Equipment UnequipFromOther(int index)
+        {
+            Contract.Requires(0 &lt; index &amp;&amp; index &lt; MaxOtherItems);
+            Contract.Requires(this[(int)EquipmentSlot.Other + index] != null);
+            Contract.Ensures(this[(int)EquipmentSlot.Other + index] == null);
+            Contract.Ensures(Contract.Result&lt;Equipment&gt;() == Contract.OldValue(inventory[(int)EquipmentSlot.Other + index]));
+            Contract.Ensures(Contract.Result&lt;Equipment&gt;().Type == EquipmentType.Other);
+
+            Equipment result = inventory[(int)EquipmentSlot.Other + index];
+            inventory[(int)EquipmentSlot.Other + index] = null;
+            result.UnequipFromHero(hero);
+            return result;
+        }
+
+        /// &lt;summary&gt;
+        /// Returns and removes a equipment from the backpack.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;index&quot;&gt;
+        /// The index from where to remove.
+        /// &lt;/param&gt;
+        /// &lt;returns&gt;
+        /// The unequipped equipment.
+        /// &lt;/returns&gt;
+        public Equipment UnequipFromBackpack(int index)
+        {
+            Contract.Requires(0 &lt; index &amp;&amp; index &lt; MaxInBackpack);
+            Contract.Requires(this[(int)EquipmentSlot.Backpack + index] != null);
+            Contract.Ensures(this[(int)EquipmentSlot.Backpack + index] == null);
+            Contract.Ensures(Contract.Result&lt;Equipment&gt;() == Contract.OldValue(inventory[(int)EquipmentSlot.Backpack + index]));
+
+            Equipment result = inventory[(int)EquipmentSlot.Backpack + index];
+            inventory[(int)EquipmentSlot.Backpack + index] = null;
+            result.UnequipFromHero(hero);
+            return result;
+        }
+
+        /// &lt;summary&gt;
+        /// Returns and removes a potion from the inventory
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;index&quot;&gt;
+        /// The index from where to remove the potion
+        /// &lt;/param&gt;
+        /// &lt;returns&gt;
+        /// The unequipped potion
+        /// &lt;/returns&gt;
+        public Equipment UnequipFromPotions(int index)
+        {
+            Contract.Requires(0 &lt; index &amp;&amp; index &lt; MaxPotions);
+            Contract.Requires(this[(int)EquipmentSlot.Potion + index] != null);
+            Contract.Ensures(this[(int)EquipmentSlot.Potion + index] == null);
+            Contract.Ensures(Contract.Result&lt;Equipment&gt;() == Contract.OldValue(inventory[(int)EquipmentSlot.Potion + index]));
+            Contract.Ensures(Contract.Result&lt;Equipment&gt;().Type == EquipmentType.Potion);
+
+            Equipment result = inventory[(int)EquipmentSlot.Potion + index];
+            inventory[(int)EquipmentSlot.Potion + index] = null;
+            result.UnequipFromHero(hero);
+            return result;
+        }
+
+        /// &lt;summary&gt;
+        /// Gets whether a piece of equipment can 
+        /// be equipped at a specific slot.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;slot&quot;&gt;
+        /// The slot to equip the equipment
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;equipment&quot;&gt;
+        /// The equipment to equip
+        /// &lt;/param&gt;
+        /// &lt;returns&gt;
+        /// Whether there is room in the inventory, 
+        /// and if that room is legal
+        /// &lt;/returns&gt;
+        [Pure]
+        public bool CanEquipAtIndex(int slot, Equipment equipment)
+        {
+            if (equipment == null) return true;
+            return slot == (int)EquipmentSlot.Weapon ?
+                equipment.Type == EquipmentType.Weapon &amp;&amp; this.CanEquipWeapon(equipment) :
+                        slot == (int)EquipmentSlot.Shield ?
+                        equipment.Type == EquipmentType.Shield &amp;&amp; CanEquipWeapon(equipment) :
+                               slot == (int)EquipmentSlot.Armor ?
+                               equipment.Type == EquipmentType.Armor :
+                                    slot &gt;= (int)EquipmentSlot.Other &amp;&amp; slot &lt; (int)EquipmentSlot.Potion ?
+                                    equipment.Type == EquipmentType.Other :
+                                        slot &gt;= (int)EquipmentSlot.Potion &amp;&amp; slot &lt; (int)EquipmentSlot.Backpack ?
+                                        equipment.Type == EquipmentType.Potion :
+                                            slot &gt;= (int)EquipmentSlot.Backpack &amp;&amp; slot &lt; this.Length;
+        }
+
+        #endregion
+
+        /// &lt;summary&gt;
+        /// Ensures that all types of equipment are in the correct positions,
+        /// and that there er never more or less hands than max and 0.
+        /// &lt;/summary&gt;
+        [ContractInvariantMethod]
+        private void ObjectInvariant()
+        {
+            Contract.Invariant(inventory[(int)EquipmentSlot.Weapon] == null || inventory[(int)EquipmentSlot.Weapon].Type == EquipmentType.Weapon);
+            Contract.Invariant(inventory[(int)EquipmentSlot.Shield] == null || inventory[(int)EquipmentSlot.Shield].Type == EquipmentType.Shield);
+            Contract.Invariant(inventory[(int)EquipmentSlot.Armor] == null || inventory[(int)EquipmentSlot.Armor].Type == EquipmentType.Armor);
+            Contract.Invariant(Enumerable.Range((int)EquipmentSlot.Other, 2).Select(i =&gt; inventory[i]).All(e =&gt; e == null || e.Type == EquipmentType.Other));
+            Contract.Invariant(Enumerable.Range((int)EquipmentSlot.Potion, 3).Select(i =&gt; inventory[i]).All(e =&gt; e == null || e.Type == EquipmentType.Potion));
+
+            Contract.Invariant(0 &lt;= FreeHands &amp;&amp; FreeHands &lt;= MaxHands);
+        }
+    }
+}</pre></code><script type="text/javascript">
+			applyranges('src39', RANGES_39)
+		</script>
+	</body>
+</html>

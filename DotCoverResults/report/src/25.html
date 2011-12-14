@@ -1,0 +1,38 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_25 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src25" class="dotCoverSource"><pre>
+namespace Descent.Model.Player.OverlordStuff
+{
+    /// &lt;summary&gt;
+    /// The power card will give the overlord extra abilities and boosts, 
+    /// but are more expensive than reguar cards.
+    /// &lt;/summary&gt;
+    /// &lt;author&gt;
+    /// Jonas Breindahl (jobre@itu.dk)
+    /// &lt;/author&gt;
+    public class PowerCard : OverlordCard
+    {
+        public PowerCard(int id, string name, string description, int playPrice, int sellPrice)
+            : base(id, name, description, playPrice, sellPrice, OverlordCardType.Power)
+        {
+            
+        }
+
+        public override void PlayCard()
+        {
+            // TODO: Play card
+        }
+    }
+}
+</pre></code><script type="text/javascript">
+			applyranges('src25', RANGES_25)
+		</script>
+	</body>
+</html>

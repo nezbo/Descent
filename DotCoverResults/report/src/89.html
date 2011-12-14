@@ -1,0 +1,118 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_89 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src89" class="dotCoverSource"><pre>namespace Descent.Messaging.Connection
+{
+    using System;
+    using AsyncSockets;
+
+    using Descent.Model.Player;
+    using Descent.State;
+
+    /// &lt;summary&gt;
+    /// A TCP server connection.
+    /// &lt;/summary&gt;
+    /// &lt;author&gt;
+    /// Simon Westh Henriksen
+    /// &lt;/author&gt;
+    public class ServerConnection : Connection
+    {
+        private AsyncSocketsServer mServer;
+
+        public ServerConnection(int port)
+        {
+            ServerPort = port;
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the id of the connection. Always 1 for the server!
+        /// &lt;/summary&gt;
+        public override int Id { get { return 1; } }
+
+        /// &lt;summary&gt;
+        /// Gets the ips of the server.
+        /// &lt;/summary&gt;
+        public override string[] Ips { get { return mServer.Ips; } }
+
+        /// &lt;summary&gt;
+        /// Get or set the server port to use.
+        /// &lt;/summary&gt;
+        private int ServerPort { get; set; }
+
+        /// &lt;summary&gt;
+        /// Start the server. Will listen on port for new clients.
+        /// &lt;/summary&gt;
+        public override void Start()
+        {
+            mServer = new AsyncSocketsServer(ServerPort);
+            mServer.ClientConnectedEvent += new ClientConnectedHandler(ClientConnected);
+            mServer.Start();
+        }
+
+        public override void Close()
+        {
+            mServer.Close();
+        }
+
+        /// &lt;summary&gt;
+        /// Sends a string through the server. Will send to all clients except the sender of the message.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;message&quot;&gt;The string to send.&lt;/param&gt;
+        public override void SendString(string message)
+        {
+            int messageSenderId = int.Parse(message.Split(&quot;,&quot;.ToCharArray())[0]);
+            mServer.BroadcastExceptClient(message, messageSenderId);
+        } 
+
+        /// &lt;summary&gt;
+        /// Called when a client has connected.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;newClient&quot;&gt;The new client.&lt;/param&gt;
+        /// &lt;returns&gt;True to accept the client (leave him connected), false to disconnect him again.&lt;/returns&gt;
+        private bool ClientConnected(ClientInfo newClient)
+        {
+            newClient.MessageReceivedEvent += new MessageReceivedHandler(MessageReceived);
+
+            return AcceptProcedure(newClient);
+        }
+
+        /// &lt;summary&gt;
+        /// Called when a message was received.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;fromClient&quot;&gt;Sender of the message.&lt;/param&gt;
+        /// &lt;param name=&quot;message&quot;&gt;The message string.&lt;/param&gt;
+        private void MessageReceived(ClientInfo fromClient, string message)
+        {
+            Player.Instance.EventManager.QueueStringEvent(message, false);
+            SendString(message);
+        }
+
+        /// &lt;summary&gt;
+        /// Decides if a new client can join the server.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;newClient&quot;&gt;The client attempting to join server.&lt;/param&gt;
+        /// &lt;returns&gt;True to accept the client (leave him connected), false to disconnect him again.&lt;/returns&gt;
+        private bool AcceptProcedure(ClientInfo newClient)
+        {
+            // Only accept the player if we're not full and we're still in the lobby, waiting for the game to start.
+            if (Player.Instance.NumberOfPlayers &lt; 5 &amp;&amp; Player.Instance.StateManager.CurrentState == State.InLobby)
+            {
+                newClient.Send(&quot;ASSIGNID,&quot; + newClient.Id); // Send back the ID to the player.
+                return true;
+            }
+
+            return false;
+        }
+    }
+}
+</pre></code><script type="text/javascript">
+			applyranges('src89', RANGES_89)
+		</script>
+	</body>
+</html>

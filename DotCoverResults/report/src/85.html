@@ -1,0 +1,886 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_85 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src85" class="dotCoverSource"><pre>namespace Descent.Model
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Diagnostics.Contracts;
+    using System.IO;
+    using System.Linq;
+
+    using Board;
+    using Board.Marker;
+    using Event;
+    using Player;
+    using Player.Figure;
+    using Player.Figure.HeroStuff;
+    using Player.OverlordStuff;
+    using Microsoft.Xna.Framework;
+    using Microsoft.Xna.Framework.Graphics;
+
+    /// &lt;summary&gt;
+    /// Full Model has access to the entire model of the program,
+    /// and the responsebility of loading/creating the model entities.
+    /// When the game needs instances of monsters, dice or heroes,
+    /// they call the FullModel which then returns a 
+    /// Holds references to all model related classes
+    /// &lt;/summary&gt;
+    /// &lt;author&gt;
+    /// Jonas Breindahl (jobre@itu.dk)
+    /// &lt;/author&gt;
+    public class FullModel
+    {
+        #region Fields
+
+        private static Game game;
+
+        private static List&lt;Monster&gt; monsters;
+
+        private static List&lt;Monster&gt; legendaryMonsters = new List&lt;Monster&gt;();
+
+        private static int monstersInPlay;
+
+        private static int markersOnBoard = 0;
+
+        private static List&lt;Hero&gt; heroes;
+
+        private static List&lt;OverlordCard&gt; overlordCards;
+
+        private static Dictionary&lt;EDice, Dice&gt; diceDictionary;
+
+        private static List&lt;Equipment&gt; allEquipment;
+
+        private static Dictionary&lt;EquipmentRarity, List&lt;Treasure&gt;&gt; treasures = new Dictionary&lt;EquipmentRarity, List&lt;Treasure&gt;&gt;();
+
+        private static List&lt;Marker&gt; markers;
+
+        private static List&lt;Chest&gt; chests;
+
+        private static List&lt;Skill&gt; skills;
+
+        private static Board.Board board;
+
+        private static HeroParty heroParty;
+
+        /// &lt;summary&gt;
+        /// Gets the instance of the board
+        /// Can I have the board?
+        /// &lt;/summary&gt;
+        public static Board.Board Board
+        {
+            get
+            {
+                return board;
+            }
+        }
+
+        #endregion
+
+        #region Load Content
+
+        /// &lt;summary&gt;
+        /// Load all content!
+        /// This includes monsters, heroes, cards, equipment, dice and the map.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;game&quot;&gt;
+        /// The game object
+        /// &lt;/param&gt;
+        public static void LoadContent(Game game)
+        {
+
+            Contract.Requires(game != null);
+
+            FullModel.game = game;
+            heroParty = new HeroParty();
+            overlordCards = new List&lt;OverlordCard&gt;();
+
+            LoadDice(game);
+            LoadMonsters(game);
+            LoadEquipment(game);
+            LoadMap(game);
+            LoadHeroes(game);
+            LoadOverlordCards(game);
+            LoadSkillCards(game);
+        }
+
+        #region Load Monsters
+        /// &lt;summary&gt;
+        /// Loads the monsters from the file monsters.txt
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;game&quot;&gt;
+        /// The game object
+        /// &lt;/param&gt;
+        private static void LoadMonsters(Game game)
+        {
+            if (FullModel.monsters != null) return;
+            StreamReader reader = new StreamReader(TitleContainer.OpenStream(&quot;monsters.txt&quot;));
+
+            int n = int.Parse(reader.ReadLine());
+            string line;
+
+            List&lt;Monster&gt; monsters = new List&lt;Monster&gt;();
+            for (int i = 0; i &lt; n; i++)
+            {
+                line = reader.ReadLine();
+
+                if (line.StartsWith(&quot;//&quot;)) continue;
+
+                string[] data = line.Split(',');
+                System.Diagnostics.Debug.Assert(data.Length == 11, &quot;Error when parsing monsters, at line &quot; + (i + 2));
+
+                int id = int.Parse(data[0]);
+                string name = data[1].Substring(1, data[1].Length - 2);
+                bool master = bool.Parse(data[2]);
+                int speed = int.Parse(data[3]);
+                int health = int.Parse(data[4].Split('/')[2]); // TODO: How many players are playing?
+                int armor = int.Parse(data[5]);
+                EAttackType type = data[6].Equals(&quot;MELEE&quot;)
+                                       ? EAttackType.MELEE
+                                       : (data[5].Equals(&quot;MAGIC&quot;) ? EAttackType.MAGIC : EAttackType.RANGED);
+
+                List&lt;Dice&gt; attackDice = (
+                    from string dice
+                        in data[7].Split(' ')
+                    select GetDice(dice)).ToList&lt;Dice&gt;();
+
+                List&lt;Ability&gt; abilities = data[8].Split('/').Select(Ability.GetAbility).ToList();
+
+
+                Rectangle size = new Rectangle(0, 0, int.Parse(data[9]), int.Parse(data[10]));
+
+                Texture2D texture = game.Content.Load&lt;Texture2D&gt;(&quot;Images/Monsters/&quot; + id);
+
+                Monster m = new Monster(id, name, master, speed, health, armor, type, attackDice, size, texture);
+                foreach (Ability ability in abilities)
+                {
+                    ability.Apply(m);
+                }
+
+                m.Initialize();
+                monsters.Add(m);
+            }
+
+            FullModel.monsters = monsters;
+            System.Diagnostics.Debug.WriteLine(&quot;Monsters loaded successfully!&quot;);
+        }
+        #endregion
+
+        #region Load Dice
+        /// &lt;summary&gt;
+        /// Loads all dice from 
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;game&quot;&gt;
+        /// The game.
+        /// &lt;/param&gt;
+        private static void LoadDice(Game game)
+        {
+            if (diceDictionary != null) return;
+
+            StreamReader reader = new StreamReader(TitleContainer.OpenStream(&quot;dice.txt&quot;));
+
+            int n = int.Parse(reader.ReadLine());
+            string line;
+
+            Dictionary&lt;EDice, Dice&gt; dice = new Dictionary&lt;EDice, Dice&gt;();
+            for (int i = 0; i &lt; n; i++)
+            {
+                line = reader.ReadLine();
+                string[] data = line.Split(',');
+                System.Diagnostics.Debug.Assert(data.Length == 7, &quot;Error in dice file, at line &quot; + (i + 1));
+
+                EDice eDice;
+                Enum.TryParse(data[0], false, out eDice);
+
+                Texture2D[] textures = new Texture2D[8];
+                int[][] sides = new int[8][];
+                for (int side = 0; side &lt; 6; side++)
+                {
+                    sides[side] = new int[4];
+
+                    char[] sideArray = data[side + 1].ToCharArray();
+                    textures[side] = game.Content.Load&lt;Texture2D&gt;(&quot;Images/Dice/&quot; + data[0] + data[side + 1]);
+
+                    for (int value = 0; value &lt; 4; value++)
+                    {
+                        sides[side][value] = int.Parse(sideArray[value] + string.Empty);
+                    }
+                }
+
+                if (eDice == EDice.B)
+                {
+                    textures[6] = game.Content.Load&lt;Texture2D&gt;(&quot;Images/Dice/B1000&quot;);
+                    textures[7] = game.Content.Load&lt;Texture2D&gt;(&quot;Images/Dice/B0100&quot;);
+                    sides[6] = new int[4] { 1, 0, 0, 0 };
+                    sides[7] = new int[4] { 0, 1, 0, 0 };
+                }
+
+                dice[eDice] = new Dice(eDice, sides, textures);
+            }
+
+            diceDictionary = dice;
+            System.Diagnostics.Debug.WriteLine(&quot;Dice loaded successfully!&quot;);
+        }
+
+        #endregion
+
+        #region Load Equipement
+
+        private static void LoadEquipment(Game game)
+        {
+            StreamReader reader = new StreamReader(TitleContainer.OpenStream(&quot;equipmentWithTreasure.txt&quot;));
+
+            int n = int.Parse(reader.ReadLine());
+            string line;
+
+            List&lt;Equipment&gt; equipmentList = new List&lt;Equipment&gt;();
+
+            for (int i = 0; i &lt; n; i++)
+            {
+                line = reader.ReadLine();
+                if (line.StartsWith(&quot;//&quot;)) continue;
+
+                string[] data = line.Split(',');
+                System.Diagnostics.Debug.Assert(data.Length == 12, &quot;Error when loading equipment, at line &quot; + (i + 2));
+
+                Equipment eq = LoadEquipment(data);
+
+                for (int j = 0; j &lt; int.Parse(data[8]); j++)
+                {
+                    equipmentList.Add(eq);
+                }
+            }
+
+            allEquipment = equipmentList;
+            System.Diagnostics.Debug.WriteLine(&quot;Common equipment loaded successfully!&quot;);
+
+            LoadTreasures(game, reader);
+
+            System.Diagnostics.Debug.WriteLine(&quot;Equipment loaded successfully!&quot;);
+        }
+
+        private static void LoadTreasures(Game game, StreamReader reader)
+        {
+            int n = int.Parse(reader.ReadLine());
+
+            // Instantiating all lists
+            treasures = new Dictionary&lt;EquipmentRarity, List&lt;Treasure&gt;&gt;();
+            foreach (EquipmentRarity rarity in Enum.GetValues(typeof(EquipmentRarity)))
+            {
+                treasures[rarity] = new List&lt;Treasure&gt;();
+            }
+
+            // running over all treasures
+            for (int i = 0; i &lt; n; i++)
+            {
+                string line = reader.ReadLine();
+                if (line.StartsWith(&quot;//&quot;)) continue;
+
+                string[] data = line.Split(',');
+
+                EquipmentRarity rarity;
+                EquipmentRarity.TryParse(data[2], out rarity);
+
+                if (data[1].Equals(&quot;Treasure Cache&quot;))
+                {
+                    treasures[rarity].Add(
+                        new Treasure(
+                            int.Parse(data[0]), 
+                            data[1], 
+                            rarity, 
+                            data[10].Contains(&quot;Potion Vitality&quot;) ? 
+                                GetEquipment(12) : 
+                                data[10].Contains(&quot;Potion Healing&quot;) ? 
+                                    GetEquipment(11) : 
+                                    null, 
+                            data[10].Contains(&quot;Coins&quot;) ? int.Parse(data[10].Split(' ').Last()) : 0));
+                }
+                else
+                {
+                    Equipment e = LoadEquipment(data);
+                    treasures[rarity].Add(new Treasure(int.Parse(data[0]), data[1] , rarity, e, 0));
+                    allEquipment.Add(e);
+                }
+            }
+
+            System.Diagnostics.Debug.WriteLine(&quot;Treasures loaded successfully!&quot;);
+        }
+
+        private static Equipment LoadEquipment(string[] data)
+        {
+            Contract.Requires(data.Length == 12);
+
+            int id = int.Parse(data[0]);
+            string name = data[1];
+
+            EquipmentRarity rarity;
+            EquipmentRarity.TryParse(data[2], out rarity);
+
+            EquipmentType type;
+            EquipmentType.TryParse(data[3], out type);
+
+            string other = data[4];
+
+            EAttackType attackType;
+            EAttackType.TryParse(data[5], out attackType);
+            attackType = type == EquipmentType.Weapon ? attackType : EAttackType.NONE;
+
+            int buyPrice = data[6].Equals(string.Empty) ? 0 : int.Parse(data[6]);
+            int hands = data[7].Equals(string.Empty) ? 0 : int.Parse(data[7]);
+            int amount = data[8].Equals(string.Empty) ? 0 : int.Parse(data[8]);
+            List&lt;Dice&gt; dice = data[9].Equals(string.Empty) ? new List&lt;Dice&gt;() : data[9].Split(' ').Select(GetDice).ToList();
+            List&lt;Ability&gt; abilities = data[10].Equals(string.Empty) ? new List&lt;Ability&gt;() : data[10].Split('/').Select(Ability.GetAbility).ToList();
+            List&lt;SurgeAbility&gt; surgeAbilities = data[11].Equals(string.Empty) ? new List&lt;SurgeAbility&gt;() : data[11].Split('/').Select(SurgeAbility.GetSurgeAbility).ToList();
+
+            return new Equipment(
+                id: id,
+                name: name,
+                type: type,
+                attackType: attackType,
+                rarity: rarity,
+                buyPrice: buyPrice,
+                surgeAbilities: surgeAbilities,
+                hands: hands,
+                abilities: abilities,
+                dice: dice);
+        }
+
+        #endregion
+
+        #region Load Map
+
+        public static void LoadMap(Game game)
+        {
+            StreamReader reader = new StreamReader(TitleContainer.OpenStream(&quot;quest1.map&quot;));
+
+            int height = int.Parse(reader.ReadLine());
+            int width = int.Parse(reader.ReadLine());
+
+            Board.Board board = new Board.Board(width, height, game.Content.Load&lt;Texture2D&gt;(&quot;Images/Board/floor&quot;));
+
+            for (int y = 0; y &lt; height; y++)
+            {
+                char[] c = reader.ReadLine().ToCharArray();
+                for (int x = 0; x &lt; c.Length; x++)
+                {
+                    switch (c[x])
+                    {
+                        case ' ':
+                            board[x, y] = null;
+                            break;
+                        default:
+                            board[x, y] = new Square(int.Parse(c[x] + string.Empty));
+                            break;
+                    }
+                }
+            }
+
+            System.Diagnostics.Debug.WriteLine(&quot;Map loaded successfully!&quot;);
+
+            LoadOther(game, reader, board);
+        }
+
+        private static void LoadOther(Game game, StreamReader reader, Board.Board board)
+        {
+            int n = int.Parse(reader.ReadLine());
+            for (int i = 0; i &lt; n; i++)
+            {
+                string line = reader.ReadLine();
+                string[] data = line.Split(',');
+
+                switch (data[0])
+                {
+                    case &quot;monster&quot;:
+                        int x = int.Parse(data[1]);
+                        int y = int.Parse(data[2]);
+                        Orientation o = Orientation.H;
+                        Orientation.TryParse(data[4], true, out o);
+                        Monster monster = GetMonster(int.Parse(data[3]));
+                        monster.Orientation = o;
+                        board.PlaceFigure(monster, new Point(x, y));
+                        break;
+                    case &quot;door&quot;:
+                        RuneKey color;
+                        RuneKey.TryParse(data[12], out color);
+                        Orientation orientation;
+                        Orientation.TryParse(data[11], out orientation);
+                        board.AddDoor(new Door(int.Parse(data[1]), new Point(int.Parse(data[2]), int.Parse(data[3])), new Point(int.Parse(data[4]), int.Parse(data[5])), int.Parse(data[6]), new Point(int.Parse(data[7]), int.Parse(data[8])), new Point(int.Parse(data[9]), int.Parse(data[10])), orientation, color, game.Content.Load&lt;Texture2D&gt;(&quot;Images/Board/door-&quot; + color.ToString())));
+                        break;
+                    default:
+                        board[int.Parse(data[1]), int.Parse(data[2])].Marker = GetMarker(data[0], data[3]);
+                        break;
+                }
+            }
+
+            System.Diagnostics.Debug.WriteLine(&quot;Markers loaded successfully!&quot;);
+
+            FullModel.board = board;
+            LoadChests(game, reader);
+        }
+
+
+        /// &lt;summary&gt;
+        /// Loads a marker by taking a name and another string
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;name&quot;&gt;&lt;/param&gt;
+        /// &lt;param name=&quot;other&quot;&gt;&lt;/param&gt;
+        /// &lt;returns&gt;&lt;/returns&gt;
+        [Pure]
+        private static Marker GetMarker(string name, string other)
+        {
+            switch (name)
+            {
+                case &quot;glyph&quot;:
+                    return new GlyphMarker(markersOnBoard++, name + &quot;-&quot; + other, game.Content.Load&lt;Texture2D&gt;(&quot;Images/Board/portal-closed&quot;), 0, other.Equals(&quot;open&quot;), game.Content.Load&lt;Texture2D&gt;(&quot;Images/Board/portal-open&quot;));
+                case &quot;treasure&quot;:
+                    EquipmentRarity rarity;
+                    EquipmentRarity.TryParse(other, true, out rarity);
+                    return new ChestMarker(markersOnBoard++, name + &quot;-&quot; + other, 2, rarity, game.Content.Load&lt;Texture2D&gt;(&quot;Images/Board/&quot; + name + &quot;-&quot; + other));
+                case &quot;gold&quot;:
+                    return new MoneyMarker(markersOnBoard++, name, game.Content.Load&lt;Texture2D&gt;(&quot;Images/Board/&quot; + name), 0);
+                case &quot;rock&quot;:
+                    return new OtherMarkers(markersOnBoard++, name, game.Content.Load&lt;Texture2D&gt;(&quot;Images/Board/rock1&quot;), 0);
+                case &quot;pit&quot;:
+                    return new OtherMarkers(markersOnBoard++, name, game.Content.Load&lt;Texture2D&gt;(&quot;Images/Board/pit1&quot;), 0);
+                case &quot;potion&quot;:
+                    return new PotionMarker(markersOnBoard++, name + &quot;-&quot; + other, game.Content.Load&lt;Texture2D&gt;(&quot;Images/Board/&quot; + name + &quot;-&quot; + other), 0, other.Contains(&quot;health&quot;) ? GetEquipment(11) : GetEquipment(12));
+                case &quot;rune&quot;:
+                    RuneKey color;
+                    RuneKey.TryParse(other, true, out color);
+                    return new RuneMarker(markersOnBoard++, name + &quot;-&quot; + other, game.Content.Load&lt;Texture2D&gt;(&quot;Images/Board/&quot; + name + &quot;-&quot; + other), 0, color);
+                default:
+                    break;
+            }
+            System.Diagnostics.Debug.Assert(false);
+            return null;
+        }
+
+        /// &lt;summary&gt;
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;game&quot;&gt;
+        /// The game object
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;reader&quot;&gt;
+        /// The reader instance, loading the map file
+        /// &lt;/param&gt;
+        private static void LoadChests(Game game, StreamReader reader)
+        {
+            chests = new List&lt;Chest&gt;();
+            int n = int.Parse(reader.ReadLine());
+
+            for (int i = 0; i &lt; n; i++)
+            {
+                string line = reader.ReadLine();
+                string[] data = line.Split(',');
+                //System.Diagnostics.Debug.Assert(data.Length == 5, &quot;Error when loading chests at line: &quot; + (i + 1));
+
+                int id = int.Parse(data[0]);
+                EquipmentRarity rarity;
+                EquipmentRarity.TryParse(data[1], true, out rarity);
+                System.Diagnostics.Debug.WriteLine(rarity.ToString());
+                int tokens = int.Parse(data[2]);
+                int coins = int.Parse(data[3]);
+                int curses = int.Parse(data[4]);
+                int treasures = int.Parse(data[5]);
+
+                chests.Add(new Chest(id, rarity, tokens, coins, curses, treasures));
+            }
+
+            System.Diagnostics.Debug.WriteLine(&quot;Chests loaded successfully!&quot;);
+
+            LoadLegendaryMonsters(game, reader);
+        }
+
+        private static void LoadLegendaryMonsters(Game game, StreamReader reader)
+        {
+            int n = int.Parse(reader.ReadLine());
+
+            for (int i = 0; i &lt; n; i++)
+            {
+                string line = reader.ReadLine();
+                string[] data = line.Split(',');
+
+                int id = int.Parse(data[0]);
+                Monster m = GetMonster(int.Parse(data[1]));
+                int x = int.Parse(data[2]);
+                int y = int.Parse(data[3]);
+                string name = data[4];
+
+                int bonusSpeed = data[5].Equals(string.Empty) ? 0 : int.Parse(data[5]);
+                int bonusHealth = data[6].Equals(string.Empty) ? 0 : int.Parse(data[6]);
+                int bonusArmor = int.Parse(data[7]);
+
+                List&lt;Dice&gt; attackDice = data[8].Equals(string.Empty) ? new List&lt;Dice&gt;() : (
+                    from string dice
+                        in data[8].Split(' ')
+                    select GetDice(dice)).ToList&lt;Dice&gt;();
+                attackDice.AddRange(m.DiceForAttack);
+
+                List&lt;Ability&gt; abilities = data[9].Split('/').Select(Ability.GetAbility).ToList();
+                abilities.AddRange(m.Abilities);
+
+                Monster legendary = new Monster(
+                    id, 
+                    name, 
+                    m.IsMaster, 
+                    m.Speed + bonusSpeed, 
+                    m.MaxHealth + bonusHealth, 
+                    m.Armor + bonusArmor, 
+                    m.AttackType, 
+                    attackDice, 
+                    m.Size, 
+                    m.Texture);
+
+                legendaryMonsters.Add(legendary);
+                board.PlaceFigure(legendary, new Point(x, y));
+            }
+        }
+
+        #endregion
+
+        #region Load Heroes
+
+        private static void LoadHeroes(Game game)
+        {
+            StreamReader reader = new StreamReader(TitleContainer.OpenStream(&quot;heroes.txt&quot;));
+
+            List&lt;Hero&gt; heroes = new List&lt;Hero&gt;();
+            int n = int.Parse(reader.ReadLine());
+            for (int i = 0; i &lt; n; i++)
+            {
+                string line = reader.ReadLine();
+                string[] data = line.Split(new char[] { ',' }, 11);
+
+                int id = int.Parse(data[0]);
+                string name = data[1];
+                int cost = int.Parse(data[2]);
+                int health = int.Parse(data[3]);
+                int fatigue = int.Parse(data[4]);
+                int armor = int.Parse(data[5]);
+                int speed = int.Parse(data[6]);
+
+                int[] dice = data[7].Split('/').Select(int.Parse).ToArray();
+                Dictionary&lt;EAttackType, int&gt; diceDictionary = new Dictionary&lt;EAttackType, int&gt;();
+                diceDictionary[EAttackType.MELEE] = dice[0];
+                diceDictionary[EAttackType.RANGED] = dice[1];
+                diceDictionary[EAttackType.MAGIC] = dice[2];
+
+                int[] skills = data[8].Split('/').Select(int.Parse).ToArray();
+                Dictionary&lt;EAttackType, int&gt; skillDictionary = new Dictionary&lt;EAttackType, int&gt;();
+                skillDictionary[EAttackType.MELEE] = dice[0];
+                skillDictionary[EAttackType.RANGED] = dice[1];
+                skillDictionary[EAttackType.MAGIC] = dice[2];
+
+                int hands = int.Parse(data[9]);
+
+                string text = data[10];
+
+                Texture2D texture = game.Content.Load&lt;Texture2D&gt;(&quot;Images/Heroes/&quot; + id);
+                Texture2D largeTexture;
+                try
+                {
+                    largeTexture = game.Content.Load&lt;Texture2D&gt;(&quot;Images/Heroes/BIG-&quot; + id);
+                }
+                catch (Exception e)
+                {
+                    largeTexture = game.Content.Load&lt;Texture2D&gt;(&quot;Images/Heroes/BIG-0&quot;);
+                }
+
+                heroes.Add(new Hero(id, name, cost, health, fatigue, armor, speed, diceDictionary, skillDictionary, hands, text, texture, largeTexture));
+            }
+
+            FullModel.heroes = heroes;
+        }
+
+        #endregion
+
+        #region Load Overlord Cards
+
+        private static void LoadOverlordCards(Game game)
+        {
+            StreamReader reader = new StreamReader(TitleContainer.OpenStream(&quot;overlordcards.txt&quot;));
+            overlordCards = new List&lt;OverlordCard&gt;();
+
+            int n = int.Parse(reader.ReadLine());
+            for (int i = 0; i &lt; n; i++)
+            {
+                string line = reader.ReadLine();
+                if (line.StartsWith(&quot;//&quot;)) continue;
+                OverlordCard card = null;
+
+                string[] data = line.Split(new char[] { ',' }, 9);
+
+                int id = int.Parse(data[0]);
+                string type = data[1];
+                string name = data[2];
+                int amount = int.Parse(data[3]);
+                int cost = int.Parse(data[4]);
+                int sell = int.Parse(data[5]);
+                string description = data[7];
+
+                switch (type)
+                {
+                    case &quot;Spawn&quot;:
+                        List&lt;Monster&gt; monsters = new List&lt;Monster&gt;();
+                        string[] creaturesToSpawn = data[6].Split('/');
+                        for (int j = 0; j &lt; creaturesToSpawn.Length; j++)
+                        {
+                            for (int k = 0; k &lt; int.Parse(creaturesToSpawn[j].Split(' ')[1]); k++)
+                            {
+                                monsters.Add(GetMonster(int.Parse(creaturesToSpawn[j].Split(' ')[0])));
+                            }
+                        }
+                        card = new SpawnCard(id, name, description, cost, sell, monsters.ToArray());
+                        break;
+                    case &quot;Power&quot;:
+                        card = new PowerCard(id, name, description, cost, sell);
+                        break;
+                    case &quot;Trap&quot;:
+                        card = new TrapCard(id, name, description, cost, sell);
+                        break;
+                    case &quot;Event&quot;:
+                        card = new EventCard(id, name, description, cost, sell);
+                        break;
+                }
+                if (card != null)
+                    overlordCards.Add(card);
+            }
+        }
+
+        #endregion
+
+        #region Load Skill Cards
+
+        private static void LoadSkillCards(Game game)
+        {
+            StreamReader reader = new StreamReader(TitleContainer.OpenStream(&quot;skills.txt&quot;));
+
+            skills = new List&lt;Skill&gt;();
+            int n = int.Parse(reader.ReadLine());
+
+            for (int i = 0; i &lt; n; i++)
+            {
+                string line = reader.ReadLine();
+                if (line.StartsWith(&quot;//&quot;)) continue;
+                string[] data = line.Split(new char[] { ',' }, 4);
+                int id = int.Parse(data[0]);
+
+                EAttackType attackType;
+                EAttackType.TryParse(data[1], true, out attackType);
+
+                string name = data[2];
+                string description = data[3];
+
+                skills.Add(new Skill(id, name, attackType, description, new List&lt;Ability&gt;()));
+            }
+        }
+
+        #endregion
+
+        #endregion
+
+        #region Getters
+
+        /// &lt;summary&gt;
+        /// Gets the standard instance of 
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;id&quot;&gt;
+        /// The id.
+        /// &lt;/param&gt;
+        /// The standard id of the mosnter
+        /// &lt;returns&gt;
+        /// The monster, as a new monster
+        /// &lt;/returns&gt;
+        [Pure]
+        public static Monster GetMonster(int id)
+        {
+            Contract.Ensures(Contract.Result&lt;Monster&gt;().Id == Contract.OldValue(monstersInPlay));
+            return monsters.Single(monster =&gt; monster.Id == id).Clone(monstersInPlay++);
+        }
+
+        /// &lt;summary&gt;
+        /// Gets a piece of equipment with a specific ID
+        /// This is only the common, town equipment, not treasure
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;id&quot;&gt;
+        /// The id of the equipment
+        /// &lt;/param&gt;
+        /// &lt;returns&gt;
+        /// An equipment with the id equals to the input
+        /// &lt;/returns&gt;
+        [Pure]
+        public static Equipment GetEquipment(int id)
+        {
+            Contract.Ensures(Contract.Result&lt;Equipment&gt;().Id == id);
+            return AllEquipment.First(equipment =&gt; equipment.Id == id).Clone();
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the treasure with the id
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;id&quot;&gt;
+        /// The id of the treasure
+        /// &lt;/param&gt;
+        /// &lt;returns&gt;
+        /// The treasure with that treasure
+        /// &lt;/returns&gt;
+        [Pure]
+        public static Treasure GetTreasure(int id)
+        {
+            return AllTreasures.Single(t =&gt; t.Id == id);
+        }
+
+        /// &lt;summary&gt;
+        /// Gets an overlord card by id
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;id&quot;&gt;
+        /// The id of the card
+        /// &lt;/param&gt;
+        /// &lt;returns&gt;
+        /// The card with the given id
+        /// &lt;/returns&gt;
+        [Pure]
+        public static OverlordCard GetOverlordCard(int id)
+        {
+            Contract.Ensures(Contract.Result&lt;OverlordCard&gt;().Id == id);
+            return overlordCards.First(overlordCard =&gt; overlordCard.Id == id);
+        }
+
+        /// &lt;summary&gt;
+        /// Get an instance of the dice, of the given color
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;dice&quot;&gt;
+        /// The dice.
+        /// &lt;/param&gt;
+        /// &lt;returns&gt;
+        /// A die of that color
+        /// &lt;/returns&gt;
+        [Pure]
+        public static Dice GetDice(EDice dice)
+        {
+            Contract.Ensures(Contract.Result&lt;Dice&gt;().Color == dice);
+            return diceDictionary[dice].Clone();
+        }
+
+        /// &lt;summary&gt;
+        /// Gets a dice from a text-string, 
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;dice&quot;&gt;
+        /// A text-string, one of R, W, U, G, Y, B
+        /// &lt;/param&gt;
+        /// &lt;returns&gt;
+        /// The dice of the asked color
+        /// &lt;/returns&gt;
+        [Pure]
+        public static Dice GetDice(string dice)
+        {
+            EDice d;
+            Enum.TryParse(dice, false, out d);
+            return GetDice(d);
+        }
+
+        /// &lt;summary&gt;
+        /// Gets a copy of a hero figure
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;id&quot;&gt;
+        /// The id of the hero
+        /// &lt;/param&gt;
+        /// &lt;returns&gt;
+        /// Returns the hero with id equal to the parameter id
+        /// &lt;/returns&gt;
+        [Pure]
+        public static Hero GetHero(int id)
+        {
+            return heroes.First(hero =&gt; hero.Id == id);
+        }
+
+        /// &lt;summary&gt;
+        /// Gets a list of all heroes
+        /// &lt;/summary&gt;
+        [Pure]
+        public static Hero[] AllHeroes
+        {
+            get { return heroes.ToArray(); }
+        }
+
+        [Pure]
+        public static Monster[] AllLengendaryMonsters
+        {
+            get { return legendaryMonsters.ToArray(); }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets a list of all town equipment 
+        /// &lt;/summary&gt;
+        [Pure]
+        public static Equipment[] AllEquipment
+        {
+            get
+            {
+                return allEquipment.ToArray();
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets a list of all overlord cards
+        /// &lt;/summary&gt;
+        [Pure]
+        public static OverlordCard[] AllOverlordCards
+        {
+            get { return overlordCards.ToArray(); }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets a list of all chests
+        /// &lt;/summary&gt;
+        [Pure]
+        public static Chest[] AllChests
+        {
+            get
+            {
+                return chests.ToArray();
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets a list of all treasures
+        /// &lt;/summary&gt;
+        [Pure]
+        public static Treasure[] AllTreasures
+        {
+            get
+            {
+                List&lt;Treasure&gt; list = new List&lt;Treasure&gt;();
+                foreach (EquipmentRarity r in Enum.GetValues(typeof(EquipmentRarity)))
+                    list.AddRange(treasures[r]);
+                return list.ToArray();
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets a list of all skills
+        /// &lt;/summary&gt;
+        [Pure]
+        public static Skill[] AllSkills
+        {
+            get
+            {
+                return skills.ToArray();
+            }
+        }
+
+        #endregion
+    }
+}
+</pre></code><script type="text/javascript">
+			applyranges('src85', RANGES_85)
+		</script>
+	</body>
+</html>

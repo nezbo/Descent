@@ -1,0 +1,64 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_69 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src69" class="dotCoverSource"><pre>
+namespace Descent.Messaging.Events
+{
+    using System.Diagnostics.Contracts;
+
+    /// &lt;summary&gt;
+    /// The event arguments for events sending only coordinates.
+    /// &lt;/summary&gt;
+    /// &lt;author&gt;
+    /// Simon Westh Henriksen
+    /// &lt;/author&gt;
+    public sealed class CoordinatesEventArgs : GameEventArgs
+    {
+        public CoordinatesEventArgs(int x, int y)
+        {
+            X = x;
+            Y = y;
+        }
+
+        public CoordinatesEventArgs(string[] stringArgs)
+        {
+            Contract.Requires(stringArgs != null);
+            Contract.Requires(stringArgs.Length == 2);
+            
+            Contract.Requires(Contract.ForAll(stringArgs, s =&gt; EventContractHelper.TryParseInt(s)));
+
+            PopulateWithArgs(stringArgs);
+        }
+
+        public int X { get; set; }
+
+        public int Y { get; set; }
+
+        public override void PopulateWithArgs(string[] stringArgs)
+        {
+            Contract.Requires(stringArgs != null);
+            Contract.Requires(stringArgs.Length == 2);
+            
+            Contract.Requires(Contract.ForAll(stringArgs, s =&gt; EventContractHelper.TryParseInt(s)));
+
+            X = int.Parse(stringArgs[0]);
+            Y = int.Parse(stringArgs[1]);
+        }
+
+        public override string ToString()
+        {
+            return string.Join(&quot;,&quot;, X.ToString(), Y.ToString());
+        }
+    }
+}
+</pre></code><script type="text/javascript">
+			applyranges('src69', RANGES_69)
+		</script>
+	</body>
+</html>

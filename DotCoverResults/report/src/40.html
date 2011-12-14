@@ -1,0 +1,601 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_40 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src40" class="dotCoverSource"><pre>namespace Descent.Model.Player.Figure
+{
+    using System.Collections.Generic;
+    using System.Diagnostics.Contracts;
+    using System.Linq;
+
+    using Descent.GUI;
+    using Descent.Model.Board;
+    using Descent.Model.Event;
+    using Descent.Model.Player.Figure.HeroStuff;
+
+    using Microsoft.Xna.Framework;
+    using Microsoft.Xna.Framework.Graphics;
+
+    using Effect = Descent.Model.Event.Effect;
+
+    /// &lt;summary&gt;
+    /// Any bonus to a hero
+    /// &lt;/summary&gt;
+    /// &lt;typeparam name=&quot;T&quot;&gt;
+    /// The type of the bonus, that defines the returntype
+    /// &lt;/typeparam&gt;
+    /// &lt;returns&gt;
+    /// The bonus, of type T
+    /// &lt;/returns&gt;
+    public delegate T Bonus&lt;T&gt;();
+
+    /// &lt;summary&gt;
+    /// A generic figure, either a hero or a monster
+    /// &lt;/summary&gt;
+    /// &lt;author&gt;
+    /// Jonas Breindahl (jobre@itu.dk) &amp; Martin Marcher
+    /// &lt;/author&gt;
+    public abstract class Figure : Drawable
+    {
+        #region Events
+
+        /// &lt;summary&gt;
+        /// This event contributes to the Max Health of the figure
+        /// &lt;/summary&gt;
+        public event Bonus&lt;int&gt; MaxHealthContribution;
+
+        /// &lt;summary&gt;
+        /// This event contributes to the Armor of the figure
+        /// &lt;/summary&gt;
+        public event Bonus&lt;int&gt; ArmorContribution;
+
+        /// &lt;summary&gt;
+        /// This event contributes to the speed of the figure
+        /// &lt;/summary&gt;
+        public event Bonus&lt;int&gt; SpeedContribution;
+
+        /// &lt;summary&gt;
+        /// This event contributes to the number of attacks of the figure
+        /// &lt;/summary&gt;
+        public event Bonus&lt;int&gt; AttacksLeftContribution;
+
+        /// &lt;summary&gt;
+        /// This event contributes lists of dice for making attacks with the figure
+        /// &lt;/summary&gt;
+        public event Bonus&lt;List&lt;Dice&gt;&gt; DiceContribution;
+
+        /// &lt;summary&gt;
+        /// This event contributes to damage when making attacks
+        /// &lt;/summary&gt;
+        public event Bonus&lt;int&gt; DamageContribution;
+
+        /// &lt;summary&gt;
+        /// This event contributes to range when making attacks
+        /// &lt;/summary&gt;
+        public event Bonus&lt;int&gt; RangeContribution;
+
+        /// &lt;summary&gt;
+        /// This event contributes to surges when making attacks
+        /// &lt;/summary&gt;
+        public event Bonus&lt;int&gt; SurgeContribution;
+
+        /// &lt;summary&gt;
+        /// This event contributes to pierce, when making attacks
+        /// &lt;/summary&gt;
+        public event Bonus&lt;int&gt; PierceContribution;
+
+        /// &lt;summary&gt;
+        /// This event contributes lists of abilities to the figure
+        /// &lt;/summary&gt;
+        public event Bonus&lt;List&lt;Ability&gt;&gt; AbilityContribution;
+
+        /// &lt;summary&gt;
+        /// This event contributes lists of surge abilities to the figure
+        /// &lt;/summary&gt;
+        public event Bonus&lt;List&lt;SurgeAbility&gt;&gt; SurgeAbilityContribution; 
+
+        /// &lt;summary&gt;
+        /// This event contributes lists of effects to the figure
+        /// &lt;/summary&gt;
+        public event Bonus&lt;List&lt;Effect&gt;&gt; EffectContribution; 
+
+        #endregion
+
+        #region Fields
+
+        protected int uniqueID;
+
+        protected string name;
+
+        protected int maxHealth;
+
+        protected int health;
+
+        protected int armor;
+
+        protected int speed;
+
+        protected int movementLeft;
+
+        protected int attacksLeft;
+
+        protected List&lt;Dice&gt; diceForAttacks = new List&lt;Dice&gt;();
+
+        protected List&lt;Ability&gt; abilities = new List&lt;Ability&gt;();
+
+        protected List&lt;Effect&gt; effects = new List&lt;Effect&gt;();
+
+        protected List&lt;SurgeAbility&gt; surgeAbilities = new List&lt;SurgeAbility&gt;();
+
+        protected Texture2D texture;
+
+        private readonly Rectangle size;
+
+        #endregion
+
+        #region Properties
+
+        /// &lt;summary&gt;
+        /// Gets a unique ID of this figure
+        /// &lt;/summary&gt;
+        public int Id
+        {
+            get
+            {
+                return uniqueID;
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the name of the figure
+        /// &lt;/summary&gt;
+        public string Name
+        {
+            get
+            {
+                return name;
+            }
+        }
+
+        public Rectangle Size
+        {
+            get
+            {
+                return size;
+            }
+        }
+
+        public Orientation Orientation { get; set; }
+
+        /// &lt;summary&gt;
+        /// Gets the max health, including all contributors
+        /// Sets the internal value, not including all contributors.
+        /// &lt;/summary&gt;
+        public int MaxHealth
+        {
+            get
+            {
+                int total = MaxHealthContribution == null ? 0 : MaxHealthContribution.GetInvocationList().Cast&lt;Bonus&lt;int&gt;&gt;().Sum(bonus =&gt; bonus.Invoke());
+                return maxHealth + total;
+            }
+
+            protected set
+            {
+                Contract.Requires(value &gt; 0);
+                maxHealth = value;
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the current health of the figure
+        /// &lt;/summary&gt;
+        public int Health
+        {
+            get
+            {
+                return health;
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the armor of the figure, including all contributors bonus
+        /// Sets the internal armor, not including any contributors
+        /// &lt;/summary&gt;
+        public int Armor
+        {
+            get
+            {
+                int total = ArmorContribution == null ? 0 : ArmorContribution.GetInvocationList().Cast&lt;Bonus&lt;int&gt;&gt;().Sum(bonus =&gt; bonus.Invoke());
+                return armor + total;
+            }
+
+            protected set
+            {
+                Contract.Requires(value &gt;= 0);
+                armor = value;
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the speed of the figure, included all contributors
+        /// Sets the internal speed of the figure, contributors not included
+        /// &lt;/summary&gt;
+        public int Speed
+        {
+            get
+            {
+                int total = SpeedContribution == null ? 0 : SpeedContribution.GetInvocationList().Cast&lt;Bonus&lt;int&gt;&gt;().Sum(bonus =&gt; bonus.Invoke());
+                return speed + total;
+            }
+
+            protected set
+            {
+                Contract.Requires(value &gt;= 0);
+                speed = value;
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the total amount of speed left
+        /// &lt;/summary&gt;
+        public int MovementLeft 
+        { 
+            get
+            {
+                return movementLeft;
+            }
+
+            private set
+            {
+                Contract.Requires(value &gt;= 0);
+                movementLeft = value;
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the total amount of attacks left, including any contributors
+        /// &lt;/summary&gt;
+        public int AttacksLeft
+        {
+            get
+            {
+                int total = AttacksLeftContribution == null ? 0 : AttacksLeftContribution.GetInvocationList().Cast&lt;Bonus&lt;int&gt;&gt;().Sum(bonus =&gt; bonus.Invoke());
+                return attacksLeft + total;
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets a list of all Dice for attacking, including all contributors
+        /// Sets the internal list of Dice, not including contributors
+        /// &lt;/summary&gt;
+        public List&lt;Dice&gt; DiceForAttack
+        {
+            get
+            {
+                List&lt;Dice&gt; total = new List&lt;Dice&gt;();
+                if (DiceContribution != null)
+                {
+                    foreach (Bonus&lt;List&lt;Dice&gt;&gt; bonus in DiceContribution.GetInvocationList())
+                    {
+                        if(bonus != null)
+                            total.AddRange(bonus.Invoke());
+                    }
+                }
+
+                total.AddRange(diceForAttacks ?? new List&lt;Dice&gt;());
+                return total;
+            }
+
+            protected set
+            {
+                Contract.Requires(value != null);
+                diceForAttacks = value;
+            }
+        } 
+
+        /// &lt;summary&gt;
+        /// Gets the figures list of abilities, including all contributors
+        /// Sets the internal list, not including contributors
+        /// &lt;/summary&gt;
+        public List&lt;Ability&gt; Abilities
+        {
+            get
+            {
+                List&lt;Ability&gt; total = new List&lt;Ability&gt;();
+                if (AbilityContribution != null)
+                {
+                    foreach (Bonus&lt;List&lt;Ability&gt;&gt; bonus in AbilityContribution.GetInvocationList())
+                    {
+                        if(bonus != null)
+                            total.AddRange(bonus.Invoke());
+                    }
+                }
+
+                total.AddRange(abilities);
+                return total;
+            }
+
+            protected set
+            {
+                Contract.Requires(value != null);
+                abilities = value;
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the figures list of surgeabilities, including all contributors
+        /// Sets the internal list, not including contributors
+        /// &lt;/summary&gt;
+        public List&lt;SurgeAbility&gt; SurgeAbilities
+        {
+            get
+            {
+                List&lt;SurgeAbility&gt; total = new List&lt;SurgeAbility&gt;();
+                if (SurgeAbilityContribution != null)
+                {
+                    foreach (Bonus&lt;List&lt;SurgeAbility&gt;&gt; bonus in SurgeAbilityContribution.GetInvocationList())
+                    {
+                        total.AddRange(bonus.Invoke());
+                    }
+                }
+
+                total.AddRange(surgeAbilities);
+                return total;
+            }
+
+            protected set
+            {
+                Contract.Requires(value != null);
+                surgeAbilities = value;
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the figures list of effects, including contributors
+        /// Sets the figures internal list of effect, external contributors not included
+        /// &lt;/summary&gt;
+        public List&lt;Effect&gt; Effects
+        {
+            get
+            {
+                List&lt;Effect&gt; total = new List&lt;Effect&gt;();
+                if (EffectContribution != null)
+                {
+                    foreach (Bonus&lt;List&lt;Effect&gt;&gt; bonus in EffectContribution.GetInvocationList())
+                    {
+                        total.AddRange(bonus.Invoke());
+                    }
+                }
+
+                return effects;
+            }
+
+            protected set
+            {
+                Contract.Requires(value != null);
+                effects = value;
+            }
+        }
+
+        public Texture2D Texture
+        {
+            get
+            {
+                return texture;
+            }
+
+            protected set
+            {
+                texture = value;
+            }
+        }
+        
+        #endregion
+
+        #region Initialization
+
+        /// &lt;summary&gt;
+        /// Initializes a new instance of the &lt;see cref=&quot;Figure&quot;/&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;id&quot;&gt;
+        /// The id of the figure
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;name&quot;&gt;
+        /// The name of the figure
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;size&quot;&gt;
+        /// The size of the figure
+        /// &lt;/param&gt;
+        public Figure(int id, string name, Rectangle size)
+        {
+            Contract.Requires(name.Length &gt; 0);
+            Contract.Requires(size.Width &gt; 0 &amp;&amp; size.Height &gt; 0);
+
+            this.uniqueID = id;
+            this.name = name;
+            this.size = size;
+        }
+
+        /// &lt;summary&gt;
+        /// Call when the game is about to start, so the figure gets life
+        /// &lt;/summary&gt;
+        public virtual void Initialize()
+        {
+            health = MaxHealth;
+        }
+
+        #endregion
+
+        #region Methods
+
+        /// &lt;summary&gt;
+        /// Adds a number of health to the health total, up to the max health
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;amount&quot;&gt;
+        /// The amount to be added
+        /// &lt;/param&gt;
+        public void AddHealth(int amount)
+        {
+            Contract.Requires(amount &gt; 0);
+            Contract.Ensures(
+                Contract.OldValue(health) + amount &gt; MaxHealth ? 
+                health == MaxHealth : 
+                health == Contract.OldValue(Health) + amount);
+            health = (int)MathHelper.Clamp(Health + amount, 0, MaxHealth);
+        }
+
+        /// &lt;summary&gt;
+        /// Removes a number of health to the health total, down to 0
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;amount&quot;&gt;
+        /// The amount to be removed
+        /// &lt;/param&gt;
+        public void RemoveHealth(int amount)
+        {
+            Contract.Ensures(
+                Contract.OldValue(Health) - amount &lt; 0 ?
+                health == 0 : 
+                health == Contract.OldValue(health) - amount);
+            health = (int)MathHelper.Clamp(health - amount, 0, MaxHealth);
+        }
+
+        /// &lt;summary&gt;
+        /// Sets the movement left equal to the amount.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;amount&quot;&gt;
+        /// The amount of movement
+        /// &lt;/param&gt;
+        public void SetMovement(int amount)
+        {
+            Contract.Requires(amount &gt;= 0);
+            Contract.Ensures(MovementLeft == amount);
+            movementLeft = amount;
+        }
+
+        /// &lt;summary&gt;
+        /// Adds speed to the speed total
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;amount&quot;&gt;
+        /// The amount to be added
+        /// &lt;/param&gt;
+        public void AddMovement(int amount)
+        {
+            Contract.Requires(amount &gt; 0);
+            Contract.Ensures(MovementLeft == Contract.OldValue(MovementLeft) + amount);
+            movementLeft = movementLeft + amount;
+        }
+
+        /// &lt;summary&gt;
+        /// Removes speed to the speed total, down to 0
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;amount&quot;&gt;
+        /// The amount to be removed
+        /// &lt;/param&gt;
+        public void RemoveMovement(int amount)
+        {
+            Contract.Requires(amount &gt; 0);
+            Contract.Requires(amount &lt;= MovementLeft);
+            Contract.Ensures(MovementLeft == Contract.OldValue(MovementLeft) - amount);
+            movementLeft -= amount;
+        }
+
+        /// &lt;summary&gt;
+        /// Sets how many attacks the hero has (without bonus). Used at the start of the hero's turn.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;amount&quot;&gt;
+        /// The amount of attacks
+        /// &lt;/param&gt;
+        public void SetAttacks(int amount)
+        {
+            Contract.Requires(amount &gt;= 0);
+            Contract.Ensures(AttacksLeft &gt;= amount);
+            attacksLeft = amount;
+        }
+
+        /// &lt;summary&gt;
+        /// Add one attack.
+        /// &lt;/summary&gt;
+        public void AddAttack()
+        {
+            attacksLeft++;
+        }
+
+        /// &lt;summary&gt;
+        /// Remove one attack.
+        /// &lt;/summary&gt;
+        public void RemoveAttack()
+        {
+            Contract.Requires(AttacksLeft &gt; 0);
+            attacksLeft--;
+        }
+
+        /// &lt;summary&gt;
+        /// Adds an ability to the list of abilities for this figure
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;ability&quot;&gt;
+        /// The ability to be added
+        /// &lt;/param&gt;
+        public void AddAbility(Ability ability)
+        {
+            Contract.Requires(ability != null);
+            Contract.Ensures(abilities.Count == Contract.OldValue(abilities.Count) + 1);
+            abilities.Add(ability);
+        }
+
+        /// &lt;summary&gt;
+        /// Gets an attack instance with the attacking figure, 
+        /// different bonuses, and the dice attacking
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;targetSquare&quot;&gt;
+        /// The target point where the figure is attacking
+        /// &lt;/param&gt;
+        /// &lt;returns&gt;
+        /// An attack instance, with the bonuses for damage, range, pierce and surges laid in.
+        /// &lt;/returns&gt;
+        public Attack GetAttack(Point targetSquare)
+        {
+            return new Attack(this, targetSquare)
+                {
+                    DamageBonus = DamageContribution == null ? 0 : DamageContribution.GetInvocationList().Cast&lt;Bonus&lt;int&gt;&gt;().Sum(bonus =&gt; bonus.Invoke()),
+                    RangeBonus = RangeContribution == null ? 0 : RangeContribution.GetInvocationList().Cast&lt;Bonus&lt;int&gt;&gt;().Sum(bonus =&gt; bonus.Invoke()),
+                    PierceBonus = PierceContribution == null ? 0 : PierceContribution.GetInvocationList().Cast&lt;Bonus&lt;int&gt;&gt;().Sum(bonus =&gt; bonus.Invoke()),
+                    SurgeBonus = SurgeContribution == null ? 0 : SurgeContribution.GetInvocationList().Cast&lt;Bonus&lt;int&gt;&gt;().Sum(bonus =&gt; bonus.Invoke()),
+                };
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the type of attack this figure would do if it attacked right now.
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt;
+        /// Returns the EAttackType of this figure
+        /// &lt;/returns&gt;
+        public abstract EAttackType AttackType { get; }
+
+        /// &lt;summary&gt;
+        /// Checks that a lot of numbers are zero or 
+        /// &lt;/summary&gt;
+        [ContractInvariantMethod]
+        private void ObjectInvariant()
+        {
+            Contract.Invariant(Name.Length &gt; 0);
+            Contract.Invariant(MaxHealth &gt; 0);
+            Contract.Invariant(Health &gt;= 0 &amp;&amp; Health &lt;= MaxHealth);
+            Contract.Invariant(Speed &gt; 0);
+            Contract.Invariant(Armor &gt;= 0);
+            Contract.Invariant(MovementLeft &gt;= 0);
+            Contract.Invariant(AttacksLeft &gt;= 0);
+        }
+        #endregion
+
+    }
+}
+</pre></code><script type="text/javascript">
+			applyranges('src40', RANGES_40)
+		</script>
+	</body>
+</html>

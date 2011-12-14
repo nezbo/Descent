@@ -1,0 +1,58 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_93 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src93" class="dotCoverSource"><pre>
+namespace Descent.Messaging.Events
+{
+    using System.Diagnostics.Contracts;
+
+    /// &lt;summary&gt;
+    /// The event arguments for events regarding overlord cards.
+    /// &lt;/summary&gt;
+    public sealed class OverlordCardEventArgs : GameEventArgs
+    {
+        public OverlordCardEventArgs(int overlordCardId)
+        {
+            Contract.Requires(overlordCardId &gt; 0);
+
+            OverlordCardId = overlordCardId;
+        }
+
+        public OverlordCardEventArgs(string[] stringArgs)
+        {
+            Contract.Requires(stringArgs != null);
+            Contract.Requires(stringArgs.Length == 1);
+            
+            Contract.Requires(EventContractHelper.TryParseInt(stringArgs[0]));
+            PopulateWithArgs(stringArgs);
+        }
+
+        public int OverlordCardId { get; set; }
+
+        public override void PopulateWithArgs(string[] stringArgs)
+        {
+            Contract.Requires(stringArgs != null);
+            Contract.Requires(stringArgs.Length == 1);
+            
+            Contract.Requires(EventContractHelper.TryParseInt(stringArgs[0]));
+
+            OverlordCardId = int.Parse(stringArgs[0]);
+        }
+
+        public override string ToString()
+        {
+            return OverlordCardId.ToString();
+        }
+    }
+}
+</pre></code><script type="text/javascript">
+			applyranges('src93', RANGES_93)
+		</script>
+	</body>
+</html>

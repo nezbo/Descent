@@ -1,0 +1,98 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_10 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src10" class="dotCoverSource"><pre>namespace Descent.GUI.SubElements
+{
+    using Descent.Messaging.Events;
+    using Descent.Model.Player.OverlordStuff;
+    using Microsoft.Xna.Framework;
+    using Microsoft.Xna.Framework.Graphics;
+
+    /// &lt;summary&gt;
+    /// Shows the information of an overlord card and
+    /// is able to switch between a hidden and an
+    /// expanded mode.
+    /// &lt;/summary&gt;
+    /// &lt;author&gt;
+    /// Emil Juul Jacobsen
+    /// &lt;/author&gt;
+
+    class OverlordCardElement : GUIElement
+    {
+        private static SpriteFont Font { get; set; }
+        private bool up = false;
+
+        /// &lt;summary&gt;
+        /// Creates a new OverlordCardElement to display information about
+        /// the given OverlordCard starting from the given position.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;game&quot;&gt;The current Game object.&lt;/param&gt;
+        /// &lt;param name=&quot;x&quot;&gt;The top-left x-coordinate of the hidden mode.&lt;/param&gt;
+        /// &lt;param name=&quot;y&quot;&gt;The top-left y-coordinate of the hidden mode.&lt;/param&gt;
+        /// &lt;param name=&quot;card&quot;&gt;The OverlordCard to display information for.&lt;/param&gt;
+        public OverlordCardElement(Game game, int x, int y, OverlordCard card)
+            : base(game, &quot;overlord card&quot;, x, y, 200, 300)
+        {
+            if (Font == null) Font = game.Content.Load&lt;SpriteFont&gt;(&quot;fontSmall&quot;);
+
+            SetBackground(&quot;Images/Other/overlordcard&quot;);
+
+            // header
+            GUIElement header = new GUIElement(game, &quot;overlord header&quot;, Bound.X + 48, Bound.Y + 15, 200 - 48 * 2, 100);
+            header.AddText(header.Name, card.Name, new Vector2(0, 0));
+            header.SetDrawBackground(false);
+            header.SetFont(Font);
+            AddChild(header);
+
+            // description
+            GUIElement description = new GUIElement(game, &quot;overlord desc&quot;, Bound.X + 35, Bound.Y + 80, 150, 160);
+            description.AddText(description.Name, card.Decription, new Vector2(0, 0));
+            description.SetDrawBackground(false);
+            description.SetFont(Font);
+            AddChild(description);
+
+            // use area
+            GUIElement use = new GUIElement(game, &quot;use overlord card&quot;, Bound.X + 10, Bound.Y + 250, 50, 40);
+            use.SetDrawBackground(false);
+            use.SetClickAction(use.Name, (n, g) =&gt;
+                                             {
+                                                 n.EventManager.QueueEvent(EventType.UseOverlordCard, new OverlordCardEventArgs(card.Id));
+                                             });
+
+            string playPrice = &quot;&quot; + card.PlayPrice;
+            Vector2 playDisp = GUI.Font.MeasureString(playPrice);
+            use.AddText(use.Name, playPrice, new Vector2((use.Bound.Width - playDisp.X) / 2, (use.Bound.Height - playDisp.Y) / 2));
+            AddChild(use);
+
+            // sell area
+            GUIElement sell = new GUIElement(game, &quot;sell overlord card&quot;, Bound.X + 140, Bound.Y + 250, 50, 40);
+            sell.SetDrawBackground(false);
+            sell.SetClickAction(sell.Name, (n, g) =&gt;
+                                               {
+                                                   n.EventManager.QueueEvent(EventType.RemoveOverlordCard, new OverlordCardEventArgs(card.Id));
+                                               });
+
+            string sellPrice = &quot;&quot; + card.SellPrice;
+            Vector2 sellDisp = GUI.Font.MeasureString(sellPrice);
+            sell.AddText(sell.Name, sellPrice, new Vector2((sell.Bound.Width - sellDisp.X) / 2, (sell.Bound.Height - sellDisp.Y) / 2));
+            AddChild(sell);
+        }
+
+        protected override void ActOnDirectClick(int x, int y)
+        {
+            Move(0, up ? 275 : -275);
+            up = !up;
+        }
+    }
+}
+</pre></code><script type="text/javascript">
+			applyranges('src10', RANGES_10)
+		</script>
+	</body>
+</html>

@@ -1,0 +1,96 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_11 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src11" class="dotCoverSource"><pre>namespace Descent.Model.Player
+{
+    using System.Collections.Generic;
+
+    using Descent.Model.Player.OverlordStuff;
+
+    /// &lt;summary&gt;
+    /// The role of a overlord, that a hero can be.
+    /// &lt;/summary&gt;
+    /// &lt;author&gt;
+    /// Jonas Breindahl (jobre@itu.dk)
+    /// &lt;/author&gt;
+    public class Overlord
+    {
+
+        #region Fields
+
+        private List&lt;OverlordCard&gt; hand;
+
+        private List&lt;OverlordCard&gt; powers;
+
+        private List&lt;OverlordCard&gt; deck;
+
+        private List&lt;OverlordCard&gt; graveyard;
+ 
+        #endregion
+
+        /// &lt;summary&gt;
+        /// Initializes a new instance of the &lt;see cref=&quot;Overlord&quot;/&gt; class.
+        /// &lt;/summary&gt;
+        public Overlord()
+        {
+            hand = new List&lt;OverlordCard&gt;();
+            powers = new List&lt;OverlordCard&gt;();
+            deck = new List&lt;OverlordCard&gt;();
+            graveyard = new List&lt;OverlordCard&gt;();
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the cards that the overlord currently has in hand..
+        /// &lt;/summary&gt;
+        public List&lt;OverlordCard&gt; Hand
+        {
+            get
+            {
+                return hand;
+            }
+        }
+
+        public List&lt;OverlordCard&gt; Deck
+        {
+            get
+            {
+                return deck;
+            }
+        }
+
+        public int Graveyard
+        {
+            get
+            {
+                return graveyard.Count;
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the cards that the overlord has put in power.
+        /// &lt;/summary&gt;
+        public List&lt;OverlordCard&gt; Powers
+        {
+            get
+            {
+                return powers;
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the number of threattokens the overlord has.
+        /// &lt;/summary&gt;
+        public int ThreatTokens { get; set; }
+    }
+}
+</pre></code><script type="text/javascript">
+			applyranges('src11', RANGES_11)
+		</script>
+	</body>
+</html>

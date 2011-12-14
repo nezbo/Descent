@@ -1,0 +1,153 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_55 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src55" class="dotCoverSource"><pre>namespace Descent.Model.Player.Figure
+{
+    using System.Collections.Generic;
+    using System.Diagnostics.Contracts;
+    using Microsoft.Xna.Framework;
+    using Microsoft.Xna.Framework.Graphics;
+
+    /// &lt;summary&gt;
+    /// A monster, controlled by the Overlord
+    /// &lt;/summary&gt;
+    /// &lt;author&gt;
+    /// Jonas Breindahl (jobre@itu.dk)
+    /// &lt;/author&gt;
+    public class Monster : Figure
+    {
+        #region Fields
+
+        private bool isMaster;
+
+        private EAttackType attackType;
+
+        #endregion
+
+        #region Properties
+
+        /// &lt;summary&gt;
+        /// Gets a value indicating whether the monster is a master
+        /// &lt;/summary&gt;
+        public bool IsMaster
+        {
+            get
+            {
+                return isMaster;
+            }
+        }
+
+        public override EAttackType AttackType
+        {
+            get
+            {
+                return attackType;
+            }
+        }
+
+        #endregion
+
+        #region Initialization
+        /// &lt;summary&gt;
+        /// Initializes a new instance of the &lt;see cref=&quot;Monster&quot;/&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;id&quot;&gt;
+        /// The monster id
+        /// This is unique for all monsters, even several instances of
+        /// the same monster.
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;name&quot;&gt;
+        /// The name.
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;master&quot;&gt;
+        /// The master.
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;speed&quot;&gt;
+        /// The speed.
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;health&quot;&gt;
+        /// The health.
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;armor&quot;&gt;
+        /// The armor.
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;type&quot;&gt;
+        /// The type.
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;dice&quot;&gt;
+        /// The dice.
+        /// &lt;/param&gt;
+        public Monster(int id, string name, bool master, int speed, int health, int armor, EAttackType type, List&lt;Dice&gt; dice, Rectangle size, Texture2D texture)
+            : base(id, name, size)
+        {
+            Contract.Requires(name != null);
+            Contract.Requires(name.Length &gt; 0);
+            Contract.Requires(size.Width &gt; 0 &amp;&amp; size.Height &gt; 0);
+            Contract.Requires(speed &gt; 0);
+            Contract.Requires(health &gt; 0);
+            Contract.Requires(armor &gt;= 0);
+            Contract.Requires(type != EAttackType.NONE);
+            Contract.Requires(dice != null);
+
+            isMaster = master;
+            Speed = speed;
+            MaxHealth = health;
+            this.health = health;
+            Armor = armor;
+            attackType = type;
+            DiceForAttack = dice;
+            this.Texture = texture;
+        }
+        #endregion
+
+        #region Methods
+
+        /// &lt;summary&gt;
+        /// Returns a clone of the monster, but with a new unique ID
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;newID&quot;&gt;
+        /// The new id of the monser
+        /// &lt;/param&gt;
+        /// &lt;returns&gt;
+        /// A copy of the monster, with a new ID
+        /// &lt;/returns&gt;
+        public Monster Clone(int newID)
+        {
+            Contract.Requires(newID &gt;= 0);
+            return new Monster(newID, Name, isMaster, Speed, MaxHealth, Armor, attackType, new List&lt;Dice&gt;(DiceForAttack), Size, Texture);
+        }
+
+        [ContractInvariantMethod]
+        private void ObjectInvariant()
+        {
+            Contract.Invariant(Name.Length &gt; 0);
+            Contract.Invariant(MaxHealth &gt; 0);
+            Contract.Invariant(Health &gt;= 0 &amp;&amp; Health &lt;= MaxHealth);
+            Contract.Invariant(Speed &gt; 0);
+            Contract.Invariant(Armor &gt;= 0);
+            Contract.Invariant(MovementLeft &gt;= 0);
+            Contract.Invariant(AttacksLeft &gt;= 0);
+            //Contract.Invariant(name != null);
+            //Contract.Invariant(name.Length &gt; 0);
+            //Contract.Invariant(Size.Width &gt; 0 &amp;&amp; Size.Height &gt; 0);
+            //Contract.Invariant(speed &gt; 0);
+            //Contract.Invariant(health &gt; 0);
+            //Contract.Invariant(armor &gt;= 0);
+            //Contract.Invariant(attackType != EAttackType.NONE);
+            //Contract.Invariant(diceForAttacks != null);
+        }
+
+        #endregion
+    }
+}
+</pre></code><script type="text/javascript">
+			applyranges('src55', RANGES_55)
+		</script>
+	</body>
+</html>

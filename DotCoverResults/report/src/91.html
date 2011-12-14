@@ -1,0 +1,316 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_91 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src91" class="dotCoverSource"><pre>
+namespace Descent.Model.Event
+{
+    using System.Collections.Generic;
+    using System.Diagnostics.Contracts;
+    using System.Linq;
+
+    using Descent.Model.Player;
+    using Descent.Model.Player.Figure;
+    using Descent.Model.Player.Figure.HeroStuff;
+
+    using Microsoft.Xna.Framework;
+
+    /// &lt;summary&gt;
+    /// An instance of an attack, with all the data necessary
+    /// &lt;/summary&gt;
+    /// &lt;author&gt;
+    /// Jonas Breindahl (jobre@itu.dk) &amp; Martin MArcher
+    /// &lt;/author&gt;
+    public class Attack
+    {
+        #region Fields
+        private Figure figure;
+
+        private List&lt;Dice&gt; diceForAttack;
+
+        private List&lt;SurgeAbility&gt; surgeAbilities;
+
+        private int damage;
+
+        private int range;
+
+        private int surges;
+
+        private int pierce;
+        #endregion
+
+        #region Properties
+
+        /// &lt;summary&gt;
+        /// Gets the hero that is attacking
+        /// &lt;/summary&gt;
+        public Figure AttackingFigure
+        {
+            get
+            {
+                return figure;
+            }
+
+            private set
+            {
+                figure = value;
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the square which is being attacked
+        /// &lt;/summary&gt;
+        public Point TargetSquare { get; private set; }
+
+        /// &lt;summary&gt;
+        /// Gets the range that is needed to fullfill the attack
+        /// &lt;/summary&gt;
+        public int RangeNeeded
+        {
+            get
+            {
+                return FullModel.Board.Distance(FullModel.Board.FiguresOnBoard[figure], TargetSquare);
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets or sets the damage bonus for this attack
+        /// &lt;/summary&gt;
+        public int DamageBonus { get; set; }
+
+        /// &lt;summary&gt;
+        /// Gets or sets the range bonus for this attack
+        /// &lt;/summary&gt;
+        public int RangeBonus { get; set; }
+
+        /// &lt;summary&gt;
+        /// Gets or sets the surge bonus for this attack
+        /// &lt;/summary&gt;
+        public int SurgeBonus { get; set; }
+
+        /// &lt;summary&gt;
+        /// Gets or sets the pierce bonus for this attack
+        /// &lt;/summary&gt;
+        public int PierceBonus { get; set; }
+
+        /// &lt;summary&gt;
+        /// Gets the total damage for this attack
+        /// &lt;/summary&gt;
+        public int Damage
+        {
+            get
+            {
+                return damage + DamageBonus;
+            }
+
+            private set
+            {
+                damage = value;
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the total range for this attack
+        /// &lt;/summary&gt;
+        public int Range
+        {
+            get
+            {
+                return range + RangeBonus;
+            }
+
+            private set
+            {
+                range = value;
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the total surges for this attack
+        /// &lt;/summary&gt;
+        public int Surge
+        {
+            get
+            {
+                return surges + SurgeBonus;
+            }
+
+            private set
+            {
+                surges = value;
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the total pierce for this attack
+        /// &lt;/summary&gt;
+        public int Pierce
+        {
+            get
+            {
+                return pierce + PierceBonus;
+            }
+
+            private set
+            {
+                pierce = value;
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets or sets the total number of used surges for this attack
+        /// &lt;/summary&gt;
+        public int UsedSurges { get; set; }
+
+        /// &lt;summary&gt;
+        /// Gets a list of dice that the attack will use when attacking
+        /// &lt;/summary&gt;
+        public List&lt;Dice&gt; DiceForAttack
+        {
+            get
+            {
+                return diceForAttack;
+            }
+        }
+        
+        /// &lt;summary&gt;
+        /// Gets a list of surge abilities that can be bought for this attack
+        /// &lt;/summary&gt;
+        public List&lt;SurgeAbility&gt; SurgeAbilities
+        {
+            get
+            {
+                return surgeAbilities;
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets a value indicating whether the attack is missed
+        /// &lt;/summary&gt;
+        public bool MissedAttack { get; private set; }
+
+        #endregion
+
+        #region Initialize
+
+        /// &lt;summary&gt;
+        /// Initializes a new instance of the &lt;see cref=&quot;Attack&quot;/&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;attackingFigure&quot;&gt;
+        /// The attacking Figure.
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;targetSquare&quot;&gt;
+        /// The square that is attacked
+        /// &lt;/param&gt;
+        public Attack(Figure attackingFigure, Point targetSquare)
+        {
+            Contract.Requires(attackingFigure != null);
+            Contract.Requires(FullModel.Board.IsSquareWithinBoard(targetSquare));
+            Contract.Requires(attackingFigure.DiceForAttack != null &amp;&amp; attackingFigure.DiceForAttack.Count &gt; 0);
+
+            this.figure = attackingFigure;
+            diceForAttack = figure.DiceForAttack;
+            surgeAbilities = figure.SurgeAbilities;
+            this.TargetSquare = targetSquare;
+            MissedAttack = false;
+        }
+
+        #endregion
+
+        #region Methods
+
+        /// &lt;summary&gt;
+        /// Sets all dice to the side of the array given
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;diceSides&quot;&gt;
+        /// An array indicating the values of the dice face
+        /// &lt;/param&gt;
+        public void SetDiceSides(int[] diceSides)
+        {
+            Contract.Requires(diceSides != null);
+            Contract.Requires(diceSides.Length == DiceForAttack.Count);
+
+            List&lt;Dice&gt; list = DiceForAttack;
+            for (int i = 0; i &lt; diceSides.Length; i++)
+            {
+                list[i].SideIndex = diceSides[i];
+            }
+            this.CalculateStats();
+        }
+
+        /// &lt;summary&gt;
+        /// Rolls all dice, and determines whether the attack is missed
+        /// &lt;/summary&gt;
+        public void RollDice()
+        {
+            foreach (Dice dice in DiceForAttack)
+            {
+                dice.RollDice();
+            }
+
+            MissedAttack = !DiceForAttack.All(d =&gt; d.ActiveSide[3] == 0);
+            this.CalculateStats();
+        }
+
+        /// &lt;summary&gt;
+        /// Calculates the current values of range, damage, surges and pierce
+        /// &lt;/summary&gt;
+        private void CalculateStats()
+        {
+            Range = 0;
+            Damage = 0;
+            Surge = 0;
+            Pierce = 0;
+            foreach (Dice dice in DiceForAttack)
+            {
+                if (!(dice.Color == EDice.B &amp;&amp; dice.SideIndex &gt;= 1 &amp;&amp; dice.SideIndex &lt;= 3))
+                {
+                    int[] side = dice.ActiveSide;
+                    Range += side[0];
+                    Damage += side[1];
+                    Surge += side[2];
+                }
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the attack instance as a string
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt;
+        /// The string of the the attack
+        /// &lt;/returns&gt;
+        public override string ToString()
+        {
+            this.CalculateStats();
+            return figure.Name + 
+                &quot;\nDamage: &quot; + Damage + 
+                (figure.AttackType != EAttackType.MELEE ? &quot;\nRange: &quot; + Range + &quot; of &quot; + RangeNeeded : string.Empty) + 
+                &quot;\nPierce: &quot; + Pierce +
+                &quot;\nSurge: &quot; + (Surge - UsedSurges);
+        }
+
+        /// &lt;summary&gt;
+        /// Checks if a list from DiceForAttack is alike every time you call it
+        /// &lt;/summary&gt;
+        [ContractInvariantMethod]
+        private void ObjectInvariant()
+        {
+            Contract.Invariant(DiceForAttack.Count &gt; 0);
+            Contract.Invariant(figure != null);
+            Contract.Invariant(FullModel.Board.IsSquareWithinBoard(TargetSquare));
+            //Contract.Invariant(DiceForAttack == null ? true : DiceForAttack.Count == DiceForAttack.Count &amp;&amp; DiceF);
+        }
+
+        #endregion
+    }
+}
+</pre></code><script type="text/javascript">
+			applyranges('src91', RANGES_91)
+		</script>
+	</body>
+</html>

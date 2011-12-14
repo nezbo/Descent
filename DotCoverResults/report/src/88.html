@@ -1,0 +1,63 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_88 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src88" class="dotCoverSource"><pre>namespace Descent.Messaging.Events
+{
+    using System.Diagnostics.Contracts;
+
+    /// &lt;summary&gt;
+    /// The event arguments for events about equipping and unequipping equipments at a special inventory fields.
+    /// &lt;/summary&gt;
+    /// &lt;author&gt;
+    /// Simon Westh Henriksen
+    /// &lt;/author&gt;
+    public sealed class InventoryFieldEventArgs : GameEventArgs
+    {
+        public InventoryFieldEventArgs(int inventoryField)
+        {
+            Contract.Requires(inventoryField &gt;= 0);
+            InventoryField = inventoryField;
+        }
+
+        public InventoryFieldEventArgs(string[] stringArgs)
+        {
+            Contract.Requires(stringArgs != null);
+            Contract.Requires(stringArgs.Length == 1);
+            
+            Contract.Requires(Contract.ForAll(stringArgs, s =&gt; EventContractHelper.TryParseInt(s)));
+            Contract.Requires(int.Parse(stringArgs[0]) &gt;= 0);
+
+            PopulateWithArgs(stringArgs);
+        }
+
+        public int EquipmentId { get; set; }
+
+        public int InventoryField { get; set; }
+
+        public override void PopulateWithArgs(string[] stringArgs)
+        {
+            Contract.Requires(stringArgs != null);
+            Contract.Requires(stringArgs.Length == 1);
+            
+            Contract.Requires(Contract.ForAll(stringArgs, s =&gt; EventContractHelper.TryParseInt(s)));
+            Contract.Requires(int.Parse(stringArgs[0]) &gt;= 0);
+            InventoryField = int.Parse(stringArgs[0]);
+        }
+
+        public override string ToString()
+        {
+            return InventoryField.ToString();
+        }
+    }
+}
+</pre></code><script type="text/javascript">
+			applyranges('src88', RANGES_88)
+		</script>
+	</body>
+</html>

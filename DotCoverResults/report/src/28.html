@@ -1,0 +1,61 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_28 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src28" class="dotCoverSource"><pre>
+namespace Descent.Model.Board.Marker
+{
+    using System.Diagnostics.Contracts;
+
+    using Descent.Messaging.Events;
+    using Descent.Model.Player;
+    using Descent.Model.Player.Figure;
+    using Descent.Model.Player.Figure.HeroStuff;
+
+    using Microsoft.Xna.Framework.Graphics;
+
+    /// &lt;summary&gt;
+    /// A marker of a chest, on the board
+    /// &lt;/summary&gt;
+    /// &lt;author&gt;
+    /// Jonas Breindahl (jobre@itu.dk)
+    /// &lt;/author&gt;
+    public class ChestMarker : Marker
+    {
+        private EquipmentRarity rarity;
+
+        public ChestMarker(int id, string name, int movementCost, EquipmentRarity rarity, Texture2D texture) : base(id, name, texture, movementCost)
+        {
+            Contract.Requires(name != null);
+            Contract.Requires(name.Length &gt; 0);
+            Contract.Requires(movementCost &gt;= 0);
+            this.rarity = rarity;
+        }
+
+        /// &lt;summary&gt;
+        /// Will get a random chest Id and queue the event to open that chest
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;hero&quot;&gt;
+        /// The hero that opend the chest
+        /// &lt;/param&gt;
+        public override void PickUp(Hero hero)
+        {
+            Contract.Requires(hero != null);
+
+            if (Player.Instance.StateManager.GameState.CurrentPlayer == Player.Instance.Id)
+            {
+                // If I am the current player, I should pick the random chest to open and send the event.
+                Player.Instance.EventManager.QueueEvent(EventType.OpenChest, new ChestEventArgs(Player.Instance.StateManager.GameState.GetRandomChestID(rarity)));
+            }
+        }
+    }
+}</pre></code><script type="text/javascript">
+			applyranges('src28', RANGES_28)
+		</script>
+	</body>
+</html>

@@ -1,0 +1,198 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_44 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src44" class="dotCoverSource"><pre>
+namespace Descent.Model.Player
+{
+    using System.Collections.Generic;
+    using System.Diagnostics.Contracts;
+    using System.Linq;
+
+    using Descent.Model.Board;
+    using Descent.Model.Player.Figure;
+
+    using Microsoft.Xna.Framework;
+
+    /// &lt;summary&gt;
+    /// A party of heroes
+    /// &lt;/summary&gt;
+    /// &lt;author&gt;
+    /// Jonas Breindahl (jobre@itu.dk)
+    /// &lt;/author&gt;
+    public class HeroParty
+    {
+        /// &lt;summary&gt;
+        /// Initializes a new instance of the &lt;see cref=&quot;HeroParty&quot;/&gt; class.
+        /// &lt;/summary&gt;
+        public HeroParty()
+        {
+            Heroes = new Dictionary&lt;int, Hero&gt;();
+            RuneKeys = new HashSet&lt;RuneKey&gt;();
+        }
+
+        #region Properties
+
+        /// &lt;summary&gt;
+        /// Gets the heroes of players. Key is player id.
+        /// Can I have all hero and id's as a map?
+        /// &lt;/summary&gt;
+        public Dictionary&lt;int, Hero&gt; Heroes { get; private set; }
+
+        /// &lt;summary&gt;
+        /// Gets all ids of the hero players.
+        /// Can I have a list of all heroes id?
+        /// &lt;/summary&gt;
+        public int[] PlayerIds
+        {
+            get { return Heroes.Keys.ToArray(); }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the runekeys of the hero party.
+        /// Can I have a list of all rune keys the heroes have?
+        /// &lt;/summary&gt;
+        public HashSet&lt;RuneKey&gt; RuneKeys { get; private set; }
+
+        /// &lt;summary&gt;
+        /// Gets numberOfHeroes.
+        /// How many heroes are in the HeroParty?
+        /// &lt;/summary&gt;
+        public int NumberOfHeroes
+        {
+            get
+            {
+                return Heroes.Count;
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets all heroes as an array.
+        /// &lt;/summary&gt;
+        public Hero[] AllHeroes
+        {
+            get
+            {
+                return Heroes.Values.ToArray();
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets number of ConquestTokens.
+        /// How many conquest tokens do the players have?
+        /// &lt;/summary&gt;
+        public int ConquestTokens { get; private set; }
+
+        /// &lt;summary&gt;
+        /// Gets a value indicating whether IsConquestPoolEmpty.
+        /// Is the pool of conquest tokens empty?
+        /// &lt;/summary&gt;
+        public bool IsConquestPoolEmpty
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result&lt;bool&gt;() == (ConquestTokens &lt;= 0));
+                return ConquestTokens &lt;= 0;
+            }
+        }
+
+        #endregion
+
+        #region Methods
+
+        /// &lt;summary&gt;
+        /// Add a number of tokens to the pool
+        /// Add 'this' number of conquest tokens to the pool of tokens!
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;tokens&quot;&gt;
+        /// The number of tokens to be added
+        /// &lt;/param&gt;
+        public void AddConquestTokens(int tokens)
+        {
+            Contract.Requires(tokens &gt;= 0);
+            Contract.Ensures(ConquestTokens == Contract.OldValue(ConquestTokens) + tokens);
+            ConquestTokens += tokens;
+        }
+
+        /// &lt;summary&gt;
+        /// Removes a number of tokens from the pool
+        /// Remove 'this' number of conquest tokens from the pool of tokens!
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;tokens&quot;&gt;
+        /// The number of tokens to be removed, must be possitive
+        /// &lt;/param&gt;
+        public void RemoveConquestTokens(int tokens)
+        {
+            Contract.Requires(tokens &gt; 0);
+            Contract.Ensures(ConquestTokens == Contract.OldValue(ConquestTokens) - tokens || ConquestTokens == 0);
+            ConquestTokens = (int)MathHelper.Clamp(ConquestTokens - tokens, 0, int.MaxValue);
+        }
+
+        /// &lt;summary&gt;
+        /// Add a hero to the hero party.
+        /// Add 'this' hero to the list of heroes in the HeroParty!
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;playerId&quot;&gt;PlayerId of the player that holds the Hero.&lt;/param&gt;
+        /// &lt;param name=&quot;hero&quot;&gt;The hero to add.&lt;/param&gt;
+        public void AddHero(int playerId, Hero hero)
+        {
+            Contract.Requires(hero != null);
+            Contract.Ensures(AllHeroes.Contains(hero));
+            Heroes.Add(playerId, hero);
+        }
+
+        /// &lt;summary&gt;
+        /// Adds 
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;runeKey&quot;&gt;
+        /// The rune key.
+        /// &lt;/param&gt;
+        public void AddRuneKey(RuneKey runeKey)
+        {
+            Contract.Ensures(HasRuneKey(runeKey));
+            RuneKeys.Add(runeKey);
+        }
+
+        /// &lt;summary&gt;
+        /// Gets whether the party has a already picked up the rune key
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;runeKey&quot;&gt;
+        /// The rune key.
+        /// &lt;/param&gt;
+        /// &lt;returns&gt;
+        /// True if the party has the key
+        /// &lt;/returns&gt;
+        [Pure]
+        public bool HasRuneKey(RuneKey runeKey)
+        {
+            return RuneKeys.Contains(runeKey);
+        }
+
+        /// &lt;summary&gt;
+        /// Fetches the player id for a given Hero if it is
+        /// in the party.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;hero&quot;&gt;The hero we want the player id for.&lt;/param&gt;
+        /// &lt;returns&gt;The player id that controls the given hero, if it isn't found -1.&lt;/returns&gt;
+        public int GetPlayerId(Hero hero)
+        {
+            foreach (KeyValuePair&lt;int, Hero&gt; kv in Heroes)
+            {
+                if (kv.Value.Equals(hero)) return kv.Key;
+            }
+            return -1;
+        }
+
+        #endregion
+    }
+}
+</pre></code><script type="text/javascript">
+			applyranges('src44', RANGES_44)
+		</script>
+	</body>
+</html>

@@ -1,0 +1,61 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_22 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src22" class="dotCoverSource"><pre>
+namespace Descent.Messaging.AsyncSockets
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics.Contracts;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Sockets;
+    using System.Text;
+
+    public delegate void MessageReceivedHandler(ClientInfo clientInfo, string message);
+
+    public delegate void ConnectionClosedHandler(ClientInfo clientInfo);
+ 
+    /// &lt;summary&gt;
+    /// Implementation of the asynchronous sockets client.
+    /// &lt;/summary&gt;
+    /// &lt;author&gt;
+    /// Simon Westh Henriksen
+    /// &lt;/author&gt;
+    public class AsyncSocketsClient
+    {
+        /// &lt;summary&gt;
+        /// Initializes a new instance of the &lt;see cref=&quot;AsyncSocketsClient&quot;/&gt; class. 
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;address&quot;&gt;Address of the server to connect to.&lt;/param&gt;
+        /// &lt;param name=&quot;port&quot;&gt;Port of the server to connect to.&lt;/param&gt;
+        public AsyncSocketsClient(string address, int port)
+        {
+            Contract.Requires(address != null &amp;&amp; address.Count(f =&gt; f == '.') == 3);
+            Contract.Requires(port &gt; 0);
+            Contract.Ensures(Socket != null);
+
+            IPAddress host = Dns.GetHostAddresses(address)[0];
+            Socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            Socket.Connect(new IPEndPoint(host, port));
+        }
+
+        public Socket Socket { get; private set; }
+
+        public void Close()
+        {
+            Socket.Close();
+        }
+    }
+}
+</pre></code><script type="text/javascript">
+			applyranges('src22', RANGES_22)
+		</script>
+	</body>
+</html>

@@ -1,0 +1,161 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_35 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src35" class="dotCoverSource"><pre>
+﻿namespace Descent.Messaging.AsyncSockets
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics.Contracts;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Sockets;
+
+    public delegate bool ClientConnectedHandler(ClientInfo clientInfo);
+
+    /// &lt;summary&gt;
+    /// Implementation of the asynchronous sockets server.
+    /// &lt;/summary&gt;
+    /// &lt;author&gt;
+    /// Simon Westh Henriksen
+    /// &lt;/author&gt;
+    public class AsyncSocketsServer
+    {
+        
+        private byte[] bytes = new byte[1024];
+
+        private Socket socket;
+
+        private int port;
+
+        // Contains all the connected clients.
+        private Dictionary&lt;int, ClientInfo&gt; clients = new Dictionary&lt;int, ClientInfo&gt;();
+
+        /// &lt;summary&gt;
+        /// Initializes a new instance of the &lt;see cref=&quot;AsyncSocketsServer&quot;/&gt; class. 
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;port&quot;&gt;
+        /// Port that the server should use.
+        /// &lt;/param&gt;
+        public AsyncSocketsServer(int port)
+        {
+            Contract.Requires(port &gt; 0);
+            this.port = port;
+
+            socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+        }
+
+        /// &lt;summary&gt;
+        /// This event will be fired when a client has connected.
+        /// &lt;/summary&gt;
+        public event ClientConnectedHandler ClientConnectedEvent;
+
+        /// &lt;summary&gt;
+        /// Gets an array of strings corresponding to the IPs of the machine. Only selects &quot;InterNetwork&quot; IPs.
+        /// &lt;/summary&gt;
+        public string[] Ips
+        {
+            get
+            {
+                return
+                    Dns.GetHostEntry(Dns.GetHostName()).AddressList.Where(
+                        ipAdr =&gt; ipAdr.AddressFamily.ToString() == &quot;InterNetwork&quot;).Select(ipAdr =&gt; ipAdr.ToString()).
+                        ToArray();
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Start listening and accepting clients.
+        /// &lt;/summary&gt;
+        public void Start()
+        {
+            socket.Bind(new IPEndPoint(IPAddress.Any, port));
+            socket.Listen(100);
+
+            socket.BeginAccept(new AsyncCallback(AcceptCallback), socket);
+        }
+
+        public void Close()
+        {
+            foreach (ClientInfo clientInfo in clients.Values)
+            {
+                clientInfo.Close();
+            }
+            socket.Close();
+        }
+
+        /// &lt;summary&gt;
+        /// Broadcast a string to all connected clients.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;message&quot;&gt;The string to broadcast&lt;/param&gt;
+        public void Broadcast(string message)
+        {
+            foreach (ClientInfo clientInfo in clients.Values)
+            {
+                clientInfo.Send(message);
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Broadcast a string to all connected clients except one.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;message&quot;&gt;The string to broadcast&lt;/param&gt;
+        /// &lt;param name=&quot;clientId&quot;&gt;The client which the server shouldn't send to.&lt;/param&gt;
+        public void BroadcastExceptClient(string message, int clientId)
+        {
+            foreach (ClientInfo clientInfo in clients.Values)
+            {
+                if (clientInfo.Id != clientId) clientInfo.Send(message);
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Called when a client was connected.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;asyncResult&quot;&gt;Asynchronous result&lt;/param&gt;
+        private void AcceptCallback(IAsyncResult asyncResult)
+        {
+            Socket server = (Socket)asyncResult.AsyncState;
+            Socket client = server.EndAccept(asyncResult);
+
+            ClientInfo clientInfo = new ClientInfo(client);
+
+            server.BeginAccept(new AsyncCallback(AcceptCallback), server);
+
+            // If we have a delegate and he returns false, we close the connection.
+            if (ClientConnectedEvent != null &amp;&amp; !ClientConnectedEvent(clientInfo))
+            {
+                client.Close();
+                return;
+            }
+
+            // Add client to collection of clients
+            clients.Add(clientInfo.Id, clientInfo);
+
+            clientInfo.ConnectionClosedEvent += new ConnectionClosedHandler(ClientConnectionDisconnected);
+
+            // Start receiving data. See ClientInfo class for details.
+            clientInfo.BeginReceive();
+        }
+
+        /// &lt;summary&gt;
+        /// Called when a client disconnects. Removes the client from the collection.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;clientInfo&quot;&gt;Disconnected client&lt;/param&gt;
+        private void ClientConnectionDisconnected(ClientInfo clientInfo)
+        {
+            clients.Remove(clientInfo.Id);
+        }
+    }
+}
+</pre></code><script type="text/javascript">
+			applyranges('src35', RANGES_35)
+		</script>
+	</body>
+</html>

@@ -74,6 +74,14 @@ namespace Descent.Messaging.Connection
         }
 
         /// <summary>
+        /// Close the socket connection.
+        /// </summary>
+        public override void Close()
+        {
+            client.Close();
+        }
+
+        /// <summary>
         /// Called when a message was received from the connection.
         /// </summary>
         /// <param name="clientInfo"><see cref="ClientInfo"/> object</param>
