@@ -1,7 +1,7 @@
 ﻿namespace Descent.Model.Event
 {
     /// <summary>
-    /// TODO: Update summary.
+    /// May be implemented later.
     /// </summary>
     public class Effect
     {

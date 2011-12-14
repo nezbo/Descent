@@ -1,0 +1,118 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_81 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src81" class="dotCoverSource"><pre>namespace Descent.State
+{
+    using System.Collections.Generic;
+    using System.Diagnostics.Contracts;
+    using Messaging.Events;
+    using Model.Player;
+
+    public delegate void StateChanged();
+
+    /// &lt;summary&gt;
+    /// The handler of all states. Knows about the current state and what to do next.
+    /// &lt;/summary&gt;
+    /// &lt;author&gt;Martin Marcher&lt;/author&gt;
+    public class StateMachine
+    {
+        private readonly List&lt;State&gt; _states = new List&lt;State&gt;();
+        private int currentIndex;
+
+        public StateMachine(State[] startStates)
+        {
+            Contract.Requires(startStates != null &amp;&amp; startStates.Length &gt; 1);
+            currentIndex = 0;
+            _states.AddRange(startStates);
+        }
+
+        public event StateChanged StateChanged;
+
+        public State CurrentState
+        {
+            get { return _states[currentIndex]; }
+        }
+
+        public State NextState
+        {
+            get { return _states[currentIndex + 1]; }
+        }
+
+        /// &lt;summary&gt;
+        /// Go to the next state.
+        /// &lt;/summary&gt;
+        public void ChangeToNextState()
+        {
+            Contract.Ensures(currentIndex &lt; _states.Count);
+            currentIndex++;
+
+            #if DEBUG 
+            if (Player.Instance.IsServer)
+            {
+                Player.Instance.EventManager.QueueEvent(EventType.ChatMessage, new ChatMessageEventArgs(&quot;Changed state: &quot; + CurrentState.ToString()));
+            }
+            #endif
+
+            StateChanged();
+        }
+
+        /// &lt;summary&gt;
+        /// Inserts states right after the CurrentState.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;states&quot;&gt;All states to insert&lt;/param&gt;
+        public void PlaceStates(params State[] states)
+        {
+            Contract.Requires(states != null &amp;&amp; states.Length &gt; 0);
+            Contract.Ensures(NextState == states[0]);
+            for (int counter = 0; counter &lt; states.Length; counter++)
+            {
+                _states.Insert(currentIndex + counter + 1, states[counter]);
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Performs backwards search beginning at the current state, searching for two different States.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;one&quot;&gt;The first state to search for.&lt;/param&gt;
+        /// &lt;param name=&quot;other&quot;&gt;The second state to search for.&lt;/param&gt;
+        /// &lt;returns&gt;True if &lt;code&gt;one&lt;/code&gt; is found before &lt;code&gt;other&lt;/code&gt; otherwise returns false.&lt;/returns&gt;
+        public bool IsOneMoreRecentThanOther(State one, State other)
+        {
+            int index = currentIndex;
+            while (index &gt;= 0)
+            {
+                if (_states[index] == one)
+                {
+                    return true;
+                }
+
+                if (_states[index] == other)
+                {
+                    return false;
+                }
+
+                index--;
+            }
+
+            return false; // there were no &quot;one&quot; at all
+        }
+
+        [ContractInvariantMethod]
+        private void Invariant()
+        {
+            // Ensures that are always a current and next state
+            Contract.Invariant(currentIndex &lt; _states.Count - 1);
+        }
+    }
+}
+</pre></code><script type="text/javascript">
+			applyranges('src81', RANGES_81)
+		</script>
+	</body>
+</html>

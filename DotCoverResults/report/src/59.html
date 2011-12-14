@@ -1,0 +1,51 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_59 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src59" class="dotCoverSource"><pre>namespace Descent.GUI
+{
+    using System.Diagnostics.Contracts;
+    using Microsoft.Xna.Framework.Graphics;
+
+    /// &lt;summary&gt;
+    /// The simplest possible Drawable that only implements the interface.
+    /// &lt;/summary&gt;
+    /// &lt;author&gt;
+    /// Emil Juul Jacobsen
+    /// &lt;/author&gt;
+    public class Image : Drawable
+    {
+        private Texture2D tex;
+
+        /// &lt;summary&gt;
+        /// Creates an Image with the given texture.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;texture&quot;&gt;The texture that the Image should hold.&lt;/param&gt;
+        public Image(Texture2D texture)
+        {
+            tex = texture;
+        }
+
+        /// &lt;summary&gt;
+        /// The visualization of the Image.
+        /// &lt;/summary&gt;
+        public Texture2D Texture
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result&lt;Texture2D&gt;() != null);
+                return tex;
+            }
+        }
+    }
+}
+</pre></code><script type="text/javascript">
+			applyranges('src59', RANGES_59)
+		</script>
+	</body>
+</html>

@@ -1,0 +1,78 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_18 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src18" class="dotCoverSource"><pre>
+namespace Descent.Messaging.Events
+{
+    using System;
+    using System.Diagnostics.Contracts;
+
+    /// &lt;summary&gt;
+    /// The event arguments for the GiveEquipment event.
+    /// &lt;/summary&gt;
+    /// &lt;author&gt;
+    /// Simon Westh Henriksen
+    /// &lt;/author&gt;
+    public sealed class GiveEquipmentEventArgs : GameEventArgs
+    {
+        public GiveEquipmentEventArgs(int playerId, int equipmentId, bool free = false)
+        {
+            Contract.Requires(playerId &gt; 0);
+            Contract.Requires(equipmentId &gt; 0);
+
+            PlayerId = playerId;
+            EquipmentId = equipmentId;
+            Free = free;
+        }
+
+        public GiveEquipmentEventArgs(string[] stringArgs)
+        {
+            Contract.Requires(stringArgs != null);
+            Contract.Requires(stringArgs.Length == 3);
+
+            Contract.Requires(Contract.ForAll(stringArgs, s =&gt; EventContractHelper.TryParseInt(s)));
+            Contract.Requires(int.Parse(stringArgs[0]) &gt; 0);
+            Contract.Requires(int.Parse(stringArgs[1]) &gt; 0);
+            Contract.Requires(int.Parse(stringArgs[2]) == 0 || int.Parse(stringArgs[2]) == 1);
+
+            PopulateWithArgs(stringArgs);
+        }
+
+        public int PlayerId { get; set; }
+
+        public int EquipmentId { get; set; }
+
+        public bool Free { get; set; }
+
+        public override void PopulateWithArgs(string[] stringArgs)
+        {
+            Contract.Requires(stringArgs != null);
+            Contract.Requires(stringArgs.Length == 3);
+
+            Contract.Requires(Contract.ForAll(stringArgs, s =&gt; EventContractHelper.TryParseInt(s)));
+            Contract.Requires(int.Parse(stringArgs[0]) &gt; 0);
+            Contract.Requires(int.Parse(stringArgs[1]) &gt; 0);
+            Contract.Requires(int.Parse(stringArgs[2]) == 0 || int.Parse(stringArgs[2]) == 1);
+
+            PlayerId = int.Parse(stringArgs[0]);
+            EquipmentId = int.Parse(stringArgs[1]);
+            Free = Convert.ToBoolean(int.Parse(stringArgs[2]));
+        }
+
+        public override string ToString()
+        {
+            return string.Join(&quot;,&quot;, PlayerId, EquipmentId, Convert.ToInt32(Free));
+        }
+    }
+}
+</pre></code><script type="text/javascript">
+			applyranges('src18', RANGES_18)
+		</script>
+	</body>
+</html>

@@ -1,0 +1,71 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_73 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src73" class="dotCoverSource"><pre>
+namespace Descent.Messaging.Events
+{
+    using System.Diagnostics.Contracts;
+
+    /// &lt;summary&gt;
+    /// The event arguments for PlaceHero event.
+    /// &lt;/summary&gt;
+    public sealed class PlaceHeroEventArgs : GameEventArgs
+    {
+        public PlaceHeroEventArgs(int playerId, int x, int y)
+        {
+            Contract.Requires(playerId &gt; 0);
+            Contract.Requires(x &gt;= 0);
+            Contract.Requires(y &gt;= 0);
+
+            PlayerId = playerId;
+            X = x;
+            Y = y;
+        }
+
+        public PlaceHeroEventArgs(string[] stringArgs)
+        {
+            Contract.Requires(stringArgs != null);
+            Contract.Requires(stringArgs.Length == 3);
+            
+            Contract.Requires(Contract.ForAll(stringArgs, s =&gt; EventContractHelper.TryParseInt(s) &amp;&amp; int.Parse(s) &gt;= 0));
+            Contract.Requires(int.Parse(stringArgs[0]) &gt; 0);
+
+            PopulateWithArgs(stringArgs);
+        }
+
+        public int PlayerId { get; set; }
+
+        public int X { get; set; }
+
+        public int Y { get; set; }
+
+        public override void PopulateWithArgs(string[] stringArgs)
+        {
+            Contract.Requires(stringArgs != null);
+            Contract.Requires(stringArgs.Length == 3);
+            
+            Contract.Requires(Contract.ForAll(stringArgs, s =&gt; EventContractHelper.TryParseInt(s) &amp;&amp; int.Parse(s) &gt;= 0));
+            Contract.Requires(int.Parse(stringArgs[0]) &gt; 0);
+
+            PlayerId = int.Parse(stringArgs[0]);
+            X = int.Parse(stringArgs[1]);
+            Y = int.Parse(stringArgs[2]);
+        }
+
+        public override string ToString()
+        {
+            return string.Join(&quot;,&quot;, PlayerId.ToString(), X.ToString(), Y.ToString());
+        }
+    }
+}
+</pre></code><script type="text/javascript">
+			applyranges('src73', RANGES_73)
+		</script>
+	</body>
+</html>

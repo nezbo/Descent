@@ -1,0 +1,96 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_60 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src60" class="dotCoverSource"><pre>namespace Descent.GUI.SubElements
+{
+    using System;
+    using Descent.Messaging.Events;
+    using Descent.Model;
+    using Microsoft.Xna.Framework;
+
+    /// &lt;summary&gt;
+    /// Displays a number of dice on their rolled sides.
+    /// &lt;/summary&gt;
+    /// &lt;author&gt;
+    /// Emil Juul Jacobsen
+    /// &lt;/author&gt;
+    class DicesElement : GUIElement
+    {
+        private static readonly int Spacing = 10;
+        private int diceWidth;
+        private int perLine;
+
+        /// &lt;summary&gt;
+        /// Creates a new DIcesElement that displays the given dice within the boundaries.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;game&quot;&gt;The current Game object.&lt;/param&gt;
+        /// &lt;param name=&quot;dices&quot;&gt;The dice to display on the screen.&lt;/param&gt;
+        /// &lt;param name=&quot;x&quot;&gt;The top-left x-coordinate of this element.&lt;/param&gt;
+        /// &lt;param name=&quot;y&quot;&gt;The top-left y-coordinate of this element.&lt;/param&gt;
+        /// &lt;param name=&quot;width&quot;&gt;The width of this element.&lt;/param&gt;
+        /// &lt;param name=&quot;height&quot;&gt;The height of this element.&lt;/param&gt;
+        public DicesElement(Game game, Dice[] dices, int x, int y, int width, int height)
+            : base(game, &quot;dice&quot;, x, y, width, height)
+        {
+            // determine how many can be displayed on a line
+            if (dices.Length &gt; 0)
+            {
+                diceWidth = dices[0].Texture.Width + Spacing;
+                perLine = 1;
+                int widthLeft = Bound.Width - dices[0].Texture.Width - 2 * Spacing;
+
+                while (widthLeft &gt; diceWidth)
+                {
+                    perLine++;
+                    widthLeft -= diceWidth;
+                }
+
+                // make the dice displayed in sorted order
+                int line = 0;
+                int number = 0;
+                foreach (EDice diceType in Enum.GetValues(typeof(EDice)))
+                {
+                    for (int d = 0; d &lt; dices.Length; d++)
+                    {
+                        if (dices[d].Color == diceType)
+                        {
+                            Dice die = dices[d];
+                            int index = d;
+                            GUIElement diceBox = new GUIElement(game, &quot;dice&quot;, Bound.X + Spacing + number * die.Texture.Width + number * Spacing,
+                                                                Bound.Y + Spacing + line * die.Texture.Height + line * Spacing,
+                                                                die.Texture.Width, die.Texture.Height);
+                            diceBox.AddDrawable(diceBox.Name, die, new Vector2(diceBox.Bound.X, diceBox.Bound.Y));
+                            diceBox.SetClickAction(diceBox.Name, (n, g) =&gt;
+                                                                     {
+                                                                         n.EventManager.QueueEvent(
+                                                                             EventType.DiceClicked,
+                                                                             new DiceEventArgs(index, die.SideIndex));
+                                                                     });
+                            this.AddChild(diceBox);
+
+
+                            number++;
+
+                            if (number &gt;= perLine)
+                            {
+                                number = 0;
+                                line++;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+</pre></code><script type="text/javascript">
+			applyranges('src60', RANGES_60)
+		</script>
+	</body>
+</html>

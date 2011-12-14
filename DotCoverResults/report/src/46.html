@@ -1,0 +1,845 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_46 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src46" class="dotCoverSource"><pre>namespace Descent.Model.Board
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Diagnostics.Contracts;
+    using System.Linq;
+
+    using Descent.Model.Player.Figure;
+
+    using Microsoft.Xna.Framework;
+    using Microsoft.Xna.Framework.Graphics;
+
+    /// &lt;summary&gt;
+    /// Indicates whether an object is horizontal or vertical
+    /// &lt;/summary&gt;
+    public enum Orientation 
+    {
+        /// &lt;summary&gt;
+        /// Horizontal orientation
+        /// &lt;/summary&gt;
+        H, 
+
+        /// &lt;summary&gt;
+        /// Vertical orientation
+        /// &lt;/summary&gt;
+        V 
+    }
+
+    /// &lt;summary&gt;
+    /// A board of 
+    /// &lt;/summary&gt;
+    /// &lt;author&gt;
+    /// Jonas Breindahl (jobre@itu.dk), Martin Marcher
+    /// &lt;/author&gt;
+    public class Board
+    {
+        #region Fields
+
+        /// &lt;summary&gt;
+        /// The board, made up of squares
+        /// &lt;/summary&gt;
+        private readonly Square[,] board;
+
+        private Rectangle bounds;
+
+        private HashSet&lt;int&gt; revealedAreas = new HashSet&lt;int&gt;();
+
+        private List&lt;Door&gt; doors = new List&lt;Door&gt;();
+
+        private Collection&lt;Hero&gt; heroesInTown = new Collection&lt;Hero&gt;();
+
+        private Dictionary&lt;Figure, Point&gt; figuresOnBoard = new Dictionary&lt;Figure, Point&gt;();
+
+        private Texture2D floorTexture;
+
+        private bool boardChanged = true;
+
+        private bool[,] canSpawn;
+
+        #endregion
+
+        #region Properties
+
+        /// &lt;summary&gt;
+        /// Gets the width of the board
+        /// What is your width?
+        /// &lt;/summary&gt;
+        public int Width
+        {
+            get { return bounds.Width; }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the height of the board
+        /// What is your height?
+        /// &lt;/summary&gt;
+        public int Height
+        {
+            get { return bounds.Height; }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the list of heroes in Town
+        /// &lt;/summary&gt;
+        public Hero[] HeroesInTown
+        {
+            get { return heroesInTown.ToArray(); }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the points where all figures are standing
+        /// 
+        /// &lt;/summary&gt;
+        public Dictionary&lt;Figure, Point&gt; FiguresOnBoard
+        {
+            get { return figuresOnBoard; }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets the texture for the floor of the dungeon
+        /// &lt;/summary&gt;
+        public Texture2D FloorTexture
+        {
+            get { return floorTexture; }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets all doors that are revealed at the moment.
+        /// &lt;/summary&gt;
+        public Door[] RelevantDoors
+        {
+            get
+            {
+                return
+                    doors.Where(door =&gt; !door.Opened &amp;&amp; door.Areas.Any(area =&gt; revealedAreas.Contains(area))).ToArray();
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Gets an array of all doors on the board
+        /// &lt;/summary&gt;
+        public Door[] AllDoors
+        {
+            get { return doors.Where(door =&gt; !door.Opened).ToArray(); }
+        }
+
+        #endregion
+
+        #region Indexers
+
+        /// &lt;summary&gt;
+        /// Access the (x, y)'th in the board
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;x&quot;&gt;
+        /// The x coordinate
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;y&quot;&gt;
+        /// The y coordinate
+        /// &lt;/param&gt;
+        /// &lt;returns&gt;
+        /// The square at coordinate (x, y)
+        /// &lt;/returns&gt;
+        public Square this[int x, int y]
+        {
+            get
+            {
+                Contract.Requires(x &gt;= 0 &amp;&amp; y &gt;= 0 &amp;&amp; x &lt; Width &amp;&amp; y &lt; Height);
+                return board[x, y];
+            }
+
+            set
+            {
+                Contract.Requires(x &gt;= 0 &amp;&amp; y &gt;= 0 &amp;&amp; x &lt; Width &amp;&amp; y &lt; Height);
+                board[x, y] = value;
+            }
+        }
+
+        /// &lt;summary&gt;
+        /// Access a point on the board
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;p&quot;&gt;
+        /// The point to be accessed
+        /// &lt;/param&gt;
+        /// &lt;returns&gt;
+        /// The square at point p
+        /// &lt;/returns&gt;
+        public Square this[Point p]
+        {
+            get
+            {
+                Contract.Requires(p.X &gt;= 0 &amp;&amp; p.Y &gt;= 0 &amp;&amp; p.X &lt; Width &amp;&amp; p.Y &lt; Height);
+                return board[p.X, p.Y];
+            }
+
+            set
+            {
+                Contract.Requires(p.X &gt;= 0 &amp;&amp; p.Y &gt;= 0 &amp;&amp; p.X &lt; Width &amp;&amp; p.Y &lt; Height);
+                board[p.X, p.Y] = value;
+            }
+        }
+
+        #endregion
+
+        #region Initialization
+
+        /// &lt;summary&gt;
+        /// Initializes a new instance of the &lt;see cref=&quot;Board&quot;/&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;width&quot;&gt;
+        /// The width of the board
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;height&quot;&gt;
+        /// The height of the board
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;floorTexture&quot;&gt;
+        /// The floor Texture.
+        /// &lt;/param&gt;
+        public Board(int width, int height, Texture2D floorTexture)
+        {
+            Contract.Requires(width &gt; 1 &amp;&amp; height &gt; 1);
+            bounds = new Rectangle(0, 0, width, height);
+            board = new Square[width, height];
+            canSpawn = new bool[width, height];
+            this.floorTexture = floorTexture;
+            revealedAreas.Add(0);
+        }
+
+        #endregion
+
+        #region Methods
+
+        /// &lt;summary&gt;
+        /// Determines wether the point (x, y) is within the board,
+        /// and a square in the dungeon
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;x&quot;&gt;
+        /// The x coordinate
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;y&quot;&gt;
+        /// The y coordinate
+        /// &lt;/param&gt;
+        /// &lt;returns&gt;
+        /// True if the point (x, y) is in the dungeon
+        /// &lt;/returns&gt;
+        public bool IsSquareWithinBoard(int x, int y)
+        {
+            if (!bounds.Contains(x, y)) return false;
+            if (board[x, y] == null) return false;
+            return true;
+        }
+
+        /// &lt;summary&gt;
+        /// Determines whether the point is within the board,
+        /// and if there is a square on that point.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;point&quot;&gt;
+        /// The point.
+        /// &lt;/param&gt;
+        /// &lt;returns&gt;
+        /// True if the point is within the boundries of the board
+        /// &lt;/returns&gt;
+        public bool IsSquareWithinBoard(Point point)
+        {
+            Contract.Requires(point != null);
+            return IsSquareWithinBoard(point.X, point.Y);
+        }
+
+        /// &lt;summary&gt;
+        /// Determines whether a series of points are with
+        /// the board, and if there is a square on that point.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;points&quot;&gt;&lt;/param&gt;
+        /// &lt;returns&gt;&lt;/returns&gt;
+        public bool IsSquareWithinBoard(Point[] points)
+        {
+            Contract.Requires(points != null);
+            return points.All(IsSquareWithinBoard);
+        }
+
+        /// &lt;summary&gt;
+        /// Is the square inside the dungeon, and is there no figure?
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;x&quot;&gt;
+        /// The x coordinate 
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;y&quot;&gt;
+        /// The y coordinate
+        /// &lt;/param&gt;
+        /// &lt;returns&gt;
+        /// True if the point is within the dungeon, and there is no figure on it
+        /// &lt;/returns&gt;
+        public bool IsStandable(int x, int y)
+        {
+            return IsSquareWithinBoard(x, y) &amp;&amp; SquareVisibleByPlayers(x, y) &amp;&amp; board[x, y].Figure == null &amp;&amp;
+                   (board[x, y].Marker == null || !board[x, y].Marker.Name.Equals(&quot;rock&quot;));
+        }
+
+        /// &lt;summary&gt;
+        /// Is all points in the array standable?
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;points&quot;&gt;&lt;/param&gt;
+        /// &lt;returns&gt;&lt;/returns&gt;
+        public bool IsStandable(Point[] points)
+        {
+            Contract.Requires(points != null);
+            return points.All(p =&gt; IsStandable(p.X, p.Y));
+        }
+
+        /// &lt;summary&gt;
+        /// Indicates whether the overlord can spawn on a space
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;point&quot;&gt;
+        /// The point
+        /// &lt;/param&gt;
+        /// &lt;returns&gt;
+        /// Whether the overlord can spawn on the point
+        /// &lt;/returns&gt;
+        public bool CanOverlordSpawn(Point point)
+        {
+            Contract.Requires(point.X &gt;= 0 &amp;&amp; point.Y &gt;= 0 &amp;&amp; point.X &lt; Width &amp;&amp; point.Y &lt; Height);
+            if (boardChanged)
+            {
+                UpdateCanSpawn();
+            }
+            return canSpawn[point.X, point.Y];
+        }
+
+        private void UpdateCanSpawn()
+        {
+            for (int x = 0; x &lt; Width; x++)
+            {
+                for (int y = 0; y &lt; Height; y++)
+                {
+                    canSpawn[x, y] = true;
+                }
+            }
+
+            foreach (Point point in FiguresOnBoard.Where(pair =&gt; pair.Key is Hero).Select(pair =&gt; pair.Value))
+            {
+                for (int x = 0; x &lt; Width; x++)
+                {
+                    for (int y = 0; y &lt; Height; y++)
+                    {
+                        canSpawn[x, y] = canSpawn[x, y] &amp;&amp; IsStandable(x, y) &amp;&amp;
+                                         !IsThereLineOfSight(point, new Point(x, y), true);
+                    }
+                }
+            }
+
+            boardChanged = false;
+        }
+
+        /// &lt;summary&gt;
+        /// Indicates whether a point is a valid start/spawn point
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;point&quot;&gt;
+        /// The point to check
+        /// &lt;/param&gt;
+        /// &lt;returns&gt;
+        /// If a hero can spawn on the point, true,
+        /// if not, false
+        /// &lt;/returns&gt;
+        public bool IsValidStartSquare(Point point)
+        {
+            if (!IsStandable(point.X, point.Y)) return false;
+            for (int x = point.X - 1; x &lt;= point.X + 1; x++)
+            {
+                for (int y = point.Y - 1; y &lt;= point.Y + 1; y++)
+                {
+                    if (IsSquareWithinBoard(x, y) &amp;&amp; this[x, y].Marker != null &amp;&amp;
+                        this[x, y].Marker.Name.Equals(&quot;glyph-open&quot;)) return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// &lt;summary&gt;
+        /// Indicates whether there is nothing in the way from one point to another
+        /// Monsters can be ignored, so it can be used to calculate where to spawn monsters
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;from&quot;&gt;
+        /// The start point
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;to&quot;&gt;
+        /// The end point
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;ignoreMonsters&quot;&gt;
+        /// If true, monsters will be ignored so they do not break line of sight
+        /// &lt;/param&gt;
+        /// &lt;returns&gt;
+        /// True if there is a clear line of sight between from and to
+        /// &lt;/returns&gt;
+        public bool IsThereLineOfSight(Point from, Point to, bool ignoreMonsters)
+        {
+            Contract.Requires(IsSquareWithinBoard(from));
+            if (this[from.X, from.Y].Marker != null &amp;&amp; this[from.X, from.Y].Marker.Name.Equals(&quot;pit&quot;))
+            {
+                return false;
+            }
+            foreach (var point in SquaresBetweenPoints(from, to))
+            {
+                if (
+                    !(IsStandable(point.X, point.Y) ||
+                      (ignoreMonsters &amp;&amp; board[point.X, point.Y] != null &amp;&amp; board[point.X, point.Y].Figure is Monster)))
+                    return false;
+            }
+            return true;
+        }
+
+        /// &lt;summary&gt;
+        /// Indicates whethere there's nothing in the way from one figure to another.
+        /// Can ignore monsters.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;from&quot;&gt;&quot;From&quot; figure.&lt;/param&gt;
+        /// &lt;param name=&quot;to&quot;&gt;&quot;To&quot; figure.&lt;/param&gt;
+        /// &lt;param name=&quot;ignoreMonsters&quot;&gt;Will ignore monsters if true.&lt;/param&gt;
+        /// &lt;returns&gt;&lt;/returns&gt;
+        public bool IsThereLineOfSight(Figure from, Figure to, bool ignoreMonsters)
+        {
+            Contract.Requires(from != null);
+            Contract.Requires(to != null);
+            Point[] fromPoints = FullModel.Board.FigureSquares(from);
+            Point[] toPoints = FullModel.Board.FigureSquares(to);
+            foreach (Point fromPoint in fromPoints)
+            {
+                foreach (Point toPoint in toPoints)
+                {
+                    if (IsThereLineOfSight(fromPoint, toPoint, ignoreMonsters)) return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// &lt;summary&gt;
+        /// Get a (non-sorted) array of squares between two squares.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;from&quot;&gt;&lt;/param&gt;
+        /// &lt;param name=&quot;to&quot;&gt;&lt;/param&gt;
+        /// &lt;returns&gt;&lt;/returns&gt;
+        private Point[] SquaresBetweenPoints(Point from, Point to)
+        {
+            var points = new HashSet&lt;Point&gt;();
+
+            if (from == to)
+            {
+                return new Point[] {from};
+            }
+            // if the lines are completely vertical
+            if (from.X == to.X)
+            {
+                int step = (to.Y - from.Y)/Math.Abs(to.Y - from.Y);
+                for (int y = from.Y; y != to.Y; y += step)
+                {
+                    points.Add(new Point(from.X, y));
+                }
+            }
+
+                // if the lines are completely horizontal
+            else if (from.Y == to.Y)
+            {
+                int step = (to.X - from.X)/Math.Abs(to.X - from.X);
+                for (int x = from.X; x != to.X; x += step)
+                {
+                    points.Add(new Point(x, from.Y));
+                }
+            }
+
+                // the line is not straight
+            else
+            {
+                // if we are going left instead of right, switch the from and to
+                if (from.X &gt; to.X)
+                {
+                    var temp = from;
+                    from = to;
+                    to = temp;
+                }
+
+                // calculate the angle of descent/decline
+                double a = (double) (to.Y - from.Y)/(to.X - from.X);
+
+                // step by 0.5 from the from x-coordinate to the to x-coordinate
+                for (double xn = from.X + .5; xn &lt; to.X; xn++)
+                {
+                    // calculate the y-value
+                    double yn = (xn - from.X)*a + from.Y;
+                    if (Math.Abs(yn - Math.Truncate(yn) - .5) &lt; .0000001)
+                    {
+                        if (a &lt; 0)
+                        {
+                            points.Add(new Point((int) Math.Truncate(xn), (int) Math.Ceiling(yn)));
+                            points.Add(new Point((int) Math.Ceiling(xn), (int) Math.Truncate(yn)));
+                        }
+                        else
+                        {
+                            points.Add(new Point((int) Math.Truncate(xn), (int) Math.Truncate(yn)));
+                            points.Add(new Point((int) Math.Ceiling(xn), (int) Math.Ceiling(yn)));
+
+                        }
+                    }
+                    else
+                    {
+                        points.Add(new Point((int) Math.Truncate(xn), (int) Math.Round(yn)));
+                        points.Add(new Point((int) Math.Truncate(xn) + 1, (int) Math.Round(yn)));
+                    }
+                }
+
+                if (from.Y &gt; to.Y)
+                {
+                    var temp = from;
+                    from = to;
+                    to = temp;
+                }
+                // step by 0.5 from the from y-coordinate to the to y-coordinate
+                for (double yn = from.Y + .5; yn &lt; to.Y; yn++)
+                {
+                    // calculates the x value
+                    double xn = (yn - from.Y)/a + from.X;
+                    if (Math.Abs(xn - Math.Truncate(xn) - .5) &lt; .000001)
+                    {
+                        if (a &lt; 0)
+                        {
+                            points.Add(new Point((int) Math.Truncate(xn), (int) Math.Ceiling(yn)));
+                            points.Add(new Point((int) Math.Ceiling(xn), (int) Math.Truncate(yn)));
+                        }
+                        else
+                        {
+                            points.Add(new Point((int) Math.Truncate(xn), (int) Math.Truncate(yn)));
+                            points.Add(new Point((int) Math.Ceiling(xn), (int) Math.Ceiling(yn)));
+
+                        }
+                    }
+                    else
+                    {
+                        points.Add(new Point((int) Math.Round(xn), (int) Math.Truncate(yn)));
+                        points.Add(new Point((int) Math.Round(xn), (int) Math.Truncate(yn) + 1));
+                    }
+                }
+            }
+
+            points.Remove(from);
+            points.Remove(to);
+
+            return points.ToArray();
+        }
+
+        /// &lt;summary&gt;
+        /// Should the square be shown on the board?
+        /// A square is visible by players if it has something on it,
+        /// and if that squares area has been revealed
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;x&quot;&gt;
+        /// The x coordinate
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;y&quot;&gt;
+        /// The y coordinate
+        /// &lt;/param&gt;
+        /// &lt;returns&gt;
+        /// Whether a square is visible by players
+        /// &lt;/returns&gt;
+        public bool SquareVisibleByPlayers(int x, int y)
+        {
+            return IsSquareWithinBoard(x, y) &amp;&amp; revealedAreas.Contains(this[x, y].Area);
+        }
+
+        /// &lt;summary&gt;
+        /// Get the distance between to squares.
+        /// This distance does not take blocking into account,
+        /// such has there being a wall in the way
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;here&quot;&gt;
+        /// The 'here' point
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;there&quot;&gt;
+        /// The 'there' point
+        /// &lt;/param&gt;
+        /// &lt;returns&gt;
+        /// The distance it would take to travel between the points, 
+        /// if there are no obstacles
+        /// &lt;/returns&gt;
+        public int Distance(Point here, Point there)
+        {
+            Contract.Requires(here != null);
+            Contract.Requires(there != null);
+            Contract.Requires(here.X &gt;= 0 &amp;&amp; here.Y &gt;= 0);
+            Contract.Requires(there.X &gt;= 0 &amp;&amp; there.Y &gt;= 0);
+            return Math.Max(Math.Abs(here.X - there.X), Math.Abs(here.Y - there.Y));
+        }
+
+        /// &lt;summary&gt;
+        /// Open a door
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;point&quot;&gt;
+        /// A point adjacent to a door
+        /// &lt;/param&gt;
+        public void OpenDoor(Point point)
+        {
+            Contract.Requires(CanOpenDoor(point));
+            revealedAreas.Add(GetDoor(point).Areas.Where(area =&gt; !revealedAreas.Contains(area)).FirstOrDefault());
+            GetDoor(point).Opened = true;
+            boardChanged = true;
+        }
+
+        /// &lt;summary&gt;
+        /// Calculates whether a party 
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;point&quot;&gt;
+        /// A point where there should be a door next to
+        /// &lt;/param&gt;
+        /// &lt;returns&gt;
+        /// Whether a door next to the point is a runedoor, and if you have the key
+        /// &lt;/returns&gt;
+        [Pure]
+        public bool CanOpenDoor(Point point)
+        {
+            Door door = GetDoor(point);
+            if (door == null) return false;
+            return !door.IsRuneDoor || Player.Player.Instance.HeroParty.HasRuneKey(door.KeyColor);
+        }
+
+        /// &lt;summary&gt;
+        /// Adds a door to the board
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;door&quot;&gt;
+        /// The door to be added
+        /// &lt;/param&gt;
+        public void AddDoor(Door door)
+        {
+            doors.Add(door);
+        }
+
+        /// &lt;summary&gt;
+        /// Gets a door at a specific point, if there is any
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;point&quot;&gt;
+        /// The point next to the door
+        /// &lt;/param&gt;
+        /// &lt;returns&gt;
+        /// The door
+        /// &lt;/returns&gt;
+        private Door GetDoor(Point point)
+        {
+            return doors.SingleOrDefault(door =&gt; door.IsAdjecentSquare(point));
+        }
+
+        /// &lt;summary&gt;
+        /// Moves a figure to a specific point.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;figure&quot;&gt;
+        /// The figure that is moved
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;point&quot;&gt;
+        /// The upper left corner of the figure, that is moved to
+        /// &lt;/param&gt;
+        public void MoveFigure(Figure figure, Point point)
+        {
+            Contract.Requires(figure != null);
+            Contract.Requires(this.CanFigureMoveToPoint(figure, point));
+
+            // Remove monsters from old position
+            Point p = FiguresOnBoard[figure];
+            for (int x = p.X;
+                 x &lt; p.X + (figure.Orientation.Equals(Orientation.V) ? figure.Size.Width : figure.Size.Height);
+                 x++)
+            {
+                for (int y = p.Y;
+                     y &lt; p.Y + (figure.Orientation.Equals(Orientation.V) ? figure.Size.Height : figure.Size.Width);
+                     y++)
+                {
+                    board[x, y].Figure = null;
+                }
+            }
+
+            for (int x = point.X;
+                 x &lt; point.X + (figure.Orientation.Equals(Orientation.V) ? figure.Size.Width : figure.Size.Height);
+                 x++)
+            {
+                for (int y = point.Y;
+                     y &lt; point.Y + (figure.Orientation.Equals(Orientation.V) ? figure.Size.Height : figure.Size.Width);
+                     y++)
+                {
+                    board[x, y].Figure = figure;
+                }
+            }
+
+            figuresOnBoard[figure] = point;
+            boardChanged = true;
+        }
+
+        /// &lt;summary&gt;
+        /// Places a figure at a specific point
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;figure&quot;&gt;
+        /// The figure that is placed
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;point&quot;&gt;
+        /// The upper left corner of the figure
+        /// &lt;/param&gt;
+        public void PlaceFigure(Figure figure, Point point)
+        {
+            Contract.Requires(figure != null);
+            Contract.Requires(point.X &gt;= 0 &amp;&amp; point.Y &gt;= 0 &amp;&amp; point.X &lt; Width &amp;&amp; point.Y &lt; Height);
+
+            for (int x = point.X;
+                 x &lt; point.X + (figure.Orientation.Equals(Orientation.V) ? figure.Size.Width : figure.Size.Height);
+                 x++)
+            {
+                for (int y = point.Y;
+                     y &lt; point.Y + (figure.Orientation.Equals(Orientation.V) ? figure.Size.Height : figure.Size.Width);
+                     y++)
+                {
+                    board[x, y].Figure = figure;
+                }
+            }
+            figuresOnBoard[figure] = point;
+            boardChanged = true;
+        }
+
+        /// &lt;summary&gt;
+        /// Creates an array of all points a figure is on
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;figure&quot;&gt;
+        /// The figure
+        /// &lt;/param&gt;
+        /// &lt;returns&gt;
+        /// The figure squares the figure is standing on
+        /// &lt;/returns&gt;
+        public Point[] FigureSquares(Figure figure)
+        {
+            Contract.Requires(figure != null);
+            List&lt;Point&gt; list = new List&lt;Point&gt;();
+            Point point = this.FiguresOnBoard[figure];
+            for (int x = point.X;
+                 x &lt; point.X + (figure.Orientation.Equals(Orientation.V) ? figure.Size.Width : figure.Size.Height);
+                 x++)
+            {
+                for (int y = point.Y;
+                     y &lt; point.Y + (figure.Orientation.Equals(Orientation.V) ? figure.Size.Height : figure.Size.Width);
+                     y++)
+                {
+                    list.Add(new Point(x, y));
+                }
+            }
+            return list.ToArray();
+        }
+
+        /// &lt;summary&gt;
+        /// Gets a value indicating whether a figure can move to a point
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;figure&quot;&gt;
+        /// The figure
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;point&quot;&gt;
+        /// The upper left corner of the end point
+        /// &lt;/param&gt;
+        /// &lt;returns&gt;
+        /// Whether all squares of the final destination are legal
+        /// &lt;/returns&gt;
+        public bool CanFigureMoveToPoint(Figure figure, Point point)
+        {
+            Contract.Requires(figure != null);
+            if (figure.Size.Width == 1 &amp;&amp; figure.Size.Height == 1) return IsStandable(point.X, point.Y);
+
+            bool canMove = true;
+
+            List&lt;Point&gt; list = new List&lt;Point&gt;();
+            for (int x = point.X;
+                 x &lt; point.X + (figure.Orientation.Equals(Orientation.V) ? figure.Size.Width : figure.Size.Height);
+                 x++)
+            {
+                for (int y = point.Y;
+                     y &lt; point.Y + (figure.Orientation.Equals(Orientation.V) ? figure.Size.Height : figure.Size.Width);
+                     y++)
+                {
+                    canMove &amp;= IsStandable(x, y) || (IsSquareWithinBoard(x, y) &amp;&amp; this[x, y].Figure == figure);
+                }
+            }
+
+            return canMove;
+        }
+
+        /// &lt;summary&gt;
+        /// Removes a figure from all squares where it was previously on the board
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;point&quot;&gt;
+        /// The point where the figure is standing
+        /// &lt;/param&gt;
+        internal void RemoveFigure(Point point)
+        {
+            Contract.Requires(IsSquareWithinBoard(point.X, point.Y));
+            Contract.Requires(this[point] != null);
+            Contract.Ensures(this[point].Figure == null);
+
+            Figure figure = this[point].Figure;
+            point = FiguresOnBoard[figure]; // Get top left corner if big monster
+            if (figure is Hero)
+            {
+                heroesInTown.Add((Hero)figure);
+            }
+
+            for (int x = point.X;
+                 x &lt; point.X + (figure.Orientation.Equals(Orientation.V) ? figure.Size.Width : figure.Size.Height);
+                 x++)
+            {
+                for (int y = point.Y;
+                     y &lt; point.Y + (figure.Orientation.Equals(Orientation.V) ? figure.Size.Height : figure.Size.Width);
+                     y++)
+                {
+                    this[x, y].Figure = null;
+                }
+            }
+
+            figuresOnBoard.Remove(figure);
+        }
+
+        /// &lt;summary&gt;
+        /// Respawns a dead hero next to the start glyph
+        /// &lt;/summary&gt;
+        public void RespawnDeadHeroes()
+        {
+            Contract.Ensures(HeroesInTown.Length == 0);
+            foreach (var hero in heroesInTown)
+            {
+                PlaceDeadHero(hero);
+            }
+            foreach (var hero in FiguresOnBoard.Keys.Where(figure =&gt; figure is Hero))
+            {
+                heroesInTown.Remove((Hero)hero);
+            }
+        }
+
+        private void PlaceDeadHero(Hero hero)
+        {
+            for (int y = 0; y &lt; Height; y++)
+            {
+                for (int x = 0; x &lt; Width; x++)
+                {
+                    if (IsValidStartSquare(new Point(x, y)))
+                    {
+                        PlaceFigure(hero, new Point(x, y));
+                        return;
+                    }
+                }
+            }
+        }
+
+        #endregion
+    }
+}</pre></code><script type="text/javascript">
+			applyranges('src46', RANGES_46)
+		</script>
+	</body>
+</html>

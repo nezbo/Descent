@@ -1,0 +1,71 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_16 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src16" class="dotCoverSource"><pre>
+namespace Descent.Messaging.Events
+{
+    using System;
+    using System.Diagnostics.Contracts;
+
+    /// &lt;summary&gt;
+    /// The event arguments for the PlayerJoined event.
+    /// &lt;/summary&gt;
+    /// &lt;author&gt;
+    /// Simon Westh Henriksen
+    /// &lt;/author&gt;
+    public sealed class AssignHeroEventArgs : GameEventArgs
+    {
+        public AssignHeroEventArgs(int playerId, int heroId)
+        {
+            Contract.Requires(playerId &gt; 0);
+            Contract.Requires(heroId &gt; 0);
+            PlayerId = playerId;
+            HeroId = heroId;
+        }
+
+        public AssignHeroEventArgs(string[] stringArgs)
+        {
+            Contract.Requires(stringArgs != null);
+            Contract.Requires(stringArgs.Length == 2);
+            
+            Contract.Requires(Contract.ForAll(stringArgs, s =&gt; EventContractHelper.TryParseInt(s) &amp;&amp; int.Parse(s) &gt; 0));
+            Contract.Ensures(PlayerId &gt; 0);
+            Contract.Ensures(HeroId &gt; 0);
+            PopulateWithArgs(stringArgs);
+        }
+
+        public int PlayerId { get; set; }
+
+        public int HeroId { get; set; }
+
+        public override void PopulateWithArgs(string[] stringArgs)
+        {
+            Contract.Requires(stringArgs != null);
+            Contract.Requires(stringArgs.Length == 2);
+            
+            Contract.Requires(Contract.ForAll(stringArgs, s =&gt; EventContractHelper.TryParseInt(s) &amp;&amp; int.Parse(s) &gt; 0));
+            Contract.Ensures(PlayerId &gt; 0);
+            Contract.Ensures(HeroId &gt; 0);
+
+            PlayerId = int.Parse(stringArgs[0]);
+            HeroId = int.Parse(stringArgs[1]);
+
+        }
+
+        public override string ToString()
+        {
+            return string.Join(&quot;,&quot;, PlayerId.ToString(), HeroId.ToString());
+        }
+    }
+}
+</pre></code><script type="text/javascript">
+			applyranges('src16', RANGES_16)
+		</script>
+	</body>
+</html>

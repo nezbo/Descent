@@ -1,0 +1,60 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_49 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src49" class="dotCoverSource"><pre>
+namespace Descent.Messaging.Events
+{
+    using System.Diagnostics.Contracts;
+
+    /// &lt;summary&gt;
+    /// The event arguments for events needing to send some kind of points. Like AddFatigue.
+    /// &lt;/summary&gt;
+    /// &lt;author&gt;
+    /// Simon Westh Henriksen
+    /// &lt;/author&gt;
+    public sealed class PointsEventArgs : GameEventArgs
+    {
+        public PointsEventArgs(int points)
+        {
+            Points = points;
+        }
+
+        public PointsEventArgs(string[] stringArgs)
+        {
+            Contract.Requires(stringArgs != null);
+            Contract.Requires(stringArgs.Length == 1);
+            
+            Contract.Requires(EventContractHelper.TryParseInt(stringArgs[0]));
+
+            PopulateWithArgs(stringArgs);
+        }
+
+        public int Points { get; set; }
+
+        public override void PopulateWithArgs(string[] stringArgs)
+        {
+            Contract.Requires(stringArgs != null);
+            Contract.Requires(stringArgs.Length == 1);
+            
+            Contract.Requires(EventContractHelper.TryParseInt(stringArgs[0]));
+
+            Points = int.Parse(stringArgs[0]);
+        }
+
+        public override string ToString()
+        {
+            return Points.ToString();
+        }
+    }
+}
+</pre></code><script type="text/javascript">
+			applyranges('src49', RANGES_49)
+		</script>
+	</body>
+</html>

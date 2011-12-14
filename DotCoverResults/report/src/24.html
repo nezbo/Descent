@@ -1,0 +1,45 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_24 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src24" class="dotCoverSource"><pre>namespace Descent.Model.Player.OverlordStuff
+{
+    using Descent.Model.Player.Figure;
+
+    /// &lt;summary&gt;
+    /// A type of Overlord_Card that lets the overlord spawn more monsters
+    /// &lt;/summary&gt;
+    /// &lt;author&gt;
+    /// Martin Marcher
+    /// &lt;/author&gt;
+    public class SpawnCard : OverlordCard
+    {
+        private readonly Monster[] monstersToSpawn;
+
+        public Monster[] MonstersToSpawn
+        {
+            get { return monstersToSpawn; }
+        }
+
+        public SpawnCard(int id, string name, string description, int playPrice, int sellPrice, Monster[] spawnMonsters)
+            : base(id, name, description, playPrice, sellPrice, OverlordCardType.Spawn)
+        {
+            monstersToSpawn = spawnMonsters;
+        }
+
+        public override void PlayCard()
+        {
+            // TODO: Monster spawn event
+        }
+    }
+}
+</pre></code><script type="text/javascript">
+			applyranges('src24', RANGES_24)
+		</script>
+	</body>
+</html>

@@ -1,0 +1,148 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_94 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src94" class="dotCoverSource"><pre>
+namespace Descent.Messaging.AsyncSockets
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics.Contracts;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Sockets;
+    using System.Text;
+
+    /// &lt;summary&gt;
+    /// Stores information about a client connection.
+    /// &lt;/summary&gt;
+    /// &lt;author&gt;
+    /// Simon Westh Henriksen
+    /// &lt;/author&gt;
+    public class ClientInfo
+    {
+        private const int BUFSIZE = 1024;
+
+        private readonly Socket socket;
+
+        private static int nextId = 2;
+
+        private StringBuilder str = new StringBuilder();
+
+        private byte[] buf = new byte[BUFSIZE];
+
+        /// &lt;summary&gt;
+        /// Initializes a new instance of the &lt;see cref=&quot;ClientInfo&quot;/&gt; class. 
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;clientSocket&quot;&gt;Socket of the client.&lt;/param&gt;
+        public ClientInfo(Socket clientSocket)
+        {
+            Contract.Requires(clientSocket != null);
+
+            socket = clientSocket;
+            Id = nextId++;
+        }
+
+        /// &lt;summary&gt;
+        /// This event is fired when a message is received.
+        /// &lt;/summary&gt;
+        public event MessageReceivedHandler MessageReceivedEvent;
+
+        /// &lt;summary&gt;
+        /// This event is fired when a connection is closed.
+        /// &lt;/summary&gt;
+        public event ConnectionClosedHandler ConnectionClosedEvent;
+
+        /// &lt;summary&gt;
+        /// Gets or sets the id of the client.
+        /// &lt;/summary&gt;
+        public int Id { get; set; }
+
+        /// &lt;summary&gt;
+        /// Gets the ip of the client.
+        /// &lt;/summary&gt;
+        public string Ip { get { return ((IPEndPoint)socket.LocalEndPoint).Address.ToString(); } }
+
+        /// &lt;summary&gt;
+        /// Send a string.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;message&quot;&gt;String to send&lt;/param&gt;
+        public void Send(string message)
+        {
+            Contract.Requires(message != null);
+
+            // Sends through the socket. Appends &lt;EOF&gt; to indicate end of message.
+            socket.Send(Encoding.UTF8.GetBytes(message + &quot;&lt;EOF&gt;&quot;));
+        }
+
+        /// &lt;summary&gt;
+        /// Begin receiving data asynchronously.
+        /// &lt;/summary&gt;
+        public void BeginReceive()
+        {
+            socket.BeginReceive(buf, 0, BUFSIZE, 0, new AsyncCallback(BeginReceiveCallback), this);
+        }
+
+        /// &lt;summary&gt;
+        /// Close the socket for this client.
+        /// &lt;/summary&gt;
+        public void Close()
+        {
+            socket.Close();
+        }
+
+        /// &lt;summary&gt;
+        /// Called when data was received.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;asyncResult&quot;&gt;Async result&lt;/param&gt;
+        private void BeginReceiveCallback(IAsyncResult asyncResult)
+        {
+            int read = socket.EndReceive(asyncResult);
+
+            if (read &gt; 0)
+            {
+                // Append to string buffer
+                str.Append(Encoding.UTF8.GetString(buf, 0, read));
+
+                string content = str.ToString();
+
+                // If and while we have an EOF marker, we would like to parse messages.
+                // When no marker is left, we're done and need to receive more data.
+                while (content.IndexOf(&quot;&lt;EOF&gt;&quot;) &gt; -1)
+                {
+                    // Gets the first message in the content string.
+                    string newMessage = content.Substring(0, content.IndexOf(&quot;&lt;EOF&gt;&quot;));
+                        
+                    // Remove the new message from our content string.
+                    content = content.Substring(newMessage.Length + 5, content.Length - newMessage.Length - 5);
+
+                    // Fire message received event.
+                    if (MessageReceivedEvent != null)
+                    {
+                        MessageReceivedEvent(this, newMessage);
+                    }
+                }
+
+                str.Clear();
+                str.Append(content);
+
+                BeginReceive();
+            }
+            else
+            {
+                // No data received - connection closed
+                ConnectionClosedEvent(this);
+            }
+        }
+    }
+}
+</pre></code><script type="text/javascript">
+			applyranges('src94', RANGES_94)
+		</script>
+	</body>
+</html>

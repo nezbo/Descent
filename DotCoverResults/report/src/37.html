@@ -1,0 +1,61 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_37 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src37" class="dotCoverSource"><pre>
+﻿namespace Descent.Messaging.Events
+{
+    using System.Diagnostics.Contracts;
+
+    /// &lt;summary&gt;
+    /// The event arguments for the RequestBuyEquipment event.
+    /// &lt;/summary&gt;
+    /// &lt;author&gt;
+    /// Simon Westh Henriksen
+    /// &lt;/author&gt;
+    public sealed class RequestBuyEquipmentEventArgs : GameEventArgs
+    {
+        public RequestBuyEquipmentEventArgs(int equipmentId)
+        {
+            Contract.Requires(equipmentId &gt; 0);
+            EquipmentId = equipmentId;
+        }
+
+        public RequestBuyEquipmentEventArgs(string[] stringArgs)
+        {
+            Contract.Requires(stringArgs != null);
+            Contract.Requires(stringArgs.Length == 1);
+            
+            Contract.Requires(EventContractHelper.TryParseInt(stringArgs[0]));
+
+            PopulateWithArgs(stringArgs);
+        }
+
+        public int EquipmentId { get; set; }
+
+        public override void PopulateWithArgs(string[] stringArgs)
+        {
+            Contract.Requires(stringArgs != null);
+            Contract.Requires(stringArgs.Length == 1);
+            
+            Contract.Requires(EventContractHelper.TryParseInt(stringArgs[0]));
+
+            EquipmentId = int.Parse(stringArgs[0]);
+        }
+
+        public override string ToString()
+        {
+            return EquipmentId.ToString();
+        }
+    }
+}
+</pre></code><script type="text/javascript">
+			applyranges('src37', RANGES_37)
+		</script>
+	</body>
+</html>

@@ -1,0 +1,88 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../js/coverreport.js">
+
+		</script><script type="text/javascript">
+			RANGES_64 = [
+  ];
+		</script><link rel="stylesheet" type="text/css" href="../css/coverreport.css" />
+	</head><body>
+		<code id="src64" class="dotCoverSource"><pre>namespace Descent.Model.Board.Marker
+{
+    using System.Diagnostics.Contracts;
+
+    using Descent.Model.Player.Figure;
+    using Descent.Model.Player.Figure.HeroStuff;
+
+    using Microsoft.Xna.Framework.Graphics;
+
+    /// &lt;summary&gt;
+    /// A potion marker, that can be on a board
+    /// &lt;/summary&gt;
+    /// &lt;author&gt;
+    /// Jonas Breindahl (jobre@itu.dk)
+    /// &lt;/author&gt;
+    public class PotionMarker : Marker
+    {
+        #region Fields
+
+        private Equipment potion;
+        
+        #endregion
+
+        #region Initialization
+
+        /// &lt;summary&gt;
+        /// Initializes a new instance of the &lt;see cref=&quot;PotionMarker&quot;/&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;id&quot;&gt;
+        /// The id of the marker
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;name&quot;&gt;
+        /// The name of the marker
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;texture&quot;&gt;
+        /// The texture of the marker
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;movementPoints&quot;&gt;
+        /// The movement points it costs to pickup the marker
+        /// &lt;/param&gt;
+        /// &lt;param name=&quot;potion&quot;&gt;
+        /// The potion that a hero will gain by picking it up
+        /// &lt;/param&gt;
+        public PotionMarker(int id, string name, Texture2D texture, int movementPoints, Equipment potion)
+            : base(id, name, texture, movementPoints)
+        {
+            Contract.Requires(name != null);
+            Contract.Requires(name.Length &gt; 0);
+            Contract.Requires(movementPoints &gt;= 0);
+            Contract.Requires(potion != null);
+
+            this.potion = potion;
+        }
+        
+        #endregion
+
+        #region Methods
+
+        /// &lt;summary&gt;
+        /// Picks up the potion
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;hero&quot;&gt;
+        /// The hero.
+        /// &lt;/param&gt;
+        public override void PickUp(Hero hero)
+        {
+            Contract.Requires(hero != null);  
+
+            hero.Inventory.EquipPotion(potion);
+        }
+        
+        #endregion
+    }
+}
+</pre></code><script type="text/javascript">
+			applyranges('src64', RANGES_64)
+		</script>
+	</body>
+</html>
