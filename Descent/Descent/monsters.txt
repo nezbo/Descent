@@ -3,8 +3,8 @@
 2,'Bane Spider',true,5,3/3/4/5,2,MAGIC,W G B,Poison/Web,2,2
 3,'Beastman',false,5,3/3/4/5,2,MELEE,R G,Damage 1,1,1
 4,'Beastman',true,5,3/3/4/5,3,MELEE,R G B,Damage 2/Command,1,1
-//5,'Demon',false,3,9/10/11/11,4,MAGIC,W G Y Y,Aura Sorcery 2/Fear 1,2,2
-//6,'Demon',true,3,10/10/11/12,5,MAGIC,W G G Y B,Aura Sorcery 3/Fear 2,2,2
+//5,'Demon',false,3,9/10/11/11,4,MAGIC,W G Y Y,Aura/Sorcery 2/Fear 1,2,2
+//6,'Demon',true,3,10/10/11/12,5,MAGIC,W G G Y B,Aura/Sorcery 3/Fear 2,2,2
 //7,'Dragon',false,4,9/9/10/11,3,RANGED,U G Y Y,Burn/Breath/Pierce 5,2,3
 //8,'Dragon',true,5,10/10/11/11,4,RANGED,U G Y Y B,Burn/Breath/Pierce 5/Fear 1,2,3
 9,'Giant',false,4,9/9/10/11,5,MELEE,R G G Y,Reach/Stun,2,2

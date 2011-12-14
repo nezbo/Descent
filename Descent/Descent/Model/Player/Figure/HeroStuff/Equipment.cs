@@ -326,7 +326,11 @@ namespace Descent.Model.Player.Figure.HeroStuff
                         hero.Inventory.OtherItems.Contains(this) :
                             this.type == EquipmentType.Potion && hero.Inventory.Potions.Contains(this));
              * */
-            
+            foreach (Ability ability in abilities)
+            {
+                ability.Apply(hero);
+            }
+
             hero.DiceContribution += this.DiceContribution;
             hero.SurgeAbilityContribution += this.SurgeAbilitiesContribution;
             equipped = true;
@@ -342,7 +346,12 @@ namespace Descent.Model.Player.Figure.HeroStuff
         {
             Contract.Requires(Equipped);
             Contract.Ensures(!Equipped);
-            
+
+            foreach (Ability ability in abilities)
+            {
+                ability.Apply(hero, true);
+            }
+
             hero.DiceContribution -= this.DiceContribution;
             equipped = false;
         }

@@ -2,6 +2,9 @@
 {
     using System.Collections.Generic;
     using System.Diagnostics.Contracts;
+
+    using Descent.Model.Event;
+
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
 
@@ -74,7 +77,7 @@
         /// <param name="dice">
         /// The dice.
         /// </param>
-        public Monster(int id, string name, bool master, int speed, int health, int armor, EAttackType type, List<Dice> dice, Rectangle size, Texture2D texture)
+        public Monster(int id, string name, bool master, int speed, int health, int armor, EAttackType type, List<Dice> dice, List<Ability> abilities, Rectangle size, Texture2D texture)
             : base(id, name, size)
         {
             Contract.Requires(name != null);
@@ -94,6 +97,12 @@
             attackType = type;
             DiceForAttack = dice;
             this.Texture = texture;
+
+            Abilities = abilities;
+            foreach (Ability ability in abilities)
+            {
+                ability.Apply(this);
+            }
         }
         #endregion
 
@@ -111,7 +120,7 @@
         public Monster Clone(int newID)
         {
             Contract.Requires(newID >= 0);
-            return new Monster(newID, Name, isMaster, Speed, MaxHealth, Armor, attackType, new List<Dice>(DiceForAttack), Size, Texture);
+            return new Monster(newID, Name, isMaster, Speed, MaxHealth, Armor, attackType, new List<Dice>(DiceForAttack), new List<Ability>(abilities), Size, Texture);
         }
 
         [ContractInvariantMethod]

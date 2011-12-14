@@ -149,11 +149,7 @@
 
                 Texture2D texture = game.Content.Load<Texture2D>("Images/Monsters/" + id);
 
-                Monster m = new Monster(id, name, master, speed, health, armor, type, attackDice, size, texture);
-                foreach (Ability ability in abilities)
-                {
-                    ability.Apply(m);
-                }
+                Monster m = new Monster(id, name, master, speed, health, armor, type, attackDice, abilities, size, texture);
 
                 m.Initialize();
                 monsters.Add(m);
@@ -526,6 +522,7 @@
                     m.Armor + bonusArmor, 
                     m.AttackType, 
                     attackDice, 
+                    abilities,
                     m.Size, 
                     m.Texture);
 

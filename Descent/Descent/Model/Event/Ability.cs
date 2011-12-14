@@ -215,7 +215,7 @@ namespace Descent.Model.Event
         /// <param name="figure">
         /// The figure to apply the figure to
         /// </param>
-        public void Apply(Figure figure)
+        public void Apply(Figure figure, bool remove = false)
         {
             this.figure = figure;
             if (!triggered || trigger.Invoke())
@@ -223,21 +223,26 @@ namespace Descent.Model.Event
                 switch (bonus)
                 {
                     case AbilityBonus.Damage:
-                        figure.DamageContribution += IntBonus;
+                        if (!remove) figure.DamageContribution += IntBonus;
+                        else figure.DamageContribution -= IntBonus;
                         break;
                     case AbilityBonus.Pierce:
-                        figure.PierceContribution += IntBonus;
+                        if (!remove) figure.PierceContribution += IntBonus;
+                        else figure.PierceContribution -= IntBonus;
                         break;
                     case AbilityBonus.Range:
-                        figure.RangeContribution += IntBonus;
+                        if (!remove) figure.RangeContribution += IntBonus;
+                        else figure.RangeContribution -= IntBonus;
                         break;
                     case AbilityBonus.Surge:
-                        figure.SurgeContribution += IntBonus;
+                        if (!remove) figure.SurgeContribution += IntBonus;
+                        else figure.SurgeContribution -= IntBonus;
                         break;
                     case AbilityBonus.QuickShot:
                         break;
                     case AbilityBonus.Armor:
-                        figure.ArmorContribution += IntBonus;
+                        if (!remove) figure.ArmorContribution += IntBonus;
+                        else figure.ArmorContribution -= IntBonus;
                         break;
                 }
             }
