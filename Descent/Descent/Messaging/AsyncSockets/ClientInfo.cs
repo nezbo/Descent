@@ -80,6 +80,14 @@ namespace Descent.Messaging.AsyncSockets
         }
 
         /// <summary>
+        /// Close the socket for this client.
+        /// </summary>
+        public void Close()
+        {
+            socket.Close();
+        }
+
+        /// <summary>
         /// Called when data was received.
         /// </summary>
         /// <param name="asyncResult">Async result</param>

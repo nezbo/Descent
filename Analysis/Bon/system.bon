@@ -1261,3 +1261,37 @@ class_chart STATE
 		"Can I have this state?"
 end
 
+dynamic_diagram EVENT_SCENARIOS
+indexing
+	author: "Simon Westh Henriksen"
+component
+	scenario "EVENT_QUEUE1"
+		description "The state managager queues a message on the message queue, the system should receive the message when the queue is processed."
+		action
+			"1"		"Listen to event"
+			"2"		"Queue an event on the event manager"
+			"3"		"Process the event queue"
+			"4"		"Confirm that the event has been received"
+		end
+		object EVENT_MANAGER
+		object STATE_MANAGER
+		object GAME
+		STATE_MANAGER calls EVENT_MANAGER "1"
+		STATE_MANAGER calls EVENT_MANAGER "2"
+		GAME calls EVENT_MANAGER "3"
+		EVENT_MANAGER calls STATE_MANAGER "4"
+	scenario "The server queues a message string on the event queue for parsing and firing."
+		action
+			"1" "The state manager listens to a specific event on the event manager"
+			"2"	"Server connection queues message string on the eventmanager"
+			"3" "The queue is processed"
+			"4" "The event is received"
+		object SERVER_CONNECTION
+		object EVENT_MANAGER
+		object GAME
+		object STATE_MANAGER
+		STATE_MANAGER calls EVENT_MANAGER "1"
+		SERVER_CONNECTION calls EVENT_MANAGER "2"
+		GAME calls "3"
+		EVENT_MANAGER calls STATE_MANAGER	
+end
